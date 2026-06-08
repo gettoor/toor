@@ -1,0 +1,8 @@
+# Packages
+**/node_modules
+**/dist
+
+# Documentation
+docs/.vitepress/cache
+docs/.vitepress/dist
+docs/api

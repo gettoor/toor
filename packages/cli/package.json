@@ -1,0 +1,22 @@
+{
+  "name": "@gettoor/cli",
+  "version": "0.0.1",
+  "description": "Toor CLI for LLM evaluations and experiments",
+  "main": "dist/main.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "clean-package": "rm -rf node_modules dist"
+  },
+  "dependencies": {
+    "@gettoor/engine": "workspace:^",
+    "ajv": "^8.20.0",
+    "ajv-errors": "^3.0.0",
+    "yaml": "^2.9.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+  },
+  "author": "AndCreations",
+  "license": "MIT"
+}

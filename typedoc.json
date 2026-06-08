@@ -1,0 +1,17 @@
+{
+  "entryPointStrategy": "packages",
+  "entryPoints": [
+    "packages/*"
+  ],
+  "exclude": ["packages/cli"],
+  "packageOptions": {
+    "entryPoints": ["src/index.ts"],
+    "tsconfig": "tsconfig.json",
+    "includeVersion": true
+  },
+  "name": "Toor",
+  "out": "docs/api",
+  "readme": "none",
+  "plugin": ["typedoc-plugin-markdown"],
+  "disableSources": true
+}

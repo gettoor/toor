@@ -1,0 +1,22 @@
+{
+  "name": "@gettoor/toor",
+  "private": true,
+  "scripts": {
+    "build": "pnpm -r build",
+    "clean-all": "pnpm clean-packages && rm -rf node_modules && rm -rf docs/.vitepress/cache && rm -rf docs/.vitepress/dist && rm -rf docs/api",
+    "clean-packages": "pnpm -r clean-package",
+    "test": "pnpm -r test",
+    "docs:api": "typedoc packages/*",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
+  },
+  "devDependencies": {
+    "@types/node": "^25.7.0",
+    "typedoc": "^0.28.19",
+    "typescript": "^6.0.3",
+    "vitepress": "^1.6.4"
+  },
+  "author": "AndCreations",
+  "license": "MIT"
+}
