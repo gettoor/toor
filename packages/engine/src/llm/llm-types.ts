@@ -1,7 +1,16 @@
+
+/**
+ * Usage information for a language model.
+ * @category LLM
+ */
 export interface LLMUsage {
-  // number of input tokens used
+  /**
+   * Number of input tokens used.
+   */
   inputTokens: number | undefined;
 
-  // number of output tokens used
+  /**
+   * Number of output tokens used.
+   */
   outputTokens: number | undefined;
 }

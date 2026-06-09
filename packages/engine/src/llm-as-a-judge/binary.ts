@@ -9,7 +9,8 @@ import { BINARY_PROMPT } from './binary-prompt.js';
 
 /**
  * Evaluates a response against a prompt using a language model with score
- * either 0 or 1 (passed or failed).
+ * either 0 (failed) or 1 (passed).
+ * @category LLM-as-a-judge
  * @param input - The input for the evaluation.
  * @returns The output of the evaluation.
  */

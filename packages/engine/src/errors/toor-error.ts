@@ -1,5 +1,6 @@
 /**
- * A base error class for Toor.
+ * A base class for errors.
+ * @category Errors
  */
 export class ToorError extends Error {
   /**

@@ -8,6 +8,14 @@ import {
   ExperimentScore,
 } from './experimentation-types.js';
 
+/**
+ * Runs a binary experiment evaluation.
+ * @category Experimentation
+ * @param model - The language model to use.
+ * @param modelParameters - The model parameters to use.
+ * @param prompt - The prompt to use.
+ * @param answer - The answer to use.
+ */
 export const runBinaryExperimentEvaluation = async (
   model: LanguageModel,
   modelParameters: Omit<ExperimentModelParameters, 'name'> | undefined,

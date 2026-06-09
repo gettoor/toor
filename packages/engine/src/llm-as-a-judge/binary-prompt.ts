@@ -1,3 +1,10 @@
+/**
+ * The default prompt to use for the binary evaluation. 
+ * It takes the parameters (each in double curly braces):
+ * - `evaluation_prompt`: The prompt to evaluate.
+ * - `response`: The response to evaluate.
+ * @category LLM-as-a-judge
+ */
 export const BINARY_PROMPT = `
 You are a strict evaluator.
 

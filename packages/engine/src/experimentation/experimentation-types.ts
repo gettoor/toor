@@ -6,13 +6,25 @@ import { JSONSchema7 } from 'json-schema';
 import { LLMUsage } from '../llm/index.js';
 import { ModelProvider } from '../model-provider/index.js';
 
+/**
+ * Experiment evaluation type.
+ * @category Experimentation
+ */
 export type ExperimentEvaluationType = 'binary' | '1-3' | '1-5' | '1-10';
 
+/**
+ * Experiment model.
+ * @category Experimentation
+ */
 export interface ExperimentModel {
   // model name
   name: string;
 }
 
+/**
+ * Experiment model parameters.
+ * @category Experimentation
+ */
 export interface ExperimentModelParameters {
   // parameters name
   name: string;
@@ -21,6 +33,10 @@ export interface ExperimentModelParameters {
   temperature?: number;
 }
 
+/**
+ * Experiment prompt.
+ * @category Experimentation
+ */
 export interface ExperimentPrompt {
   // prompt name (keep unique)
   name: string;
@@ -29,8 +45,16 @@ export interface ExperimentPrompt {
   prompt: string;
 }
 
+/**
+ * Experiment dataset variable value.
+ * @category Experimentation
+ */
 export type ExperimentDatasetVarValue = any;
 
+/**
+ * Experiment dataset entry.
+ * @category Experimentation
+ */
 export interface ExperimentDatasetEntry {
   // dataset name (keep unique)
   name: string;
@@ -39,6 +63,10 @@ export interface ExperimentDatasetEntry {
   vars?: Record<string, ExperimentDatasetVarValue>;
 }
 
+/**
+ * Experiment settings.
+ * @category Experimentation
+ */
 export interface ExperimentSettings {
   // evaluation type
   type: ExperimentEvaluationType;
@@ -50,6 +78,10 @@ export interface ExperimentSettings {
   modelParameters?: ExperimentModelParameters;
 }
 
+/**
+ * Dataset entry evaluation metrics.
+ * @category Experimentation
+ */
 export interface DatasetEntryEvaluationMetrics {
   // evaluation time in milliseconds
   promptGenerationTime: number;
@@ -78,6 +110,7 @@ export interface DatasetEntryEvaluationMetrics {
  * - runningEvaluation
  * - evaluationCompleted
  * - datasetEntryEvaluationCompleted
+ * @category Experimentation
  */
 export interface ExperimentListeners {
   /**
@@ -145,8 +178,16 @@ export interface ExperimentListeners {
   ) => Promise<void>;
 }
 
+/**
+ * Experiment structured output format.
+ * @category Experimentation
+ */
 export type ExperimentStructuredOutputFormat = 'json' | 'yaml';
 
+/**
+ * Experiment structured output.
+ * @category Experimentation
+ */
 export interface ExperimentStructuredOutput {
   // schema of the structured output
   schema: JSONSchema7;
@@ -155,6 +196,10 @@ export interface ExperimentStructuredOutput {
   format: ExperimentStructuredOutputFormat;
 }
 
+/**
+ * Experiment.
+ * @category Experimentation
+ */
 export interface Experiment {
   // experiment settings
   settings: ExperimentSettings;
@@ -181,6 +226,10 @@ export interface Experiment {
   listeners?: ExperimentListeners;
 }
 
+/**
+ * Experiment score.
+ * @category Experimentation
+ */
 export interface ExperimentScore {
   // score
   score: number;
@@ -198,6 +247,10 @@ export interface ExperimentScore {
   metrics?: Record<string, number>;
 }
 
+/**
+ * Experiment result.
+ * @category Experimentation
+ */
 export interface ExperimentResult {
   // model name
   modelName: string;

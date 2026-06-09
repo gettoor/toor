@@ -6,8 +6,7 @@ export default {
     siteTitle: 'Toor',
 
     socialLinks: [
-      // You can add any icon from simple-icons (https://simpleicons.org/):
-      { icon: 'github', link: 'https://github.com/orgs/gettoor/repositories' },
+      { icon: 'github', link: 'https://github.com/gettoor/toor' },
     ],
 
     sidebar: [

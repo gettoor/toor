@@ -1,5 +1,6 @@
 /**
  * Calculates the average of an array of numbers.
+ * @category Math
  * @param values - The array of numbers to calculate the average of.
  * @returns The average of the numbers.
  */
@@ -12,6 +13,7 @@ export function average(values: number[]): number {
 
 /**
  * Calculates the median of an array of numbers.
+ * @category Math
  * @param values - The array of numbers to calculate the median of.
  * @returns The median of the numbers.
  */

@@ -1,7 +1,8 @@
 import { EvaluationInput, EvaluationOutput } from './evaluator-types.js';
 
 /**
- * Evaluates a dataset entry using an evaluator.
+ * Evaluates a dataset using an evaluator.
+ * @category Evaluator
  * @param input - The input for the evaluator.
  * @returns The output of the evaluator.
  */

@@ -12,6 +12,10 @@
   "name": "Toor",
   "out": "docs/api",
   "readme": "none",
+  "disableSources": true,
+
   "plugin": ["typedoc-plugin-markdown"],
-  "disableSources": true
+  "parametersFormat": "list",
+  "typeAliasPropertiesFormat": "list",
+  "expandParameters": true
 }

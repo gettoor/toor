@@ -1,5 +1,5 @@
 import * as z from 'zod';
-import { Ajv, ErrorObject } from 'ajv';
+import { Ajv } from 'ajv';
 import { ToorError } from '@gettoor/engine';
 
 import { FatalError } from '../errors/index.js';

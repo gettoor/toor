@@ -8,17 +8,37 @@ import {
   NoValueForPlaceholderError,
 } from './placeholders-errors.js';
 
+/**
+ * Output of the {@link replacePlaceholders} function.
+ * @category Utils
+ */
 export interface ReplacePlaceholderOutput {
-  // The text with placeholders replaced with values.
+  /**
+   * The text with placeholders replaced with values.
+   */
   text: string;
 
-  // The keys of the values that were not used.
+  /**
+   * The keys of the values that were not used.
+   */
   unusedValueKeys: string[];
 }
 
 /**
  * Replaces placeholders in a string with values.
- * The placeholders are of the form {{key}} in the string.
+ * The placeholders are of the form `{{key}}` in the string.
+ * @example
+ * ```ts
+ * const text = 'Hello {{name}}!';
+ * const values = { name: 'John', age: '27' };
+ * const output = replacePlaceholders(text, values);
+ * // The output will be:
+ * // {
+ * //   text: 'Hello John!',
+ * //   unusedValueKeys: ['age'],
+ * // }
+ * ```
+ * @category Utils
  * @param text - The text to replace placeholders in.
  * @param values - The values to replace placeholders with.
  * @returns The string with placeholders replaced with values.
@@ -34,8 +54,6 @@ export function replacePlaceholders(
   for (const match of text.matchAll(placeholderPattern)) {
     placeholdersInText.add(match[1].trim());
   }
-
-
   
   // Check if all placeholders are provided
   const missingPlaceholders = [...placeholdersInText].filter((placeholder) => {
@@ -91,3 +109,12 @@ function formatValue(fullKey: string, value: any, format?: string): string {
   }
   throw new InvalidPlaceholderFormatError(format);
 }
+
+const text = 'Hello {{name}}!';
+const values = { name: 'John', age: '27' };
+const output = replacePlaceholders(text, values);
+// The output will be:
+// {
+//   text: 'Hello John!',
+//   unusedValueKeys: ['age'],
+// }

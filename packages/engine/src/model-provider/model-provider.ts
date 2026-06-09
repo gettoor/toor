@@ -5,6 +5,7 @@ import { LanguageModel } from 'ai';
 
 /**
  * A model provider.
+ * @category Model Provider
  */
 export interface ModelProvider {
   /**

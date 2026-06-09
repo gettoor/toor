@@ -1,3 +1,11 @@
+/**
+ * The default prompt to use for the scalar evaluation.
+ * It takes the parameters (each in double curly braces):
+ * - `evaluation_prompt`: The prompt to evaluate.
+ * - `response`: The response to evaluate.
+ * - `scoring_scale`: The scoring scale to use.
+ * @category LLM-as-a-judge
+ */
 export const SCALAR_PROMPT = `
 You are a strict evaluator.
 

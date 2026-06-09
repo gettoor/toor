@@ -32,6 +32,7 @@ import { runScalarExperimentEvaluation } from './experimentation-scalar.js';
 
 /**
  * Runs an experiment.
+ * @category Experimentation
  * @param experiment - The experiment to run.
  * @returns A promise that resolves when the online evaluation is complete.
  */

@@ -1,6 +1,10 @@
 import { ScalarScoringScale } from './scalar-types.js';
 
-// coarse-grained scale
+/**
+ * Coarse-grained scale (1-3) for the scalar evaluation.
+ * @category LLM-as-a-judge
+ * @see {@link scalar}
+ */
 export const SCALAR_SCORING_1_3: ScalarScoringScale = {
   min: 1,
   max: 3,
@@ -11,7 +15,11 @@ export const SCALAR_SCORING_1_3: ScalarScoringScale = {
   `,
 };
 
-// Lickert scale
+/**
+ * Lickert scale (1-5) for the scalar evaluation.
+ * @category LLM-as-a-judge
+ * @see {@link scalar}
+ */
 export const SCALAR_SCORING_1_5: ScalarScoringScale = {
   min: 1,
   max: 5,
@@ -24,7 +32,11 @@ export const SCALAR_SCORING_1_5: ScalarScoringScale = {
 `,
 };
 
-// fine-grained scale
+/**
+ * Fine-grained scale (1-10) for the scalar evaluation.
+ * @category LLM-as-a-judge
+ * @see {@link scalar}
+ */
 export const SCALAR_SCORING_1_10: ScalarScoringScale = {
   min: 1,
   max: 10,
@@ -38,4 +50,9 @@ export const SCALAR_SCORING_1_10: ScalarScoringScale = {
 `,
 };
 
+/**
+ * The default scoring scale for the scalar evaluation.
+ * @category LLM-as-a-judge
+ * @see {@link scalar}
+ */
 export const SCALAR_SCORING_DEFAULT = SCALAR_SCORING_1_5;

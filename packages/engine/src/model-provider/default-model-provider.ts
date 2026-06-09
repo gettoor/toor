@@ -11,13 +11,35 @@ import { ModelNotFoundError } from './model-provider-errors.js';
 import { ModelProvider } from './model-provider.js';
 
 /**
- * A default model provider implementation.
+ * A default model provider implementation. Supports Gemini, OpenAI
+ * and Anthropic.
+ * 
+ * Model names are prefixed with the provider name:
+ * - `gemini:<model>`
+ * - `openai:<model>`
+ * - `anthropic:<model>`
+ * 
+ * It takes the keys from the environment variables:
+ * - `GEMINI_API_KEY`
+ * - `OPENAI_API_KEY`
+ * - `ANTHROPIC_API_KEY`
+ * 
+ * @example
+ * ```ts
+ * const provider = new DefaultModelProvider();
+ * const model = await provider.getModel('gemini:gemini-3.5-flash');
+ * ```
+ * @category Model Provider
  */
 export class DefaultModelProvider implements ModelProvider {
   /**
    * Gets a model by name.
    * @param name - The name of the model.
    * @returns The model.
+   * @throws {@link MissingApiKeyError}
+   *   If the API key is not set in the environment variables.
+   * @throws {@link ModelNotFoundError}
+   *   If the model is not found.
    */
   public async getModel(name: string): Promise<LanguageModel> {
     // gemini
