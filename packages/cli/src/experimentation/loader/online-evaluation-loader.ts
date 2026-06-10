@@ -7,7 +7,7 @@ import {
   ExperimentModelParameters,
   ExperimentPrompt,
   ExperimentSettings,
-} from '@gettoor/engine';
+} from '@gettoor/core';
 
 import { FatalError } from '../../errors/index.js';
 import { ExperimentCfg } from '../../cfg/index.js';

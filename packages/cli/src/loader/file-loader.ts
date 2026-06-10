@@ -2,7 +2,7 @@ import fs from 'fs';
 import { extname, join, resolve } from 'path';
 import yaml from 'yaml';
 import * as z from 'zod';
-import { ToorError } from '@gettoor/engine';
+import { ToorError } from '@gettoor/core';
 
 import { FatalError } from '../errors/index.js';
 

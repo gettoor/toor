@@ -1,5 +1,5 @@
 import { ErrorObject } from 'ajv';
-import { ToorError } from '@gettoor/engine';
+import { ToorError } from '@gettoor/core';
 
 export function humanizeAjvErrors(
   errors: ErrorObject[],

@@ -1,4 +1,4 @@
-import { ExperimentDatasetEntry } from '@gettoor/engine';
+import { ExperimentDatasetEntry } from '@gettoor/core';
 
 import { loadFile } from '../../loader/index.js';
 import { ExperimentDataset, ExperimentDatasetScheme } from './dataset-types.js';

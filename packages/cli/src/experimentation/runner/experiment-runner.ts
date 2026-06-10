@@ -3,8 +3,8 @@ import {
   Experiment,
   ExperimentListeners,
   ExperimentScore,
-  runExperiment as runExperimentEngine,
-} from '@gettoor/engine';
+  runExperiment as runExperimentFromCore,
+} from '@gettoor/core';
 
 import {
   green,
@@ -180,7 +180,7 @@ export async function runExperiment(
   };
 
   // run experiment
-  const results = await runExperimentEngine({
+  const results = await runExperimentFromCore({
     ...experiment,
     listeners,
   });

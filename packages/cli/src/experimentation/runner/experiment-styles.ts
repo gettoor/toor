@@ -1,4 +1,4 @@
-import { ExperimentScore } from '@gettoor/engine';
+import { ExperimentScore } from '@gettoor/core';
 import { red, yellow, green, Style } from '../../console/index.js';
 
 export function colorForScore(score: ExperimentScore): Style {

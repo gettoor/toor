@@ -23,9 +23,9 @@ importers:
 
   packages/cli:
     dependencies:
-      '@gettoor/engine':
+      '@gettoor/core':
         specifier: workspace:^
-        version: link:../engine
+        version: link:../core
       ajv:
         specifier: ^8.20.0
         version: 8.20.0
@@ -39,7 +39,7 @@ importers:
         specifier: ^4.4.3
         version: 4.4.3
 
-  packages/engine:
+  packages/core:
     dependencies:
       '@ai-sdk/anthropic':
         specifier: ^3.0.80

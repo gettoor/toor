@@ -1,4 +1,4 @@
-import { ToorError } from '@gettoor/engine';
+import { ToorError } from '@gettoor/core';
 
 import { FatalError } from './errors/index.js';
 import { Args, parseArgs } from './args/index.js';

@@ -9,7 +9,7 @@
     "clean-package": "rm -rf node_modules dist"
   },
   "dependencies": {
-    "@gettoor/engine": "workspace:^",
+    "@gettoor/core": "workspace:^",
     "ajv": "^8.20.0",
     "ajv-errors": "^3.0.0",
     "yaml": "^2.9.0",

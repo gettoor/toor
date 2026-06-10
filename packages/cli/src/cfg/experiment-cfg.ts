@@ -1,6 +1,6 @@
 import * as z from 'zod';
 import { Ajv } from 'ajv';
-import { ToorError } from '@gettoor/engine';
+import { ToorError } from '@gettoor/core';
 
 import { FatalError } from '../errors/index.js';
 import { readFile } from '../io/index.js';

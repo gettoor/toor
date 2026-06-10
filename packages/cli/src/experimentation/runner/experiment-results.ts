@@ -1,7 +1,7 @@
 import { 
   average,
   ExperimentResult,
-} from '@gettoor/engine';
+} from '@gettoor/core';
 
 import {
   dim,
