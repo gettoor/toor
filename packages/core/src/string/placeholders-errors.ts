@@ -42,3 +42,14 @@ export class NoValueForPlaceholderError extends NotFoundToorError {
     return [...this.placeholders];
   }
 }
+
+export class MissingPlaceholderError extends NotFoundToorError {
+  public static readonly CODE = 'MissingPlaceholderError';
+
+  public constructor(placeholder: string) {
+    super(
+      MissingPlaceholderError.CODE,
+      `Placeholder ${ToorError.quote(placeholder)} is missing`,
+    );
+  }
+}

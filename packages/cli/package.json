@@ -1,6 +1,6 @@
 {
   "name": "@gettoor/cli",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Toor CLI for LLM evaluations and experiments",
   "main": "dist/main.js",
   "type": "module",

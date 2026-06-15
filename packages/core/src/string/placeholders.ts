@@ -5,6 +5,7 @@ import yaml from 'yaml';
 import { 
   InvalidFormatForObjectError,
   InvalidPlaceholderFormatError,
+  MissingPlaceholderError,
   NoValueForPlaceholderError,
 } from './placeholders-errors.js';
 
@@ -24,12 +25,14 @@ export interface ReplacePlaceholderOutput {
   unusedValueKeys: string[];
 }
 
+const PLACEHOLDER_PATTERN = /<<([^<>]+)>>/g;
+
 /**
  * Replaces placeholders in a string with values.
- * The placeholders are of the form `{{key}}` in the string.
+ * The placeholders are of the form `<key>` in the string.
  * @example
  * ```ts
- * const text = 'Hello {{name}}!';
+ * const text = 'Hello <<name>>!';
  * const values = { name: 'John', age: '27' };
  * const output = replacePlaceholders(text, values);
  * // The output will be:
@@ -47,11 +50,9 @@ export function replacePlaceholders(
   text: string,
   values: Record<string, string>,
 ): ReplacePlaceholderOutput {
-  const placeholderPattern = /\{\{([^{}]+)\}\}/g;
-
   // Find all placeholders in the text
   const placeholdersInText = new Set<string>();
-  for (const match of text.matchAll(placeholderPattern)) {
+  for (const match of text.matchAll(PLACEHOLDER_PATTERN)) {
     placeholdersInText.add(match[1].trim());
   }
   
@@ -69,7 +70,7 @@ export function replacePlaceholders(
   for (const [fullKey, value] of Object.entries(values)) {
     const [ _, format ] = parseFullKey(fullKey);
 
-    const placeholder = `{{${fullKey}}}`;
+    const placeholder = `<<${fullKey}>>`;
     if (text.includes(placeholder)) {
       text = text.replace(placeholder, formatValue(fullKey, value, format));
     } else {
@@ -81,6 +82,36 @@ export function replacePlaceholders(
     text,
     unusedValueKeys: [...unusedValueKeys],
   };
+}
+
+/**
+ * Finds placeholders in a string.
+ * @category Utils
+ * @param text - The text to get the placeholders from.
+ * @returns The placeholders in the text.
+ */
+export function findPlaceholders(text: string): string[] {
+  return [...text.matchAll(PLACEHOLDER_PATTERN)]
+    .map((match) => match[1].trim());
+}
+
+/**
+ * Validates that the required placeholders are present in the text.
+ * @category Utils
+ * @param text - The text to validate the placeholders in.
+ * @param requiredPlaceholders - The required placeholders to validate.
+ * @throws {MissingPlaceholderError} If a required placeholder is missing.
+ */
+export function requirePlaceholders(
+  text: string,
+  requiredPlaceholders: string[],
+): void {
+  const placeholdersInText = findPlaceholders(text);
+  for (const requiredPlaceholder of requiredPlaceholders) {
+    if (!placeholdersInText.includes(requiredPlaceholder)) {
+      throw new MissingPlaceholderError(requiredPlaceholder);
+    }
+  }
 }
 
 function parseFullKey(fullKey: string): string[] {
@@ -109,12 +140,3 @@ function formatValue(fullKey: string, value: any, format?: string): string {
   }
   throw new InvalidPlaceholderFormatError(format);
 }
-
-const text = 'Hello {{name}}!';
-const values = { name: 'John', age: '27' };
-const output = replacePlaceholders(text, values);
-// The output will be:
-// {
-//   text: 'Hello John!',
-//   unusedValueKeys: ['age'],
-// }

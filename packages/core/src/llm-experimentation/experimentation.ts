@@ -186,18 +186,20 @@ async function runEvaluation(
   prompt: string,
   answer: string,
 ): Promise<{ score: ExperimentScore, usage: LLMUsage }> {
-  const model = await modelProvider.getModel(evalSettings.model);
+  // const model = await modelProvider.getModel(evalSettings.model);
   switch (evalSettings.type) {
     case 'binary':
       return runBinaryExperimentEvaluation(
-        model,
+        evalSettings.modelName,
+        modelProvider,
         evalSettings.modelParameters,
         prompt,
         answer,
       );
     case '1-3':
       return runScalarExperimentEvaluation(
-        model,
+        evalSettings.modelName,
+        modelProvider,
         evalSettings.modelParameters,
         prompt,
         answer,
@@ -205,7 +207,8 @@ async function runEvaluation(
       );
     case '1-5':
       return runScalarExperimentEvaluation(
-        model,
+        evalSettings.modelName,
+        modelProvider,
         evalSettings.modelParameters,
         prompt,
         answer,
@@ -213,7 +216,8 @@ async function runEvaluation(
       );
     case '1-10':
       return runScalarExperimentEvaluation(
-        model,
+        evalSettings.modelName,
+        modelProvider,
         evalSettings.modelParameters,
         prompt,
         answer,

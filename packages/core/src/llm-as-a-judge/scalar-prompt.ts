@@ -1,51 +1,38 @@
 /**
  * The default prompt to use for the scalar evaluation.
  * It takes the parameters (each in double curly braces):
- * - `evaluation_prompt`: The prompt to evaluate.
- * - `response`: The response to evaluate.
- * - `scoring_scale`: The scoring scale to use.
+ * - `<<prompt>>`: The prompt to evaluate.
+ * - `<<response>>`: The response to evaluate.
+ * - `<<scoring_scale>>`: The scoring scale to use.
  * @category LLM-as-a-judge
  */
 export const SCALAR_PROMPT = `
 You are a strict evaluator.
 
-Your task is to assess how well the RESPONSE satisfies the EVALUATION_PROMPT using the provided SCORING_SCALE.
+Your task is to assess how well the RESPONSE satisfies the PROMPT using the provided SCORING_SCALE.
 
-<EVALUATION_PROMPT>
-{{evaluation_prompt}}
-</EVALUATION_PROMPT>
+PROMPT:
+<<prompt>>
 
-<RESPONSE>
-{{response}}
-</RESPONSE>
+RESPONSE:
+<<response>>
 
-<SCORING_SCALE>
-{{scoring_scale}}
-</SCORING_SCALE>
+SCORING_SCALE:
+<<scoring_scale>>
 
 Evaluation Guidelines:
 
-1. Focus only on whether the RESPONSE fulfills the intent and requirements of the EVALUATION_PROMPT.
+1. Focus only on whether the RESPONSE fulfills the intent and requirements of the PROMPT.
 2. Consider:
-   - Correctness
-   - Completeness
-   - Relevance
    - Absence of contradictions
+<<metrics>>
 3. Do not reward partially correct answers as fully correct.
 4. Be strict and conservative in scoring.
-5. Do not consider writing style unless explicitly required by the EVALUATION_PROMPT.
+5. Do not consider writing style unless explicitly required by the PROMPT.
 
 Scoring Instructions:
 
 - Assign a single numeric score based strictly on the SCORING_SCALE.
 - The score must fall within the defined range.
 - Use the full range when appropriate (avoid clustering in the middle without reason).
-
-Output Format (STRICT):
-
-Score: <numeric score>
-Reasoning: <concise explanation referencing the evaluation criteria>
-Correctness: <numeric score for correctness>
-Completeness: <numeric score for completeness>
-Relevance: <numeric score for relevance>
 `;

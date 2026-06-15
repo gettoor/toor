@@ -5,4 +5,5 @@ export * from './binary.js';
 export * from './scalar-prompt.js';
 export * from './scalar-types.js';
 export * from './scalar-scoring.js';
+export * from './scalar-metrics.js';
 export * from './scalar.js';

@@ -1,4 +1,4 @@
-import { LanguageModel } from 'ai';
+import { ModelProvider } from '../model-provider/index.js';
 import { ModelParameters, Output } from './types.js';
 
 /**
@@ -20,8 +20,41 @@ export interface ScalarScoringScale {
    * The prompt to use for the scoring scale.
    * If not provided, the default prompt will be used.
    * @see {@link SCALAR_SCORING_DEFAULT}
+   * @see {@link SCALAR_SCORING_1_3}
+   * @see {@link SCALAR_SCORING_1_5}
+   * @see {@link SCALAR_SCORING_1_10}
+   * @example
+   * ```ts
+   * const scoringScale: ScalarScoringScale = {
+   *   min: 0,
+   *   max: 1,
+   *   prompt: `
+   *     0 = Incorrect or irrelevant
+   *     1 = Correct
+   *   `,
    */
   prompt?: string;
+}
+
+/**
+ * A metric for the scalar evaluation.
+ * @category LLM-as-a-judge
+ */
+export interface ScalarMetric {
+  /**
+   * The name of the metric.
+   */
+  name: string;
+
+  /**
+   * The description of the scheme in the structured output.
+   */
+  schemeDescription: string;
+
+  /**
+   * The description of the prompt. If not provided, then just name is passed.
+   */
+  promptDescription?: string;
 }
 
 /**
@@ -30,9 +63,15 @@ export interface ScalarScoringScale {
  */
 export interface ScalarInput {
   /**
-   * The language model to use for the evaluation.
+   * The name of the model to use for the evaluation.
    */
-  model: LanguageModel;
+  modelName: string;
+
+  /**
+   * The model provider to use for the evaluation.
+   * Uses the default model provider {@link DefaultModelProvider} if not set.
+   */
+  modelProvider?: ModelProvider;
 
   /**
    * The parameters to use for the language model.
@@ -45,14 +84,19 @@ export interface ScalarInput {
   prompt: string;
 
   /**
-   * The answer to the prompt.
+   * The response to the prompt.
    */
-  answer: string;
+  response: string;
 
   /**
    * The scoring scale to use for the evaluation.
    */
   scoringScale?: ScalarScoringScale;
+
+  /**
+   * The metrics to use for the evaluation.
+   */
+  metrics?: ScalarMetric[];
 
   /**
    * The prompt to use for the evaluation.
@@ -62,6 +106,21 @@ export interface ScalarInput {
   evalPrompt?: string;
 }
 
+/**
+ * Result for a single metric.
+ * @category LLM-as-a-judge
+ */
+export interface ScalarMetricResult {
+  /**
+   * The score for the metric.
+   */
+  score: number;
+
+  /**
+   * The reasoning for the metric score.
+   */
+  reasoning: string;
+}
 
 /**
  * Result for the scalar evaluation.
@@ -74,19 +133,10 @@ export interface ScalarResult {
   score: number;
 
   /**
-   * The score for correctness.
+   * The metrics for the response where key is the metric name
+   * and value is the score.
    */
-  correctness: number;
-
-  /**
-   * The score for completeness.
-   */
-  completeness: number;
-
-  /**
-   * The score for relevance.
-   */
-  relevance: number;
+  metrics: Record<ScalarMetric['name'], ScalarMetricResult>;
 }
 
 /**

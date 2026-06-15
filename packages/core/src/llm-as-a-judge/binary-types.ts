@@ -1,5 +1,5 @@
-import { LanguageModel } from 'ai';
 import { ModelParameters, Output } from './types.js';
+import { ModelProvider } from '../model-provider/index.js';
 
 /**
  * Input for the binary evaluation.
@@ -9,7 +9,13 @@ export interface BinaryInput {
   /**
    * The language model to use for the evaluation.
    */
-  model: LanguageModel;
+  modelName: string;
+
+  /**
+   * The model provider to use for the evaluation.
+   * Uses the default model provider {@link DefaultModelProvider} if not set.
+   */
+  modelProvider?: ModelProvider;
 
   /**
    * The parameters to use for the language model.
@@ -22,9 +28,9 @@ export interface BinaryInput {
   prompt: string;
 
   /**
-   * The answer to the prompt.
+   * The response to the prompt.
    */
-  answer: string;
+  response: string;
 
   /**
    * The prompt to use for the evaluation.

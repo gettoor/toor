@@ -4,6 +4,7 @@ export default {
   description: 'Toor for LLM evaluations and experiments',
   themeConfig: {
     siteTitle: 'Toor',
+    outline: 'deep',
 
     socialLinks: [
       { icon: 'github', link: 'https://github.com/gettoor/toor' },
@@ -14,6 +15,16 @@ export default {
         items: [
           { text: 'Introduction', link: '/' },
           { text: 'Getting started', link: '/getting-started.md' },
+          { text: 'CLI', link: '/cli.md' },
+          { 
+            text: 'Core',
+            link: '/core.md',
+            items: [
+              { text: 'LLM-as-a-judge', link: '/llm-as-a-judge.md' },
+              { text: 'LLM experimentation', link: '/llm-experimentation.md' },
+              { text: 'Model provider', link: '/model-provider.md' },
+            ]
+          },
         ],
       },
       {

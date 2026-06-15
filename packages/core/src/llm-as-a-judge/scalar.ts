@@ -2,10 +2,17 @@ import { generateText, Output } from 'ai';
 import { z } from 'zod';
 
 import { LLMUsage } from '../llm/index.js';
-import { replacePlaceholders } from '../string/index.js';
+import { replacePlaceholders, requirePlaceholders } from '../string/index.js';
+import { DefaultModelProvider } from '../model-provider/index.js';
 import { buildModelCallSettings } from './utils.js';
 import { ScoringScalePromptRequiredError } from './scalar-errors.js';
-import { ScalarInput, ScalarOutput, ScalarResult } from './scalar-types.js';
+import { 
+  ScalarInput,
+  ScalarMetric,
+  ScalarMetricResult,
+  ScalarOutput,
+  ScalarResult,
+} from './scalar-types.js';
 import { SCALAR_SCORING_DEFAULT } from './scalar-scoring.js';
 import { SCALAR_PROMPT } from './scalar-prompt.js';
 
@@ -20,36 +27,80 @@ export async function scalar(input: ScalarInput): Promise<ScalarOutput> {
   if (!scoringScale.prompt) {
     throw new ScoringScalePromptRequiredError();
   }
+  if (input.evalPrompt) {
+    requirePlaceholders(input.evalPrompt, [
+      'prompt',
+      'response',
+      'scoring_scale',
+      'metrics',
+    ]);
+  }
 
+  // build metrics for prompt
+  const metricsForPrompt = (input.metrics ?? [])
+    .map(metric => {
+      const description = metric.promptDescription
+        ? `: ${metric.promptDescription}`
+        : '';
+      return '   - ' + metric.name + description;
+    })
+    .join('\n') ?? '';
+
+  // build prompt
   const { text: evalPrompt } = replacePlaceholders(
     input.evalPrompt ?? SCALAR_PROMPT,
     {
-      evaluation_prompt: input.prompt,
-      response: input.answer,
+      prompt: input.prompt,
+      response: input.response,
       scoring_scale: scoringScale.prompt.trim(),
+      metrics: metricsForPrompt,
     },
   );
 
+  // resolve model
+  const modelProvider = input.modelProvider ?? new DefaultModelProvider();
+  const model = await modelProvider.getModel(input.modelName);
+
+  // build metrics schema
+  const metricsSchema: Record<
+    ScalarMetric['name'],
+    z.ZodObject<{
+      score: z.ZodNumber;
+      reasoning: z.ZodString;
+    }>
+  > = {};
+  for (const metric of input.metrics ?? []) {
+    metricsSchema[metric.name] = z.object({
+      score: z.number().describe(metric.schemeDescription),
+      reasoning: z.string().describe('The reasoning for the metric score'),
+    });
+  }
+
+  // generate text
   const response = await generateText({
-    model: input.model,
+    model,
     prompt: evalPrompt,
     ...buildModelCallSettings(input.modelParameters),
     output: Output.object({
-      schema: z.object({
+      schema: z.looseObject({
         score: z.number().describe('The score for the response'),
         reasoning: z.string().describe('The reasoning for the score'),
-        correctness: z.number().describe('The score for correctness'),
-        completeness: z.number().describe('The score for completeness'),
-        relevance: z.number().describe('The score for relevance'),
+        ...metricsSchema,
       }),
     }),
   });
+
+  // collect metrics
+  const metrics: Record<ScalarMetric['name'], ScalarMetricResult> = {};
+  for (const metric of input.metrics ?? []) {
+    metrics[metric.name] = response.output[metric.name] as ScalarMetricResult;
+  }
+
+  // compile result
   const output = response.output;
   const result: ScalarResult = {
     score: output.score,
-    correctness: output.correctness,
-    completeness: output.completeness,
-    relevance: output.relevance,
+    metrics,
   };
   const usage: LLMUsage = {
     inputTokens: response.usage.inputTokens,

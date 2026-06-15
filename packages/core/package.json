@@ -1,6 +1,6 @@
 {
   "name": "@gettoor/core",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Toor core for LLM evaluations and experiments",
   "main": "dist/index.js",
   "type": "module",

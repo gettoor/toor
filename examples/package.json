@@ -1,0 +1,17 @@
+{
+  "name": "@gettoor/examples",
+  "version": "0.1.0",
+  "description": "Evaluation and experiment examples",
+  "type": "module",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@gettoor/core": "workspace:^"
+  },
+  "devDependencies": {
+    "typescript": "^6.0.3"
+  },
+  "author": "AndCreations",
+  "license": "MIT"
+}

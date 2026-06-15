@@ -32,7 +32,7 @@ export function loadExperiment(
 function loadSettings(cfg: ExperimentCfg): ExperimentSettings {
   return {
     type: cfg.evaluation.type,
-    model: cfg.evaluation.model,
+    modelName: cfg.evaluation.model,
   };
 }
 

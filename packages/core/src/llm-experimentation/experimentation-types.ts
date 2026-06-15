@@ -56,10 +56,14 @@ export type ExperimentDatasetVarValue = any;
  * @category Experimentation
  */
 export interface ExperimentDatasetEntry {
-  // dataset name (keep unique)
+  /**
+   * Dataset name (keep unique).
+   */
   name: string;
 
-  // variables to replace in the prompt
+  /**
+   * Variables to replace in the prompt.
+   */
   vars?: Record<string, ExperimentDatasetVarValue>;
 }
 
@@ -68,13 +72,19 @@ export interface ExperimentDatasetEntry {
  * @category Experimentation
  */
 export interface ExperimentSettings {
-  // evaluation type
+  /**
+   * Evaluation type.
+   */
   type: ExperimentEvaluationType;
 
-  // name of the model used to evaluate the prompt and response
-  model: string;
+  /**
+   * Name of the model used to evaluate the prompt and response.
+   */
+  modelName: string;
 
-  // model parameters
+  /**
+   * Model parameters.
+   */
   modelParameters?: ExperimentModelParameters;
 }
 
@@ -83,16 +93,24 @@ export interface ExperimentSettings {
  * @category Experimentation
  */
 export interface DatasetEntryEvaluationMetrics {
-  // evaluation time in milliseconds
+  /**
+   * Evaluation time in milliseconds.
+   */
   promptGenerationTime: number;
 
-  // LLM usage for the evaluation
+  /**
+   * LLM usage for the evaluation.
+   */
   promptGenerationUsage: LLMUsage;
 
-  // evaluation time in milliseconds
+  /**
+   * Evaluation time in milliseconds.
+   */
   evaluationTime: number;
 
-  // LLM usage for the evaluation
+  /**
+   * LLM usage for the evaluation.
+   */
   evaluationUsage: LLMUsage;
 }
 
@@ -189,84 +207,126 @@ export type ExperimentStructuredOutputFormat = 'json' | 'yaml';
  * @category Experimentation
  */
 export interface ExperimentStructuredOutput {
-  // schema of the structured output
+  /**
+   * Schema of the structured output.
+   */
   schema: JSONSchema7;
 
-  // format of the structured output passed to evaluation
+  /**
+   * Format of the structured output passed to evaluation.
+   */
   format: ExperimentStructuredOutputFormat;
 }
 
 /**
- * Experiment.
+ * Experiment settings and configuration.
  * @category Experimentation
  */
 export interface Experiment {
-  // experiment settings
+  /**
+   * Experiment settings.
+   */
   settings: ExperimentSettings;
 
-  // models to evaluate
+  /**
+   * Models to evaluate.
+   */
   models: ExperimentModel[];
 
-  // model provider to resolve the models
+  /**
+   * Model provider to resolve the models.
+   */
   modelProvider: ModelProvider;
 
-  // model parameters
+  /**
+   * Model parameters.
+   */
   modelParameters: ExperimentModelParameters[];
 
-  // prompts to evaluate
+  /**
+   * Prompts to evaluate.
+   */
   prompts: ExperimentPrompt[];
 
-  // structured output to evaluate
+  /**
+   * Structured output to evaluate.
+   */
   structuredOutput?: ExperimentStructuredOutput;
 
-  // dataset to evaluate
+  /**
+   * Dataset to evaluate.
+   */
   dataset: ExperimentDatasetEntry[];
 
-  // listeners to the experiment
+  /**
+   * Listeners to the experiment.
+   */
   listeners?: ExperimentListeners;
 }
 
 /**
- * Experiment score.
+ * Score for a single evaluation.
  * @category Experimentation
  */
 export interface ExperimentScore {
-  // score
+  /**
+   * Score.
+   */
   score: number;
   
-  // score as string
+  /**
+   * Score as string.
+   */
   scoreAsString: string;
 
-  // score normalized to 0..1
+  /**
+   * Score normalized to 0..1.
+   */
   normalizedScore: number;
 
-  // reasoning for the score
+  /**
+   * Reasoning for the score.
+   */
   reasoning: string;
 
-  // metrics for the score
+  /**
+   * Metrics for the score.
+   */
   metrics?: Record<string, number>;
 }
 
 /**
- * Experiment result.
+ * Experiment result of a single evaluation.
  * @category Experimentation
  */
 export interface ExperimentResult {
-  // model name
+  /**
+   * Model name.
+   */
   modelName: string;
 
-  // parameters name
+  /**
+   * Parameters name.
+   */
   parametersName: string;
 
-  // prompt
+  /**
+   * Prompt name.
+   */
   promptName: string;
 
-  // dataset
+  /**
+   * Dataset name.
+   */
   datasetName: string;
 
-  // score
+  /**
+   * Score.
+   */
   score: ExperimentScore;
 
-  // metrics
+  /**
+   * Metrics.
+   */
   metrics: DatasetEntryEvaluationMetrics;
 }

@@ -6,3 +6,9 @@
 docs/.vitepress/cache
 docs/.vitepress/dist
 docs/api
+
+# Notes
+NOTES.md
+
+# pnpn
+.pnpm-store
