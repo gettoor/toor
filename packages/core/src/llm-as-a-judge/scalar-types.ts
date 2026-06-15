@@ -18,7 +18,6 @@ export interface ScalarScoringScale {
 
   /**
    * The prompt to use for the scoring scale.
-   * If not provided, the default prompt will be used.
    * @see {@link SCALAR_SCORING_DEFAULT}
    * @see {@link SCALAR_SCORING_1_3}
    * @see {@link SCALAR_SCORING_1_5}
@@ -33,7 +32,7 @@ export interface ScalarScoringScale {
    *     1 = Correct
    *   `,
    */
-  prompt?: string;
+  prompt: string;
 }
 
 /**
@@ -90,6 +89,8 @@ export interface ScalarInput {
 
   /**
    * The scoring scale to use for the evaluation.
+   * If not provided, the default scoring scale will be used.
+   * @see {@link SCALAR_SCORING_DEFAULT}
    */
   scoringScale?: ScalarScoringScale;
 

@@ -1,6 +1,6 @@
 # LLM-as-a-judge
 
-LLM-as-a-judge is an evaluation technique in which a large language model asseses the quality of an output from another model against predefined criteria by assigning scores (e.g. overall score, correctness, relevance or completeness). It also provides reasoning for the scores.
+LLM-as-a-judge is an evaluation technique in which a large language model assesses the quality of an output from another model against predefined criteria by assigning scores (e.g. overall score, correctness, relevance or completeness). It also provides reasoning for the scores.
 
 Toor provides 2 types of LLM judges:
 - [binary](#binary) which returns a boolean value (pass or fail) and reasoning for the decision
@@ -75,7 +75,7 @@ import { binary } from '@gettoor/core';
 const result = await binary({
   modelName: 'openai:gpt-4o',
   prompt: 'What is the capital of France?',
-  answer: 'Paris',
+  response: 'Paris',
 });
 
 console.log(
@@ -87,7 +87,7 @@ console.log(
 ### Binary `evalPrompt`
 
 The field `evalPrompt` can be used to provide a custom evaluation prompt. The prompt must contain the placeholders:
-- `<<prompt>>` replaced with the prompt to evaluation,
+- `<<prompt>>` replaced with the prompt to evaluate,
 - `<<response>>` replaced with the response to the prompt.
 
 The evaluation will fail if any of the placeholders are not provided.
@@ -124,7 +124,7 @@ It takes an object of type [`ScalarInput`](api/interfaces/ScalarInput.md) as arg
 * `modelParameters` (optional): The model parameters to use for the evaluation. See [`ModelParameters`](/api/interfaces/ModelParameters.md).
 * `prompt`: The prompt to evaluate.
 * `response`: The response to the prompt.
-* `scoringScale` (optional): The scoring scale to use for the evaluation. If not provided, the default scoring [`SCALAR_SCORING_DEFAULT`](api/variables/SCALAR_SCORING_DEFAULT.md) scale will be used. See [Scoring scales](#scoring-scales) and [`ScalarScoringScale`](api/interfaces/ScalarScoringScale.md).
+* `scoringScale` (optional): The scoring scale to use for the evaluation. If not provided, the default scoring [`SCALAR_SCORING_DEFAULT`](api/variables/SCALAR_SCORING_DEFAULT.md) scale will be used. See [Scales](#scales) and [`ScalarScoringScale`](api/interfaces/ScalarScoringScale.md).
 * `metrics` (optional): The metrics to use for the evaluation. See [`ScalarMetric`](api/interfaces/ScalarMetric.md).
 * `evalPrompt` (optional): The prompt to use for the evaluation. If not provided, the default prompt will be used. See [Scalar `evalPrompt`](#scalar-evalprompt).
 
@@ -163,7 +163,7 @@ console.log(
 
 There are 3 predefined scoring scales (score 1 is the lowest score):
 - Coarse-grained scale [`SCALAR_SCORING_1_3`](api/variables/SCALAR_SCORING_1_3.md) with score range 1-3
-- Lickert scale [`SCALAR_SCORING_1_5`](api/variables/SCALAR_SCORING_1_5.md) with score range 1-5
+- Likert scale [`SCALAR_SCORING_1_5`](api/variables/SCALAR_SCORING_1_5.md) with score range 1-5
 - Fine-grained scale [`SCALAR_SCORING_1_10`](api/variables/SCALAR_SCORING_1_10.md) with score range 1-10
 
 ### Custom scale

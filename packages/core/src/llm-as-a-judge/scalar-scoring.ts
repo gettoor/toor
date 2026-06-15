@@ -16,7 +16,7 @@ export const SCALAR_SCORING_1_3: ScalarScoringScale = {
 };
 
 /**
- * Lickert scale (1-5) for the scalar evaluation.
+ * Likert scale (1-5) for the scalar evaluation.
  * @category LLM-as-a-judge
  * @see {@link scalar}
  */
