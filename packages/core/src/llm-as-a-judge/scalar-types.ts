@@ -1,3 +1,4 @@
+import { MetricResult } from '../llm/index.js';
 import { ModelProvider } from '../model-provider/index.js';
 import { ModelParameters, Output } from './types.js';
 
@@ -108,22 +109,6 @@ export interface ScalarInput {
 }
 
 /**
- * Result for a single metric.
- * @category LLM-as-a-judge
- */
-export interface ScalarMetricResult {
-  /**
-   * The score for the metric.
-   */
-  score: number;
-
-  /**
-   * The reasoning for the metric score.
-   */
-  reasoning: string;
-}
-
-/**
  * Result for the scalar evaluation.
  * @category LLM-as-a-judge
  */
@@ -137,7 +122,7 @@ export interface ScalarResult {
    * The metrics for the response where key is the metric name
    * and value is the score.
    */
-  metrics: Record<ScalarMetric['name'], ScalarMetricResult>;
+  metrics: Record<ScalarMetric['name'], MetricResult>;
 }
 
 /**

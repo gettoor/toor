@@ -1,15 +1,18 @@
 import { generateText, Output } from 'ai';
 import { z } from 'zod';
 
-import { LLMUsage } from '../llm/index.js';
-import { replacePlaceholders, requirePlaceholders } from '../string/index.js';
+import { LLMUsage, MetricResult } from '../llm/index.js';
+import { 
+  rejectUnknownPlaceholders,
+  replacePlaceholders,
+  requirePlaceholders,
+} from '../string/index.js';
 import { DefaultModelProvider } from '../model-provider/index.js';
 import { buildModelCallSettings } from './utils.js';
 import { ScoringScalePromptRequiredError } from './scalar-errors.js';
 import { 
   ScalarInput,
   ScalarMetric,
-  ScalarMetricResult,
   ScalarOutput,
   ScalarResult,
 } from './scalar-types.js';
@@ -32,7 +35,12 @@ export async function scalar(input: ScalarInput): Promise<ScalarOutput> {
       'prompt',
       'response',
       'scoring_scale',
-      'metrics',
+    ]);
+    rejectUnknownPlaceholders(input.evalPrompt, [
+      'prompt',
+      'response',
+      'scoring_scale',
+      'metrics', // optional
     ]);
   }
 
@@ -91,9 +99,9 @@ export async function scalar(input: ScalarInput): Promise<ScalarOutput> {
   });
 
   // collect metrics
-  const metrics: Record<ScalarMetric['name'], ScalarMetricResult> = {};
+  const metrics: Record<ScalarMetric['name'], MetricResult> = {};
   for (const metric of input.metrics ?? []) {
-    metrics[metric.name] = response.output[metric.name] as ScalarMetricResult;
+    metrics[metric.name] = response.output[metric.name] as MetricResult;
   }
 
   // compile result

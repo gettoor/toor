@@ -3,6 +3,7 @@ import {
   DefaultModelProvider,
   Experiment,
   ExperimentDatasetEntry,
+  ExperimentEvaluator,
   ExperimentModel,
   ExperimentModelParameters,
   ExperimentPrompt,
@@ -32,6 +33,8 @@ export function loadExperiment(
 function loadSettings(cfg: ExperimentCfg): ExperimentSettings {
   return {
     type: cfg.evaluation.type,
+    // TODO: use the appropriate evaluator
+    evaluator: null as unknown as ExperimentEvaluator,
     modelName: cfg.evaluation.model,
   };
 }

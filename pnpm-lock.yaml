@@ -23,6 +23,9 @@ importers:
 
   examples:
     dependencies:
+      '@gettoor/cli':
+        specifier: workspace:^
+        version: link:../packages/cli
       '@gettoor/core':
         specifier: workspace:^
         version: link:../packages/core

@@ -7,6 +7,7 @@ import {
   InvalidPlaceholderFormatError,
   MissingPlaceholderError,
   NoValueForPlaceholderError,
+  UnknownPlaceholdersError,
 } from './placeholders-errors.js';
 
 /**
@@ -111,6 +112,24 @@ export function requirePlaceholders(
     if (!placeholdersInText.includes(requiredPlaceholder)) {
       throw new MissingPlaceholderError(requiredPlaceholder);
     }
+  }
+}
+
+/**
+ * Rejects unknown placeholders in a string.
+ * @param text - The text to reject unknown placeholders in.
+ * @param expectedPlaceholders - The expected placeholders in the text.
+ */
+export function rejectUnknownPlaceholders(
+  text: string,
+  expectedPlaceholders: string[],
+): void {
+  const placeholdersInText = findPlaceholders(text);
+  const unknownPlaceholders = placeholdersInText.filter((placeholder) => {
+    return !expectedPlaceholders.includes(placeholder);
+  });
+  if (unknownPlaceholders.length > 0) {
+    throw new UnknownPlaceholdersError(unknownPlaceholders);
   }
 }
 

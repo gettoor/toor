@@ -6,14 +6,11 @@ import yaml from 'yaml';
 
 import { LLMUsage } from '../llm/index.js';
 import { replacePlaceholders } from '../string/index.js';
-import { ModelProvider } from '../model-provider/index.js';
 import { 
-  SCALAR_SCORING_1_10,
-  SCALAR_SCORING_1_3,
-  SCALAR_SCORING_1_5,
-} from '../llm-as-a-judge/index.js';
+  DefaultModelProvider,
+  ModelProvider,
+} from '../model-provider/index.js';
 import { 
-  UnknownExperimentEvaluationTypeError,
   UnknownExperimentStructuredOutputFormatError,
 } from './experimentation-errors.js';
 import { 
@@ -27,8 +24,6 @@ import {
   DatasetEntryEvaluationMetrics,
   ExperimentStructuredOutput,
 } from './experimentation-types.js';
-import { runBinaryExperimentEvaluation } from './experimentation-binary.js';
-import { runScalarExperimentEvaluation } from './experimentation-scalar.js';
 
 /**
  * Runs an experiment.
@@ -39,15 +34,17 @@ import { runScalarExperimentEvaluation } from './experimentation-scalar.js';
 export async function runExperiment(
   experiment: Experiment,
 ): Promise<ExperimentResult[]> {
+  const modelProvider = experiment.modelProvider ?? new DefaultModelProvider();
+
   // do checks before running the experiment
-  await checkModels(experiment.models, experiment.modelProvider);
+  await checkModels(experiment.models, modelProvider);
 
   // results of the experiment
   const results: ExperimentResult[] = [];
 
   // for each model
   for (const evalModel of experiment.models) {
-    const model = await experiment.modelProvider.getModel(
+    const model = await modelProvider.getModel(
       evalModel.name,
     );
 
@@ -123,7 +120,7 @@ export async function runExperiment(
           const evaluationStartTime = Date.now();
           const { score, usage: evaluationUsage } = await runEvaluation(
             experiment.settings,
-            experiment.modelProvider,
+            modelProvider,
             prompt.text,
             response,
           );
@@ -154,6 +151,8 @@ export async function runExperiment(
             parametersName: evalModelParameters.name,
             promptName: evalPrompt.name,
             datasetName: evalDatasetEntry.name,
+            prompt: prompt.text,
+            response,
             score,
             metrics,
           });
@@ -184,48 +183,56 @@ async function runEvaluation(
   evalSettings: ExperimentSettings,
   modelProvider: ModelProvider,
   prompt: string,
-  answer: string,
+  response: string,
 ): Promise<{ score: ExperimentScore, usage: LLMUsage }> {
-  // const model = await modelProvider.getModel(evalSettings.model);
-  switch (evalSettings.type) {
-    case 'binary':
-      return runBinaryExperimentEvaluation(
-        evalSettings.modelName,
-        modelProvider,
-        evalSettings.modelParameters,
-        prompt,
-        answer,
-      );
-    case '1-3':
-      return runScalarExperimentEvaluation(
-        evalSettings.modelName,
-        modelProvider,
-        evalSettings.modelParameters,
-        prompt,
-        answer,
-        SCALAR_SCORING_1_3,
-      );
-    case '1-5':
-      return runScalarExperimentEvaluation(
-        evalSettings.modelName,
-        modelProvider,
-        evalSettings.modelParameters,
-        prompt,
-        answer,
-        SCALAR_SCORING_1_5,
-      );
-    case '1-10':
-      return runScalarExperimentEvaluation(
-        evalSettings.modelName,
-        modelProvider,
-        evalSettings.modelParameters,
-        prompt,
-        answer,
-        SCALAR_SCORING_1_10,
-      );
-    default:
-      throw new UnknownExperimentEvaluationTypeError(evalSettings.type);
-  }
+  const result = await evalSettings.evaluator({
+    modelName: evalSettings.modelName,
+    modelProvider,
+    modelParameters: evalSettings.modelParameters,
+    prompt,
+    response,
+  });
+  return result;
+  // switch (evalSettings.type) {
+  //   case 'binary':
+  //     return runBinaryExperimentEvaluation(
+  //       {
+  //       modelName: evalSettings.modelName,
+  //       modelProvider,
+  //       modelParameters: evalSettings.modelParameters,
+  //       prompt,
+  //       response,
+  //     });
+  //   case '1-3':
+  //     return runScalarExperimentEvaluation({
+  //       modelName: evalSettings.modelName,
+  //       modelProvider,
+  //       modelParameters: evalSettings.modelParameters,
+  //       prompt,
+  //       response,
+  //       scoringScale: SCALAR_SCORING_1_3,
+  //     });
+  //   case '1-5':
+  //     return runScalarExperimentEvaluation({
+  //       modelName: evalSettings.modelName,
+  //       modelProvider,
+  //       modelParameters: evalSettings.modelParameters,
+  //       prompt,
+  //       response,
+  //       scoringScale: SCALAR_SCORING_1_5,
+  //     });
+  //   case '1-10':
+  //     return runScalarExperimentEvaluation({
+  //       modelName: evalSettings.modelName,
+  //       modelProvider,
+  //       modelParameters: evalSettings.modelParameters,
+  //       prompt,
+  //       response,
+  //       scoringScale: SCALAR_SCORING_1_10,
+  //     });
+  //   default:
+  //     throw new UnknownExperimentEvaluationTypeError(evalSettings.type);
+  // }
 }
 
 /**

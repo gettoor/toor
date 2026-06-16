@@ -13,3 +13,19 @@ export interface LLMUsage {
    */
   outputTokens: number | undefined;
 }
+
+/**
+ * Result for a single metric.
+ * @category LLM
+ */
+export interface MetricResult {
+  /**
+   * The score for the metric.
+   */
+  score: number;
+
+  /**
+   * The reasoning for the metric score.
+   */
+  reasoning?: string;
+}

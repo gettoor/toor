@@ -4,6 +4,9 @@
   "description": "Toor CLI for LLM evaluations and experiments",
   "main": "dist/main.js",
   "type": "module",
+  "bin": {
+    "toor": "dist/main.js"
+  },
   "scripts": {
     "build": "tsc",
     "clean-package": "rm -rf node_modules dist"

@@ -30,7 +30,4 @@ Rules:
 * If you are unsure → FALSE.
 * Ignore style unless explicitly required.
 * Never mention the PROMPT or the RESPONSE in the reasoning.
-
-Output:
-Return: true or false and reasoning.
 `;

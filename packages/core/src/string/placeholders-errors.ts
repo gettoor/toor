@@ -4,6 +4,10 @@ import {
   ToorError,
 } from '../errors/index.js';
 
+/**
+ * Error thrown when an invalid format is provided for an object placeholder.
+ * @category Utils
+ */
 export class InvalidFormatForObjectError extends BadRequestToorError {
   public static readonly CODE = 'InvalidFormatForObjectError';
 
@@ -16,6 +20,10 @@ export class InvalidFormatForObjectError extends BadRequestToorError {
   }
 }
 
+/**
+ * Error thrown when an invalid format is provided for a placeholder.
+ * @category Utils
+ */
 export class InvalidPlaceholderFormatError extends BadRequestToorError {
   public static readonly CODE = 'InvalidPlaceholderFormatError';
 
@@ -27,6 +35,10 @@ export class InvalidPlaceholderFormatError extends BadRequestToorError {
   }
 }
 
+/**
+ * Error thrown when no value is provided for a placeholder.
+ * @category Utils
+ */
 export class NoValueForPlaceholderError extends NotFoundToorError {
   public static readonly CODE = 'NoValueForPlaceholderError';
 
@@ -43,6 +55,10 @@ export class NoValueForPlaceholderError extends NotFoundToorError {
   }
 }
 
+/**
+ * Error thrown when a placeholder is missing.
+ * @category Utils
+ */
 export class MissingPlaceholderError extends NotFoundToorError {
   public static readonly CODE = 'MissingPlaceholderError';
 
@@ -50,6 +66,21 @@ export class MissingPlaceholderError extends NotFoundToorError {
     super(
       MissingPlaceholderError.CODE,
       `Placeholder ${ToorError.quote(placeholder)} is missing`,
+    );
+  }
+}
+
+/**
+ * Error thrown when unknown placeholders are present in a string.
+ * @category Utils
+ */
+export class UnknownPlaceholdersError extends BadRequestToorError {
+  public static readonly CODE = 'UnknownPlaceholdersError';
+
+  public constructor(placeholders: string[]) {
+    super(
+      UnknownPlaceholdersError.CODE,
+      `Unknown placeholders: ${ToorError.quote(placeholders.join(', '))}`,
     );
   }
 }
