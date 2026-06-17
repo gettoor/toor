@@ -1,18 +1,13 @@
 {
-  "name": "@gettoor/examples",
+  "name": "@gettoor/examples-cli",
   "version": "0.1.0",
   "description": "Evaluation and experiment examples",
   "type": "module",
   "scripts": {
-    "build": "tsc"
+    "minimal": "toor --cfg minimal/toor.experiment.yaml --type experiment"
   },
   "dependencies": {
-    "@gettoor/cli": "workspace:^",
-    "@gettoor/core": "workspace:^"
-
-  },
-  "devDependencies": {
-    "typescript": "^6.0.3"
+    "@gettoor/cli": "workspace:^"
   },
   "author": "AndCreations",
   "license": "MIT"

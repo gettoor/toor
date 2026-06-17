@@ -22,13 +22,9 @@ export function printResults(results: ExperimentResult[]): void {
   const statName = 'average';
 
   // print aggregated results
-  console.log();
   printModelScores(results, statName, stat);
-  console.log();
   printPromptScores(results, statName, stat);
-  console.log();
   printParametersScores(results, statName, stat);
-  console.log();
   printDatasetScores(results, statName, stat);
   console.log();
 }
@@ -74,6 +70,12 @@ export function printModelScores(
     models.add(result.modelName);
   }
 
+  // no need to print model scores if there is only one model
+  if (models.size <= 1) {
+    return;
+  }
+  console.log();
+
   for (const model of models) {
     const modelResults = results.filter((result) => {
       return result.modelName === model;
@@ -89,12 +91,12 @@ export function printModelScores(
     );
     const modelNormalizedScore = stat(modelNormalizedScores);
 
-    // prompt generation time
-    const modelPromptGenerationTimes = modelResults.map(
-      (result) => result.metrics.promptGenerationTime
+    // response generation time
+    const modelResponseGenerationTimes = modelResults.map(
+      (result) => result.metrics.responseGenerationTime
     );
-    const modelPromptGenerationTime = Math.round(
-      average(modelPromptGenerationTimes),
+    const modelResponseGenerationTime = Math.round(
+      average(modelResponseGenerationTimes),
     );
 
     table.push([
@@ -104,7 +106,7 @@ export function printModelScores(
         style: colorForNormalizedScore(modelNormalizedScore),
       },
       { 
-        value: `${modelPromptGenerationTime}${dim('ms')}`,
+        value: `${modelResponseGenerationTime}${dim('ms')}`,
       },
     ]);
   }
@@ -128,6 +130,12 @@ export function printPromptScores(
     prompts.add(result.promptName);
   }
 
+  // no need to print prompt scores if there is only one prompt
+  if (prompts.size <= 1) {
+    return;
+  }
+  console.log();
+
   for (const prompt of prompts) {
     const promptResults = results.filter((result) => {
       return result.promptName === prompt;
@@ -145,12 +153,12 @@ export function printPromptScores(
     });
     const promptNormalizedScore = stat(promptNormalizedScores);
 
-    // prompt generation time
-    const promptPromptGenerationTimes = promptResults.map((result) => {
-      return result.metrics.promptGenerationTime;
+    // response generation time
+    const promptResponseGenerationTimes = promptResults.map((result) => {
+      return result.metrics.responseGenerationTime;
     });
-    const promptPromptGenerationTime = Math.round(
-      average(promptPromptGenerationTimes),
+    const promptResponseGenerationTime = Math.round(
+      average(promptResponseGenerationTimes),
     );
 
     table.push([
@@ -159,7 +167,7 @@ export function printPromptScores(
         value: promptScore.toString(),
         style: colorForNormalizedScore(promptNormalizedScore),
       },
-      { value: `${promptPromptGenerationTime}${dim('ms')}` },
+      { value: `${promptResponseGenerationTime}${dim('ms')}` },
     ]);
   }
   printTable(table);
@@ -181,6 +189,13 @@ export function printParametersScores(
   for (const result of results) {
     parameters.add(result.parametersName);
   }
+
+  // no need to print parameters scores if there is only one parameter
+  if (parameters.size <= 1) {
+    return;
+  }
+  console.log();
+
   for (const parameter of parameters) {
     const parameterResults = results.filter((result) => {
       return result.parametersName === parameter;
@@ -198,12 +213,12 @@ export function printParametersScores(
     });
     const parameterNormalizedScore = stat(parameterNormalizedScores);
     
-    // prompt generation time
-    const parameterPromptGenerationTimes = parameterResults.map((result) => {
-      return result.metrics.promptGenerationTime;
+    // response generation time
+    const parameterResponseGenerationTimes = parameterResults.map((result) => {
+      return result.metrics.responseGenerationTime;
     });
-    const parameterPromptGenerationTime = Math.round(
-      average(parameterPromptGenerationTimes),
+    const parameterResponseGenerationTime = Math.round(
+      average(parameterResponseGenerationTimes),
     );
     
     table.push([
@@ -212,7 +227,7 @@ export function printParametersScores(
         value: parameterScore.toString(),
         style: colorForNormalizedScore(parameterNormalizedScore),
       },
-      { value: `${parameterPromptGenerationTime}${dim('ms')}` },
+      { value: `${parameterResponseGenerationTime}${dim('ms')}` },
     ]);
   }
   printTable(table);
@@ -234,6 +249,13 @@ export function printDatasetScores(
   for (const result of results) {
     datasets.add(result.datasetName);
   }
+
+  // no need to print dataset scores if there is only one dataset
+  if (datasets.size <= 1) {
+    return;
+  }
+  console.log();
+
   for (const dataset of datasets) {
     const datasetResults = results.filter((result) => {
       return result.datasetName === dataset;
@@ -251,12 +273,12 @@ export function printDatasetScores(
     });
     const datasetNormalizedScore = stat(datasetNormalizedScores);
     
-    // prompt generation time
-    const datasetPromptGenerationTimes = datasetResults.map((result) => {
-      return result.metrics.promptGenerationTime;
+    // response generation time
+    const datasetResponseGenerationTimes = datasetResults.map((result) => {
+      return result.metrics.responseGenerationTime;
     });
-    const datasetPromptGenerationTime = Math.round(
-      average(datasetPromptGenerationTimes),
+    const datasetResponseGenerationTime = Math.round(
+      average(datasetResponseGenerationTimes),
     );
     
     table.push([
@@ -265,7 +287,7 @@ export function printDatasetScores(
         value: datasetScore.toString(),
         style: colorForNormalizedScore(datasetNormalizedScore),
       },
-      { value: `${datasetPromptGenerationTime}${dim('ms')}` },
+      { value: `${datasetResponseGenerationTime}${dim('ms')}` },
     ]);
   }
   printTable(table);

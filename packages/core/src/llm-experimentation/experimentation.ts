@@ -83,17 +83,18 @@ export async function runExperiment(
           }
 
           // generate response
-          const promptGenerationStartTime = Date.now();
+          const responseGenerationStartTime = Date.now();
           const {
             response,
-            usage: promptGenerationUsage,
+            usage: responseGenerationUsage,
           } = await generateResponse(
             model,
             evalModelParameters,
             prompt.text,
             experiment.structuredOutput,
           )
-          const promptGenerationTime = Date.now() - promptGenerationStartTime;
+          const responseGenerationTime =
+            Date.now() - responseGenerationStartTime;
 
           // notify
           if (experiment.listeners?.responseGenerated) {
@@ -139,8 +140,8 @@ export async function runExperiment(
 
           // metrics
           const metrics: DatasetEntryEvaluationMetrics = {
-            promptGenerationTime,
-            promptGenerationUsage,
+            responseGenerationTime,
+            responseGenerationUsage,
             evaluationTime,
             evaluationUsage,
           };

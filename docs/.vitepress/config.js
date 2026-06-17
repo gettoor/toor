@@ -13,9 +13,7 @@ export default {
     sidebar: [
       {
         items: [
-          { text: 'Introduction', link: '/' },
-          { text: 'Getting started', link: '/getting-started.md' },
-          { text: 'CLI', link: '/cli.md' },
+          { text: 'Getting started', link: '/' },
           { 
             text: 'Core',
             link: '/core.md',
@@ -25,12 +23,14 @@ export default {
               { text: 'Model provider', link: '/model-provider.md' },
             ]
           },
+          { text: 'CLI', link: '/cli.md' },
         ],
       },
       {
         text: 'Reference',
         items: [
           { text: 'API Reference', link: '/api/README.md' },
+          { text: 'CLI reference', link: '/cli-reference.md' },
         ],
       },
     ],

@@ -117,6 +117,7 @@ export function requirePlaceholders(
 
 /**
  * Rejects unknown placeholders in a string.
+ * @category Utils
  * @param text - The text to reject unknown placeholders in.
  * @param expectedPlaceholders - The expected placeholders in the text.
  */

@@ -7,12 +7,6 @@ import { LLMUsage, MetricResult } from '../llm/index.js';
 import { ModelProvider } from '../model-provider/index.js';
 
 /**
- * Experiment evaluation type.
- * @category Experimentation
- */
-export type ExperimentEvaluationType = 'binary' | '1-3' | '1-5' | '1-10';
-
-/**
  * Score for a single evaluation.
  * @category Experimentation
  */
@@ -159,11 +153,6 @@ export interface ExperimentDatasetEntry {
  */
 export interface ExperimentSettings {
   /**
-   * Evaluation type.
-   */
-  type: ExperimentEvaluationType;
-
-  /**
    * Evaluator to use for the experiment.
    */
   evaluator: ExperimentEvaluator;
@@ -185,14 +174,14 @@ export interface ExperimentSettings {
  */
 export interface DatasetEntryEvaluationMetrics {
   /**
-   * Evaluation time in milliseconds.
+   * Response generation time in milliseconds.
    */
-  promptGenerationTime: number;
+  responseGenerationTime: number;
 
   /**
-   * LLM usage for the evaluation.
+   * LLM usage for the response generation.
    */
-  promptGenerationUsage: LLMUsage;
+  responseGenerationUsage: LLMUsage;
 
   /**
    * Evaluation time in milliseconds.

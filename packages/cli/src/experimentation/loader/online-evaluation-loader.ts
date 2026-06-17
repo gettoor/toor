@@ -1,5 +1,6 @@
 import { dirname } from 'path';
 import {
+  binaryEvaluator,
   DefaultModelProvider,
   Experiment,
   ExperimentDatasetEntry,
@@ -8,12 +9,16 @@ import {
   ExperimentModelParameters,
   ExperimentPrompt,
   ExperimentSettings,
+  SCALAR_SCORING_1_10,
+  SCALAR_SCORING_1_3,
+  SCALAR_SCORING_1_5,
+  scalarEvaluator,
 } from '@gettoor/core';
 
 import { FatalError } from '../../errors/index.js';
 import { ExperimentCfg } from '../../cfg/index.js';
 import { loadTextBySpec } from '../../loader/index.js';
-import { loadOnlineDataset } from './dataset-loader.js';
+import { loadExperimentDataset, loadExperimentDatasetFromFile } from './dataset-loader.js';
 
 export function loadExperiment(
   cfg: Omit<ExperimentCfg, 'listeners'>,
@@ -31,10 +36,26 @@ export function loadExperiment(
 }
 
 function loadSettings(cfg: ExperimentCfg): ExperimentSettings {
+  let evaluator: ExperimentEvaluator;
+  switch (cfg.evaluation.type) {
+    case 'binary':
+      evaluator = binaryEvaluator();
+      break;
+    case '1-3':
+      evaluator = scalarEvaluator({ scoringScale: SCALAR_SCORING_1_3 });
+      break;
+    case '1-5':
+      evaluator = scalarEvaluator({ scoringScale: SCALAR_SCORING_1_5 });
+      break;
+    case '1-10':
+      evaluator = scalarEvaluator({ scoringScale: SCALAR_SCORING_1_10 });
+      break;
+    default:
+      throw new FatalError(`Unknown evaluation type: ${cfg.evaluation.type}`);
+  }
+
   return {
-    type: cfg.evaluation.type,
-    // TODO: use the appropriate evaluator
-    evaluator: null as unknown as ExperimentEvaluator,
+    evaluator,
     modelName: cfg.evaluation.model,
   };
 }
@@ -70,23 +91,23 @@ function loadDatasets(
   cfg: ExperimentCfg,
   cfgDir: string,
 ): ExperimentDatasetEntry[] {
-  const entries: ExperimentDatasetEntry[] = [];
+  // load
+  const entries = loadExperimentDataset(cfg.datasets, cfgDir);
 
-  for (const cfgDataset of cfg.datasets) {
-    // load the dataset
-    const dataset = loadOnlineDataset(cfgDataset.file, cfgDir);
-
-    // check for duplicates
-    const duplicates = entries.filter(dataset => dataset.name === dataset.name);
-    if (duplicates.length > 0) {
-      const duplicateNames = duplicates
-        .map(duplicate => duplicate.name)
-        .join(', ');
-      throw new FatalError(`Dataset names "${duplicateNames}" are not unique`);
-    }
-
-    // add the dataset to the list
-    entries.push(...dataset);
+  // check for duplicates
+  const nameCounts = entries.reduce<Record<string, number>>(
+    (acc, entry) => {
+      acc[entry.name] = (acc[entry.name] ?? 0) + 1;
+      return acc;
+    },
+    {},
+  );
+  const duplicates = Object.entries(nameCounts)
+    .filter(([_, count]) => count > 1)
+    .map(([name]) => name);
+  if (duplicates.length > 0) {
+    const duplicateNames = duplicates.join(', ');
+    throw new FatalError(`Duplicated dataset names: "${duplicateNames}"`);
   }
 
   return entries;

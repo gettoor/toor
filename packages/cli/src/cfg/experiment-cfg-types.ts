@@ -1,5 +1,20 @@
 import * as z from 'zod';
 
+// see ExperimentDatasetEntry in @gettoor/core
+export const ExperimentDatasetEntryScheme = z.object({
+  name: z.string().describe('The name of the dataset entry'),
+  vars: z
+    .record(z.string(), z.any())
+    .describe('The variables of the dataset entry'),
+});
+
+export type ExperimentDatasetEntry =
+  z.infer<typeof ExperimentDatasetEntryScheme>;
+
+export const ExperimentDatasetScheme = z.array(ExperimentDatasetEntryScheme);
+
+export type ExperimentDataset = z.infer<typeof ExperimentDatasetScheme>;
+
 export const ExperimentCfgScheme =
   z.object({
     evaluation: z
@@ -46,11 +61,15 @@ export const ExperimentCfgScheme =
       })
       .optional()
       .describe('The structured output configuration'),
-    datasets: z
-      .array(z.object({
-        file: z.string().describe('The path to the dataset file'),
-      }))
-      .describe('The paths to the dataset files'),
+    datasets: z.array(
+      z.union([
+        z.object({
+          file: z.string().describe('The path to the dataset file'),
+        })
+        .describe('The path to the dataset file'),
+        ExperimentDatasetEntryScheme.describe('The dataset entry'),
+      ]),
+    )
   })
   .strict();
 

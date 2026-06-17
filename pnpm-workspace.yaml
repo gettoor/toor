@@ -2,7 +2,7 @@ nodeVersion: "24.12.0"
 
 packages:
   - "packages/*"
-  - "examples"
+  - "examples/*"
 
 allowBuilds:
   esbuild: true

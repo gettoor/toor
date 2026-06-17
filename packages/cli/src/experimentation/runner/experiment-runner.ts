@@ -70,28 +70,28 @@ export async function runExperiment(
 
       // metrics
       const metricsNameWidth = 36;
-      if (metrics.promptGenerationTime) {
+      if (metrics.responseGenerationTime) {
         section.property(
           'Prompt generation time',
-          `${metrics.promptGenerationTime}${dim('ms')}`,
+          `${metrics.responseGenerationTime} ${dim('ms')}`,
           {
             nameWidth: metricsNameWidth,
           }
         );
       }
-      if (metrics.promptGenerationUsage.inputTokens) {
+      if (metrics.responseGenerationUsage.inputTokens) {
         section.property(
           'Prompt generation input tokens',
-          metrics.promptGenerationUsage.inputTokens.toString(),
+          metrics.responseGenerationUsage.inputTokens.toString(),
           {
             nameWidth: metricsNameWidth,
           }
         );
       }
-      if (metrics.promptGenerationUsage.outputTokens) {
+      if (metrics.responseGenerationUsage.outputTokens) {
         section.property(
           'Prompt generation output tokens',
-          metrics.promptGenerationUsage.outputTokens.toString(),
+          metrics.responseGenerationUsage.outputTokens.toString(),
           {
             nameWidth: metricsNameWidth,
           }
@@ -100,7 +100,7 @@ export async function runExperiment(
       if (metrics.evaluationTime) {
         section.property(
           'Evaluation time',
-          `${metrics.evaluationTime}${dim('ms')}`,
+          `${metrics.evaluationTime} ${dim('ms')}`,
           {
             nameWidth: metricsNameWidth,
           }
