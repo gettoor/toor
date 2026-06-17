@@ -4,7 +4,8 @@
   "description": "Evaluation and experiment examples",
   "type": "module",
   "scripts": {
-    "minimal": "toor --cfg minimal/toor.experiment.yaml --type experiment"
+    "minimal": "toor --cfg minimal/toor.experiment.yaml --type experiment",
+    "basic": "toor --cfg basic/toor.experiment.yaml --type experiment"
   },
   "dependencies": {
     "@gettoor/cli": "workspace:^"

@@ -36,19 +36,34 @@ export function loadExperiment(
 }
 
 function loadSettings(cfg: ExperimentCfg): ExperimentSettings {
+  const evalPrompt = cfg.evaluation.prompt
+    ? { evalPrompt: cfg.evaluation.prompt }
+    : {};
+
   let evaluator: ExperimentEvaluator;
   switch (cfg.evaluation.type) {
     case 'binary':
-      evaluator = binaryEvaluator();
+      evaluator = binaryEvaluator({
+        ...evalPrompt,
+      });
       break;
     case '1-3':
-      evaluator = scalarEvaluator({ scoringScale: SCALAR_SCORING_1_3 });
+      evaluator = scalarEvaluator({
+        scoringScale: SCALAR_SCORING_1_3,
+        ...evalPrompt,
+      });
       break;
     case '1-5':
-      evaluator = scalarEvaluator({ scoringScale: SCALAR_SCORING_1_5 });
+      evaluator = scalarEvaluator({
+        scoringScale: SCALAR_SCORING_1_5,
+        ...evalPrompt,
+      });
       break;
     case '1-10':
-      evaluator = scalarEvaluator({ scoringScale: SCALAR_SCORING_1_10 });
+      evaluator = scalarEvaluator({
+        scoringScale: SCALAR_SCORING_1_10,
+        ...evalPrompt,
+      });
       break;
     default:
       throw new FatalError(`Unknown evaluation type: ${cfg.evaluation.type}`);

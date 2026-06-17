@@ -25,6 +25,10 @@ export const ExperimentCfgScheme =
         model: z
           .string()
           .describe('The model to evaluate'),
+        prompt: z
+          .string()
+          .optional()
+          .describe('The prompt to use for the evaluation'),
       })
       .describe('The evaluation configuration'),    
     models: z
