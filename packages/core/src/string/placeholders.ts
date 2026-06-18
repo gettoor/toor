@@ -49,15 +49,15 @@ const PLACEHOLDER_PATTERN = /<<([^<>]+)>>/g;
  */
 export function replacePlaceholders(
   text: string,
-  values: Record<string, string>,
+  values: Record<string, any>,
 ): ReplacePlaceholderOutput {
-  // Find all placeholders in the text
+  // find all placeholders in the text
   const placeholdersInText = new Set<string>();
   for (const match of text.matchAll(PLACEHOLDER_PATTERN)) {
     placeholdersInText.add(match[1].trim());
   }
   
-  // Check if all placeholders are provided
+  // check if all placeholders are provided
   const missingPlaceholders = [...placeholdersInText].filter((placeholder) => {
     const [ key, _ ] = parseFullKey(placeholder);
     return !(key in values);
@@ -66,17 +66,20 @@ export function replacePlaceholders(
     throw new NoValueForPlaceholderError(missingPlaceholders);
   }
 
-  // Replace placeholders with values
-  const unusedValueKeys = new Set<string>();
-  for (const [fullKey, value] of Object.entries(values)) {
-    const [ _, format ] = parseFullKey(fullKey);
-
-    const placeholder = `<<${fullKey}>>`;
-    if (text.includes(placeholder)) {
-      text = text.replace(placeholder, formatValue(fullKey, value, format));
-    } else {
-      unusedValueKeys.add(fullKey);
+  // replace placeholders with values
+  const unusedValueKeys = new Set<string>(Object.keys(values));
+  for (const placeholder of placeholdersInText) {
+    const [ key, format ] = parseFullKey(placeholder);
+    const value = values[key];
+    if (value === undefined) {
+      throw new NoValueForPlaceholderError([placeholder]);
     }
+    const placeholderWithBrackets = `<<${placeholder}>>`;
+    text = text.replace(
+      placeholderWithBrackets,
+      formatValue(key, value, format),
+    );
+    unusedValueKeys.delete(key);
   }
 
   return {

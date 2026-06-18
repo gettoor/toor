@@ -1,5 +1,6 @@
 import { binary } from '../../llm-as-a-judge/index.js';
 import { toModelParameters } from '../experimentation-utils.js';
+import { DefaultModelProvider } from '../../model-provider/index.js';
 import { 
   ExperimentEvaluator,
   ExperimentEvaluatorInput,
@@ -13,25 +14,24 @@ import { EvaluatorBinaryInput } from './evaluator-binary.types.js';
  * @returns A binary experiment evaluator.
  */
 export const binaryEvaluator = (
-  evaluatorInput: EvaluatorBinaryInput = {},
+  evaluatorInput: EvaluatorBinaryInput,
 ): ExperimentEvaluator => {
-  const { evalPrompt } = evaluatorInput;
+  const { 
+    modelName,
+    modelProvider,
+    modelParameters,
+    evalPrompt,
+  } = evaluatorInput;
 
   return async (
     input: ExperimentEvaluatorInput,
   ): Promise<ExperimentEvaluatorOutput> => {
-    const { 
-      modelName,
-      modelProvider,
-      modelParameters,
-      prompt,
-      response,
-    } = input;
+    const {  prompt, response } = input;
 
     const { result, reasoning, usage } = await binary({
       modelName,
-      modelProvider,
-      modelParameters: toModelParameters(modelParameters),
+      modelProvider: modelProvider ?? new DefaultModelProvider(),
+      ...(modelParameters ? { modelParameters } : {}),
       prompt,
       response,
       ...(evalPrompt ? { evalPrompt } : {}),

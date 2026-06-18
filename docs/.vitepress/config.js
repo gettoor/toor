@@ -19,7 +19,7 @@ export default {
             link: '/core.md',
             items: [
               { text: 'LLM-as-a-judge', link: '/llm-as-a-judge.md' },
-              { text: 'LLM experimentation', link: '/llm-experimentation.md' },
+              { text: 'LLM experiments', link: '/llm-experiments.md' },
               { text: 'Model provider', link: '/model-provider.md' },
             ]
           },

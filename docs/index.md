@@ -6,7 +6,7 @@ Toor is a set of packages of utilities for LLM evaluations and experimentation. 
 
 Toor supports the following evaluations and experiments:
 - [LLM-as-a-judge](./llm-as-a-judge.md) - An evaluation in which an output from a model is evaluated against predefined criteria by assigning scores (e.g. overall score, correctness, relevance or completeness).
-- [LLM experimentation](./llm-experimentation.md) - The goal of an LLM experiment is to measure performance of different models, parameters, prompts on a dataset, typically to find the best combination.
+- [LLM experimentation](./llm-experimentation.md) -  A process to measure performance of different models, model parameters, prompts on a dataset, typically to find the best combination.
 
 ## Installation
 

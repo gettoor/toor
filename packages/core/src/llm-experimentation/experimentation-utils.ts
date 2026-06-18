@@ -1,4 +1,8 @@
-import { ExperimentModelParameters } from './experimentation-types.js';
+import { 
+  ExperimentModelParameters,
+  ExperimentScore,
+  ToExperimentScoreInput,
+} from './experimentation-types.js';
 
 /**
  * Converts experiment model parameters to model parameters.
@@ -7,12 +11,29 @@ import { ExperimentModelParameters } from './experimentation-types.js';
  * @returns Model parameters.
  */
 export function toModelParameters(
-  modelParameters: Omit<ExperimentModelParameters, 'name'> | undefined,
+  modelParameters: ExperimentModelParameters | undefined,
 ): Record<string, unknown> {
   if (!modelParameters) {
     return {};
   }
+  const { name: _name, ...rest } = modelParameters;
+  return rest;
+}
+
+/**
+ * Converts an input to an experiment score.
+ * @category Experimentation
+ * @param input - The input for the experiment score.
+ * @returns The experiment score.
+ */
+export function toExperimentScore(
+  input: ToExperimentScoreInput,
+): ExperimentScore {
+  const { score, minScore, maxScore, reasoning } = input;
   return {
-    temperature: modelParameters.temperature,
+    score,
+    scoreAsString: score.toString(),
+    normalizedScore: (score - minScore) / (maxScore - minScore),
+    ...(reasoning ? { reasoning } : {}),
   };
 }

@@ -1,5 +1,6 @@
-import { ModelParameters, Output } from './types.js';
+import { ModelParameters } from '../llm/index.js';
 import { ModelProvider } from '../model-provider/index.js';
+import { Output } from './types.js';
 
 /**
  * Input for the binary evaluation.

@@ -1,8 +1,9 @@
 import { 
-  runExperiment,
+  DefaultModelProvider,
   ExperimentResult,
   SCALAR_SCORING_1_5,
   scalarEvaluator,
+  runExperiment,
 } from '@gettoor/core';
 import { table } from '../console.js';
 
@@ -59,21 +60,31 @@ Return only the final score.
     settings: {
       evaluator: scalarEvaluator({
         scoringScale: SCALAR_SCORING_1_5,
+        modelName: 'openai:gpt-4o',
         evalPrompt,
       }),
-      modelName: 'openai:gpt-4o',
     },
+
+    // models to evaluate
     models: [
       {
         name: 'openai:gpt-4o-mini'
       },
+      {
+        name: 'gemini:gemini-2.5-flash'
+      },
     ],
+    modelProvider: new DefaultModelProvider(),
+
+    // model parameters to evaluate
     modelParameters: [
       {
         name: 'default',
         temperature: 0.2,
       },
     ],
+
+    // prompts to evaluate
     prompts: [
       {
         name: 'sentiment',
@@ -99,6 +110,8 @@ Review:
 `,
       }
     ],
+
+    // dataset with variables to replace in the prompts
     dataset: [
       {
         name: 'positive-review',
@@ -114,6 +127,7 @@ Review:
       },
     ],
   });
+
   printResults(results);
 }
 

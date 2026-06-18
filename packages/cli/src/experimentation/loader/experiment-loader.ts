@@ -36,43 +36,45 @@ export function loadExperiment(
 }
 
 function loadSettings(cfg: ExperimentCfg): ExperimentSettings {
-  const evalPrompt = cfg.evaluation.prompt
-    ? { evalPrompt: cfg.evaluation.prompt }
-    : {};
+  const commonInput = {
+    modelName: cfg.evaluation.model,
+    modelProvider: new DefaultModelProvider(),
+    ...(cfg.evaluation.prompt
+      ? { evalPrompt: cfg.evaluation.prompt }
+      : {}
+    ),
+  };
 
   let evaluator: ExperimentEvaluator;
   switch (cfg.evaluation.type) {
     case 'binary':
       evaluator = binaryEvaluator({
-        ...evalPrompt,
+        ...commonInput,
       });
       break;
     case '1-3':
       evaluator = scalarEvaluator({
         scoringScale: SCALAR_SCORING_1_3,
-        ...evalPrompt,
+        ...commonInput,
       });
       break;
     case '1-5':
       evaluator = scalarEvaluator({
         scoringScale: SCALAR_SCORING_1_5,
-        ...evalPrompt,
+        ...commonInput,
       });
       break;
     case '1-10':
       evaluator = scalarEvaluator({
         scoringScale: SCALAR_SCORING_1_10,
-        ...evalPrompt,
+        ...commonInput,
       });
       break;
     default:
       throw new FatalError(`Unknown evaluation type: ${cfg.evaluation.type}`);
   }
 
-  return {
-    evaluator,
-    modelName: cfg.evaluation.model,
-  };
+  return { evaluator };
 }
 
 function loadModelParameters(

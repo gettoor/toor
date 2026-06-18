@@ -7,9 +7,9 @@ import {
 async function minimal(): Promise<void> {
   const results = await runExperiment({
     settings: {
-      modelName: 'openai:gpt-4o',
       evaluator: scalarEvaluator({
         scoringScale: SCALAR_SCORING_1_5,
+        modelName: 'openai:gpt-4o',
       }),
     },
     models: [

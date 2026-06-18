@@ -1,6 +1,6 @@
-import { MetricResult } from '../llm/index.js';
+import { MetricResult, ModelParameters } from '../llm/index.js';
 import { ModelProvider } from '../model-provider/index.js';
-import { ModelParameters, Output } from './types.js';
+import { Output } from './types.js';
 
 /**
  * A scoring scale for the scalar evaluation.

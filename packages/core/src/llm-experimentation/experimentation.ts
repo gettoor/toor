@@ -4,7 +4,7 @@
 import { generateText, jsonSchema, LanguageModel, Output } from 'ai';
 import yaml from 'yaml';
 
-import { LLMUsage } from '../llm/index.js';
+import { LLMUsage, buildModelCallSettings } from '../llm/index.js';
 import { replacePlaceholders } from '../string/index.js';
 import { 
   DefaultModelProvider,
@@ -121,7 +121,7 @@ export async function runExperiment(
           const evaluationStartTime = Date.now();
           const { score, usage: evaluationUsage } = await runEvaluation(
             experiment.settings,
-            modelProvider,
+            evalPrompt.name,
             prompt.text,
             response,
           );
@@ -182,58 +182,16 @@ export async function runExperiment(
  */
 async function runEvaluation(
   evalSettings: ExperimentSettings,
-  modelProvider: ModelProvider,
+  promptName: string,
   prompt: string,
   response: string,
-): Promise<{ score: ExperimentScore, usage: LLMUsage }> {
+): Promise<{ score: ExperimentScore, usage?: LLMUsage }> {
   const result = await evalSettings.evaluator({
-    modelName: evalSettings.modelName,
-    modelProvider,
-    modelParameters: evalSettings.modelParameters,
+    promptName,
     prompt,
     response,
   });
   return result;
-  // switch (evalSettings.type) {
-  //   case 'binary':
-  //     return runBinaryExperimentEvaluation(
-  //       {
-  //       modelName: evalSettings.modelName,
-  //       modelProvider,
-  //       modelParameters: evalSettings.modelParameters,
-  //       prompt,
-  //       response,
-  //     });
-  //   case '1-3':
-  //     return runScalarExperimentEvaluation({
-  //       modelName: evalSettings.modelName,
-  //       modelProvider,
-  //       modelParameters: evalSettings.modelParameters,
-  //       prompt,
-  //       response,
-  //       scoringScale: SCALAR_SCORING_1_3,
-  //     });
-  //   case '1-5':
-  //     return runScalarExperimentEvaluation({
-  //       modelName: evalSettings.modelName,
-  //       modelProvider,
-  //       modelParameters: evalSettings.modelParameters,
-  //       prompt,
-  //       response,
-  //       scoringScale: SCALAR_SCORING_1_5,
-  //     });
-  //   case '1-10':
-  //     return runScalarExperimentEvaluation({
-  //       modelName: evalSettings.modelName,
-  //       modelProvider,
-  //       modelParameters: evalSettings.modelParameters,
-  //       prompt,
-  //       response,
-  //       scoringScale: SCALAR_SCORING_1_10,
-  //     });
-  //   default:
-  //     throw new UnknownExperimentEvaluationTypeError(evalSettings.type);
-  // }
 }
 
 /**
@@ -241,7 +199,7 @@ async function runEvaluation(
  */
 async function generateResponse(
   model: LanguageModel,
-  modelParameters: ExperimentModelParameters,
+  experimentModelParameters: ExperimentModelParameters,
   prompt: string,
   structuredOutput?: ExperimentStructuredOutput,
 ): Promise<{ response: string, usage: LLMUsage }> {
@@ -249,18 +207,23 @@ async function generateResponse(
   if (structuredOutput) {
     return generateStructuredResponse(
       model,
-      modelParameters,
+      experimentModelParameters,
       prompt,
       structuredOutput,
     );
   }
 
+  // model parameters
+  const { name: _name, ...modelParameters } = experimentModelParameters;
+
   // generate text response
   const response = await generateText({
     model,
     prompt,
-    temperature: modelParameters.temperature,
+    ...buildModelCallSettings(modelParameters)
   });
+
+  // build result
   const usage: LLMUsage = {
     inputTokens: response.usage.inputTokens,
     outputTokens: response.usage.outputTokens,

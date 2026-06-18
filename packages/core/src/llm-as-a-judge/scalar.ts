@@ -1,14 +1,13 @@
 import { generateText, Output } from 'ai';
 import { z } from 'zod';
 
-import { LLMUsage, MetricResult } from '../llm/index.js';
+import { LLMUsage, MetricResult, buildModelCallSettings } from '../llm/index.js';
 import { 
   rejectUnknownPlaceholders,
   replacePlaceholders,
   requirePlaceholders,
 } from '../string/index.js';
 import { DefaultModelProvider } from '../model-provider/index.js';
-import { buildModelCallSettings } from './utils.js';
 import { ScoringScalePromptRequiredError } from './scalar-errors.js';
 import { 
   ScalarInput,

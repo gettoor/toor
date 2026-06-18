@@ -1,14 +1,13 @@
 import { generateText, Output } from 'ai';
 import { z } from 'zod';
 
-import { LLMUsage } from '../llm/index.js';
+import { LLMUsage, buildModelCallSettings } from '../llm/index.js';
 import { 
   requirePlaceholders,
   replacePlaceholders,
   rejectUnknownPlaceholders,
 } from '../string/index.js';
 import { DefaultModelProvider } from '../model-provider/index.js';
-import { buildModelCallSettings } from './utils.js';
 import { BinaryInput, BinaryOutput } from './binary-types.js';
 import { BINARY_PROMPT } from './binary-prompt.js';
 

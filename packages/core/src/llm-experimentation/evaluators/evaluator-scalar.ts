@@ -1,5 +1,6 @@
-import { scalar, ScalarScoringScale } from '../../llm-as-a-judge/index.js';
+import { scalar } from '../../llm-as-a-judge/index.js';
 import { toModelParameters } from '../experimentation-utils.js';
+import { DefaultModelProvider } from '../../model-provider/index.js';
 import { 
   ExperimentEvaluator,
   ExperimentEvaluatorInput,
@@ -15,21 +16,24 @@ import { EvaluatorScalarInput } from './evaluator-scalar.types.js';
 export const scalarEvaluator = (
   evaluatorInput: EvaluatorScalarInput,
 ): ExperimentEvaluator => {
-  const { scoringScale, evalPrompt } = evaluatorInput;
+  const { 
+    scoringScale,
+    modelName,
+    modelProvider,
+    modelParameters,
+    evalPrompt,
+  } = evaluatorInput;
 
   return async (input: ExperimentEvaluatorInput) => {
     const { 
-      modelName,
-      modelProvider,
-      modelParameters,
       prompt,
       response,
     } = input;
 
     const { result, reasoning, usage } = await scalar({
       modelName,
-      modelProvider,
-      modelParameters: toModelParameters(modelParameters),
+      modelProvider: modelProvider ?? new DefaultModelProvider(),
+      ...(modelParameters ? { modelParameters } : {}),
       prompt,
       response,
       scoringScale: evaluatorInput.scoringScale,

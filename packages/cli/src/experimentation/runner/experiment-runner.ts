@@ -53,13 +53,15 @@ export async function runExperiment(
           valueColor: scoreColor,
         }
       );
-      section.property(
-        'Reason',
-        score.reasoning,
-        {
-          valueColor: scoreColor,
-        }
-      );
+      if (score.reasoning) {
+        section.property(
+          'Reason',
+          score.reasoning,
+          {
+            valueColor: scoreColor,
+          }
+        );
+      }
       if (score.metrics) {
         const metricNames = Object.keys(score.metrics ?? {});
         for (const metricName of metricNames) {
@@ -106,23 +108,25 @@ export async function runExperiment(
           }
         );
       }
-      if (metrics.evaluationUsage.inputTokens) {
-        section.property(
-          'Evaluation input tokens',
-          metrics.evaluationUsage.inputTokens.toString(),
-          {
-            nameWidth: metricsNameWidth,
-          }
-        );
-      }
-      if (metrics.evaluationUsage.outputTokens) {
-        section.property(
-          'Evaluation output tokens',
-          metrics.evaluationUsage.outputTokens.toString(),
-          {
-            nameWidth: metricsNameWidth,
-          }
-        );
+      if (metrics.evaluationUsage) {
+        if (metrics.evaluationUsage.inputTokens) {
+          section.property(
+            'Evaluation input tokens',
+            metrics.evaluationUsage.inputTokens.toString(),
+            {
+              nameWidth: metricsNameWidth,
+            }
+          );
+        }
+        if (metrics.evaluationUsage.outputTokens) {
+          section.property(
+            'Evaluation output tokens',
+            metrics.evaluationUsage.outputTokens.toString(),
+            {
+              nameWidth: metricsNameWidth,
+            }
+          );
+        }
       }
 
       console.log(' ' + separator({ width: 32, color: dim }));
