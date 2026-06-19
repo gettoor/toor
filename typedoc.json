@@ -15,7 +15,13 @@
   "disableSources": true,
 
   "plugin": ["typedoc-plugin-markdown"],
-  "parametersFormat": "list",
+  "parametersFormat": "table",
   "typeAliasPropertiesFormat": "list",
+  "indexFormat": "table",
+  "interfacePropertiesFormat": "list",
+  "classPropertiesFormat": "list",
+  "enumMembersFormat": "table",
+  "propertyMembersFormat": "list",
+  "typeDeclarationFormat": "table",
   "expandParameters": true
 }

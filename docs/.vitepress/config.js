@@ -16,14 +16,20 @@ export default {
           { text: 'Getting started', link: '/' },
           { 
             text: 'Core',
-            link: '/core.md',
+            link: '/core/index.md',
             items: [
-              { text: 'LLM-as-a-judge', link: '/llm-as-a-judge.md' },
-              { text: 'LLM experiments', link: '/llm-experiments.md' },
-              { text: 'Model provider', link: '/model-provider.md' },
+              { text: 'LLM-as-a-judge', link: '/core/llm-as-a-judge.md' },
+              { text: 'LLM experiments', link: '/core/llm-experiments.md' },
+              { text: 'Model provider', link: '/core/model-provider.md' },
             ]
           },
-          { text: 'CLI', link: '/cli.md' },
+          { 
+            text: 'CLI', 
+            link: '/cli/index.md',
+            items: [
+              { text: 'LLM experiments', link: '/cli/llm-experiments.md' },
+            ]
+          },
         ],
       },
       {

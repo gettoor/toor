@@ -4,7 +4,8 @@
 import { LanguageModel } from 'ai';
 
 /**
- * A model provider.
+ * A model provider. The returned `LanguageModel` comes from
+ * [AI SDK](https://ai-sdk.dev/).
  * @category Model Provider
  */
 export interface ModelProvider {

@@ -58,12 +58,12 @@ export async function runExperiment(
         for (const evalDatasetEntry of experiment.dataset) {
           // notify
           if (experiment.listeners?.datasetEntryEvaluationStarted) {
-            await experiment.listeners.datasetEntryEvaluationStarted(
-              evalModel.name,
-              evalModelParameters.name,
-              evalPrompt.name,
-              evalDatasetEntry.name,
-            );
+            await experiment.listeners.datasetEntryEvaluationStarted({
+              modelName: evalModel.name,
+              parametersName: evalModelParameters.name,
+              promptName: evalPrompt.name,
+              datasetName: evalDatasetEntry.name,
+            });
           }
 
           // create prompt
@@ -74,12 +74,12 @@ export async function runExperiment(
 
           // notify
           if (experiment.listeners?.generatingResponse) {
-            await experiment.listeners.generatingResponse(
-              evalModel.name,
-              evalModelParameters.name,
-              evalPrompt.name,
-              evalDatasetEntry.name,
-            );
+            await experiment.listeners.generatingResponse({
+              modelName: evalModel.name,
+              parametersName: evalModelParameters.name,
+              promptName: evalPrompt.name,
+              datasetName: evalDatasetEntry.name,
+            });
           }
 
           // generate response
@@ -98,23 +98,23 @@ export async function runExperiment(
 
           // notify
           if (experiment.listeners?.responseGenerated) {
-            await experiment.listeners.responseGenerated(
-              evalModel.name,
-              evalModelParameters.name,
-              evalPrompt.name,
-              evalDatasetEntry.name,
+            await experiment.listeners.responseGenerated({
+              modelName: evalModel.name,
+              parametersName: evalModelParameters.name,
+              promptName: evalPrompt.name,
+              datasetName: evalDatasetEntry.name,
               response,
-            );
+            });
           }
 
           // notify
           if (experiment.listeners?.runningEvaluation) {
-            await experiment.listeners.runningEvaluation(
-              evalModel.name,
-              evalModelParameters.name,
-              evalPrompt.name,
-              evalDatasetEntry.name,
-            );
+            await experiment.listeners.runningEvaluation({
+              modelName: evalModel.name,
+              parametersName: evalModelParameters.name,
+              promptName: evalPrompt.name,
+              datasetName: evalDatasetEntry.name,
+            });
           }
 
           // run evaluation
@@ -129,13 +129,13 @@ export async function runExperiment(
 
           // notify
           if (experiment.listeners?.evaluationCompleted) {
-            await experiment.listeners.evaluationCompleted(
-              evalModel.name,
-              evalModelParameters.name,
-              evalPrompt.name,
-              evalDatasetEntry.name,
+            await experiment.listeners.evaluationCompleted({
+              modelName: evalModel.name,
+              parametersName: evalModelParameters.name,
+              promptName: evalPrompt.name,
+              datasetName: evalDatasetEntry.name,
               score,
-            );
+            });
           }
 
           // metrics
@@ -160,14 +160,14 @@ export async function runExperiment(
 
           // notify
           if (experiment.listeners?.datasetEntryEvaluationCompleted) {
-            await experiment.listeners.datasetEntryEvaluationCompleted(
-              evalModel.name,
-              evalModelParameters.name,
-              evalPrompt.name,
-              evalDatasetEntry.name,
+            await experiment.listeners.datasetEntryEvaluationCompleted({
+              modelName: evalModel.name,
+              parametersName: evalModelParameters.name,
+              promptName: evalPrompt.name,
+              datasetName: evalDatasetEntry.name,
               score,
               metrics,
-            );
+            });
           }
         }
       }

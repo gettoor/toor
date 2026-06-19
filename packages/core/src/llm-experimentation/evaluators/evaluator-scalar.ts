@@ -10,7 +10,7 @@ import { EvaluatorScalarInput } from './evaluator-scalar.types.js';
 /**
  * Creates a scalar experiment evaluator.
  * @category Experimentation
- * @param scoringScale - The scoring scale to use.
+ * @param evaluatorInput - The input for the scalar evaluator.
  * @returns A scalar experiment evaluator.
  */
 export const scalarEvaluator = (

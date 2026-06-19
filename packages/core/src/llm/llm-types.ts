@@ -32,7 +32,7 @@ export interface MetricResult {
 
 /**
  * Model parameters for the LLM-as-a-judge.
- * @category LLM-as-a-judge
+ * @category LLM
  */
 export interface ModelParameters {
   /**
