@@ -2,6 +2,7 @@ export default {
   title: 'Toor',
   lang: 'en-US',
   description: 'Toor for LLM evaluations and experiments',
+  ignoreDeadLinks: false,
   themeConfig: {
     siteTitle: 'Toor',
     outline: 'deep',

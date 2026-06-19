@@ -5,18 +5,18 @@ Toor is a set of packages of utilities for LLM evaluations and experimentation. 
 - `@gettoor/cli` - Command-line interface to run evaluations and experiments based on a configuration file.
 
 Toor supports the following evaluations and experiments:
-- [LLM-as-a-judge](./llm-as-a-judge.md) - An evaluation in which an output from a model is evaluated against predefined criteria by assigning scores (e.g. overall score, correctness, relevance or completeness).
-- [LLM experimentation](./llm-experimentation.md) -  A process to measure performance of different models, model parameters, prompts on a dataset, typically to find the best combination.
+- [LLM-as-a-judge](/core/llm-as-a-judge.md) - An evaluation in which an output from a model is evaluated against predefined criteria by assigning scores (e.g. overall score, correctness, relevance or completeness).
+- [LLM experiments](/core/llm-experiments.md) -  A process to measure performance of different models, model parameters, prompts on a dataset, typically to find the best combination.
 
 ## Installation
 
-Install the [core package](./core.md) if you want to run evaluations and experiments in your code:
+Install the [core package](/core/index.md) if you want to run evaluations and experiments in your code:
 
 ```sh
 npm install @gettoor/core
 ```
 
-Install the [command line interface](./cli.md) if you want to run evaluations and experiments from the command line:
+Install the [command line interface](/cli/index.md) if you want to run evaluations and experiments from the command line:
 
 ```sh
 npm install @gettoor/cli
@@ -86,7 +86,7 @@ const results = await runExperiment({
 console.log('Score: ' + results[0].score.scoreAsString);
 ```
 
-For full API details, see [Core](./core.md), [LLM-as-a-judge](./llm-as-a-judge.md), and [LLM experimentation](./llm-experimentation.md).
+For full API details, see [Core](/core/index.md), [LLM-as-a-judge](/core/llm-as-a-judge.md), and [LLM experiments](/core/llm-experiments.md).
 
 ## CLI
 
@@ -129,4 +129,4 @@ datasets:
 npx toor --type experiment --cfg ./toor.experiment.yaml
 ```
 
-For more details, see [CLI](./cli.md).
+For more details, see [CLI](/cli/index.md).
