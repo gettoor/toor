@@ -1,6 +1,8 @@
 import { 
   DatasetEntryEvaluationMetrics,
   Experiment,
+  ExperimentDatasetEntryEvaluationCompletedInput,
+  ExperimentDatasetEntryEvaluationStartedInput,
   ExperimentListeners,
   ExperimentScore,
   runExperiment as runExperimentFromCore,
@@ -25,27 +27,20 @@ export async function runExperiment(
 
   const listeners: ExperimentListeners = {
     datasetEntryEvaluationStarted: async (
-      modelName: string,
-      parametersName: string,
-      promptName: string,
-      datasetName: string,
+      input: ExperimentDatasetEntryEvaluationStartedInput,
     ) => {
       section = newSection();
-      section.property('Model', modelName);
-      section.property('Parameters', parametersName);
-      section.property('Prompt', promptName);
-      section.property('Dataset', datasetName);
+      section.property('Model', input.modelName);
+      section.property('Parameters', input.parametersName);
+      section.property('Prompt', input.promptName);
+      section.property('Dataset', input.datasetName);
     },
 
     datasetEntryEvaluationCompleted: async (
-      _modelName: string,
-      _parametersName: string,
-      _promptName: string,
-      _datasetName: string,
-      score: ExperimentScore,
-      metrics: DatasetEntryEvaluationMetrics,
+      input: ExperimentDatasetEntryEvaluationCompletedInput,
     ) => {
-      const scoreColor = colorForScore(score);
+      const { score, metrics } = input;
+      const scoreColor = colorForScore(input.score);
       section.property(
         'Score',
         score.scoreAsString,
@@ -132,12 +127,7 @@ export async function runExperiment(
       console.log(' ' + separator({ width: 32, color: dim }));
     },
 
-    generatingResponse: async (
-      _modelName: string,
-      _parametersName: string,
-      _promptName: string,
-      _datasetName: string,
-    ) => {
+    generatingResponse: async () => {
       spinner.start(
         `Generating response`,
         {
@@ -147,22 +137,11 @@ export async function runExperiment(
       );
     },
 
-    responseGenerated: async (
-      _modelName: string,
-      _parametersName: string,
-      _promptName: string,
-      _datasetName: string,
-      _response: string,
-    ) => {
+    responseGenerated: async () => {
       spinner.stop();
     },
 
-    runningEvaluation: async (
-      _modelName: string,
-      _parametersName: string,
-      _promptName: string,
-      _datasetName: string,
-    ) => {
+    runningEvaluation: async () => {
       spinner.start(
         `Running evaluation`,
         {
@@ -172,13 +151,7 @@ export async function runExperiment(
       );
     },
 
-    evaluationCompleted: async (
-      _modelName: string,
-      _parametersName: string,
-      _promptName: string,
-      _datasetName: string,
-      _score: ExperimentScore,
-    ) => {
+    evaluationCompleted: async () => {
       spinner.stop();
     },
   };

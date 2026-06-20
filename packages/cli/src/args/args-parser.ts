@@ -39,6 +39,8 @@ export function parseArgsByConfig(config: ArgsConfig): {
     }
   }
 
+  
+
   return {
     values,
     positionals,
@@ -59,7 +61,7 @@ function printHelp(config: ArgsConfig): void {
   console.log(`${config.name}: ${config.description}
 
 Usage:
-  ${config.name} [options] [args...]
+  ${config.name} [options] <config-file>
 
 Options:
 ${options}`);

@@ -1,4 +1,4 @@
-import { Args, EVALUATION_TYPES, EvaluationType } from './args-types.js';
+import { Args, PROCESS_TYPES, ProcessType } from './args-types.js';
 import { ArgsConfig, parseArgsByConfig } from './args-parser.js';
 
 export const argsConfig: ArgsConfig = {
@@ -10,17 +10,11 @@ export const argsConfig: ArgsConfig = {
       short: 'h',
       description: 'Show help',
     },
-    cfg: { 
-      type: 'string',
-      description: 'The path to the configuration file',
-      required: true,
-    },
     type: {
       type: 'string',
       description:
-        `The type of evaluation to perform. ` +
-        `One of: ${EVALUATION_TYPES.join(', ')}`,
-      required: true,
+        `The type of process to run. ` +
+        `One of: ${PROCESS_TYPES.join(', ')}`,
     }
   },
 }
@@ -28,7 +22,25 @@ export const argsConfig: ArgsConfig = {
 export function parseArgs(): Args {
   const args = parseArgsByConfig(argsConfig);
 
-  if (!EVALUATION_TYPES.includes(args.values.type as EvaluationType)) {
+  if (args.positionals.length === 0) {
+    console.error(
+      `Missing required argument <config-file>. ` +
+      `Try --help for more information.`
+    );
+    process.exit(1);
+  }
+  if (args.positionals.length > 1) {
+    console.error(
+      `Only one <config-file> is allowed. ` +
+      `Try --help for more information.`
+    );
+    process.exit(1);
+  }
+
+  if (
+    args.values.type &&
+    !PROCESS_TYPES.includes(args.values.type as ProcessType)
+  ) {
     console.error(
       `Invalid evaluation type "${args.values.type}". ` +
       `Try --help for more information.`
@@ -37,7 +49,7 @@ export function parseArgs(): Args {
   }
 
   return {
-    cfgFile: args.values.cfg as string,
-    type: args.values.type as EvaluationType,
+    cfgFile: args.positionals[0],
+    type: args.values.type as ProcessType,
   }
 }

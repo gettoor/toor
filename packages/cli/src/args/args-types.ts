@@ -1,10 +1,10 @@
-export const EVALUATION_TYPES = [
+export const PROCESS_TYPES = [
   'experiment',
 ] as const
 
-export type EvaluationType = (typeof EVALUATION_TYPES)[number]
+export type ProcessType = (typeof PROCESS_TYPES)[number]
 
 export interface Args {
   cfgFile: string;
-  type: EvaluationType;
+  type: ProcessType;
 }

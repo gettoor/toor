@@ -126,7 +126,7 @@ datasets:
 ### Run the CLI
 
 ```sh
-npx toor --type experiment --cfg ./toor.experiment.yaml
+npx toor ./toor.experiment.yaml
 ```
 
 For more details, see [CLI](/cli/index.md).
