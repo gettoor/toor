@@ -34,6 +34,7 @@ import {
 export async function runExperiment(
   experiment: Experiment,
 ): Promise<ExperimentResult[]> {
+  // TODO: validate the experiment configuration
   const modelProvider = experiment.modelProvider ?? new DefaultModelProvider();
 
   // do checks before running the experiment

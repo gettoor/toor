@@ -22,6 +22,7 @@ export function printResults(results: ExperimentResult[]): void {
   const statName = 'average';
 
   // print aggregated results
+  // TODO: Add posibility to set function to aggrgate scores (average, median...)
   printModelScores(results, statName, stat);
   printPromptScores(results, statName, stat);
   printParametersScores(results, statName, stat);
