@@ -231,12 +231,12 @@ Toor provides the following predefined metrics:
 ### Scalar `evalPrompt`
 
 The field `evalPrompt` can be used to provide a custom evaluation prompt. The prompt must contain the placeholders:
-- `<<prompt>>` replaced with the prompt to evaluation,
+- `<<prompt>>` replaced with the prompt to evaluate,
 - `<<response>>` replaced with the response to the prompt,
 - `<<scoring_scale>>` replaced with the scoring scale to use for the evaluation,
 - `<<metrics>>` replaced with the metrics to use for the evaluation.
 
-The evaluation will fail if any of the placeholders are not provided.
+The evaluation will fail if any of the placeholders is not provided.
 
 ```ts
 const result = await scalar({
