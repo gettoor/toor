@@ -1,29 +1,29 @@
 # LLM experiments
 
-An LLM experiment is a process to measure performance of different models, model parameters, prompts on a dataset, typically to find the best combination.
+An LLM experiment compares combinations of models, model parameters, prompts, and dataset entries to help you find the best setup for your use case.
 
-CLI allows to run LLM experiments from configuration files. See [CLI](/cli/index.md) for information how to run CLI.
-A configuration can be a YAML (`*.yaml`, `*.yml`) or JSON (`*.json`) file.
+Use the CLI to run experiments from a configuration file. See [CLI](/cli/index.md) for basic usage.
+Configuration files can be YAML (`*.yaml`, `*.yml`) or JSON (`*.json`).
 
-See [CLI Reference](/cli-reference.md) for more information about the configuration file format.
+See [CLI Reference](/cli-reference.md) for the complete configuration format.
 
 ## Example
 
-A configuration file has the form as shown below. Keep all the names in `models`, `model-parameters`, `prompts` and `datasets` unique.
+The configuration below shows a minimal experiment. Keep all the names in `models`, `model-parameters`, `prompts` and `datasets` unique.
 
 ```yaml [toor.experiment.yaml]
 evaluation:
   # binary, 1-3, 1-5, 1-10
   type: 1-5
 
-  # model used to evaluate the prompts and responses
+  # model used to evaluate generated responses
   model: openai:gpt-4o
 
 # models to evaluate
 models:
   - model: openai:gpt-4o-mini
 
-# model parameters to evaluate
+# model parameter sets to evaluate
 model-parameters:
   - name: default
     temperature: 0.2
@@ -33,7 +33,7 @@ prompts:
   - name: support
     prompt: "Answer clearly: <<question>>"
 
-# dataset with variables to replace in the prompts
+# dataset values substituted into prompts
 dataset:
   - name: reset-password
     vars:
@@ -63,12 +63,13 @@ TODO: Results
 
 ## Evaluation settings
 
-Evaluation settings are set under `evaluation`. It supports the following settings:
+Evaluation settings live under `evaluation`:
 - `type`
 - `model`
 - `prompt` (optional)
 
-The optional field `prompt` can be used to define custom evaluation prompt. See [Binary evaluation prompt](#binary-evaluation-prompt) and [Scalar evaluation prompt](#scalar-evaluation-prompt)
+Use the optional `prompt` field to provide a custom evaluator prompt.
+See [Binary evaluation prompt](#binary-evaluation-prompt) and [Scalar evaluation prompt](#scalar-evaluation-prompt).
 
 ### Type
 
@@ -80,14 +81,14 @@ The evaluation type defines how a pair prompt-response is evaluated and what sco
 
 ### Model
 
-`model` defines the model used to evaluate prompt-response pairs. It's a string prefixed with provider name:
+`model` specifies the model used for evaluation, with a provider prefix:
 - `gemini:<model>`
 - `openai:<model>`
 - `anthropic:<model>`
 
-For example `gemini:gemini-3.5-flash` or `openai:gpt-4o`.
+Examples: `gemini:gemini-3.5-flash`, `openai:gpt-4o`.
 
-Depending on the provider one of the following environment variables must be defined:
+Set the matching API key environment variable for the provider you use:
 - `GEMINI_API_KEY`
 - `OPENAI_API_KEY`
 - `ANTHROPIC_API_KEY`
@@ -98,11 +99,11 @@ The binary evaluator prompt must have the following placeholders:
 - `<<prompt>>` replaced with the prompt to evaluate,
 - `<<response>>` replaced with the response to the prompt.
 
-The expected response is a structured output with fields:
-- `passed` - `false` for failure, `true` for pass,
-- `reasoning` - reasoning for the `passed` value.
+The evaluator is expected to return structured output with:
+- `passed` - `true` or `false`
+- `reasoning` - explanation of the decision
 
-The evaluation will fail if any of the placeholders is not provided.
+Evaluation fails if required placeholders are missing.
 
 ```
 You are an evaluator. Does the response correctly satisfy the prompt?
@@ -122,11 +123,11 @@ The scalar evaluator prompt must have the following properties:
 - `<<scoring_scale>>` replaced with the scoring scale to use for the evaluation,
 - `<<metrics>>` replaced with the metrics to use for the evaluation.
 
-The expected response is a structured output with fields:
-- `score` - score for the response,
-- `reasoning` - reasoning for the `score` value.
+The evaluator is expected to return structured output with:
+- `score` - numeric score
+- `reasoning` - explanation of the score
 
-The evaluation will fail if any of the placeholders is not provided.
+Evaluation fails if required placeholders are missing.
 
 ```
 You are an evaluator. Does the response correctly satisfy the prompt?
@@ -168,7 +169,8 @@ Prompts to evaluate are passed under the `prompts` field in the experiment objec
 - `name` - unique name,
 - `prompt` - prompt to evaluate.
 
-Each prompt can contain placeholders of the form `<<placeholder>>`. The placeholders are replaced with the variables from the dataset entries.
+Prompt templates can include placeholders like `<<placeholder>>`.
+Values are injected from each dataset entry's `vars`.
 
 ### Prompts from files
 
@@ -231,7 +233,7 @@ dataset:
       ticket: Can you add dark mode to the dashboard?
 ```
 
-## Datasets
+## Dataset
 
 A dataset is a set of entries with variables that are substituted in the prompts. A dataset is passed under the `datasets` field. It is an array of objects, where each object has the fields:
 - `name` - unique name,
@@ -274,9 +276,10 @@ dataset:
         candidate_profile: Graphic designer with 8 years of Adobe Photoshop experience.
 ```
 
-### Datasets from files
+### Dataset from files
 
-A dataset can be read from a file. The file must be a YAML or JSON file. The file is passed under the `file` field in the dataset object. `file` is relative to the configuration file.
+A dataset can load records from a file with the `file` field.
+The file path is relative to the configuration file and must be YAML or JSON.
 
 ```yaml
 # other fields of the experiment...
