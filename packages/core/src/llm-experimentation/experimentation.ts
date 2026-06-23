@@ -166,6 +166,8 @@ export async function runExperiment(
               parametersName: evalModelParameters.name,
               promptName: evalPrompt.name,
               datasetName: evalDatasetEntry.name,
+              prompt: prompt.text,
+              response,
               score,
               metrics,
             });
@@ -241,6 +243,7 @@ async function generateStructuredResponse(
   prompt: string,
   structuredOutput: ExperimentStructuredOutput,
 ): Promise<{ response: string, usage: LLMUsage }> {
+  console.log('generateStructuredResponse', prompt, structuredOutput);
   const response = await generateText({
     model,
     prompt,

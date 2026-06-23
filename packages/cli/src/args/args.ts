@@ -1,6 +1,8 @@
 import { Args, PROCESS_TYPES, ProcessType } from './args-types.js';
 import { ArgsConfig, parseArgsByConfig } from './args-parser.js';
 
+let verbose = false;
+
 export const argsConfig: ArgsConfig = {
   name: 'toor',
   description: 'CLI for Toor to evaluate models on datasets',
@@ -9,6 +11,11 @@ export const argsConfig: ArgsConfig = {
       type: 'boolean',
       short: 'h',
       description: 'Show help',
+    },
+    verbose: {
+      type: 'boolean',
+      short: 'v',
+      description: 'Verbose output',
     },
     type: {
       type: 'string',
@@ -48,8 +55,15 @@ export function parseArgs(): Args {
     process.exit(1);
   }
 
+  verbose = !!args.values.verbose;
+
   return {
     cfgFile: args.positionals[0],
+    verbose,
     type: args.values.type as ProcessType,
   }
+}
+
+export function isVerbose(): boolean {
+  return verbose;
 }

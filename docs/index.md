@@ -117,7 +117,7 @@ prompts:
     prompt: "Answer clearly: <<question>>"
 
 # dataset with variables to replace in the prompts
-datasets:
+dataset:
   - name: reset-password
     vars:
       question: How can I reset my password?

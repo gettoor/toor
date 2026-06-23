@@ -18,6 +18,7 @@ import {
 } from '../../console/index.js';
 import { colorForScore } from './experiment-styles.js';
 import { printResults } from './experiment-results.js';
+import { isVerbose } from '../../args/args.js';
 
 export async function runExperiment(
   experiment: Experiment,
@@ -122,6 +123,13 @@ export async function runExperiment(
             }
           );
         }
+      }
+
+      if (isVerbose()) {
+        console.log('\n' + dim('Prompt:'));
+        console.log(input.prompt);
+        console.log('\n' + dim('Response:'));
+        console.log(input.response + '\n');
       }
 
       console.log(' ' + separator({ width: 32, color: dim }));

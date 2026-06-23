@@ -252,7 +252,7 @@ PROMPT:
 RESPONSE:
 <<response>>
 
-SCORING_SCALE Scale:
+SCORING_SCALE:
 <<scoring_scale>>
 
 METRICS:

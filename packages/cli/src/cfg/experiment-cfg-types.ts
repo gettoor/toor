@@ -39,12 +39,34 @@ export const ExperimentCfgScheme =
     'model-parameters': z
       .array(z.object({
         name: z.string().describe('The name of the model parameter'),
+        maxOutputTokens: z
+          .number()
+          .optional()
+          .describe('The maximum number of tokens the model may generate in its response'),
         temperature: z
           .number()
           .min(0)
           .max(1)
           .optional()
           .describe('The temperature of the model parameter'),
+        topP: z
+          .number()
+          .min(0)
+          .max(1)
+          .optional()
+          .describe('The top-p of the model parameter'),
+        topK: z
+          .number()
+          .optional()
+          .describe('The top-k of the model parameter'),
+        presencePenalty: z
+          .number()
+          .optional()
+          .describe('The presence penalty of the model parameter'),
+        frequencyPenalty: z
+          .number()
+          .optional()
+          .describe('The frequency penalty of the model parameter'),
       }))
       .min(1)
       .describe('The model parameters to evaluate'),
@@ -65,7 +87,7 @@ export const ExperimentCfgScheme =
       })
       .optional()
       .describe('The structured output configuration'),
-    datasets: z.array(
+    dataset: z.array(
       z.union([
         z.object({
           file: z.string().describe('The path to the dataset file'),

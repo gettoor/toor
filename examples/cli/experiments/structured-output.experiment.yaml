@@ -1,0 +1,41 @@
+evaluation:
+  type: 1-5
+  model: openai:gpt-4o
+
+models:
+  - model: openai:gpt-4o-mini
+
+model-parameters:
+  - name: default
+    temperature: 0.2
+
+prompts:
+  - name: classifier
+    prompt: |
+      Classify the support ticket.
+
+      Return structured output with:
+      - priority: "low" | "medium" | "high"
+      - category: "bug" | "billing" | "feature" | "question"
+
+      Ticket:
+      <<ticket>>
+
+structured-output:
+  schema:
+    priority:
+      type: string
+      enum: [low, medium, high]
+    category:
+      type: string
+      enum: [bug, billing, feature, question]
+  format: yaml
+
+dataset:
+  - name: charged-twice
+    vars:
+      ticket: I was charged twice for my subscription this month.
+  - name: dark-mode
+    vars:
+      ticket: Can you add dark mode to the dashboard?
+  

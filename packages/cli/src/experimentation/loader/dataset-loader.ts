@@ -8,7 +8,7 @@ import {
 } from '../../cfg/index.js';
 
 export function loadExperimentDataset(
-  cfg: ExperimentCfg['datasets'],
+  cfg: ExperimentCfg['dataset'],
   cfgDir: string,
 ): ExperimentDatasetEntry[] {
   const entries: ExperimentDatasetEntry[] = [];

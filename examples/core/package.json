@@ -9,7 +9,6 @@
   "dependencies": {
     "@gettoor/cli": "workspace:^",
     "@gettoor/core": "workspace:^"
-
   },
   "devDependencies": {
     "typescript": "^6.0.3"

@@ -82,7 +82,12 @@ function loadModelParameters(
 ): ExperimentModelParameters[] {
   return cfg['model-parameters'].map(parameter => ({
     name: parameter.name,
+    maxOutputTokens: parameter.maxOutputTokens,
     temperature: parameter.temperature,
+    topP: parameter.topP,
+    topK: parameter.topK,
+    presencePenalty: parameter.presencePenalty,
+    frequencyPenalty: parameter.frequencyPenalty,
   }));
 }
 
@@ -109,7 +114,7 @@ function loadDatasets(
   cfgDir: string,
 ): ExperimentDatasetEntry[] {
   // load
-  const entries = loadExperimentDataset(cfg.datasets, cfgDir);
+  const entries = loadExperimentDataset(cfg.dataset, cfgDir);
 
   // check for duplicates
   const nameCounts = entries.reduce<Record<string, number>>(

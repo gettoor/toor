@@ -61,7 +61,7 @@ prompts:
       Review:
       <<review>>
 
-datasets:
+dataset:
   - name: positive-review
     vars:
       review: The product exceeded my expectations.
