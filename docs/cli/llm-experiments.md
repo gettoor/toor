@@ -58,7 +58,27 @@ An LLM experiment runs in the following steps:
 The result results for example above are:
 
 ```
-TODO: Results
+│          Model: openai:gpt-4o-mini
+│     Parameters: default
+│         Prompt: support
+│        Dataset: reset-password
+│          Score: 5                                      
+│         Reason: The response provides a clear, step-by-step guide for resetting a
+│                 password, which aligns perfectly with the prompt. Each step is
+│                 relevant and there are no contradictions or omissions. It also
+│                 offers advice on what to do if issues arise, making it
+│                 comprehensive. Therefore, it fully satisfies the prompt.
+│             Prompt generation time: 5154 ms
+│     Prompt generation input tokens: 17
+│    Prompt generation output tokens: 194
+│                    Evaluation time: 2467 ms
+│            Evaluation input tokens: 460
+│           Evaluation output tokens: 68
+ ────────────────────────────────
+
+Model                Parameters   Prompt    Dataset          Score
+──────────────────────────────────────────────────────────────────
+openai:gpt-4o-mini   default      support   reset-password   5
 ```
 
 ## Evaluation settings
