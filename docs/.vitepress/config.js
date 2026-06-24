@@ -1,4 +1,7 @@
+const isProduction = process.env.NODE_ENV === 'production';
+
 export default {
+  ...(isProduction ? { base: '/toor/' } : {}),
   title: 'Toor',
   lang: 'en-US',
   description: 'Toor for LLM evaluations and experiments',
