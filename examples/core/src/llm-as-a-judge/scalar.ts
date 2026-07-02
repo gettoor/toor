@@ -117,4 +117,4 @@ METRICS:
   printResult(result);
 }
 
-customPrompt().catch(console.error);
+basic().catch(console.error);
