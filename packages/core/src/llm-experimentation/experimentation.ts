@@ -70,7 +70,7 @@ export async function runExperiment(
           // create prompt
           const prompt = replacePlaceholders(
             evalPrompt.prompt,
-            varsToPlaceholders(evalDatasetEntry.vars),
+            evalDatasetEntry.vars ?? {},
           );
 
           // notify
@@ -287,21 +287,4 @@ async function checkModels(
   for (const model of models) {
     await modelProvider.getModel(model.name);
   }
-}
-
-/**
- * Converts a record of variables to placeholders.
- */
-function varsToPlaceholders(
-  vars?: Record<string, ExperimentDatasetVarValue>,
-): Record<string, any> {
-  if (!vars) {
-    return {};
-  }
-  return Object.fromEntries(
-    Object.entries(vars).map(([key, value]) => [
-      key,
-      value,
-    ]),
-  );
 }

@@ -113,7 +113,9 @@ export type ExperimentEvaluator = (
  * @category Experimentation
  */
 export interface ExperimentModel {
-  // model name
+  /**
+   * Name of the model (keep unique).
+   */
   name: string;
 }
 
@@ -122,7 +124,9 @@ export interface ExperimentModel {
  * @category Experimentation
  */
 export interface ExperimentModelParameters extends ModelParameters {
-  // parameters name
+  /**
+   * Name of the parameters (keep unique).
+   */
   name: string;
 }
 
@@ -131,10 +135,14 @@ export interface ExperimentModelParameters extends ModelParameters {
  * @category Experimentation
  */
 export interface ExperimentPrompt {
-  // prompt name (keep unique)
+  /**
+   * Name of the prompt (keep unique).
+   */
   name: string;
 
-  // prompt to evaluate
+  /**
+   * Prompt to evaluate.
+   */
   prompt: string;
 }
 

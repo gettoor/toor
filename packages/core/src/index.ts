@@ -5,3 +5,4 @@ export * from './model-provider/index.js';
 export * from './llm/index.js';
 export * from './llm-as-a-judge/index.js';
 export * from './llm-experimentation/index.js';
+export * from './rpe/index.js';

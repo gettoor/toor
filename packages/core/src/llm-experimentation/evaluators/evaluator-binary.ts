@@ -6,7 +6,7 @@ import {
   ExperimentEvaluatorInput,
   ExperimentEvaluatorOutput,
 } from '../experimentation-types.js';
-import { EvaluatorBinaryInput } from './evaluator-binary.types.js';
+import { EvaluatorBinaryInput } from './evaluator-binary-types.js';
 
 /**
  * Creates a binary experiment evaluator.

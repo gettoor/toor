@@ -21,8 +21,8 @@ import { SCALAR_PROMPT } from './scalar-prompt.js';
 /**
  * Scores a response against a prompt using a language model.
  * @category LLM-as-a-judge
- * @param input - The input for the scoring.
- * @returns The output of the scoring.
+ * @param input - Input for the scoring.
+ * @returns Output of the scoring.
  */
 export async function scalar(input: ScalarInput): Promise<ScalarOutput> {
   const scoringScale = input.scoringScale ?? SCALAR_SCORING_DEFAULT;

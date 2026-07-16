@@ -5,7 +5,7 @@ import {
   ExperimentEvaluator,
   ExperimentEvaluatorInput,
 } from '../experimentation-types.js';
-import { EvaluatorScalarInput } from './evaluator-scalar.types.js';
+import { EvaluatorScalarInput } from './evaluator-scalar-types.js';
 
 /**
  * Creates a scalar experiment evaluator.
