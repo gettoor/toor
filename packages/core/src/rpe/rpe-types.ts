@@ -2,6 +2,7 @@ import { RPEPrompt } from './rpe-prompt/index.js';
 import { RPEDataset } from './rpe-dataset/index.js';
 import { RPEExecutor } from './rpe-executor/index.js';
 import { RPEEvaluator } from './rpe-evaluator/index.js';
+import { RPEAggregator } from './rpe-aggregator/index.js';
 
 /**
  * State of the RPE process.
@@ -55,10 +56,34 @@ export interface RPEInput {
   executor: RPEExecutor;
 
   /**
+   * Number of concurrent executors to use. Defaults to 1 that means
+   * that the executors are run sequentially.
+   */
+  executorParallelism?: number;
+
+  /**
    * Evaluator to use for the RPE. An evaluator is responsible for evaluating
    * the responses.
    */
   evaluator: RPEEvaluator;
+
+  /**
+   * Number of concurrent evaluators to use. Defaults to 1 that means
+   * that the evaluators are run sequentially.
+   */
+  evaluatorParallelism?: number;
+
+  /**
+   * Number of concurrent aggregators to use. Defaults to 1 that means
+   * that the aggregators are run sequentially.
+   */
+  aggregatorParallelism?: number;
+
+  /**
+   * Aggregator to use for the RPE. An aggregator is responsible for aggregating
+   * the evaluations of a single prompt into a single evaluation.
+   */
+  aggregator: RPEAggregator;
 
   /**
    * Function to determine if the optimization should stop.

@@ -106,6 +106,11 @@ export interface ScalarInput {
    * @see {@link SCALAR_PROMPT}
    */
   evalPrompt?: string;
+
+  /**
+   * Additional values in the custom evaluation prompt.
+   */
+  additionalPromptValues?: Record<string, string>;
 }
 
 /**
@@ -114,9 +119,14 @@ export interface ScalarInput {
  */
 export interface ScalarResult {
   /**
-   * The score for the response.
+   * Score for the response.
    */
   score: number;
+
+  /**
+   * Score normalized to 0..1.
+   */
+  normalizedScore: number;
 
   /**
    * The metrics for the response where key is the metric name

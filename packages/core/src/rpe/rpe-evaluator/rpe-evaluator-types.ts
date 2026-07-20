@@ -18,9 +18,14 @@ export interface RPEEvaluatorInput {
  */
 export interface RPEEvaluatorOutput {
   /**
+   * Response with its context to evaluate.
+   */
+  response: RPEExecutorOutput;
+
+  /**
    * Score normalized to 0..1.
    */
-  normalizedScore: number;
+  score: number;
 
   /**
    * Reasoning of the evaluation. Extremely important for the RPE process.

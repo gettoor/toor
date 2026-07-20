@@ -1,7 +1,11 @@
 import { generateText, Output } from 'ai';
 import { z } from 'zod';
 
-import { LLMUsage, MetricResult, buildModelCallSettings } from '../llm/index.js';
+import { 
+  LLMUsage,
+  MetricResult,
+  buildModelCallSettings,
+} from '../llm/index.js';
 import { 
   rejectUnknownPlaceholders,
   replacePlaceholders,
@@ -30,15 +34,20 @@ export async function scalar(input: ScalarInput): Promise<ScalarOutput> {
     throw new ScoringScalePromptRequiredError();
   }
   if (input.evalPrompt) {
+    const additionalPlaceholders = Object.keys(
+      input.additionalPromptValues ?? {},
+    );
     requirePlaceholders(input.evalPrompt, [
       'prompt',
       'response',
       'scoring_scale',
+      ...additionalPlaceholders,
     ]);
     rejectUnknownPlaceholders(input.evalPrompt, [
       'prompt',
       'response',
       'scoring_scale',
+      ...additionalPlaceholders,
       'metrics', // optional
     ]);
   }
@@ -61,6 +70,7 @@ export async function scalar(input: ScalarInput): Promise<ScalarOutput> {
       response: input.response,
       scoring_scale: scoringScale.prompt.trim(),
       metrics: metricsForPrompt,
+      ...(input.additionalPromptValues ?? {}),
     },
   );
 
@@ -105,8 +115,12 @@ export async function scalar(input: ScalarInput): Promise<ScalarOutput> {
 
   // compile result
   const output = response.output;
+  const normalizedScore =
+    (output.score - scoringScale.min) /
+    (scoringScale.max - scoringScale.min);
   const result: ScalarResult = {
     score: output.score,
+    normalizedScore,
     metrics,
   };
   const usage: LLMUsage = {

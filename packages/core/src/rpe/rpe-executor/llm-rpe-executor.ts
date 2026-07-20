@@ -8,9 +8,9 @@ import { LLMRPEExecutorInput } from './llm-rpe-executor-types.js';
 
 /**
  * Creates an RPE executor that uses a LLM to generate a response.
+ * @category Reflective Prompt Evolution
  * @param input - Input for the RPE executor creation.
  * @returns An RPE executor that uses a LLM to generate a response.
- * @category Reflective Prompt Evolution
  */
 export function llmRPEExecutor(
   input: LLMRPEExecutorInput,

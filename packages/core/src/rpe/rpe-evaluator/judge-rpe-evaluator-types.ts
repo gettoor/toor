@@ -1,3 +1,7 @@
+import { 
+  ScalarMetric, 
+  ScalarScoringScale,
+} from '../../llm-as-a-judge/index.js';
 import { ModelParameters } from '../../llm/index.js';
 import { ModelProvider } from '../../model-provider/index.js';
 
@@ -21,4 +25,16 @@ export interface JudgeRPEEvaluatorInput {
    * Model parameters to use for the executor.
    */
   modelParameters?: ModelParameters;
+
+  /**
+   * Scoring scale to use for the evaluation.
+   * If not provided, the default scoring scale will be used.
+   * @see {@link SCALAR_SCORING_DEFAULT}
+   */
+  scoringScale?: ScalarScoringScale;
+
+  /**
+   * Metrics to use for the evaluation.
+   */
+  metrics?: ScalarMetric[];
 }

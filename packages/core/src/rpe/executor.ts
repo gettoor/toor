@@ -1,14 +1,16 @@
+import { runParallelBatchesOrThrow } from '../concurrency/index.js';
 import { RPEDataset } from './rpe-dataset/index.js';
 import { RPEPrompt } from './rpe-prompt/index.js';
 import { 
   RPEExecutor,
-  RPEExecutorInput,
   RPEExecutorOutput,
 } from './rpe-executor/index.js';
+import { DEFAULT_EXECUTOR_PARALLELISM } from './executor-consts.js';
 import { ExecutorOutput } from './executor-types.js';
 
 /**
- * Generates responses for the given prompts and dataset using the given executor.
+ * Generates responses for the given prompts and dataset
+ * using the given executor.
  * @param prompts - Prompts to generate responses for.
  * @param dataset - Dataset to generate responses for.
  * @param executor - Executor to use for the response generation.
@@ -18,27 +20,19 @@ export async function generateResponses(
   prompts: RPEPrompt[],
   dataset: RPEDataset,
   executor: RPEExecutor,
+  parallelism?: number,
 ): Promise<ExecutorOutput> {
-  const outputs: RPEExecutorOutput[] = [];
+  parallelism = parallelism ?? DEFAULT_EXECUTOR_PARALLELISM;
 
-  // TODO: parallelize this
-  // for each prompt
+  // tasks
+  const tasks: Promise<RPEExecutorOutput>[] = [];
   for (const prompt of prompts) {
-
-    // for each dataset entry
     for (const datasetEntry of dataset.entries) {
-      
-      // generate response for the prompt and dataset entry
-      const executorInput: RPEExecutorInput = {
-        prompt,
-        datasetEntry,
-      };
-      const output = await executor(executorInput);
-
-      // keep the response
-      outputs.push(output);
+      tasks.push(executor({ prompt, datasetEntry }));
     }
   }
 
+  // run tasks in parallel
+  const outputs = await runParallelBatchesOrThrow(tasks, parallelism);
   return { outputs };
 }

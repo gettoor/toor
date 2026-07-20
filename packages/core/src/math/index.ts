@@ -1,1 +1,1 @@
-export * from './math.js';
+export * from './statistics.js';
