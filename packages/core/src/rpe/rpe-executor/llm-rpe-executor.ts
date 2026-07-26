@@ -31,7 +31,7 @@ export function llmRPEExecutor(
     const response = await generateText({
       model,
       prompt: prompt.text,
-      ...buildModelCallSettings(modelParameters)
+      ...buildModelCallSettings(modelParameters),
     });
 
     return {

@@ -1,4 +1,5 @@
 import { MetricResult } from '../../llm/index.js';
+import { RPEPrompt } from '../rpe-prompt/index.js';
 import { RPEExecutorOutput } from '../rpe-executor/index.js';
 
 /**
@@ -7,9 +8,19 @@ import { RPEExecutorOutput } from '../rpe-executor/index.js';
  */
 export interface RPEEvaluatorInput {
   /**
-   * Response with its context to evaluate.
+   * Prompt to evaluate.
    */
-  response: RPEExecutorOutput;
+  prompt: RPEPrompt;
+
+  /**
+   * Response to evaluate.
+   */
+  response: string;
+
+  /**
+   * Expected response.
+   */
+  expectedResponse?: string;
 }
 
 /**
@@ -18,9 +29,9 @@ export interface RPEEvaluatorInput {
  */
 export interface RPEEvaluatorOutput {
   /**
-   * Response with its context to evaluate.
+   * Evaluated prompt.
    */
-  response: RPEExecutorOutput;
+  input: RPEEvaluatorInput;
 
   /**
    * Score normalized to 0..1.

@@ -1,3 +1,4 @@
+import { DistributionRange } from '../../math/index.js';
 import { MetricResult } from '../../llm/index.js';
 import { RPEPrompt } from '../rpe-prompt/index.js';
 import { RPEEvaluatorOutput } from '../rpe-evaluator/index.js';
@@ -48,6 +49,11 @@ export interface RPEAggregatorOutput {
    * Metric scores are normalized to 0..1.
    */
   aggregatedMetrics?: Record<string, MetricResult>;
+
+  /**
+   * Distribution of the scores.
+   */
+  scoreDistribution: DistributionRange[];
 }
 
 /**

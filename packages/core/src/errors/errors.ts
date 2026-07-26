@@ -35,3 +35,14 @@ export class MissingApiKeyError extends NotFoundToorError {
   }
 }
 
+/**
+ * Thrown when an internal error occurs.
+ * @category Errors
+ */
+export class InternalToorError extends ToorError {
+  public static readonly CODE = 'InternalToorError';
+
+  public constructor(message: string) {
+    super(InternalToorError.CODE, message, 500);
+  }
+}

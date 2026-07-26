@@ -7,10 +7,16 @@ import { RPEPrompt } from '../index.js';
  * @param prompt - Prompt to create.
  * @returns Created RPE prompt.
  */
-export function createRPEPrompt(prompt: string): RPEPrompt {
+export function createRPEPrompt(
+  prompt: string,
+  options: {
+    parents?: RPEPrompt[];
+  } = {},
+): RPEPrompt {
   return {
     prompt,
     promptHash: hash(prompt),
+    parents: options.parents,
   }
 }
 

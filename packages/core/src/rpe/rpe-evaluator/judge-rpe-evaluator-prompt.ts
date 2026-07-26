@@ -31,7 +31,7 @@ Evaluation Guidelines:
 1.  Use the EXPECTED_RESPONSE as the primary reference when evaluating the RESPONSE.
 2.  The RESPONSE must satisfy both:
     -   the requirements of the PROMPT, and
-    -   the content of the EXPECTED_RESPONSE.
+    -   the exact content of the EXPECTED_RESPONSE.
 3.  Compare the RESPONSE against the EXPECTED_RESPONSE for:
     -   correctness,
     -   completeness,

@@ -24,3 +24,7 @@ export function buildModelCallSettings(
     ...ifDefined(modelParameters?.frequencyPenalty, 'frequencyPenalty'),
   }
 }
+
+export function removeNewlines(text: string): string {
+  return text.replace(/\n/g, ' ');
+}

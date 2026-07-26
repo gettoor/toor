@@ -1,3 +1,4 @@
+import { distributeScores, DistributionRange } from '../../math/index.js';
 import { MetricResult } from '../../llm/index.js';
 import { RPEEvaluatorOutput } from '../rpe-evaluator/index.js';
 import { 
@@ -7,6 +8,12 @@ import {
 } from './rpe-aggregator-types.js';
 import { DefaultRPEAggregatorInput } from './default-rpe-aggregator-types.js';
 
+/**
+ * Default RPE aggregator.
+ * @param input - Input for the RPE aggregator.
+ * @returns RPE aggregator.
+ * @category Reflective Prompt Evolution
+ */
 export function defaultRPEAggregator(
   input: DefaultRPEAggregatorInput,
 ): RPEAggregator {
@@ -25,6 +32,10 @@ export function defaultRPEAggregator(
       }),
       aggregatedScore: aggregationFunc(scores),
       aggregatedMetrics: aggregateMetrics(evaluations, aggregationFunc),
+      scoreDistribution: distributeScores(
+        scores,
+        getDefaultScoreDistributionRanges(),
+      ),
     };
   };
 }
@@ -55,4 +66,19 @@ function aggregateMetrics(
   }
   
   return aggregatedMetrics;
+}
+
+function getDefaultScoreDistributionRanges(): DistributionRange[] {
+  return [
+    { min: 0, max: 0.1, count: 0 },
+    { min: 0.1, max: 0.2, count: 0 },
+    { min: 0.2, max: 0.3, count: 0 },
+    { min: 0.3, max: 0.4, count: 0 },
+    { min: 0.4, max: 0.5, count: 0 },
+    { min: 0.5, max: 0.6, count: 0 },
+    { min: 0.6, max: 0.7, count: 0 },
+    { min: 0.7, max: 0.8, count: 0 },
+    { min: 0.8, max: 0.9, count: 0 },
+    { min: 0.9, max: 1.0, count: 0 },
+  ];
 }

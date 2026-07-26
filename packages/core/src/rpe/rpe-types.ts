@@ -3,28 +3,10 @@ import { RPEDataset } from './rpe-dataset/index.js';
 import { RPEExecutor } from './rpe-executor/index.js';
 import { RPEEvaluator } from './rpe-evaluator/index.js';
 import { RPEAggregator } from './rpe-aggregator/index.js';
-
-/**
- * State of the RPE process.
- * @category Reflective Prompt Evolution
- */
-export interface RPEState {
-  /**
-   * The prompts considered in the current iteration.
-   */
-  prompts: RPEPrompt[];
-
-  /**
-   * The current iteration of the RPE process (starting from 0).
-   */
-  iteration: number;
-}
-
-/**
- * Function to determine if the RPE should stop.
- * @category Reflective Prompt Evolution
- */
-export type RPEStopFunc = (state: RPEState) => Promise<boolean>;
+import { RPEAnalyzer } from './rpe-analyzer/index.js';
+import { RPEPromptGenerator } from './rpe-prompt-generator/index.js';
+import { RPEPromptSelector } from './rpe-prompt-selector/index.js';
+import { RPEStopFunc } from './rpe-stop/index.js';
 
 /**
  * Reflective Prompt Evolution (RPE) settings and configuration.
@@ -74,6 +56,13 @@ export interface RPEInput {
   evaluatorParallelism?: number;
 
   /**
+   * Function to determine if the optimization should stop after evaluating
+   * a set of responses.
+   * @see {@link RPEState}
+   */
+  stopAfterEvaluation?: RPEStopFunc;
+
+  /**
    * Number of concurrent aggregators to use. Defaults to 1 that means
    * that the aggregators are run sequentially.
    */
@@ -86,7 +75,49 @@ export interface RPEInput {
   aggregator: RPEAggregator;
 
   /**
-   * Function to determine if the optimization should stop.
+   * Number of concurrent analyzers to use. Defaults to 1 that means
+   * that the analyzers are run sequentially.
    */
-  stopFunc: RPEStopFunc;
+  analyzerParallelism?: number;
+
+  /**
+   * Analyzer to use for the RPE. An analyzer is responsible for analyzing
+   * the aggregated evaluations of a single prompt into a single analysis.
+   */
+  analyzer: RPEAnalyzer;
+
+  /**
+   * Number of concurrent prompt generators to use. Defaults to 1 that means
+   * that the prompt generators are run sequentially.
+   */
+  promptGeneratorParallelism?: number;
+
+  /**
+   * Prompt generator to use for the RPE. A prompt generator is responsible for
+   * generating a new prompt based on the aggregated evaluations and analyses.
+   */
+  promptGenerator: RPEPromptGenerator;
+
+  /**
+   * Prompt selector to use for the RPE. A prompt selector is responsible for
+   * selecting the best prompts from the candidates.
+   */
+  promptSelector: RPEPromptSelector;
+
+  /**
+   * Function to determine if the optimization should stop after an iteration.
+   */
+  stopAfterIteration: RPEStopFunc;
+}
+
+export interface RPEOutput {
+  /**
+   * The final prompts (seed prompts).
+   */
+  prompts: RPEPrompt[];
+
+  /**
+   * The reason why the optimization stopped.
+   */
+  stopReason: string;
 }

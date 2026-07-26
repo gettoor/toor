@@ -1,17 +1,19 @@
 import { DistributionRange } from './distribution-types.js';
 
-/**
- * Distribute scores into ranges.
- * @category Math
- * @param scores - Scores to distribute.
- * @param rangeSize - Size of the range.
- * @returns Distribution of the scores.
- */
 export function distributeScores(
   scores: number[],
-  ranges: DistributionRange[],
+  rangeSize: number,
 ): DistributionRange[] {
+  const ranges: DistributionRange[] = [];
+
+  let min = 0;
+  while (min < 1) {
+    const max = min + rangeSize;
+    ranges.push({ min, max, count: 0 });
+    min = max;
+  }
   const max = ranges[ranges.length - 1].max;
+
   for (const score of scores) {
     for (const range of ranges) {
       if (score >= max) {

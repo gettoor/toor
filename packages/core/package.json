@@ -10,10 +10,11 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     }
-  },  
+  },
   "scripts": {
     "build": "tsc",
-    "clean-package": "rm -rf node_modules dist"
+    "clean-package": "rm -rf node_modules dist",
+    "test": "jest --passWithNoTests"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.80",

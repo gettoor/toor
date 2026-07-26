@@ -13,7 +13,7 @@ You are given the following information.
 
 ## Aggregated Overall Score (0-1)
 
-<<overall_score>>
+<<aggregated_score>>
 
 ## Aggregated Metric Scores (0-1)
 
@@ -27,20 +27,9 @@ You are given the following information.
 
 <<passed_explanations>>
 
-## Failed Evaluation Explanations
-
-<<failed_explanations>>
-
 ## Representative Failed Examples
 
 <<failed_examples>>
-
-Each failed example contains:
-
-* evaluation input
-* expected response
-* model response
-* evaluator explanation
 
 ## Analysis Guidelines
 
@@ -85,52 +74,3 @@ Requirements:
 * Order recommendations from highest to lowest expected impact.
 * Return only valid JSON.
 `;
-
-/*
-{
-  "summary": {
-    "overall_assessment": "Short assessment of the prompt performance.",
-    "main_strengths": [
-      "...",
-      "..."
-    ],
-    "main_weaknesses": [
-      "...",
-      "..."
-    ]
-  },
-  "strengths": [
-    {
-      "title": "...",
-      "description": "...",
-      "supporting_evidence": "..."
-    }
-  ],
-  "failure_patterns": [
-    {
-      "title": "...",
-      "description": "...",
-      "frequency": "high | medium | low",
-      "impact": "high | medium | low",
-      "supporting_evidence": "..."
-    }
-  ],
-  "metric_analysis": [
-    {
-      "metric": "...",
-      "assessment": "...",
-      "possible_causes": [
-        "...",
-        "..."
-      ]
-    }
-  ],
-  "recommendations": [
-    {
-      "priority": 1,
-      "goal": "...",
-      "reason": "..."
-    }
-  ]
-}
-*/

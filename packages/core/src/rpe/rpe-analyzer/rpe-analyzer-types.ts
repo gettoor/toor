@@ -1,4 +1,5 @@
 import { RPEAggregatorOutput } from '../rpe-aggregator/index.js';
+import { RPEPrompt } from '../rpe-prompt/index.js';
 
 /**
  * Input for the RPE analyzer.
@@ -17,9 +18,29 @@ export interface RPEAnalyzerInput {
  */
 export interface RPEAnalyzerOutput {
   /**
-   * Analysis of the aggregation.
+   * Prompt for which the analysis is performed.
    */
-  analysis: string;
+  prompt: RPEPrompt;
+
+  /**
+   * Strengths of the prompt.
+   */
+  strengths: string[];
+
+  /**
+   * Weaknesses of the prompt.
+   */
+  weaknesses: string[];
+
+  /**
+   * Recommendations for the prompt improvement.
+   */
+  recommendations: string[];
+
+  /**
+   * Failure patterns of the prompt.
+   */
+  failurePatterns: string[];
 }
 
 /**

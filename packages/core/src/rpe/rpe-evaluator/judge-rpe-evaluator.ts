@@ -1,5 +1,9 @@
 import { scalar, SCALAR_SCORING_DEFAULT } from '../../llm-as-a-judge/index.js';
-import { RPEEvaluator, RPEEvaluatorInput } from './rpe-evaluator-types.js';
+import { 
+  RPEEvaluator,
+  RPEEvaluatorInput,
+  RPEEvaluatorOutput,
+} from './rpe-evaluator-types.js';
 import { JudgeRPEEvaluatorInput } from './judge-rpe-evaluator-types.js';
 import { JUDGE_RPE_EVALUATOR_PROMPT } from './judge-rpe-evaluator-prompt.js';
 
@@ -20,8 +24,8 @@ export function judgeRPEEvaluator(
     metrics,
   } = input;
 
-  return async (input: RPEEvaluatorInput) => {
-    const expectedResponse = input.response.input.datasetEntry.expectedResponse;
+  return async (input: RPEEvaluatorInput): Promise<RPEEvaluatorOutput> => {
+    const { prompt, response, expectedResponse } = input;
 
     // do plain LLM-as-a-judge without expected response
     if (!expectedResponse) {
@@ -29,13 +33,13 @@ export function judgeRPEEvaluator(
         modelName,
         modelProvider,
         modelParameters,
-        prompt: input.response.input.prompt.prompt,
-        response: input.response.response,
+        prompt: prompt.prompt,
+        response: response,
         scoringScale,
         metrics,
       });
       return {
-        response: input.response,
+        input,
         score: result.result.normalizedScore,
         reasoning: result.reasoning,
         metrics: result.result.metrics,
@@ -47,8 +51,8 @@ export function judgeRPEEvaluator(
       modelName,
       modelProvider,
       modelParameters,
-      prompt: input.response.input.prompt.prompt,
-      response: input.response.response,
+      prompt: prompt.prompt,
+      response: response,
       scoringScale,
       evalPrompt: JUDGE_RPE_EVALUATOR_PROMPT,
       additionalPromptValues: {
@@ -56,7 +60,7 @@ export function judgeRPEEvaluator(
       },
     });
     return {
-      response: input.response,
+      input,
       score: result.result.normalizedScore,
       reasoning: result.reasoning,
       metrics: result.result.metrics,

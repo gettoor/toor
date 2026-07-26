@@ -1,0 +1,1 @@
+export const DEFAULT_ANALYZER_PARALLELISM = 1;
