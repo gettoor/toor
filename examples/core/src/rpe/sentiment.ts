@@ -17,7 +17,7 @@ import { EASY_DATASET } from './sentiment-dataset.js';
 
 async function run(): Promise<void> {
   const dataset: RPEDataset = {
-    entries: EASY_DATASET.slice(0, 2),
+    entries: EASY_DATASET.slice(0, 3),
   };
   const [trainingDataset, validationDataset] = splitRPEDataset(dataset, 2, 1);
 
@@ -28,10 +28,10 @@ async function run(): Promise<void> {
       ),
     ],
     trainingDataset: {
-      entries: dataset.entries,
+      entries: trainingDataset.entries,
     },
     validationDataset: {
-      entries: [],
+      entries: validationDataset.entries,
     },
     executorParallelism: 8,
     executor: llmRPEExecutor({
