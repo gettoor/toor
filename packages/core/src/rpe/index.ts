@@ -8,5 +8,6 @@ export * from './rpe-prompt-generator/index.js';
 export * from './rpe-prompt-selector/index.js';
 export * from './rpe-state/index.js';
 export * from './rpe-stop/index.js';
+export * from './rpe-html-renderer/index.js';
 export * from './rpe-types.js';
 export * from './rpe.js';

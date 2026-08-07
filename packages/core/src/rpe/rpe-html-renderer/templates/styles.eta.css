@@ -1,0 +1,66 @@
+:root {
+  --bg: #f3f5fa;
+  --text: #111827;
+}
+
+html[data-theme="dark"] {
+  --bg: #05070d;
+  --text: #f7f9ff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Funnel Sans", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  line-height: 1.5;
+}
+
+.prompt {
+  font-family: monospace;
+}
+
+.prompt-tree {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.prompt-tree .relation {
+  fill: none;
+  stroke: #94a3b8;
+  stroke-width: 1;
+}
+
+.prompt-tree .prompt-box {
+  fill: #ffffff;
+  stroke: #64748b;
+  stroke-width: 1;
+}
+
+.prompt-tree .candidate-box {
+  fill: #f8fafc;
+  stroke: #475569;
+}
+
+.prompt-tree .prompt-text {
+  height: 100%;
+  padding: 12px;
+  overflow: auto;
+  color: #111827;
+  font: 10px/1.4 monospace;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.prompt-tree .iteration-label {
+  fill: currentColor;
+  font: 600 14px "Funnel Sans", sans-serif;
+  letter-spacing: 0.04em;
+  writing-mode: vertical-rl;
+  text-anchor: middle;
+}

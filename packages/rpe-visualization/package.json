@@ -1,0 +1,26 @@
+{
+  "name": "@gettoor/rpe-visualization",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Visualization app for the Reflective Prompt Evolution (RPE) process",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "postbuild": "node ./postbuild.mjs",
+    "preview": "vite preview",
+    "clean-package": "rm -rf node_modules dist"
+  },
+  "dependencies": {
+    "preact": "^10.29.8"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.10.6",
+    "sass-embedded": "^1.100.0",
+    "typescript": "^6.0.3",
+    "vite": "^8.2.1",
+    "vite-plugin-singlefile": "^2.3.3"
+  },
+  "author": "AndCreations",
+  "license": "MIT"
+}

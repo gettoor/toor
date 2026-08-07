@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Toor</title>
+  <meta name="description" content="" />
+  <link rel="icon" href="favicon.png" sizes="any">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=Funnel+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Funnel+Sans:ital,wght@0,300..800;1,300..800&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+  <style>
+:root {
+  --bg: #f3f5fa;
+  --text: #111827;
+}
+
+html[data-theme="dark"] {
+  --bg: #05070d;
+  --text: #f7f9ff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Funnel Sans", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  line-height: 1.5;
+}
+
+.prompt {
+  font-family: monospace;
+}
+
+.prompt-tree {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.prompt-tree .relation {
+  fill: none;
+  stroke: #94a3b8;
+  stroke-width: 1;
+}
+
+.prompt-tree .prompt-box {
+  fill: #ffffff;
+  stroke: #64748b;
+  stroke-width: 1;
+}
+
+.prompt-tree .candidate-box {
+  fill: #f8fafc;
+  stroke: #475569;
+}
+
+.prompt-tree .prompt-text {
+  height: 100%;
+  padding: 12px;
+  overflow: auto;
+  color: #111827;
+  font: 10px/1.4 monospace;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.prompt-tree .iteration-label {
+  fill: currentColor;
+  font: 600 14px "Funnel Sans", sans-serif;
+  letter-spacing: 0.04em;
+  writing-mode: vertical-rl;
+  text-anchor: middle;
+}  </style>
+</head>
+
+<body>
+<svg
+  class="prompt-tree"
+  viewBox="0 0 400 358"
+  width="400"
+  height="358"
+  role="img"
+  aria-label="Prompt evolution by iteration"
+  xmlns="http://www.w3.org/2000/svg"
+>
+      <g class="iteration" data-iteration="1">
+      <!-- Draw the parent-child curves behind the prompt boxes. -->
+      <g class="relations">
+                  <path
+            class="relation"
+            d="M 228 152               C 228 183.32,
+                 228 174.68,
+                 228 206"
+          />
+              </g>
+
+      <g class="input-prompts">
+                  <g transform="translate(88 32)">
+            <title>What is the sentiment of the following input
+
+&lt;&lt;input&gt;&gt;</title>
+            <rect class="prompt-box" width="280" height="120" rx="12" />
+            <foreignObject width="280" height="120">
+              <div class="prompt-text" xmlns="http://www.w3.org/1999/xhtml">What is the sentiment of the following input
+
+&lt;&lt;input&gt;&gt;</div>
+            </foreignObject>
+          </g>
+              </g>
+
+      <g class="candidate-prompts">
+                  <g transform="translate(88 206)">
+            <title>Determine the sentiment of the following input. Your response must be a single word: &#39;positive&#39;, &#39;negative&#39;, or &#39;neutral&#39;. Do not provide any additional text or explanation.
+&lt;&lt;input&gt;&gt;</title>
+            <rect class="prompt-box candidate-box" width="280" height="120" rx="12" />
+            <foreignObject width="280" height="120">
+              <div class="prompt-text" xmlns="http://www.w3.org/1999/xhtml">Determine the sentiment of the following input. Your response must be a single word: &#39;positive&#39;, &#39;negative&#39;, or &#39;neutral&#39;. Do not provide any additional text or explanation.
+&lt;&lt;input&gt;&gt;</div>
+            </foreignObject>
+          </g>
+              </g>
+
+      <text
+        class="iteration-label"
+        x="64"
+        y="92"
+      >Iteration #1</text>
+      <text
+        class="iteration-label"
+        x="64"
+        y="266"
+      >Iteration #1</text>
+    </g>
+  </svg>
+</body>
+
+</html>

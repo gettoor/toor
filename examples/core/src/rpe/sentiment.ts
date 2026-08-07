@@ -1,3 +1,4 @@
+import fs from 'fs/promises';
 import { 
   RPEDataset,
   RPEState,
@@ -12,6 +13,7 @@ import {
   defaultRPEAnalyzer,
   defaultRPEPromptGenerator,
   bestScorePromptSelector,
+  renderRPEStateToHTML,
 } from '@gettoor/core';
 import { EASY_DATASET } from './sentiment-dataset.js';
 
@@ -75,7 +77,22 @@ async function run(): Promise<void> {
     }
   };
 
-  await optimize(input);
+  // const { state } = await optimize(input);
+  // fs.writeFile('state.json', JSON.stringify(state, null, 2));
+
+  // const state: RPEState = {
+  //   prompts: [
+  //     createRPEPrompt('What is the sentiment of the following input\n\n<<input>>'),
+  //   ],
+  //   iteration: {},
+  //   iterationNo: 0,
+  //   iterationHistory: [],
+  // };
+
+  const state: RPEState = JSON.parse(await fs.readFile('state.json', 'utf-8'));
+  console.log(JSON.stringify(state, null, 2));
+  const html = await renderRPEStateToHTML(state);
+  await fs.writeFile('index.html', html);
 }
 
 run().catch(console.error);

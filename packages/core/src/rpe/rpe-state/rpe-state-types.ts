@@ -11,6 +11,11 @@ import { RPEPromptGeneratorOutput } from '../rpe-prompt-generator/index.js';
  */
 export interface RPEIteration {
   /**
+   * The prompts evaluated in the current iteration.
+   */
+  prompts: RPEPrompt[];
+  
+  /**
    * The responses generated for the prompts in the current iteration.
    */
   responses: RPEExecutorOutput[];
@@ -50,6 +55,11 @@ export interface RPEIteration {
    * in the current iteration.
    */
   candidateAggregatedEvaluations: RPEAggregatorOutput[];
+
+  /**
+   * The prompts selected for the next iteration.
+   */
+  selectedPrompts: RPEPrompt[];
 }
 
 /**

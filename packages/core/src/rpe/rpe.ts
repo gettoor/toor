@@ -1,4 +1,8 @@
-import { RPEIteration, RPEState } from './rpe-state/index.js';
+import { 
+  RPEIteration,
+  RPEIterationInProgress,
+  RPEState,
+} from './rpe-state/index.js';
 import { RPEInput, RPEOutput } from './rpe-types.js';
 import { generateResponses } from './executor.js';
 import { evaluateResponses } from './evaluator.js';
@@ -8,9 +12,9 @@ import { generatePrompts } from './prompt-generator.js';
 
 /**
  * Runs the Reflective Prompt Evolution (RPE) process.
+ * @category Reflective Prompt Evolution
  * @param input - Input for the RPE process.
  * @returns A promise that resolves when the RPE process is complete.
- * @category Reflective Prompt Evolution
  */
 export async function optimize(
   input: RPEInput,
@@ -25,7 +29,10 @@ export async function optimize(
   
   while (true) {
     // start new iteration
-    state.iteration = {};
+    state.iteration = {
+      prompts: state.prompts,
+    };
+    const iteration: RPEIterationInProgress = state.iteration;
 
     // generate responses
     const { outputs: responses } = await generateResponses(
@@ -33,7 +40,7 @@ export async function optimize(
       input.trainingDataset,
       input.executor,
     );
-    state.iteration.responses = responses;
+    iteration.responses = responses;
 
     // evaluate responses
     const { evaluations } = await evaluateResponses(
@@ -41,9 +48,19 @@ export async function optimize(
       input.evaluator,
       input.evaluatorParallelism,
     );
-    state.iteration.evaluations = evaluations;
+    iteration.evaluations = evaluations;
     console.log('------ evaluations ------');
     console.log(JSON.stringify(evaluations, null, 2));
+
+    // aggregate evaluations
+    const aggregatedEvaluations = await aggregateEvaluations(
+      evaluations,
+      input.aggregator,
+      input.aggregatorParallelism,
+    );
+    iteration.aggregatedEvaluations = aggregatedEvaluations;
+    console.log('------ aggregated evaluations ------');
+    console.log(JSON.stringify(aggregatedEvaluations, null, 2));
 
     // should stop?
     const shouldStopAfterEvaluation = await input.stopAfterEvaluation?.(state);
@@ -52,23 +69,13 @@ export async function optimize(
       break;
     }
 
-    // aggregate evaluations
-    const aggregatedEvaluations = await aggregateEvaluations(
-      evaluations,
-      input.aggregator,
-      input.aggregatorParallelism,
-    );
-    state.iteration.aggregatedEvaluations = aggregatedEvaluations;
-    console.log('------ aggregated evaluations ------');
-    console.log(JSON.stringify(aggregatedEvaluations, null, 2));
-
     // analyze aggregated evaluations
     const analyses = await analyzeAggregatedEvaluations(
       aggregatedEvaluations,
       input.analyzer,
       input.analyzerParallelism,
     );
-    state.iteration.analyses = analyses;
+    iteration.analyses = analyses;
     console.log('------ analyses ------');
     console.log(JSON.stringify(analyses, null, 2));
 
@@ -79,7 +86,7 @@ export async function optimize(
       input.promptGenerator,
       input.promptGeneratorParallelism,
     );
-    state.iteration.candidates = candidates;
+    iteration.candidates = candidates;
     console.log('------ candidates ------');
     console.log(JSON.stringify({ candidates }, null, 2));
 
@@ -89,7 +96,7 @@ export async function optimize(
       input.trainingDataset,
       input.executor,
     );
-    state.iteration.candidateResponses = candidateResponses;
+    iteration.candidateResponses = candidateResponses;
     console.log('------ candidate responses ------');
     console.log(JSON.stringify(candidateResponses, null, 2));
 
@@ -99,7 +106,7 @@ export async function optimize(
       input.evaluator,
       input.evaluatorParallelism,
     );
-    state.iteration.candidateEvaluations = candidateEvaluations;
+    iteration.candidateEvaluations = candidateEvaluations;
     console.log('------ candidate evaluations ------');
     console.log(JSON.stringify(candidateEvaluations, null, 2));
 
@@ -109,15 +116,19 @@ export async function optimize(
       input.aggregator,
       input.aggregatorParallelism,
     );
-    state.iteration.candidateAggregatedEvaluations = candidateAggregatedEvaluations;
+    iteration.candidateAggregatedEvaluations = candidateAggregatedEvaluations;
     console.log('------ candidate aggregated evaluations ------');
     console.log(JSON.stringify(candidateAggregatedEvaluations, null, 2));
 
     // select prompts
-    const { prompts } = await input.promptSelector({ state });
-    state.prompts = prompts;
+    const { prompts: selectedPrompts } = await input.promptSelector({ state });
+    iteration.selectedPrompts = selectedPrompts;
+    state.prompts = selectedPrompts;
     console.log('------ prompts ------');
-    console.log(JSON.stringify(prompts, null, 2));
+    console.log(JSON.stringify(selectedPrompts, null, 2));
+
+    // update history
+    state.iterationHistory.push(iteration as RPEIteration);
 
     // should stop?
     const shouldStopAfterIteration = await input.stopAfterIteration(state);
@@ -127,11 +138,11 @@ export async function optimize(
     }
 
     state.iterationNo++;
-    state.iterationHistory.push(state.iteration as RPEIteration);
   }
 
   return {
     prompts: state.prompts,
+    state,
     stopReason,
   };
 }

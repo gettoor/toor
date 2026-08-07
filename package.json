@@ -2,6 +2,7 @@
   "name": "@gettoor/toor",
   "private": true,
   "scripts": {
+    "prebuild": "node ./packages/core/prebuild.mjs",
     "build": "pnpm -r build",
     "clean-all": "pnpm clean-packages && rm -rf node_modules && rm -rf docs/.vitepress/cache && rm -rf docs/.vitepress/dist && rm -rf docs/api",
     "clean-packages": "pnpm -r clean-package",

@@ -5,5 +5,9 @@ packages:
   - "examples/*"
 
 allowBuilds:
+  '@parcel/watcher': true
   esbuild: true
   unrs-resolver: false
+
+minimumReleaseAgeExclude:
+  - vite@8.2.1
