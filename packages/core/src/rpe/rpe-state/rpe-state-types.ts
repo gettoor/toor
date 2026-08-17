@@ -3,7 +3,7 @@ import { RPEExecutorOutput } from '../rpe-executor/index.js';
 import { EvaluatorPromptOutput } from '../evaluator-types.js';
 import { RPEAggregatorOutput } from '../rpe-aggregator/index.js';
 import { RPEAnalyzerOutput } from '../rpe-analyzer/index.js';
-import { RPEPromptGeneratorOutput } from '../rpe-prompt-generator/index.js';
+import { PromptGeneratorCandidate } from '../prompt-generator-types.js';
 
 /**
  * Represents a completed iteration of the RPE process.
@@ -38,7 +38,7 @@ export interface RPEIteration {
   /**
    * The candidates generated for the prompts in the current iteration.
    */
-  candidates: RPEPromptGeneratorOutput[];
+  candidates: PromptGeneratorCandidate[];
 
   /**
    * The responses generated for the candidates in the current iteration.

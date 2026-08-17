@@ -25,14 +25,14 @@ export async function evaluatePrompts(
     const evaluation = await evaluator(prompt);
 
     // keep the evaluation
-    const promptHash = prompt.prompt.promptHash;
-    if (!evaluations[promptHash]) {
-      evaluations[promptHash] = {
+    const promptId = prompt.prompt.promptId;
+    if (!evaluations[promptId]) {
+      evaluations[promptId] = {
         prompt: prompt.prompt,
         evaluations: [],
       };
     }
-    evaluations[promptHash].evaluations.push(evaluation);
+    evaluations[promptId].evaluations.push(evaluation);
   });
 
   // run tasks in parallel

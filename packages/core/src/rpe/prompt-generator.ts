@@ -14,6 +14,7 @@ import { PromptGeneratorOutput } from './prompt-generator-types.js';
  * @category Reflective Prompt Evolution
  */
 export async function generatePrompts(
+  iterationNo: number,
   aggregations: RPEAggregatorOutput[],
   analyses: RPEAnalyzerOutput[],
   generator: RPEPromptGenerator,
@@ -22,9 +23,9 @@ export async function generatePrompts(
   parallelism = parallelism ?? DEFAULT_PROMPT_GENERATOR_PARALLELISM;
 
   // tasks
-  const tasks = aggregations.map(aggregation => {
+  const tasks = aggregations.map(async (aggregation, index) => {
     const analysis = analyses.find(analysis => {
-      return analysis.prompt.promptHash === aggregation.prompt.promptHash;
+      return analysis.prompt.promptId === aggregation.prompt.promptId;
     });
     if (!analysis) {
       throw new InternalToorError(
@@ -32,11 +33,18 @@ export async function generatePrompts(
         `${ToorError.quote(aggregation.prompt.prompt)}`,
       );
     }
-    return generator({
+    const output = await generator({
       prompt: aggregation.prompt,
       aggregation,
       analysis,
     });
+    return {
+      ...output,
+      prompt: {
+        ...output.prompt,
+        promptId: `i${iterationNo}p${index}`,
+      }
+    }
   });
 
   // run tasks in parallel

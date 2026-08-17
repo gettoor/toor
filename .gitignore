@@ -12,3 +12,6 @@ NOTES.md
 
 # pnpn
 .pnpm-store
+
+# Apple
+.DS_Store

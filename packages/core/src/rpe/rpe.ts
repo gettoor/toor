@@ -81,6 +81,7 @@ export async function optimize(
 
     // generate prompt
     const { candidates } = await generatePrompts(
+      state.iterationNo,
       aggregatedEvaluations,
       analyses,
       input.promptGenerator,

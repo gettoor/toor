@@ -47,7 +47,7 @@ export interface RPEPromptGeneratorOutput {
   /**
    * New prompt.
    */
-  prompt: RPEPrompt;
+  prompt: Omit<RPEPrompt, 'promptId'>;
 
   /**
    * Changes made to the prompt.

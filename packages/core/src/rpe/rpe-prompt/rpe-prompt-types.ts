@@ -8,7 +8,7 @@ export interface RPEPrompt {
    * There can be multiple parents when a new prompt is created from
    * multiple parents. Typically, there is only one parent.
    */
-  parents?: RPEPrompt[];
+  parentPromptIds?: string[];
 
   /**
    * Prompt to evaluate.
@@ -16,7 +16,7 @@ export interface RPEPrompt {
   prompt: string;
 
   /**
-   * Hash of the prompt.
+   * Unique identifier of the prompt.
    */
-  promptHash: string;
+  promptId: string;
 }

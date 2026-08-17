@@ -4,7 +4,6 @@ import { replacePlaceholders } from '../../string/index.js';
 import { DistributionRange } from '../../math/index.js';
 import { MetricResult, buildModelCallSettings } from '../../llm/index.js';
 import { DefaultModelProvider } from '../../model-provider/index.js';
-import { createRPEPrompt } from '../rpe-prompt/rpe-prompt-utils.js';
 import { RPEEvaluatorOutput } from '../rpe-evaluator/rpe-evaluator-types.js';
 import { 
   DEFAULT_RPE_PROMPT_GENERATOR_PROMPT,
@@ -63,12 +62,10 @@ export function defaultRPEPromptGenerator(
     });
 
     return { 
-      prompt: createRPEPrompt(
-        output.prompt,
-        {
-          parents: [input.prompt],
-        }
-      ),
+      prompt: {
+        prompt: output.prompt,
+        parentPromptIds: [input.prompt.promptId],
+      },
       changes: output.changes.map(change => ({
         description: change.description,
         reasoning: change.reasoning,
