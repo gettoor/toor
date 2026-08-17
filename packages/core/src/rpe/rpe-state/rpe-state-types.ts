@@ -1,4 +1,4 @@
-import { RPEPrompt } from '../rpe-prompt/index.js';
+import { RPEPrompt, RPEPromptRef } from '../rpe-prompt/index.js';
 import { RPEExecutorOutput } from '../rpe-executor/index.js';
 import { EvaluatorPromptOutput } from '../evaluator-types.js';
 import { RPEAggregatorOutput } from '../rpe-aggregator/index.js';
@@ -11,9 +11,9 @@ import { PromptGeneratorCandidate } from '../prompt-generator-types.js';
  */
 export interface RPEIteration {
   /**
-   * The prompts evaluated in the current iteration.
+   * References to the prompts evaluated in the current iteration.
    */
-  prompts: RPEPrompt[];
+  promptRefs: RPEPromptRef[];
   
   /**
    * The responses generated for the prompts in the current iteration.
@@ -57,16 +57,18 @@ export interface RPEIteration {
   candidateAggregatedEvaluations: RPEAggregatorOutput[];
 
   /**
-   * The prompts selected for the next iteration.
+   * References to the prompts selected for the next iteration.
    */
-  selectedPrompts: RPEPrompt[];
+  selectedPromptRefs: RPEPromptRef[];
 }
 
 /**
  * Represents an in-progress iteration of the RPE process.
  * @category Reflective Prompt Evolution
  */
-export type RPEIterationInProgress = Partial<RPEIteration>;
+export type RPEIterationInProgress =
+  Partial<Omit<RPEIteration, 'promptRefs'>> &
+  Pick<RPEIteration, 'promptRefs'>;
 
 /**
  * State of the RPE process.
@@ -74,19 +76,19 @@ export type RPEIterationInProgress = Partial<RPEIteration>;
  */
 export interface RPEState {
   /**
-   * The prompts evaluated in the current iteration.
+   * All the prompts from an RPE process.
    */
   prompts: RPEPrompt[];
-
-  /**
-   * The current iteration of the RPE process.
-   */
-  iteration: RPEIterationInProgress;
 
   /**
    * The current iteration number of the RPE process (starting from 0).
    */
   iterationNo: number;
+
+  /**
+   * The current iteration of the RPE process.
+   */
+  iteration: RPEIterationInProgress;
 
   /**
    * The history of iterations of the RPE process.

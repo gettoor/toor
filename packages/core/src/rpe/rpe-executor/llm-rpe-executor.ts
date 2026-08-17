@@ -3,6 +3,7 @@ import { generateText } from 'ai';
 import { replacePlaceholders } from '../../string/index.js';
 import { buildModelCallSettings } from '../../llm/index.js';
 import { DefaultModelProvider } from '../../model-provider/index.js';
+import { promptRefFromPrompt } from '../rpe-prompt/index.js';
 import { RPEExecutor, RPEExecutorInput } from './rpe-executor-types.js';
 import { LLMRPEExecutorInput } from './llm-rpe-executor-types.js';
 
@@ -35,7 +36,8 @@ export function llmRPEExecutor(
     });
 
     return {
-      input,
+      promptRef: promptRefFromPrompt(input.prompt),
+      datasetEntry: input.datasetEntry,
       response: response.text,
       usage: {
         inputTokens: response.usage.inputTokens,

@@ -1,4 +1,6 @@
+import { promptRefFromPrompt } from './rpe-prompt/index.js';
 import { 
+  findPromptById,
   RPEIteration,
   RPEIterationInProgress,
   RPEState,
@@ -20,23 +22,28 @@ export async function optimize(
   input: RPEInput,
 ): Promise<RPEOutput> {
   const state: RPEState = {
-    prompts: input.seed,
-    iteration: {},
+    prompts: [...input.seed],
     iterationNo: 0,
+    iteration: {
+      promptRefs: input.seed.map(prompt => promptRefFromPrompt(prompt)),
+    },
     iterationHistory: [],
   };
   let stopReason = '';
   
   while (true) {
     // start new iteration
-    state.iteration = {
-      prompts: state.prompts,
-    };
+    // state.iteration = {
+    //   prompts: state.prompts,
+    // };
     const iteration: RPEIterationInProgress = state.iteration;
+    const prompts = iteration.promptRefs.map(promptRef => {
+      return findPromptById(state, promptRef.promptId);
+    });
 
     // generate responses
     const { outputs: responses } = await generateResponses(
-      state.prompts,
+      prompts,
       input.trainingDataset,
       input.executor,
     );
@@ -44,6 +51,7 @@ export async function optimize(
 
     // evaluate responses
     const { evaluations } = await evaluateResponses(
+      state,
       responses,
       input.evaluator,
       input.evaluatorParallelism,
@@ -54,6 +62,7 @@ export async function optimize(
 
     // aggregate evaluations
     const aggregatedEvaluations = await aggregateEvaluations(
+      state,
       evaluations,
       input.aggregator,
       input.aggregatorParallelism,
@@ -71,6 +80,7 @@ export async function optimize(
 
     // analyze aggregated evaluations
     const analyses = await analyzeAggregatedEvaluations(
+      state,
       aggregatedEvaluations,
       input.analyzer,
       input.analyzerParallelism,
@@ -81,13 +91,17 @@ export async function optimize(
 
     // generate prompt
     const { candidates } = await generatePrompts(
-      state.iterationNo,
+      state,
       aggregatedEvaluations,
       analyses,
       input.promptGenerator,
       input.promptGeneratorParallelism,
     );
-    iteration.candidates = candidates;
+    iteration.candidates = candidates.map(candidate => ({
+      promptRef: promptRefFromPrompt(candidate.prompt),
+      changes: candidate.changes,
+    }));
+    state.prompts.push(...candidates.map(candidate => candidate.prompt));
     console.log('------ candidates ------');
     console.log(JSON.stringify({ candidates }, null, 2));
 
@@ -103,6 +117,7 @@ export async function optimize(
 
     // evaluate candidates
     const { evaluations: candidateEvaluations } = await evaluateResponses(
+      state,
       candidateResponses,
       input.evaluator,
       input.evaluatorParallelism,
@@ -113,6 +128,7 @@ export async function optimize(
 
     // aggregate candidate evaluations
     const candidateAggregatedEvaluations = await aggregateEvaluations(
+      state,
       candidateEvaluations,
       input.aggregator,
       input.aggregatorParallelism,
@@ -122,11 +138,13 @@ export async function optimize(
     console.log(JSON.stringify(candidateAggregatedEvaluations, null, 2));
 
     // select prompts
-    const { prompts: selectedPrompts } = await input.promptSelector({ state });
-    iteration.selectedPrompts = selectedPrompts;
-    state.prompts = selectedPrompts;
+    const { 
+      promptRefs: selectedPromptRefs,
+    } = await input.promptSelector(state, {});
+    iteration.selectedPromptRefs = selectedPromptRefs;
+    // state.prompts = selectedPrompts;
     console.log('------ prompts ------');
-    console.log(JSON.stringify(selectedPrompts, null, 2));
+    console.log(JSON.stringify(selectedPromptRefs, null, 2));
 
     // update history
     state.iterationHistory.push(iteration as RPEIteration);
@@ -139,10 +157,15 @@ export async function optimize(
     }
 
     state.iterationNo++;
+    state.iteration = {
+      promptRefs: selectedPromptRefs,
+    };
   }
 
   return {
-    prompts: state.prompts,
+    prompts: state.iteration.promptRefs.map(promptRef => {
+      return findPromptById(state, promptRef.promptId);
+    }),
     state,
     stopReason,
   };

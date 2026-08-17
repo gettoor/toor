@@ -20,3 +20,14 @@ export interface RPEPrompt {
    */
   promptId: string;
 }
+
+/**
+ * A reference to a prompt.
+ * @category Reflective Prompt Evolution
+ */
+export interface RPEPromptRef {
+  /**
+   * Unique identifier of the referenced prompt.
+   */
+  promptId: string;
+}

@@ -1,5 +1,6 @@
 import { InternalToorError, ToorError } from '../errors/index.js';
 import { runParallelBatchesOrThrow } from '../concurrency/index.js';
+import { findPromptById, RPEState } from './rpe-state/index.js';
 import { RPEAggregatorOutput } from './rpe-aggregator/index.js';
 import { RPEAnalyzerOutput } from './rpe-analyzer/index.js';
 import { RPEPromptGenerator } from './rpe-prompt-generator/index.js';
@@ -14,7 +15,7 @@ import { PromptGeneratorOutput } from './prompt-generator-types.js';
  * @category Reflective Prompt Evolution
  */
 export async function generatePrompts(
-  iterationNo: number,
+  state: RPEState,
   aggregations: RPEAggregatorOutput[],
   analyses: RPEAnalyzerOutput[],
   generator: RPEPromptGenerator,
@@ -24,17 +25,22 @@ export async function generatePrompts(
 
   // tasks
   const tasks = aggregations.map(async (aggregation, index) => {
+    const aggregationPromptId = aggregation.promptRef.promptId;
+
+    // find analysis
     const analysis = analyses.find(analysis => {
-      return analysis.prompt.promptId === aggregation.prompt.promptId;
+      return analysis.promptRef.promptId === aggregationPromptId;
     });
     if (!analysis) {
       throw new InternalToorError(
         `Analysis not found for prompt during prompt generation: ` +
-        `${ToorError.quote(aggregation.prompt.prompt)}`,
+        `${ToorError.quote(aggregationPromptId)}`,
       );
     }
+
+    // generate (candidate) prompt
     const output = await generator({
-      prompt: aggregation.prompt,
+      prompt: findPromptById(state, aggregationPromptId),
       aggregation,
       analysis,
     });
@@ -42,7 +48,7 @@ export async function generatePrompts(
       ...output,
       prompt: {
         ...output.prompt,
-        promptId: `i${iterationNo}p${index}`,
+        promptId: `i${state.iterationNo}p${index}`,
       }
     }
   });

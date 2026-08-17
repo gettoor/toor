@@ -1,6 +1,5 @@
 import { MetricResult } from '../../llm/index.js';
-import { RPEPrompt } from '../rpe-prompt/index.js';
-import { RPEExecutorOutput } from '../rpe-executor/index.js';
+import { RPEPrompt, RPEPromptRef } from '../rpe-prompt/index.js';
 
 /**
  * Input for the RPE evaluator.
@@ -29,9 +28,19 @@ export interface RPEEvaluatorInput {
  */
 export interface RPEEvaluatorOutput {
   /**
-   * Evaluated prompt.
+   * Reference to the prompt that was evaluated.
    */
-  input: RPEEvaluatorInput;
+  promptRef: RPEPromptRef;
+
+  /**
+   * Response to evaluate.
+   */
+  response: string;
+
+  /**
+   * Expected response.
+   */
+  expectedResponse?: string;
 
   /**
    * Score normalized to 0..1.

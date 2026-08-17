@@ -1,16 +1,11 @@
-import { RPEPrompt } from '../rpe-prompt/index.js';
+import { RPEPromptRef } from '../rpe-prompt/index.js';
 import { RPEState } from '../rpe-state/index.js';
 
 /**
  * Input for the RPE prompt selector.
  * @category Reflective Prompt Evolution
  */
-export interface RPEPromptSelectorInput {
-  /**
-   * The current state of the RPE.
-   */
-  state: RPEState;
-}
+export interface RPEPromptSelectorInput {}
 
 /**
  * Output for the RPE prompt selector.
@@ -18,9 +13,9 @@ export interface RPEPromptSelectorInput {
  */
 export interface RPEPromptSelectorOutput {
   /**
-   * The selected prompts.
+   * References to the selected prompts.
    */
-  prompts: RPEPrompt[];
+  promptRefs: RPEPromptRef[];
 }
 
 /**
@@ -28,5 +23,6 @@ export interface RPEPromptSelectorOutput {
  * @category Reflective Prompt Evolution
  */
 export type RPEPromptSelector = (
+  state: RPEState,
   input: RPEPromptSelectorInput,
 ) => Promise<RPEPromptSelectorOutput>;

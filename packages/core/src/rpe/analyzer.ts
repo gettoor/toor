@@ -1,4 +1,5 @@
 import { runParallelBatchesOrThrow } from '../concurrency/index.js';
+import { RPEState } from './rpe-state/index.js';
 import { DEFAULT_ANALYZER_PARALLELISM } from './analyzer-consts.js';
 import { RPEAggregatorOutput } from './rpe-aggregator/index.js';
 import { 
@@ -7,6 +8,7 @@ import {
 } from './rpe-analyzer/rpe-analyzer-types.js';
 
 export async function analyzeAggregatedEvaluations(
+  state: RPEState,
   aggregatedEvaluations: RPEAggregatorOutput[],
   analyzer: RPEAnalyzer,
   parallelism?: number,
@@ -16,9 +18,12 @@ export async function analyzeAggregatedEvaluations(
 
   // tasks
   const tasks = aggregatedEvaluations.map(async aggregatedEvaluation => {
-    const output = await analyzer({
-      aggregation: aggregatedEvaluation,
-    });
+    const output = await analyzer(
+      state,
+      {
+        aggregation: aggregatedEvaluation,
+      },
+    );
     outputs.push(output);
   });
 

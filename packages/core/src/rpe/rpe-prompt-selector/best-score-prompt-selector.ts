@@ -1,4 +1,5 @@
-import { 
+import { findPromptById, RPEState } from '../rpe-state/index.js';
+import {
   RPEPromptSelector,
   RPEPromptSelectorInput,
   RPEPromptSelectorOutput,
@@ -19,9 +20,9 @@ export function bestScorePromptSelector(
   const { candidatesOnly = false } = input;
 
   return async (
+    state: RPEState,
     input: RPEPromptSelectorInput,
   ): Promise<RPEPromptSelectorOutput> => {
-    const { state } = input;
     const allAggregatedEvaluations = [
       ...state.iteration.candidateAggregatedEvaluations ?? [],
     ];
@@ -40,14 +41,16 @@ export function bestScorePromptSelector(
     );
 
     // find the prompts with the max score
-    const maxScorePrompts = allAggregatedEvaluations
+    const maxScorePromptRefs = allAggregatedEvaluations
       .filter(aggregatedEvaluation => {
         return aggregatedEvaluation.aggregatedScore === maxScore;
       })
-      .map(aggregatedEvaluation => aggregatedEvaluation.prompt);
+      .map(aggregatedEvaluation => {
+        return aggregatedEvaluation.promptRef;
+      });
 
     return {
-      prompts: maxScorePrompts,
+      promptRefs: maxScorePromptRefs,
     }
   } 
 }

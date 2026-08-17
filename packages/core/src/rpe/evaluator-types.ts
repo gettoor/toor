@@ -1,5 +1,5 @@
 import { RPEEvaluatorOutput } from './rpe-evaluator/index.js';
-import { RPEPrompt } from './rpe-prompt/index.js';
+import { RPEPromptRef } from './rpe-prompt/index.js';
 
 /**
  * Output for the RPE evaluator for a single prompt.
@@ -7,9 +7,9 @@ import { RPEPrompt } from './rpe-prompt/index.js';
  */
 export interface EvaluatorPromptOutput {
   /**
-   * Prompt that was evaluated.
+   * Reference to the prompt that was evaluated.
    */
-  prompt: RPEPrompt;
+  promptRef: RPEPromptRef;
 
   /**
    * Evaluations for the prompt.

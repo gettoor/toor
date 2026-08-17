@@ -1,5 +1,6 @@
 import { RPEAggregatorOutput } from '../rpe-aggregator/index.js';
-import { RPEPrompt } from '../rpe-prompt/index.js';
+import { RPEPromptRef } from '../rpe-prompt/index.js';
+import { RPEState } from '../rpe-state/index.js';
 
 /**
  * Input for the RPE analyzer.
@@ -18,9 +19,9 @@ export interface RPEAnalyzerInput {
  */
 export interface RPEAnalyzerOutput {
   /**
-   * Prompt for which the analysis is performed.
+   * Reference to the prompt for which the analysis is performed.
    */
-  prompt: RPEPrompt;
+  promptRef: RPEPromptRef;
 
   /**
    * Strengths of the prompt.
@@ -50,5 +51,6 @@ export interface RPEAnalyzerOutput {
  * @category Reflective Prompt Evolution
  */
 export type RPEAnalyzer = (
+  state: RPEState,
   input: RPEAnalyzerInput,
 ) => Promise<RPEAnalyzerOutput>;

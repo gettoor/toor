@@ -8,6 +8,7 @@ import {
   removeNewlines,
 } from '../../llm/index.js';
 import { DefaultModelProvider } from '../../model-provider/index.js';
+import { findPromptById, RPEState } from '../rpe-state/index.js';
 import { RPEEvaluatorOutput } from '../rpe-evaluator/index.js';
 import { 
   RPEAnalyzer,
@@ -29,13 +30,14 @@ export function defaultRPEAnalyzer(
   const modelProvider = input.modelProvider ?? new DefaultModelProvider();
 
   return async (
+    state: RPEState,
     input: RPEAnalyzerInput,
   ): Promise<RPEAnalyzerOutput> => {
     // build prompt
     const prompt = replacePlaceholders(
       DEFAULT_RPE_ANALYZER_PROMPT,
       {
-        prompt: input.aggregation.prompt.prompt,
+        prompt: findPromptById(state, input.aggregation.promptRef.promptId).prompt,
         aggregated_score: input.aggregation.aggregatedScore,
         aggregated_metrics: aggregatedMetricsForPrompt(
           input.aggregation.aggregatedMetrics ?? {},
@@ -65,7 +67,7 @@ export function defaultRPEAnalyzer(
     });
 
     return {
-      prompt: input.aggregation.prompt,
+      promptRef: input.aggregation.promptRef,
       strengths: output.strengths.map(strength => strength.description),
       weaknesses: output.weaknesses.map(weakness => weakness.description),
       recommendations: output.recommendations.map(recommendation => {
@@ -112,14 +114,13 @@ function failedExamplesForPrompt(
 ): string {
   return evaluations
     .slice(0, count)
-    .map(({ input, reasoning }, index) => {
+    .map(({ response, expectedResponse, reasoning }, index) => {
       const no = `${index + 1}.`
-      const expectedResponse = input.expectedResponse;
       const expectedResponseEntry = expectedResponse
         ? `   **Expected response**: ${removeNewlines(expectedResponse)}`
         : '';
       return [
-        `${no} **Response from model**: ${removeNewlines(input.response)}`,
+        `${no} **Response from model**: ${removeNewlines(response)}`,
         expectedResponseEntry,
         `   **Explanation from evaluator**: ${removeNewlines(reasoning)}`,
       ]

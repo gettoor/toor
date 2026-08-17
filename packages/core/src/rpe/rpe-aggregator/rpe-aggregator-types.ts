@@ -1,6 +1,6 @@
 import { DistributionRange } from '../../math/index.js';
 import { MetricResult } from '../../llm/index.js';
-import { RPEPrompt } from '../rpe-prompt/index.js';
+import { RPEPrompt, RPEPromptRef } from '../rpe-prompt/index.js';
 import { RPEEvaluatorOutput } from '../rpe-evaluator/index.js';
 
 /**
@@ -25,9 +25,9 @@ export interface RPEAggregatorInput {
  */
 export interface RPEAggregatorOutput {
   /**
-   * Prompt that was evaluated.
+   * Reference to the prompt that was evaluated.
    */
-  prompt: RPEPrompt;
+  promptRef: RPEPromptRef;
 
   /**
    * Evaluations that passed.

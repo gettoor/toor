@@ -1,4 +1,5 @@
 import { scalar, SCALAR_SCORING_DEFAULT } from '../../llm-as-a-judge/index.js';
+import { promptRefFromPrompt } from '../rpe-prompt/index.js';
 import { 
   RPEEvaluator,
   RPEEvaluatorInput,
@@ -39,7 +40,9 @@ export function judgeRPEEvaluator(
         metrics,
       });
       return {
-        input,
+        promptRef: promptRefFromPrompt(prompt),
+        response,
+        expectedResponse,
         score: result.result.normalizedScore,
         reasoning: result.reasoning,
         metrics: result.result.metrics,
@@ -60,7 +63,9 @@ export function judgeRPEEvaluator(
       },
     });
     return {
-      input,
+      promptRef: promptRefFromPrompt(prompt),
+      response,
+      expectedResponse,
       score: result.result.normalizedScore,
       reasoning: result.reasoning,
       metrics: result.result.metrics,
