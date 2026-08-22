@@ -114,7 +114,8 @@ function failedExamplesForPrompt(
 ): string {
   return evaluations
     .slice(0, count)
-    .map(({ response, expectedResponse, reasoning }, index) => {
+    .map(({ response, datasetEntry, reasoning }, index) => {
+      const expectedResponse = datasetEntry.expectedResponse;
       const no = `${index + 1}.`
       const expectedResponseEntry = expectedResponse
         ? `   **Expected response**: ${removeNewlines(expectedResponse)}`

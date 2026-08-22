@@ -57,6 +57,7 @@ export async function evaluateResponses(
 ): Promise<EvaluatorOutput> {
   const inputs = responses.map(response => ({
     prompt: findPromptById(state, response.promptRef.promptId),
+    datasetEntry: response.datasetEntry,
     response: response.response,
     expectedResponse: response.datasetEntry.expectedResponse,
   }));

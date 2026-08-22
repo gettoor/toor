@@ -26,7 +26,7 @@ export function judgeRPEEvaluator(
   } = input;
 
   return async (input: RPEEvaluatorInput): Promise<RPEEvaluatorOutput> => {
-    const { prompt, response, expectedResponse } = input;
+    const { prompt, datasetEntry, response, expectedResponse } = input;
 
     // do plain LLM-as-a-judge without expected response
     if (!expectedResponse) {
@@ -41,8 +41,8 @@ export function judgeRPEEvaluator(
       });
       return {
         promptRef: promptRefFromPrompt(prompt),
+        datasetEntry,
         response,
-        expectedResponse,
         score: result.result.normalizedScore,
         reasoning: result.reasoning,
         metrics: result.result.metrics,
@@ -64,8 +64,8 @@ export function judgeRPEEvaluator(
     });
     return {
       promptRef: promptRefFromPrompt(prompt),
+      datasetEntry,
       response,
-      expectedResponse,
       score: result.result.normalizedScore,
       reasoning: result.reasoning,
       metrics: result.result.metrics,

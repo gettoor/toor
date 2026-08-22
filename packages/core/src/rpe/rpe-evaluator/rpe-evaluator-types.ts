@@ -1,4 +1,5 @@
 import { MetricResult } from '../../llm/index.js';
+import { RPEDatasetEntry } from '../rpe-dataset/index.js';
 import { RPEPrompt, RPEPromptRef } from '../rpe-prompt/index.js';
 
 /**
@@ -10,6 +11,11 @@ export interface RPEEvaluatorInput {
    * Prompt to evaluate.
    */
   prompt: RPEPrompt;
+
+  /**
+   * Dataset entry used to generate the response.
+   */
+  datasetEntry: RPEDatasetEntry;
 
   /**
    * Response to evaluate.
@@ -33,14 +39,14 @@ export interface RPEEvaluatorOutput {
   promptRef: RPEPromptRef;
 
   /**
+   * Dataset entry used to generate the response.
+   */
+  datasetEntry: RPEDatasetEntry;
+
+  /**
    * Response to evaluate.
    */
   response: string;
-
-  /**
-   * Expected response.
-   */
-  expectedResponse?: string;
 
   /**
    * Score normalized to 0..1.
