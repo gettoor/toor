@@ -6,16 +6,22 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "typecheck": "tsc --noEmit --skipLibCheck",
+    "build": "tsc --noEmit --skipLibCheck && vite build",
     "postbuild": "node ./postbuild.mjs",
     "preview": "vite preview",
     "clean-package": "rm -rf node_modules dist"
   },
   "dependencies": {
+    "@gettoor/core": "workspace:^",
+    "clsx": "^2.1.1",
+    "dompurify": "^3.4.14",
+    "marked": "^18.0.10",
     "preact": "^10.29.8"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.10.6",
+    "esbuild": "^0.28.2",
     "sass-embedded": "^1.100.0",
     "typescript": "^6.0.3",
     "vite": "^8.2.1",

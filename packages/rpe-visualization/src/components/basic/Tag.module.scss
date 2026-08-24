@@ -1,0 +1,17 @@
+@use '../../styles/includes' as *;
+
+.tag {
+  padding: 0.125rem 0.377rem;
+  border-radius: 0.25rem;
+  @include font-small;
+}
+
+.tag-red {
+  background-color: var(--red);
+  color: var(--bg);
+}
+
+.tag-green {
+  background-color: var(--green);
+  color: var(--bg);
+}

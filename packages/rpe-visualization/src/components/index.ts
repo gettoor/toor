@@ -1,1 +1,1 @@
-export * from './prompt-tree/index.js';
+export * from './prompt-view/index.js';

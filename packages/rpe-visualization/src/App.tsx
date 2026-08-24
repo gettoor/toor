@@ -1,19 +1,18 @@
-import { PromptTree } from './components/index.js';
-import { iterations } from './data.js';
+import { RPEState } from '@gettoor/core';
+import { PromptView } from './components/index.js';
 
-export function App() {
+export interface AppProps {
+  rpeState: RPEState;
+}
+
+export function App(props: AppProps) {
+  const { rpeState } = props;
   return (
     <main>
-      <h1>RPE Visualization</h1>
-      <ul>
-        {iterations.map(iteration => (
-          <li key={iteration.iterationNo}>
-            Iteration #{iteration.iterationNo} — {iteration.promptCount} prompt(s),{' '}
-            {iteration.candidateCount} candidate(s)
-          </li>
-        ))}
-      </ul>
-      <PromptTree/>
+      <PromptView 
+        prompts={rpeState.prompts}
+        iterations={rpeState.iterationHistory}
+      />
     </main>
   );
 }

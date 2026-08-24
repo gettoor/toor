@@ -11,8 +11,7 @@ async function copyResourceFiles() {
   await cp(srcDir, distDir, {
     recursive: true,
     filter: (src) =>
-      src.endsWith('.eta') ||
-      src.includes('.eta.') ||
+      src.includes('index.html') ||
       !src.includes('.'),
   });
 }
