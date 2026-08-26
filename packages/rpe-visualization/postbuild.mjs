@@ -35,7 +35,7 @@ async function copyIndexHtmlToCore() {
     'templates',
     'index.html',
   );
-  console.log('Copying index.html to core...', dstIndexHtmlPath);
+  console.log('Copying index.html to core...');
   await writeFile(dstIndexHtmlPath, indexHtml);
 }
 
@@ -44,7 +44,7 @@ async function embedRPEstate() {
   const rpeState = await readFile('../../state.json');
   const html = await readFile(distIndexHtmlPath, 'utf-8');
   const updatedHtml = html.replace('__RPE_STATE__', rpeState);
-  await writeFile(join(__dirname, 'dist', 'index-with-rpe-state.html')  , updatedHtml);
+  await writeFile(join(__dirname, 'dist', 'index-with-rpe-state.html'), updatedHtml);
 }
 
 async function run() {

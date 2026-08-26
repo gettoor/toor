@@ -1,4 +1,5 @@
 import { RPEPrompt } from '@gettoor/core';
+
 import { 
   PADDING,
   BOX_WIDTH,
@@ -66,9 +67,11 @@ export function resolveBoxes(
         promptId: promptRef.promptId,
         parentPromptIds: prompt.parentPromptIds,
         aggregatedScore: aggregatedEvaluation?.aggregatedScore,
+        passedEvaluationsCount: aggregatedEvaluation?.passedEvaluations.length,
+        failedEvaluationsCount: aggregatedEvaluation?.failedEvaluations.length,
       },
-      x: x,
-      y: y,
+      x,
+      y,
       width: BOX_WIDTH,
       height: BOX_HEIGHT,
       isSelected: false,
@@ -83,7 +86,6 @@ export function resolveBoxes(
     let x = PADDING;
     for (const candidate of iteration.candidates) {
       const prompt = findPromptById(candidate.promptRef.promptId);
-      const aggregatedEvaluation = findAggregatedEvaluation(prompt.promptId);
       const candidateAggregatedEvaluation = findCandidateAggregatedEvaluation(
         prompt.promptId,
       );
@@ -96,12 +98,15 @@ export function resolveBoxes(
         data: {
           promptId: prompt.promptId,
           parentPromptIds: prompt.parentPromptIds,
-          aggregatedScore:
-            aggregatedEvaluation?.aggregatedScore ??
-            candidateAggregatedEvaluation?.aggregatedScore,
+          aggregatedScore: candidateAggregatedEvaluation?.aggregatedScore,
+          passedEvaluationsCount:
+            candidateAggregatedEvaluation?.passedEvaluations.length,
+          failedEvaluationsCount:
+            candidateAggregatedEvaluation?.failedEvaluations.length,
+          promptChangesCount: candidate?.changes.length,
         },
-        x: x,
-        y: y,
+        x,
+        y,
         width: BOX_WIDTH,
         height: BOX_HEIGHT,
         isSelected,

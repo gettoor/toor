@@ -13,7 +13,12 @@ export function PromptBoxConnection(props: PromptBoxConnectionProps) {
 
   return (
     <path
-      d={`M ${fromX} ${fromY} C${fromX} ${toY}, ${toX} ${fromY}, ${toX} ${toY}`} 
+      d={
+        `M ${fromX + 0.5} ${fromY + 0.5} `+
+        `C ${fromX + 0.5} ${toY + 0.5}, `+
+        `${toX + 0.5} ${fromY + 0.5}, `+
+        `${toX + 0.5} ${toY + 0.5}`
+      } 
       stroke='var(--stroke)'
       strokeWidth={1}
       fill='none'

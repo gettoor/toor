@@ -17,11 +17,6 @@ export function PromptAggregatedEvaluation(
 ) {
   const { aggregatedEvaluation } = props;
 
-  const allEvaluations = [
-    ...aggregatedEvaluation.passedEvaluations,
-    ...aggregatedEvaluation.failedEvaluations,
-  ];
-
   const renderDatasetEntry = (datasetEntry: RPEDatasetEntry) => {
     if (datasetEntry.vars == undefined) {
       return;
@@ -84,13 +79,15 @@ export function PromptAggregatedEvaluation(
     );
   };
   const renderEvaluations = () => {
-    return allEvaluations.map((evaluation, index) => {
-      const passed = aggregatedEvaluation.passedEvaluations.some(evaluation => {
-        return evaluation.promptRef.promptId === evaluation.promptRef.promptId;
+    const passedEvaluations = aggregatedEvaluation.passedEvaluations
+      .map((evaluation, index) => {
+        return renderEvaluation(index, 'passed', evaluation);
       });
-      const status = passed ? 'passed' : 'failed';
-      return renderEvaluation(index, status, evaluation);
-    });
+    const failedEvaluations = aggregatedEvaluation.failedEvaluations
+      .map((evaluation, index) => {
+        return renderEvaluation(index, 'failed', evaluation);
+      });
+    return [...passedEvaluations, ...failedEvaluations];
   };
 
   return (

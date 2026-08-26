@@ -5,7 +5,7 @@
 
   border: 1px solid var(--muted);
   border-radius: var(--border-radius);
-  background-color: var(--bg);
+  background-color: var(--bg-muted);
   position: fixed;
   bottom: 0;
   top: $vertical-padding;
@@ -14,9 +14,11 @@
   height: calc(100vh - $vertical-padding * 2);
   z-index: 7;
   box-shadow: var(--shadow);
-  padding: calc(var(--border-radius) * 1.5) calc(var(--border-radius) * 2);
   @include font-medium;
-  overflow-y: auto;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
 
   left: 50%;
   transform: translate(-50%, -110%);
@@ -40,10 +42,34 @@
     margin-bottom: 0rem;
     padding: 0;
   }
+
+  .prompt-details-box-header {
+    font-family: 'Funnel Display', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 500;
+    padding: 0;
+    border-bottom: 1px solid var(--muted);
+    position: sticky;
+    top: 0;
+    padding: calc(var(--border-radius) * 1.5) calc(var(--border-radius) * 2);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .prompt-details-box-header-title {
+    flex: 1;
+  }
+
+  .prompt-details-box-content {
+    padding: calc(var(--border-radius) * 1.5) calc(var(--border-radius) * 2);
+    overflow-y: auto;
+    flex: 1;
+  }
 }
 
 .prompt-details-prompt {
-  max-height: 12rem;      
+  max-height: 12rem;
   @include font-small;
   border: 1px solid var(--muted);
   border-radius: var(--border-radius);

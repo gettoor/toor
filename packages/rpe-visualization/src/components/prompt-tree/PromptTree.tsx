@@ -20,12 +20,13 @@ export interface PromptTreeProps {
     | 'candidateAggregatedEvaluations'
   >[];
   selectedPromptId: string | null;
+  detailsVisible: boolean;
   onSelectPromptId: (promptId: string) => void;
   onBackgroundClick: () => void;
 }
 
 export function PromptTree(props: PromptTreeProps) {
-  const { selectedPromptId } = props;
+  const { selectedPromptId, detailsVisible } = props;
 
   const onBoxClick = (promptId: string) => {
     props.onSelectPromptId(promptId);
@@ -42,6 +43,7 @@ export function PromptTree(props: PromptTreeProps) {
       <PromptBox
         key={box.data.promptId}
         {...box}
+        isSelected={box.data.promptId === selectedPromptId && detailsVisible}
         isHighlighted={isHighlighted(boxes, box.data.promptId, selectedPromptId)}
       />
     ));
@@ -85,8 +87,15 @@ export function PromptTree(props: PromptTreeProps) {
         opacity={1}
         onClick={onBackgroundClick}
       />
-      {renderBoxes()}
       {renderConnections()}
+      {renderBoxes()}
+      <text
+        x="20"
+        y="100"
+        transform="rotate(-90 20 100)"
+      >
+        Vertical text
+      </text>    
     </svg>
   );
 }

@@ -5,7 +5,7 @@ export interface ScoreProps {
 export function Score(props: ScoreProps) {
   return (
     <span>
-      {props.score.toFixed(2)}
+      <b>{props.score.toFixed(2)}</b>
     </span>
   );
 }

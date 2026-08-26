@@ -14,7 +14,40 @@
     opacity: 0.25;
   }
 
-  .prompt-box-info-score {
+  .prompt-box-info-properties {
+    display: grid;
+    grid-template-columns: auto 2rem;
+    @include font-small;
+  }
+
+  .prompt-box-score-name {
+    @include font-small;
+  }
+
+  .prompt-box-score-value {
     font-size: 1rem;
+  }
+
+  .prompt-box-score-value {
+    font-weight: bold;
+    margin-top: -0.25rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .prompt-box-info-name {
+    text-align: right;
+    padding-right: 0.25rem;
+  }
+
+  .prompt-box-info-value {
+    font-weight: bold;
+  }
+
+  .prompt-box-info-value-red {
+    color: var(--red);
+  }
+
+  .prompt-box-info-value-green {
+    color: var(--green);
   }
 }

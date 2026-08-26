@@ -24,12 +24,11 @@ export interface PromptDetailsData {
 export interface PromptDetailsProps {
   data?: PromptDetailsData;
   visible: boolean;
-  overlayVisible?: boolean;
-  onOverlayClick: () => void;
+  onCloseClick: () => void;
 }
 
 export function PromptDetails(props: PromptDetailsProps) {
-  const { data, visible, overlayVisible = false } = props;
+  const { data, visible, onCloseClick } = props;
   const hasData = !!data;
 
   const [promptExpanded, setPromptExpanded] = useState(false);
@@ -61,46 +60,52 @@ export function PromptDetails(props: PromptDetailsProps) {
 
   return (
     <>
-      { overlayVisible &&
-        <div
-          className={overlayClassName}
-          onClick={props.onOverlayClick}
-        />
-      }
       <div className={boxClassName}>
-        { hasData &&
-          <>
-            <Header title='Prompt'>
-              <IconButton
-                name={expandIconName}
-                title='Expand/collapse prompt'
-                onClick={onPromptExpandClick}
-              />
-            </Header>
-            <pre className={promptClassName}>
-              {data?.prompt.prompt}
-            </pre>
-            { data?.promptChanges &&
-              <>
-                <Header title='Prompt Changes'/>
-                <PromptChanges 
-                  promptId={data!.prompt.promptId}
-                  changes={data!.promptChanges}
+        <div className={styles['prompt-details-box-header']}>
+          <div className={styles['prompt-details-box-header-title']}>
+            Prompt details
+          </div>
+          <IconButton
+            name='close'
+            title='Close prompt details'
+            onClick={onCloseClick}
+          />
+        </div>
+        <div className={styles['prompt-details-box-content']}>
+          { hasData &&
+            <>
+              <Header title='Prompt'>
+                <IconButton
+                  name={expandIconName}
+                  title='Expand/collapse prompt'
+                  onClick={onPromptExpandClick}
                 />
-              </>
-            }
-            <Header title='Evaluations'/>
-            <PromptAggregatedEvaluation
-              aggregatedEvaluation={data!.aggregatedEvaluation}
-            />
-            { data!.analysis &&
-              <>
-                <Header title='Analysis'/>
-                <PromptAnalysis analysis={data!.analysis}/>
-              </>
-            }
-          </>
-        }
+              </Header>
+              <pre className={promptClassName}>
+                {data?.prompt.prompt}
+              </pre>
+              { data?.promptChanges &&
+                <>
+                  <Header title='Prompt Changes'/>
+                  <PromptChanges 
+                    promptId={data!.prompt.promptId}
+                    changes={data!.promptChanges}
+                  />
+                </>
+              }
+              <Header title='Evaluations'/>
+              <PromptAggregatedEvaluation
+                aggregatedEvaluation={data!.aggregatedEvaluation}
+              />
+              { data!.analysis &&
+                <>
+                  <Header title='Analysis'/>
+                  <PromptAnalysis analysis={data!.analysis}/>
+                </>
+              }
+            </>
+          }
+        </div>
       </div>
     </>
   );

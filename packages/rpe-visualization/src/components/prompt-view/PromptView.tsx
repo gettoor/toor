@@ -1,10 +1,10 @@
 import { useState } from 'preact/hooks';
 import { RPEIteration, RPEPrompt } from '@gettoor/core';
 
-import styles from './PromptView.module.scss';
 import { PromptTree } from '../prompt-tree';
 import { PromptDetails } from '../prompt-details';
 import { getPromptDetailsData } from './prompt-view-utils';
+import { ThemeSwitch } from '../settings';
 
 export interface PromptViewProps {
   prompts: RPEPrompt[];
@@ -18,7 +18,10 @@ export function PromptView(props: PromptViewProps) {
     selectedPromptId,
     setSelectedPromptId,
   ] = useState<string | null>(null);
-  const [ detailsVisible, setDetailsVisible ] = useState<boolean>(false);
+  const [
+    detailsVisible,
+    setDetailsVisible,
+  ] = useState<boolean>(false);
 
   const selectPromptId = (promptId: string) => {
     setSelectedPromptId(promptId);
@@ -27,12 +30,8 @@ export function PromptView(props: PromptViewProps) {
   const clearPromptId = () => {
     setSelectedPromptId(null);
   };
-  const onBackgroundClick = () => {
-    if (detailsVisible) {
-      setDetailsVisible(false);
-      return;
-    }
-    clearPromptId();
+  const onCloseClick = () => {
+    setDetailsVisible(false);
   };
 
   const promptTreeIterations = iterations.map(iteration => {
@@ -50,22 +49,20 @@ export function PromptView(props: PromptViewProps) {
 
   return (
     <>
-      <div 
-        className={styles['prompt-view-background']}
-        onClick={onBackgroundClick}
-      />
       <PromptTree
         prompts={prompts}
         iterations={promptTreeIterations}
         selectedPromptId={selectedPromptId}
+        detailsVisible={detailsVisible}
         onSelectPromptId={selectPromptId}
-        onBackgroundClick={onBackgroundClick}
+        onBackgroundClick={() => {}}
       />
       <PromptDetails
         data={promptDetailsData}
         visible={detailsVisible}
-        onOverlayClick={() => {}}
+        onCloseClick={onCloseClick}
       />
+      <ThemeSwitch/>
     </>
   );
 }

@@ -16,3 +16,25 @@ pre {
   font-size: 0.86rem;
   line-height: 1.62;
 }
+
+/* Let's get this party started */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  -webkit-border-radius: 8px;
+  border-radius: 8px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  -webkit-border-radius: 8px;
+  border-radius: 8px;
+  background: var(--muted);
+}
+
+::-webkit-scrollbar-thumb:window-inactive {
+  background: var(--muted);
+}
