@@ -7,7 +7,7 @@ import {
   RPEPromptGeneratorChange,
 } from '@gettoor/core';
 
-import { IconButton } from '../basic';
+import { IconButton, Panel } from '../basic';
 import { Header } from './Header';
 import { PromptAggregatedEvaluation } from './PromptAggregatedEvaluation';
 import { PromptAnalysis } from './PromptAnalysis';
@@ -39,74 +39,59 @@ export function PromptDetails(props: PromptDetailsProps) {
   };
 
   const boxClassName = clsx(
-    styles['prompt-details-box'],
+    styles['prompt-details-panel'],
     {
       [styles.visible]: visible,
       [styles.hidden]: !visible,
     },
   );
-  const overlayClassName = clsx(
-    styles['prompt-details-overlay'], {
-      [styles.visible]: visible,
-      [styles.hidden]: !visible,
-    },
-  );
   const promptClassName = clsx(
-    styles['prompt-details-prompt'], {
+    styles['prompt-details-prompt'],
+    {
       [styles['prompt-details-prompt-expanded']]: promptExpanded,
     },
   );
   const expandIconName = promptExpanded ? 'unfold_less' : 'unfold_more';
 
   return (
-    <>
-      <div className={boxClassName}>
-        <div className={styles['prompt-details-box-header']}>
-          <div className={styles['prompt-details-box-header-title']}>
-            Prompt details
-          </div>
-          <IconButton
-            name='close'
-            title='Close prompt details'
-            onClick={onCloseClick}
-          />
-        </div>
-        <div className={styles['prompt-details-box-content']}>
-          { hasData &&
+    <Panel
+      className={boxClassName}
+      title='Prompt details'
+      onCloseClick={onCloseClick}
+    >
+      { hasData &&
+        <>
+          <Header title='Prompt'>
+            <IconButton
+              name={expandIconName}
+              title='Expand/collapse prompt'
+              onClick={onPromptExpandClick}
+            />
+          </Header>
+          <pre className={promptClassName}>
+            {data?.prompt.prompt}
+          </pre>
+          { data?.promptChanges &&
             <>
-              <Header title='Prompt'>
-                <IconButton
-                  name={expandIconName}
-                  title='Expand/collapse prompt'
-                  onClick={onPromptExpandClick}
-                />
-              </Header>
-              <pre className={promptClassName}>
-                {data?.prompt.prompt}
-              </pre>
-              { data?.promptChanges &&
-                <>
-                  <Header title='Prompt Changes'/>
-                  <PromptChanges 
-                    promptId={data!.prompt.promptId}
-                    changes={data!.promptChanges}
-                  />
-                </>
-              }
-              <Header title='Evaluations'/>
-              <PromptAggregatedEvaluation
-                aggregatedEvaluation={data!.aggregatedEvaluation}
+              <Header title='Prompt Changes'/>
+              <PromptChanges 
+                promptId={data!.prompt.promptId}
+                changes={data!.promptChanges}
               />
-              { data!.analysis &&
-                <>
-                  <Header title='Analysis'/>
-                  <PromptAnalysis analysis={data!.analysis}/>
-                </>
-              }
             </>
           }
-        </div>
-      </div>
-    </>
+          <Header title='Evaluations'/>
+          <PromptAggregatedEvaluation
+            aggregatedEvaluation={data!.aggregatedEvaluation}
+          />
+          { data!.analysis &&
+            <>
+              <Header title='Analysis'/>
+              <PromptAnalysis analysis={data!.analysis}/>
+            </>
+          }
+        </>
+      }
+    </Panel>
   );
 }
