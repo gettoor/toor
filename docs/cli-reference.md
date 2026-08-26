@@ -120,7 +120,7 @@ datasets:
 ```
 
 ::: info <Badge type="tip" text="NOTE" />
-The placeholders in prompts are placed inside the square brackets, e.g. `<<ticket>>`.
+The placeholders in prompts are placed inside the angle brackets, e.g. `<<ticket>>`.
 
 ```yaml
 prompt: |
