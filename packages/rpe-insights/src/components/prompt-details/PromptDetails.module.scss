@@ -17,14 +17,6 @@
     transition: transform 280ms ease-in;
     transform: translate(-50%, 110%);
   }
-
-  h2 {
-    font-family: 'Funnel Display', sans-serif;
-    @include font-medium;
-    margin-top: 1rem;
-    margin-bottom: 0rem;
-    padding: 0;
-  }
 }
 
 .prompt-details-prompt {

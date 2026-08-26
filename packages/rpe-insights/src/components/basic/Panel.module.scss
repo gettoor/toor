@@ -8,10 +8,10 @@
   background-color: var(--bg-muted);
   position: fixed;
   bottom: 0;
-  top: $vertical-padding;
+  top: $vertical-padding * 2;
   width: 90vw;
   max-width: 960px;
-  height: calc(100vh - $vertical-padding * 2);
+  height: calc(100vh - $vertical-padding * 4);
   z-index: 7;
   box-shadow: var(--shadow);
   @include font-medium;
@@ -42,5 +42,20 @@
     padding: calc(var(--border-radius) * 1.5) calc(var(--border-radius) * 2);
     overflow-y: auto;
     flex: 1;
+  }
+
+  h1 {
+    font-family: 'Funnel Display', sans-serif;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    padding: 0;
+  }
+
+  h2 {
+    font-family: 'Funnel Display', sans-serif;
+    @include font-medium;
+    margin-top: 1rem;
+    margin-bottom: 0rem;
+    padding: 0;
   }
 }

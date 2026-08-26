@@ -6,13 +6,9 @@ export interface AppProps {
 }
 
 export function App(props: AppProps) {
-  const { rpeInsights } = props;
   return (
     <main>
-      <PromptView 
-        prompts={rpeInsights.prompts}
-        iterations={rpeInsights.iterationHistory}
-      />
+      <PromptView rpeInsights={props.rpeInsights}/>
     </main>
   );
 }

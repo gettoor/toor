@@ -1,18 +1,18 @@
 import { useState } from 'preact/hooks';
-import { RPEIteration, RPEPrompt } from '@gettoor/core';
+import { RPEInsights, RPEIteration, RPEPrompt } from '@gettoor/core';
 
 import { PromptTree } from '../prompt-tree';
 import { PromptDetails } from '../prompt-details';
 import { getPromptDetailsData } from './prompt-view-utils';
-import { ThemeSwitch } from '../settings';
+import { InfoPanel, Toolbar } from '../tools';
 
 export interface PromptViewProps {
-  prompts: RPEPrompt[];
-  iterations: RPEIteration[];
+  rpeInsights: RPEInsights;
 }
 
 export function PromptView(props: PromptViewProps) {
-  const { prompts, iterations } = props;
+  const { rpeInsights } = props;
+  const { prompts, iterationHistory } = rpeInsights;
 
   const [
     selectedPromptId,
@@ -22,10 +22,25 @@ export function PromptView(props: PromptViewProps) {
     detailsVisible,
     setDetailsVisible,
   ] = useState<boolean>(false);
+  const [
+    infoVisible,
+    setInfoVisible,
+  ] = useState<boolean>(false);
+
+  const hideDetails = () => {
+    // let the details slide out first...
+    setDetailsVisible(false);
+
+    // ...then clear the prompt identifier
+    setTimeout(() => {
+      clearPromptId();
+    }, 340);
+  };
 
   const selectPromptId = (promptId: string) => {
     setSelectedPromptId(promptId);
-    setDetailsVisible(promptId !== null);
+    setDetailsVisible(true);
+    setInfoVisible(false);
   };
   const clearPromptId = () => {
     setSelectedPromptId(null);
@@ -38,15 +53,16 @@ export function PromptView(props: PromptViewProps) {
       clearPromptId();
       return;
     }
-
-    // let the details slide out first
-    setDetailsVisible(false);
-    setTimeout(() => {
-      clearPromptId();
-    }, 340);
+    hideDetails();
+  };
+  const onInfoClick = () => {
+    if (detailsVisible) {
+      hideDetails();
+    }
+    setInfoVisible(!infoVisible);
   };
 
-  const promptTreeIterations = iterations.map(iteration => {
+  const promptTreeIterations = iterationHistory.map(iteration => {
     return {
       promptRefs: iteration.promptRefs,
       candidates: iteration.candidates,
@@ -56,7 +72,7 @@ export function PromptView(props: PromptViewProps) {
     };
   });
   const promptDetailsData = selectedPromptId !== null
-    ? getPromptDetailsData(prompts, iterations, selectedPromptId)
+    ? getPromptDetailsData(prompts, iterationHistory, selectedPromptId)
     : undefined;
 
   return (
@@ -74,7 +90,12 @@ export function PromptView(props: PromptViewProps) {
         visible={detailsVisible}
         onCloseClick={onCloseClick}
       />
-      <ThemeSwitch/>
+      <Toolbar onInfoClick={onInfoClick}/>
+      <InfoPanel
+        rpeInsights={rpeInsights}
+        visible={infoVisible}
+        onCloseClick={onInfoClick}
+      />
     </>
   );
 }
