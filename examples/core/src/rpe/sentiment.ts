@@ -12,7 +12,7 @@ import {
   defaultRPEAnalyzer,
   defaultRPEPromptGenerator,
   bestScorePromptSelector,
-  renderRPEStateToHTML,
+  renderRPEInsightsToHTML,
 } from '@gettoor/core';
 import { EASY_DATASET } from './sentiment-dataset.js';
 
@@ -77,10 +77,10 @@ async function run(): Promise<void> {
     }
   };
 
-  const { state } = await optimize(input);
-  fs.writeFile('state.json', JSON.stringify(state, null, 2));
+  const { insights } = await optimize(input);
+  fs.writeFile('insights.json', JSON.stringify(insights, null, 2));
 
-  const html = await renderRPEStateToHTML(state);
+  const html = await renderRPEInsightsToHTML(insights);
   fs.writeFile('rpe.html', html);
 }
 

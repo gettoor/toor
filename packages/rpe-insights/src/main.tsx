@@ -2,10 +2,10 @@ import { render } from 'preact';
 import './styles/global.scss';
 import './styles/themes.scss';
 import { App } from './App.js';
-import { loadRPEState } from './rpe-state';
+import { loadRPEInsights } from './rpe-insights';
 
-const rpeState = loadRPEState();
+const rpeInsights = loadRPEInsights();
 render(
-  <App rpeState={rpeState}/>,
+  <App rpeInsights={rpeInsights}/>,
   document.getElementById('app')!
 );

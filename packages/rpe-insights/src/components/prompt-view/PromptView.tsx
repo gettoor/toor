@@ -33,6 +33,18 @@ export function PromptView(props: PromptViewProps) {
   const onCloseClick = () => {
     setDetailsVisible(false);
   };
+  const onBackgroundClick = () => {
+    if (!detailsVisible) {
+      clearPromptId();
+      return;
+    }
+
+    // let the details slide out first
+    setDetailsVisible(false);
+    setTimeout(() => {
+      clearPromptId();
+    }, 340);
+  };
 
   const promptTreeIterations = iterations.map(iteration => {
     return {
@@ -55,7 +67,7 @@ export function PromptView(props: PromptViewProps) {
         selectedPromptId={selectedPromptId}
         detailsVisible={detailsVisible}
         onSelectPromptId={selectPromptId}
-        onBackgroundClick={() => {}}
+        onBackgroundClick={onBackgroundClick}
       />
       <PromptDetails
         data={promptDetailsData}

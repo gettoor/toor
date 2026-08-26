@@ -7,7 +7,7 @@ import { RPEAnalyzer } from './rpe-analyzer/index.js';
 import { RPEPromptGenerator } from './rpe-prompt-generator/index.js';
 import { RPEPromptSelector } from './rpe-prompt-selector/index.js';
 import { RPEStopFunc } from './rpe-stop/index.js';
-import { RPEState } from './rpe-state/index.js';
+import { RPEInsights, RPEState } from './rpe-state/index.js';
 
 /**
  * Reflective Prompt Evolution (RPE) settings and configuration.
@@ -111,6 +111,10 @@ export interface RPEInput {
   stopAfterIteration: RPEStopFunc;
 }
 
+/**
+ * Output of an RPE process.
+ * @category Reflective Prompt Evolution
+ */
 export interface RPEOutput {
   /**
    * The final prompts.
@@ -118,12 +122,7 @@ export interface RPEOutput {
   prompts: RPEPrompt[];
 
   /**
-   * The final state of the RPE process.
+   * Insights from the RPE process.
    */
-  state: RPEState;
-
-  /**
-   * The reason why the optimization stopped.
-   */
-  stopReason: string;
+  insights: RPEInsights;
 }

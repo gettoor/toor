@@ -83,19 +83,20 @@ export function PromptTree(props: PromptTreeProps) {
         width={width}
         height={height}
         fill='var(--bg)'
-        stroke='none'
-        opacity={1}
+        opacity={0}
+        rx={`var(--border-radius)`}
+        ry={`var(--border-radius)`}        
         onClick={onBackgroundClick}
       />
       {renderConnections()}
       {renderBoxes()}
-      <text
+      {/* <text
         x="20"
         y="100"
         transform="rotate(-90 20 100)"
       >
         Vertical text
-      </text>    
+      </text>     */}
     </svg>
   );
 }

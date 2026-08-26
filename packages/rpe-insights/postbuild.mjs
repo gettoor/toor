@@ -40,17 +40,17 @@ async function copyIndexHtmlToCore() {
 }
 
 // TODO: delete me
-async function embedRPEstate() {
-  const rpeState = await readFile('../../state.json');
+async function embedRPEInsights() {
+  const rpeInsights = await readFile('../../insights.json');
   const html = await readFile(distIndexHtmlPath, 'utf-8');
-  const updatedHtml = html.replace('__RPE_STATE__', rpeState);
-  await writeFile(join(__dirname, 'dist', 'index-with-rpe-state.html'), updatedHtml);
+  const updatedHtml = html.replace('__RPE_INSIGHTS__', rpeInsights);
+  await writeFile(join(__dirname, 'dist', 'index-with-rpe-insights.html'), updatedHtml);
 }
 
 async function run() {
   await embedData();
   await copyIndexHtmlToCore();
-  await embedRPEstate(); // TODO: delete me
+  await embedRPEInsights(); // TODO: delete me
 }
 
 run().catch(error => {

@@ -166,7 +166,10 @@ export async function optimize(
     prompts: state.iteration.promptRefs.map(promptRef => {
       return findPromptById(state, promptRef.promptId);
     }),
-    state,
-    stopReason,
+    insights: {
+      prompts: state.prompts,
+      stopReason,
+      iterationHistory: state.iterationHistory,
+    },
   };
 }
