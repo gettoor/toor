@@ -1,3 +1,4 @@
+import { LLMUsage } from '../llm/index.js';
 import { RPEPrompt, RPEPromptRef } from './rpe-prompt/index.js';
 import { 
   RPEPromptGeneratorChange,
@@ -17,6 +18,11 @@ export interface PromptGeneratorOutputCandidate {
    * Changes made to the prompt.
    */
   changes: RPEPromptGeneratorChange[];
+
+  /**
+   * Usage of the model.
+   */
+  usage?: LLMUsage;
 }
 
 /**
@@ -44,4 +50,9 @@ export interface PromptGeneratorCandidate {
    * Changes made to the prompt.
    */
   changes: RPEPromptGeneratorChange[];
+
+  /**
+   * Usage of the model.
+   */
+  usage?: LLMUsage;
 } 

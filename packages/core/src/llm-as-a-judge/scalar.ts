@@ -95,7 +95,7 @@ export async function scalar(input: ScalarInput): Promise<ScalarOutput> {
 
   // generate text
   const response = await generateText({
-    model,
+    model: model.model,
     prompt: evalPrompt,
     ...buildModelCallSettings(input.modelParameters),
     output: Output.object({
@@ -124,8 +124,13 @@ export async function scalar(input: ScalarInput): Promise<ScalarOutput> {
     metrics,
   };
   const usage: LLMUsage = {
-    inputTokens: response.usage.inputTokens,
-    outputTokens: response.usage.outputTokens,
+    modelUsage: [
+      {
+        modelName: model.name,
+        inputTokens: response.usage.inputTokens,
+        outputTokens: response.usage.outputTokens,
+      },
+    ],
   };
   return { result, reasoning: output.reasoning, usage };
 }

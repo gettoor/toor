@@ -1,14 +1,11 @@
 .info-panel {
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, 100vh);
-  height: 16rem;
-  max-height: 16rem;
+  height: 24rem;
+  max-height: 90vh;
 
   &.visible {
     left: 50%;
     top: 50%;
-    transform: translate(-50%, calc(-50% - 8rem));
+    transform: translate(-50%, -50%);
     transition: transform 340ms ease-out;
   }
 
@@ -17,5 +14,9 @@
     top: 50%;
     transition: transform 280ms ease-in;
     transform: translate(-50%, 100vh);
+  }
+
+  p {
+    margin-left: 1rem;
   }
 }

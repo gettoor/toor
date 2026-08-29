@@ -1,10 +1,10 @@
 /**
  * Runs an experiment.
  */
-import { generateText, jsonSchema, LanguageModel, Output } from 'ai';
+import { generateText, jsonSchema, Output } from 'ai';
 import yaml from 'yaml';
 
-import { LLMUsage, buildModelCallSettings } from '../llm/index.js';
+import { LLMModel, LLMUsage, buildModelCallSettings } from '../llm/index.js';
 import { replacePlaceholders } from '../string/index.js';
 import { 
   DefaultModelProvider,
@@ -15,7 +15,6 @@ import {
 } from './experimentation-errors.js';
 import { 
   Experiment,
-  ExperimentDatasetVarValue,
   ExperimentSettings,
   ExperimentModel,
   ExperimentModelParameters,
@@ -201,7 +200,7 @@ async function runEvaluation(
  * Generates a response from a model for an experiment prompt.
  */
 async function generateResponse(
-  model: LanguageModel,
+  model: LLMModel,
   experimentModelParameters: ExperimentModelParameters,
   prompt: string,
   structuredOutput?: ExperimentStructuredOutput,
@@ -221,15 +220,20 @@ async function generateResponse(
 
   // generate text response
   const response = await generateText({
-    model,
+    model: model.model,
     prompt,
     ...buildModelCallSettings(modelParameters)
   });
 
   // build result
   const usage: LLMUsage = {
-    inputTokens: response.usage.inputTokens,
-    outputTokens: response.usage.outputTokens,
+    modelUsage: [
+      {
+        modelName: model.name,
+        inputTokens: response.usage.inputTokens,
+        outputTokens: response.usage.outputTokens,
+      },
+    ],
   };
   return {
     response: response.text,
@@ -238,14 +242,13 @@ async function generateResponse(
 }
 
 async function generateStructuredResponse(
-  model: LanguageModel,
+  model: LLMModel,
   modelParameters: ExperimentModelParameters,
   prompt: string,
   structuredOutput: ExperimentStructuredOutput,
 ): Promise<{ response: string, usage: LLMUsage }> {
-  console.log('generateStructuredResponse', prompt, structuredOutput);
   const response = await generateText({
-    model,
+    model: model.model,
     prompt,
     temperature: modelParameters.temperature,
     output: Output.object({
@@ -255,8 +258,13 @@ async function generateStructuredResponse(
 
   const output = response.output;
   const usage: LLMUsage = {
-    inputTokens: response.usage.inputTokens,
-    outputTokens: response.usage.outputTokens,
+    modelUsage: [
+      {
+        modelName: model.name,
+        inputTokens: response.usage.inputTokens,
+        outputTokens: response.usage.outputTokens,
+      },
+    ],
   };
 
   // format

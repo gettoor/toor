@@ -1,7 +1,7 @@
 import clsx from 'clsx';
-import { RPEInsights } from '@gettoor/core';
+import { type RPEInsights, sumRPEInsightsUsage } from '@gettoor/core';
 
-import { Panel } from '../basic';
+import { Panel, Table } from '../basic';
 import styles from './InfoPanel.module.scss';
 
 export interface InfoPanelProps {
@@ -12,6 +12,19 @@ export interface InfoPanelProps {
 
 export function InfoPanel(props: InfoPanelProps) {
   const { visible, onCloseClick } = props;
+
+  const usage = sumRPEInsightsUsage(props.rpeInsights);
+  const usageRows = usage.modelUsage
+    .sort((a, b) => a.modelName.localeCompare(b.modelName))
+    .map(modelUsage => {
+      const inputTokens = modelUsage.inputTokens ?? 0;
+      const outputTokens = modelUsage.outputTokens ?? 0;
+      return [
+        modelUsage.modelName,
+        inputTokens.toString(),
+        outputTokens.toString(),
+      ];
+    });
 
   const panelClassName = clsx(
     styles['info-panel'],
@@ -29,6 +42,15 @@ export function InfoPanel(props: InfoPanelProps) {
     >
       <h2>Stop reason</h2>
       <p>{props.rpeInsights.stopReason}</p>
+
+      <h2>Token usage by model</h2>
+      <p>
+        <Table
+          header={['Model', 'Input tokens', 'Output tokens']}
+          rows={usageRows}
+        />
+      </p>
+
     </Panel>
   );
 }

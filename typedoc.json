@@ -3,7 +3,10 @@
   "entryPoints": [
     "packages/*"
   ],
-  "exclude": ["packages/cli"],
+  "exclude": [
+    "packages/cli",
+    "packages/rpe-insights"
+  ],
   "packageOptions": {
     "entryPoints": ["src/index.ts"],
     "tsconfig": "tsconfig.json",

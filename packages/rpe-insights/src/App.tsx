@@ -1,4 +1,4 @@
-import { RPEInsights } from '@gettoor/core';
+import { type RPEInsights } from '@gettoor/core';
 import { PromptView } from './components/index.js';
 
 export interface AppProps {

@@ -1,11 +1,10 @@
 import { 
-  DatasetEntryEvaluationMetrics,
   Experiment,
   ExperimentDatasetEntryEvaluationCompletedInput,
   ExperimentDatasetEntryEvaluationStartedInput,
   ExperimentListeners,
-  ExperimentScore,
   runExperiment as runExperimentFromCore,
+  sumLLMUsage,
 } from '@gettoor/core';
 
 import {
@@ -77,19 +76,22 @@ export async function runExperiment(
           }
         );
       }
-      if (metrics.responseGenerationUsage.inputTokens) {
+      const responseGenerationUsage = sumLLMUsage(
+        metrics.responseGenerationUsage,
+      );
+      if (responseGenerationUsage.inputTokens) {
         section.property(
           'Prompt generation input tokens',
-          metrics.responseGenerationUsage.inputTokens.toString(),
+          responseGenerationUsage.inputTokens.toString(),
           {
             nameWidth: metricsNameWidth,
           }
         );
       }
-      if (metrics.responseGenerationUsage.outputTokens) {
+      if (responseGenerationUsage.outputTokens) {
         section.property(
           'Prompt generation output tokens',
-          metrics.responseGenerationUsage.outputTokens.toString(),
+          responseGenerationUsage.outputTokens.toString(),
           {
             nameWidth: metricsNameWidth,
           }
@@ -105,19 +107,22 @@ export async function runExperiment(
         );
       }
       if (metrics.evaluationUsage) {
-        if (metrics.evaluationUsage.inputTokens) {
+        const evaluationUsage = sumLLMUsage(
+          metrics.evaluationUsage,
+        );
+        if (evaluationUsage.inputTokens) {
           section.property(
             'Evaluation input tokens',
-            metrics.evaluationUsage.inputTokens.toString(),
+            evaluationUsage.inputTokens.toString(),
             {
               nameWidth: metricsNameWidth,
             }
           );
         }
-        if (metrics.evaluationUsage.outputTokens) {
+        if (evaluationUsage.outputTokens) {
           section.property(
             'Evaluation output tokens',
-            metrics.evaluationUsage.outputTokens.toString(),
+            evaluationUsage.outputTokens.toString(),
             {
               nameWidth: metricsNameWidth,
             }

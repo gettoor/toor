@@ -49,7 +49,8 @@ export async function generatePrompts(
       prompt: {
         ...output.prompt,
         promptId: `i${state.iterationNo}p${index}`,
-      }
+      },
+      usage: output.usage,
     }
   });
 

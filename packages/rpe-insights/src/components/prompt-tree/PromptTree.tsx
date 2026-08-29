@@ -1,4 +1,4 @@
-import { RPEIteration, RPEPrompt } from '@gettoor/core';
+import { type RPEIteration, type RPEPrompt } from '@gettoor/core';
 
 import styles from './PromptTree.module.scss';
 import { PADDING } from './prompt-tree-consts';

@@ -1,10 +1,10 @@
 import { clsx } from 'clsx';
 import { useState } from 'preact/hooks';
 import { 
-  RPEPrompt,
-  RPEAggregatorOutput,
-  RPEAnalyzerOutput,
-  RPEPromptGeneratorChange,
+  type RPEPrompt,
+  type RPEAggregatorOutput,
+  type RPEAnalyzerOutput,
+  type RPEPromptGeneratorChange,
 } from '@gettoor/core';
 
 import { IconButton, Panel } from '../basic';
@@ -34,7 +34,6 @@ export function PromptDetails(props: PromptDetailsProps) {
   const [promptExpanded, setPromptExpanded] = useState(false);
 
   const onPromptExpandClick = () => {
-    console.log('onPromptExpandClick');
     setPromptExpanded(!promptExpanded);
   };
 

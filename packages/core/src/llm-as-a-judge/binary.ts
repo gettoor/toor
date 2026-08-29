@@ -36,7 +36,7 @@ export async function binary(input: BinaryInput): Promise<BinaryOutput> {
   const model = await modelProvider.getModel(input.modelName);
 
   const response = await generateText({
-    model,
+    model: model.model,
     prompt: evalPrompt,
     ...buildModelCallSettings(input.modelParameters),
     output: Output.object({
@@ -53,8 +53,13 @@ export async function binary(input: BinaryInput): Promise<BinaryOutput> {
 
   const { passed, reasoning } = response.output;
   const usage: LLMUsage = {
-    inputTokens: response.usage.inputTokens,
-    outputTokens: response.usage.outputTokens,
+    modelUsage: [
+      {
+        modelName: model.name,
+        inputTokens: response.usage.inputTokens,
+        outputTokens: response.usage.outputTokens,
+      },
+    ],
   };
   return { result: passed, reasoning, usage };
 }

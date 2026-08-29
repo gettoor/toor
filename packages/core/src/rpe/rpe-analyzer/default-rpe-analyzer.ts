@@ -57,8 +57,8 @@ export function defaultRPEAnalyzer(
 
     // generate text response
     const model = await modelProvider.getModel(modelName);
-    const { output } = await generateText({
-      model,
+    const { output, usage } = await generateText({
+      model: model.model,
       prompt: prompt.text,
       ...buildModelCallSettings(modelParameters),
       output: Output.object({
@@ -76,6 +76,15 @@ export function defaultRPEAnalyzer(
       failurePatterns: output.failurePatterns.map(failurePattern => {
         return failurePattern.description;
       }),
+      usage: {
+        modelUsage: [
+          {
+            modelName: model.name,
+            inputTokens: usage.inputTokens,
+            outputTokens: usage.outputTokens,
+          },
+        ],
+      },
     };
   };
 }

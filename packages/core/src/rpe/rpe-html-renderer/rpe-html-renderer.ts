@@ -1,7 +1,7 @@
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { readFile } from 'node:fs/promises';
-import { RPEInsights } from '../rpe-state/index.js';
+import { RPEInsights } from '../rpe-insights/index.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 

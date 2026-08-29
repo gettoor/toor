@@ -7,6 +7,7 @@ import { createOpenAI } from '@ai-sdk/openai';
 import { createAnthropic } from '@ai-sdk/anthropic';
 
 import { MissingApiKeyError } from '../errors/index.js';
+import { LLMModel } from '../llm/index.js';
 import { ModelNotFoundError } from './model-provider-errors.js';
 import { ModelProvider } from './model-provider.js';
 
@@ -41,7 +42,7 @@ export class DefaultModelProvider implements ModelProvider {
    * @throws {@link ModelNotFoundError}
    *   If the model is not found.
    */
-  public async getModel(name: string): Promise<LanguageModel> {
+  public async getModel(name: string): Promise<LLMModel> {
     // gemini
     const GEMINI_PREFIX = 'gemini:';
     if (name.startsWith(GEMINI_PREFIX)) {
@@ -50,9 +51,13 @@ export class DefaultModelProvider implements ModelProvider {
       if (!geminiAPIKey) {
         throw new MissingApiKeyError('GEMINI_API_KEY');
       }
-      return createGoogleGenerativeAI({
+      const model = createGoogleGenerativeAI({
         apiKey: geminiAPIKey,
       }).languageModel(geminiModel);
+      return {
+        name: geminiModel,
+        model,
+      };
     }
   
     // openai
@@ -63,9 +68,13 @@ export class DefaultModelProvider implements ModelProvider {
       if (!openaiAPIKey) {
         throw new MissingApiKeyError('OPENAI_API_KEY');
       }
-      return createOpenAI({
+      const model = createOpenAI({
         apiKey: openaiAPIKey,
       }).languageModel(openaiModel);
+      return {
+        name: openaiModel,
+        model,
+      };
     }
   
     // anthropic
@@ -76,9 +85,13 @@ export class DefaultModelProvider implements ModelProvider {
       if (!anthropicAPIKey) {
         throw new MissingApiKeyError('ANTHROPIC_API_KEY');
       }
-      return createAnthropic({
+      const model = createAnthropic({
         apiKey: anthropicAPIKey,
       }).languageModel(anthropicModel);
+      return {
+        name: anthropicModel,
+        model,
+      };
     }
   
     throw new ModelNotFoundError(name);

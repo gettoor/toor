@@ -4,7 +4,7 @@ import { DistributionRange } from './distribution-types.js';
  * Distribute scores into ranges.
  * @category Math
  * @param scores - Scores to distribute.
- * @param rangeSize - Size of the range.
+ * @param ranges - Ranges to distribute the scores into.
  * @returns Distribution of the scores.
  */
 export function distributeScores(

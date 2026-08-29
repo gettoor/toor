@@ -100,6 +100,7 @@ export async function optimize(
     iteration.candidates = candidates.map(candidate => ({
       promptRef: promptRefFromPrompt(candidate.prompt),
       changes: candidate.changes,
+      usage: candidate.usage,
     }));
     state.prompts.push(...candidates.map(candidate => candidate.prompt));
     console.log('------ candidates ------');

@@ -1,7 +1,7 @@
 import { 
-  RPEAggregatorOutput,
-  RPEDatasetEntry,
-  RPEEvaluatorOutput,
+  type RPEAggregatorOutput,
+  type RPEDatasetEntry,
+  type RPEEvaluatorOutput,
 } from '@gettoor/core';
 
 import { Markdown, Score, Tag } from '../basic';

@@ -12,8 +12,8 @@ import {
   defaultRPEAnalyzer,
   defaultRPEPromptGenerator,
   bestScorePromptSelector,
-  renderRPEInsightsToHTML,
 } from '@gettoor/core';
+import { renderRPEInsightsToHTML } from '@gettoor/core/rpe-html-renderer';
 import { EASY_DATASET } from './sentiment-dataset.js';
 
 async function run(): Promise<void> {

@@ -1,4 +1,4 @@
-import { MetricResult } from '../../llm/index.js';
+import { LLMUsage, MetricResult } from '../../llm/index.js';
 import { RPEDatasetEntry } from '../rpe-dataset/index.js';
 import { RPEPrompt, RPEPromptRef } from '../rpe-prompt/index.js';
 
@@ -63,6 +63,11 @@ export interface RPEEvaluatorOutput {
    * Metrics for the evaluation. Metric scores are normalized to 0..1.
    */
   metrics?: Record<string, MetricResult>;
+
+  /**
+   * Usage of the model.
+   */
+  usage?: LLMUsage;
 }
 
 /**

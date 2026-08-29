@@ -1,6 +1,7 @@
 import { RPEPrompt } from '../rpe-prompt/index.js';
 import { RPEAggregatorOutput } from '../rpe-aggregator/index.js';
 import { RPEAnalyzerOutput } from '../rpe-analyzer/index.js';
+import { LLMUsage } from '../../llm/index.js';
 
 /**
  * Input for the RPE prompt generator.
@@ -53,6 +54,11 @@ export interface RPEPromptGeneratorOutput {
    * Changes made to the prompt.
    */
   changes: RPEPromptGeneratorChange[];
+
+  /**
+   * Usage of the model.
+   */
+  usage?: LLMUsage;
 }
 
 /**

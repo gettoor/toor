@@ -46,6 +46,7 @@ export function judgeRPEEvaluator(
         score: result.result.normalizedScore,
         reasoning: result.reasoning,
         metrics: result.result.metrics,
+        usage: result.usage,
       }
     }
 
@@ -69,6 +70,7 @@ export function judgeRPEEvaluator(
       score: result.result.normalizedScore,
       reasoning: result.reasoning,
       metrics: result.result.metrics,
+      usage: result.usage,
     }
   };
 }

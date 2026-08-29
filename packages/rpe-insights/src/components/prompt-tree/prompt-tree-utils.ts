@@ -1,4 +1,4 @@
-import { RPEPrompt } from '@gettoor/core';
+import { type RPEPrompt } from '@gettoor/core';
 
 import { 
   PADDING,

@@ -1,0 +1,32 @@
+.properties {
+  display: grid;
+  grid-template-columns: auto auto;
+  width: fit-content;
+
+  @mixin cell {
+    padding: 0.125rem;
+  }
+
+  .align-left {
+    text-align: left;
+  }
+
+  .align-right {
+    text-align: right;
+  }
+
+  .top-border {
+    border-top: 1px solid var(--muted);
+  }
+
+  .property-key {
+    font-weight: bold;
+    @include cell;
+    padding-right: 0.5rem;
+  }
+
+  .property-value {
+    font-weight: normal;
+    @include cell;
+  }
+}

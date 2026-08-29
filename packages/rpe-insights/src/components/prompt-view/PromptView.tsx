@@ -1,5 +1,5 @@
 import { useState } from 'preact/hooks';
-import { RPEInsights, RPEIteration, RPEPrompt } from '@gettoor/core';
+import { type RPEInsights } from '@gettoor/core';
 
 import { PromptTree } from '../prompt-tree';
 import { PromptDetails } from '../prompt-details';

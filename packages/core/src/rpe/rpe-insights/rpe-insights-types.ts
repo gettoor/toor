@@ -1,5 +1,5 @@
 import { RPEPrompt } from '../rpe-prompt/index.js';
-import { RPEIteration } from './rpe-state-types.js';
+import { RPEIteration } from '../rpe-state/index.js';
 
 /**
  * Insights from an RPE process.

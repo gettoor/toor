@@ -30,7 +30,7 @@ export function llmRPEExecutor(
 
     // generate text response
     const response = await generateText({
-      model,
+      model: model.model,
       prompt: prompt.text,
       ...buildModelCallSettings(modelParameters),
     });
@@ -40,8 +40,13 @@ export function llmRPEExecutor(
       datasetEntry: input.datasetEntry,
       response: response.text,
       usage: {
-        inputTokens: response.usage.inputTokens,
-        outputTokens: response.usage.outputTokens,
+        modelUsage: [
+          {
+            modelName: model.name,
+            inputTokens: response.usage.inputTokens,
+            outputTokens: response.usage.outputTokens,
+          },
+        ],
       },
     };
   };

@@ -6,6 +6,8 @@ export default defineConfig({
   plugins: [preact(), viteSingleFile()],
   build: {
     outDir: 'dist',
+    minify: false,
+    sourcemap: true,
   },
   resolve: {
     alias: {

@@ -1,4 +1,4 @@
-import { RPEAnalyzerOutput } from '@gettoor/core';
+import { type RPEAnalyzerOutput } from '@gettoor/core';
 import styles from './PromptAnalysis.module.scss';
 
 export interface PromptAnalysisProps {

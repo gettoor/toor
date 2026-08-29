@@ -1,5 +1,26 @@
 import { CallSettings } from 'ai';
-import { ModelParameters } from '../llm/index.js';
+import { LLMModelUsage, LLMUsage, ModelParameters } from './llm-types.js';
+
+/**
+ * Sums the usage of language models. That is, flattens the usage of all models
+ * into a single usage object.
+ * @category LLM
+ * @param usage - Usage to sum.
+ * @returns Summed usage.
+ */
+export function sumLLMUsage(
+  usage: LLMUsage,
+): Pick<LLMModelUsage, 'inputTokens' | 'outputTokens'> {
+  const sum: Pick<LLMModelUsage, 'inputTokens' | 'outputTokens'> = {
+    inputTokens: 0,
+    outputTokens: 0,
+  };
+  for (const modelUsage of usage.modelUsage) {
+    sum.inputTokens! += modelUsage.inputTokens ?? 0;
+    sum.outputTokens! += modelUsage.outputTokens ?? 0;
+  }
+  return sum;
+}
 
 function ifDefined<T>(
   value: T | undefined,

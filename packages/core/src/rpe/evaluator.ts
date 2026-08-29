@@ -31,10 +31,10 @@ export async function evaluatePrompts(
     if (!evaluations[promptId]) {
       evaluations[promptId] = {
         promptRef: promptRefFromPrompt(input.prompt),
-        evaluations: [],
+        evaluatorOutputs: [],
       };
     }
-    evaluations[promptId].evaluations.push(evaluation);
+    evaluations[promptId].evaluatorOutputs.push(evaluation);
   });
 
   // run tasks in parallel

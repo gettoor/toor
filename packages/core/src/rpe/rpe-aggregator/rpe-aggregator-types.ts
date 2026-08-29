@@ -1,5 +1,5 @@
 import { DistributionRange } from '../../math/index.js';
-import { MetricResult } from '../../llm/index.js';
+import { LLMUsage, MetricResult } from '../../llm/index.js';
 import { RPEPrompt, RPEPromptRef } from '../rpe-prompt/index.js';
 import { RPEEvaluatorOutput } from '../rpe-evaluator/index.js';
 
@@ -54,6 +54,11 @@ export interface RPEAggregatorOutput {
    * Distribution of the scores.
    */
   scoreDistribution: DistributionRange[];
+
+  /**
+   * Usage of the model.
+   */
+  usage?: LLMUsage;
 }
 
 /**

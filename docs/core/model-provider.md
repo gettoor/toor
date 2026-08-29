@@ -1,12 +1,12 @@
 # Model provider
 
-A model provider resolves a model by name. Note that the returned `LanguageModel` comes from [AI SDK](https://ai-sdk.dev/).
+A model provider resolves a model by name. Note that the returned [`LLMModel`](/api/interfaces/LLMModel.md) contains `LanguageModel` which comes from [AI SDK](https://ai-sdk.dev/).
 
 ```ts
-import { LanguageModel } from 'ai';
+import { LLMModel } from '@gettoor/core';
 
 interface ModelProvider {
-  getModel(name: string): Promise<LanguageModel>;
+  getModel(name: string): Promise<LLMModel>;
 }
 ```
 

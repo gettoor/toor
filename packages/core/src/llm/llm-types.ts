@@ -1,8 +1,15 @@
+import { LanguageModel } from 'ai';
+
 /**
- * Usage information for a language model.
+ * Usage information for a specific model.
  * @category LLM
  */
-export interface LLMUsage {
+export interface LLMModelUsage {
+  /**
+   * The model name.
+   */
+  modelName: string;
+
   /**
    * Number of input tokens used.
    */
@@ -12,6 +19,14 @@ export interface LLMUsage {
    * Number of output tokens used.
    */
   outputTokens?: number;
+}
+
+/**
+ * Usage information for a language model.
+ * @category LLM
+ */
+export interface LLMUsage {
+  modelUsage: LLMModelUsage[];
 }
 
 /**
@@ -86,4 +101,21 @@ export interface ModelParameters {
    * resulting in more varied output.
    */
   frequencyPenalty?: number;
+}
+
+
+/**
+ * A language model.
+ * @category LLM
+ */
+export interface LLMModel {
+  /**
+   * The model name.
+   */
+  name: string;
+
+  /**
+   * The AI SDK language model.
+   */
+  model: LanguageModel;
 }

@@ -1,9 +1,8 @@
 import { 
-  RPEAggregatorOutput,
-  RPEAnalyzerOutput,
-  RPEIteration,
-  RPEPrompt,
-  PromptGeneratorCandidate,
+  type RPEAggregatorOutput,
+  type RPEAnalyzerOutput,
+  type RPEIteration,
+  type RPEPrompt,
 } from '@gettoor/core';
 import { PromptDetailsData } from '../prompt-details';
 

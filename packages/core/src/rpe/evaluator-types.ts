@@ -12,9 +12,9 @@ export interface EvaluatorPromptOutput {
   promptRef: RPEPromptRef;
 
   /**
-   * Evaluations for the prompt.
+   * Evaluator outputs for the prompt.
    */
-  evaluations: RPEEvaluatorOutput[];
+  evaluatorOutputs: RPEEvaluatorOutput[];
 }
 
 /**

@@ -1,0 +1,13 @@
+.table {
+  display: grid;
+  grid-auto-columns: max-content;
+
+  .cell {
+    padding: 0.125rem 0.875rem;
+  }
+
+  .header-cell {
+    font-weight: bold;
+    border-bottom: 1px solid var(--muted);
+  }
+}

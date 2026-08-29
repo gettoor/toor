@@ -4,3 +4,5 @@ export * from './Markdown';
 export * from './Icon';
 export * from './IconButton';
 export * from './Panel';
+export * from './Properties';
+export * from './Table';

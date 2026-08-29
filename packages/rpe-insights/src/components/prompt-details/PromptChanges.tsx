@@ -1,4 +1,4 @@
-import { RPEPromptGeneratorChange } from '@gettoor/core';
+import { type RPEPromptGeneratorChange } from '@gettoor/core';
 import { Separator } from './Separator';
 import { Markdown } from '../basic';
 

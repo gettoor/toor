@@ -1,3 +1,4 @@
+import { LLMUsage } from '../../llm/index.js';
 import { RPEPromptRef } from '../rpe-prompt/index.js';
 import { RPEState } from '../rpe-state/index.js';
 
@@ -16,6 +17,11 @@ export interface RPEPromptSelectorOutput {
    * References to the selected prompts.
    */
   promptRefs: RPEPromptRef[];
+
+  /**
+   * Usage of the model.
+   */
+  usage?: LLMUsage;
 }
 
 /**

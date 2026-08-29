@@ -52,8 +52,8 @@ export function defaultRPEPromptGenerator(
     );
 
     const model = await modelProvider.getModel(modelName);
-    const { output } = await generateText({
-      model,
+    const { output, usage } = await generateText({
+      model: model.model,
       prompt: prompt.text,
       ...buildModelCallSettings(modelParameters),
       output: Output.object({
@@ -70,6 +70,15 @@ export function defaultRPEPromptGenerator(
         description: change.description,
         reasoning: change.reasoning,
       })),
+      usage: {
+        modelUsage: [
+          {
+            modelName: model.name,
+            inputTokens: usage.inputTokens,
+            outputTokens: usage.outputTokens,
+          },
+        ],
+      },
     }
   };
 }

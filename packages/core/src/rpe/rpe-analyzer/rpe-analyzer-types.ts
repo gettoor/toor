@@ -1,3 +1,4 @@
+import { LLMUsage } from '../../llm/index.js';
 import { RPEAggregatorOutput } from '../rpe-aggregator/index.js';
 import { RPEPromptRef } from '../rpe-prompt/index.js';
 import { RPEState } from '../rpe-state/index.js';
@@ -42,6 +43,11 @@ export interface RPEAnalyzerOutput {
    * Failure patterns of the prompt.
    */
   failurePatterns: string[];
+
+  /**
+   * Usage of the model.
+   */
+  usage?: LLMUsage;
 }
 
 /**

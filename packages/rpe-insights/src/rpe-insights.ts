@@ -1,4 +1,4 @@
-import { RPEInsights } from '@gettoor/core';
+import { type RPEInsights } from '@gettoor/core';
 
 export function loadRPEInsights(): RPEInsights {
   const rpeInsightsElement = document.getElementById('rpe-insights');
