@@ -8,10 +8,12 @@ import {
   removeNewlines,
 } from '../../llm/index.js';
 import { DefaultModelProvider } from '../../model-provider/index.js';
+import { modelParametersToRPEInfo } from '../rpe-info/index.js';
 import { findPromptById, RPEState } from '../rpe-state/index.js';
 import { RPEEvaluatorOutput } from '../rpe-evaluator/index.js';
 import { 
   RPEAnalyzer,
+  RPEAnalyzerInfo,
   RPEAnalyzerInput,
   RPEAnalyzerOutput,
 } from './rpe-analyzer-types.js';
@@ -29,63 +31,79 @@ export function defaultRPEAnalyzer(
   const { modelName, modelParameters } = input;
   const modelProvider = input.modelProvider ?? new DefaultModelProvider();
 
-  return async (
-    state: RPEState,
-    input: RPEAnalyzerInput,
-  ): Promise<RPEAnalyzerOutput> => {
-    // build prompt
-    const prompt = replacePlaceholders(
-      DEFAULT_RPE_ANALYZER_PROMPT,
-      {
-        prompt: findPromptById(state, input.aggregation.promptRef.promptId).prompt,
-        aggregated_score: input.aggregation.aggregatedScore,
-        aggregated_metrics: aggregatedMetricsForPrompt(
-          input.aggregation.aggregatedMetrics ?? {},
-        ),
-        score_distribution: scoreDistributionForPrompt(
-          input.aggregation.scoreDistribution,
-        ),
-        passed_explanations: explanationsForPrompt(
-          input.aggregation.passedEvaluations,
-        ),
-        failed_examples: failedExamplesForPrompt(
-          input.aggregation.failedEvaluations,
-          DEFAULT_FAILED_EXAMPLES_COUNT,
-        ),
-      },
-    );
+  return {
+    run: async (
+      state: RPEState,
+      input: RPEAnalyzerInput,
+    ): Promise<RPEAnalyzerOutput> => {
+      // build prompt
+      const prompt = replacePlaceholders(
+        DEFAULT_RPE_ANALYZER_PROMPT,
+        {
+          prompt: findPromptById(state, input.aggregation.promptRef.promptId).prompt,
+          aggregated_score: input.aggregation.aggregatedScore,
+          aggregated_metrics: aggregatedMetricsForPrompt(
+            input.aggregation.aggregatedMetrics ?? {},
+          ),
+          score_distribution: scoreDistributionForPrompt(
+            input.aggregation.scoreDistribution,
+          ),
+          passed_explanations: explanationsForPrompt(
+            input.aggregation.passedEvaluations,
+          ),
+          failed_examples: failedExamplesForPrompt(
+            input.aggregation.failedEvaluations,
+            DEFAULT_FAILED_EXAMPLES_COUNT,
+          ),
+        },
+      );
 
-    // generate text response
-    const model = await modelProvider.getModel(modelName);
-    const { output, usage } = await generateText({
-      model: model.model,
-      prompt: prompt.text,
-      ...buildModelCallSettings(modelParameters),
-      output: Output.object({
-        schema: DefaultRPEAnalyzerOutputSchema,
-      })
-    });
+      // generate text response
+      const model = await modelProvider.getModel(modelName);
+      const { output, usage } = await generateText({
+        model: model.model,
+        prompt: prompt.text,
+        ...buildModelCallSettings(modelParameters),
+        output: Output.object({
+          schema: DefaultRPEAnalyzerOutputSchema,
+        })
+      });
 
-    return {
-      promptRef: input.aggregation.promptRef,
-      strengths: output.strengths.map(strength => strength.description),
-      weaknesses: output.weaknesses.map(weakness => weakness.description),
-      recommendations: output.recommendations.map(recommendation => {
-        return `${recommendation.goal} (${recommendation.reason})`;
-      }),
-      failurePatterns: output.failurePatterns.map(failurePattern => {
-        return failurePattern.description;
-      }),
-      usage: {
-        modelUsage: [
+      return {
+        promptRef: input.aggregation.promptRef,
+        strengths: output.strengths.map(strength => strength.description),
+        weaknesses: output.weaknesses.map(weakness => weakness.description),
+        recommendations: output.recommendations.map(recommendation => {
+          return `${recommendation.goal} (${recommendation.reason})`;
+        }),
+        failurePatterns: output.failurePatterns.map(failurePattern => {
+          return failurePattern.description;
+        }),
+        usage: {
+          modelUsage: [
+            {
+              modelName: model.name,
+              inputTokens: usage.inputTokens,
+              outputTokens: usage.outputTokens,
+            },
+          ],
+        },
+      };
+    },
+
+    getInfo: async (): Promise<RPEAnalyzerInfo> => {
+      return {
+        name: 'Default Analyzer',
+        properties: [
           {
-            modelName: model.name,
-            inputTokens: usage.inputTokens,
-            outputTokens: usage.outputTokens,
+            key: 'model',
+            value: modelProvider.getProviderModelName(modelName),
+            description: 'Model name used for the analysis.',
           },
+          ...modelParametersToRPEInfo(modelParameters),
         ],
-      },
-    };
+      };
+    },
   };
 }
 

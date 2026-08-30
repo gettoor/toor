@@ -1,5 +1,7 @@
+@use '../../styles/_includes.scss' as *;
+
 .info-panel {
-  height: 24rem;
+  height: 32rem;
   max-height: 90vh;
 
   &.visible {
@@ -18,5 +20,17 @@
 
   p {
     margin-left: 1rem;
+  }
+
+  h1 {
+    font-family: 'Funnel Display', sans-serif;
+    @include font-big;
+    font-weight: 500;
+    line-height: 1;
+  }
+
+  h2 {
+    font-family: 'Funnel Display', sans-serif;
+    @include font-medium;
   }
 }

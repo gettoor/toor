@@ -1,3 +1,5 @@
+@use '../../styles/_includes.scss' as *;
+
 .header {
   display: flex;
   flex-direction: row;
@@ -12,7 +14,7 @@
 }
 
 .header-title-level-1 {
-  font-size: 1.25rem;
+  @include font-big;
   font-weight: 500;
   line-height: 1;
 }

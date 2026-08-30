@@ -1,5 +1,6 @@
 import { DistributionRange } from '../../math/index.js';
 import { LLMUsage, MetricResult } from '../../llm/index.js';
+import { RPEProperties } from '../rpe-info/index.js';
 import { RPEPrompt, RPEPromptRef } from '../rpe-prompt/index.js';
 import { RPEEvaluatorOutput } from '../rpe-evaluator/index.js';
 
@@ -62,10 +63,37 @@ export interface RPEAggregatorOutput {
 }
 
 /**
+ * Info of the RPE aggregator.
+ * @category Reflective Prompt Evolution
+ */
+export interface RPEAggregatorInfo {
+  /**
+   * Name of the aggregator.
+   */
+  name: string;
+
+  /**
+   * Properties of the aggregator.
+   */
+  properties?: RPEProperties;
+}
+
+/**
  * An aggregator which takes a set of evaluations of a single prompt
  * and aggregates them into a single evaluation.
  * @category Reflective Prompt Evolution
  */
-export type RPEAggregator = (
-  input: RPEAggregatorInput,
-) => Promise<RPEAggregatorOutput>;
+export interface RPEAggregator {
+  /**
+   * Aggregate evaluations for a prompt.
+   * @param input - Input for the aggregator.
+   * @returns Aggregated output.
+   */
+  run(input: RPEAggregatorInput): Promise<RPEAggregatorOutput>;
+
+  /**
+   * Get the info of the aggregator.
+   * @returns Info of the aggregator.
+   */
+  getInfo(): Promise<RPEAggregatorInfo>;
+}

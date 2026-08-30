@@ -7,6 +7,7 @@ export * from './rpe-analyzer/index.js';
 export * from './rpe-prompt-generator/index.js';
 export * from './rpe-prompt-selector/index.js';
 export * from './rpe-state/index.js';
+export * from './rpe-info/index.js';
 export * from './rpe-insights/index.js';
 export * from './rpe-stop/index.js';
 export * from './prompt-generator-types.js';

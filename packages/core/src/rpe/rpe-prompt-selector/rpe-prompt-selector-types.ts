@@ -1,4 +1,5 @@
 import { LLMUsage } from '../../llm/index.js';
+import { RPEProperties } from '../rpe-info/index.js';
 import { RPEPromptRef } from '../rpe-prompt/index.js';
 import { RPEState } from '../rpe-state/index.js';
 
@@ -25,10 +26,40 @@ export interface RPEPromptSelectorOutput {
 }
 
 /**
+ * Info of the RPE prompt selector.
+ * @category Reflective Prompt Evolution
+ */
+export interface RPEPromptSelectorInfo {
+  /**
+   * Name of the prompt selector.
+   */
+  name: string;
+
+  /**
+   * Properties of the prompt selector.
+   */
+  properties?: RPEProperties;
+}
+
+/**
  * Function to select the best prompts from the candidates.
  * @category Reflective Prompt Evolution
  */
-export type RPEPromptSelector = (
-  state: RPEState,
-  input: RPEPromptSelectorInput,
-) => Promise<RPEPromptSelectorOutput>;
+export interface RPEPromptSelector {
+  /**
+   * Select the best prompts from the candidates.
+   * @param state - State of the RPE process.
+   * @param input - Input for the prompt selector.
+   * @returns Prompt selector output.
+   */
+  run(
+    state: RPEState,
+    input: RPEPromptSelectorInput,
+  ): Promise<RPEPromptSelectorOutput>;
+
+  /**
+   * Get the info of the prompt selector.
+   * @returns Info of the prompt selector.
+   */
+  getInfo(): Promise<RPEPromptSelectorInfo>;
+}

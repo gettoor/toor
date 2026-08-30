@@ -46,9 +46,12 @@
 
   h1 {
     font-family: 'Funnel Display', sans-serif;
+    @include font-big;
     margin-top: 1rem;
     margin-bottom: 1rem;
     padding: 0;
+    font-weight: 500;
+    line-height: 1;
   }
 
   h2 {

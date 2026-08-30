@@ -3,7 +3,7 @@ import clsx from 'clsx';
 
 import styles from './Table.module.scss';
 
-export type Cell = string | VNode;
+export type Cell = string | number | boolean | null | undefined | VNode;
 
 export interface TableProps {
   header?: Cell[];
@@ -30,7 +30,22 @@ export function Table(props: TableProps) {
         gridColumn: columnIndex + 1,
         gridRow: rowIndex + 2,
       };
-      return <div className={styles['cell']} style={style}>{cell}</div>;
+
+      let value: string | VNode = '';
+      if (typeof cell === 'string') {
+        value = cell;
+      } else if (typeof cell === 'number') {
+        value = cell.toString();
+      } else if (typeof cell === 'boolean') {
+        value = cell ? 'Yes' : 'No';
+      } else if (cell === null) {
+        value = '';
+      } else if (cell === undefined) {
+        value = '';
+      } else if (typeof cell === 'object' && 'props' in cell) {
+        value = cell;
+      }
+      return <div className={styles['cell']} style={style}>{value}</div>;
   });
   };
   

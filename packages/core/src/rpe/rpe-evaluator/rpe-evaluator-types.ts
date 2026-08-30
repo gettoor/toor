@@ -1,4 +1,5 @@
 import { LLMUsage, MetricResult } from '../../llm/index.js';
+import { RPEProperties } from '../rpe-info/index.js';
 import { RPEDatasetEntry } from '../rpe-dataset/index.js';
 import { RPEPrompt, RPEPromptRef } from '../rpe-prompt/index.js';
 
@@ -71,10 +72,37 @@ export interface RPEEvaluatorOutput {
 }
 
 /**
+ * Info of the RPE evaluator.
+ * @category Reflective Prompt Evolution
+ */
+export interface RPEEvaluatorInfo {
+  /**
+   * Name of the evaluator.
+   */
+  name: string;
+
+  /**
+   * Properties of the evaluator.
+   */
+  properties?: RPEProperties;
+}
+
+/**
  * An evaluator which takes a prompt and produces information passed
  * to a failure analyzer.
  * @category Reflective Prompt Evolution
  */
-export type RPEEvaluator = (
-  input: RPEEvaluatorInput,
-) => Promise<RPEEvaluatorOutput>;
+export interface RPEEvaluator {
+  /**
+   * Evaluate a prompt.
+   * @param input - Input for the evaluator.
+   * @returns Evaluator output.
+   */
+  run(input: RPEEvaluatorInput): Promise<RPEEvaluatorOutput>;
+
+  /**
+   * Get the info of the evaluator.
+   * @returns Info of the evaluator.
+   */
+  getInfo(): Promise<RPEEvaluatorInfo>;
+}

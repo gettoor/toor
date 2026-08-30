@@ -1,4 +1,5 @@
 import { LLMUsage } from '../../llm/index.js';
+import { RPEProperties } from '../rpe-info/index.js';
 import { RPEDatasetEntry } from '../rpe-dataset/index.js';
 import { RPEPrompt, RPEPromptRef } from '../rpe-prompt/index.js';
 
@@ -45,9 +46,36 @@ export interface RPEExecutorOutput {
 }
 
 /**
+ * Info of the RPE executor.
+ * @category Reflective Prompt Evolution
+ */
+export interface RPEExecutorInfo {
+  /**
+   * Name of the executor.
+   */
+  name: string;
+
+  /**
+   * Properties of the executor.
+   */
+  properties?: RPEProperties;
+}
+
+/**
  * An executor which takes a prompt and generates a response.
  * @category Reflective Prompt Evolution
  */
-export type RPEExecutor = (
-  input: RPEExecutorInput,
-) => Promise<RPEExecutorOutput>;
+export interface RPEExecutor {
+  /**
+   * Execute a prompt.
+   * @param input - Input for the executor.
+   * @returns Executor output.
+   */
+  run(input: RPEExecutorInput): Promise<RPEExecutorOutput>;
+
+  /**
+   * Get the info of the executor.
+   * @returns Info of the executor.
+   */
+  getInfo(): Promise<RPEExecutorInfo>;
+}

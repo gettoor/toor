@@ -39,7 +39,7 @@ export async function generatePrompts(
     }
 
     // generate (candidate) prompt
-    const output = await generator({
+    const output = await generator.run({
       prompt: findPromptById(state, aggregationPromptId),
       aggregation,
       analysis,

@@ -1,4 +1,5 @@
 import { LLMUsage } from '../../llm/index.js';
+import { RPEProperties } from '../rpe-info/index.js';
 import { RPEAggregatorOutput } from '../rpe-aggregator/index.js';
 import { RPEPromptRef } from '../rpe-prompt/index.js';
 import { RPEState } from '../rpe-state/index.js';
@@ -51,12 +52,39 @@ export interface RPEAnalyzerOutput {
 }
 
 /**
+ * Info of the RPE analyzer.
+ * @category Reflective Prompt Evolution
+ */
+export interface RPEAnalyzerInfo {
+  /**
+   * Name of the analyzer.
+   */
+  name: string;
+
+  /**
+   * Properties of the analyzer.
+   */
+  properties?: RPEProperties;
+}
+
+/**
  * An analyzer takes aggregation from evaluations and returns an analysis of
  * the aggregation. It should return strengths, weaknesses, recommendations
  * and summary for the prompt improvement.
  * @category Reflective Prompt Evolution
  */
-export type RPEAnalyzer = (
-  state: RPEState,
-  input: RPEAnalyzerInput,
-) => Promise<RPEAnalyzerOutput>;
+export interface RPEAnalyzer {
+  /**
+   * Analyze the aggregation of the evaluations.
+   * @param state - State of the RPE process.
+   * @param input - Input for the analyzer.
+   * @returns Analyzer output.
+   */
+  run(state: RPEState, input: RPEAnalyzerInput): Promise<RPEAnalyzerOutput>;
+
+  /**
+   * Get the info of the analyzer.
+   * @returns Info of the analyzer.
+   */
+  getInfo(): Promise<RPEAnalyzerInfo>;
+}

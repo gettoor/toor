@@ -4,6 +4,7 @@ import { promptRefFromPrompt } from '../rpe-prompt/index.js';
 import { RPEEvaluatorOutput } from '../rpe-evaluator/index.js';
 import { 
   RPEAggregator,
+  RPEAggregatorInfo,
   RPEAggregatorInput,
   RPEAggregatorOutput,
 } from './rpe-aggregator-types.js';
@@ -19,25 +20,45 @@ export function defaultRPEAggregator(
   input: DefaultRPEAggregatorInput,
 ): RPEAggregator {
   const { aggregationFunc, passedEvaluationThreshold } = input;
-  return async (input: RPEAggregatorInput): Promise<RPEAggregatorOutput> => {
-    const { evaluations } = input;
-    const scores = evaluations.map(evaluation => evaluation.score);
-    
-    return {
-      promptRef: promptRefFromPrompt(input.prompt),
-      passedEvaluations: evaluations.filter(evaluation => {
-        return evaluation.score >= passedEvaluationThreshold;
-      }),
-      failedEvaluations: evaluations.filter(evaluation => {
-        return evaluation.score < passedEvaluationThreshold;
-      }),
-      aggregatedScore: aggregationFunc(scores),
-      aggregatedMetrics: aggregateMetrics(evaluations, aggregationFunc),
-      scoreDistribution: distributeScores(
-        scores,
-        getDefaultScoreDistributionRanges(),
-      ),
-    };
+  return {
+    run: async (input: RPEAggregatorInput): Promise<RPEAggregatorOutput> => {
+      const { evaluations } = input;
+      const scores = evaluations.map(evaluation => evaluation.score);
+      
+      return {
+        promptRef: promptRefFromPrompt(input.prompt),
+        passedEvaluations: evaluations.filter(evaluation => {
+          return evaluation.score >= passedEvaluationThreshold;
+        }),
+        failedEvaluations: evaluations.filter(evaluation => {
+          return evaluation.score < passedEvaluationThreshold;
+        }),
+        aggregatedScore: aggregationFunc(scores),
+        aggregatedMetrics: aggregateMetrics(evaluations, aggregationFunc),
+        scoreDistribution: distributeScores(
+          scores,
+          getDefaultScoreDistributionRanges(),
+        ),
+      };
+    },
+
+    getInfo: async (): Promise<RPEAggregatorInfo> => {
+      return {
+        name: 'Default Aggregator',
+        properties: [
+          {
+            key: 'aggregationFunc',
+            value: aggregationFunc.name,
+            description: 'Aggregation function used to aggregate the scores.',
+          },
+          {
+            key: 'passedEvaluationThreshold',
+            value: passedEvaluationThreshold,
+            description: 'Score threshold for passing an evaluation.',
+          },
+        ],
+      };
+    },
   };
 }
 

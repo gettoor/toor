@@ -15,7 +15,7 @@ export async function aggregateEvaluations(
 
   // tasks
   const tasks = evaluations.map(async evaluation => {
-    const output = await aggregator({
+    const output = await aggregator.run({
       prompt: findPromptById(state, evaluation.promptRef.promptId),
       evaluations: evaluation.evaluatorOutputs,
     });

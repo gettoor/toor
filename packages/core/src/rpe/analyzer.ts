@@ -18,7 +18,7 @@ export async function analyzeAggregatedEvaluations(
 
   // tasks
   const tasks = aggregatedEvaluations.map(async aggregatedEvaluation => {
-    const output = await analyzer(
+    const output = await analyzer.run(
       state,
       {
         aggregation: aggregatedEvaluation,

@@ -15,4 +15,11 @@ export interface ModelProvider {
    * @returns Language model.
    */
   getModel(name: string): Promise<LLMModel>;
+
+  /**
+   * Gets the provider model name for a given model name.
+   * @param name - Name of the model.
+   * @returns Provider model name.
+   */
+  getProviderModelName(name: string): string;
 }

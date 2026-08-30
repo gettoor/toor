@@ -5,6 +5,7 @@ import {
   RPEIterationInProgress,
   RPEState,
 } from './rpe-state/index.js';
+import { RPEInsightsInfo } from './rpe-insights/index.js';
 import { RPEInput, RPEOutput } from './rpe-types.js';
 import { generateResponses } from './executor.js';
 import { evaluateResponses } from './evaluator.js';
@@ -32,10 +33,6 @@ export async function optimize(
   let stopReason = '';
   
   while (true) {
-    // start new iteration
-    // state.iteration = {
-    //   prompts: state.prompts,
-    // };
     const iteration: RPEIterationInProgress = state.iteration;
     const prompts = iteration.promptRefs.map(promptRef => {
       return findPromptById(state, promptRef.promptId);
@@ -141,9 +138,8 @@ export async function optimize(
     // select prompts
     const { 
       promptRefs: selectedPromptRefs,
-    } = await input.promptSelector(state, {});
+    } = await input.promptSelector.run(state, {});
     iteration.selectedPromptRefs = selectedPromptRefs;
-    // state.prompts = selectedPrompts;
     console.log('------ prompts ------');
     console.log(JSON.stringify(selectedPromptRefs, null, 2));
 
@@ -171,6 +167,20 @@ export async function optimize(
       prompts: state.prompts,
       stopReason,
       iterationHistory: state.iterationHistory,
+      info: await buildRPEInsightsInfo(input),
     },
+  };
+}
+
+async function buildRPEInsightsInfo(
+  input: RPEInput,
+): Promise<RPEInsightsInfo> {
+  return {
+    executorInfo: await input.executor.getInfo(),
+    evaluatorInfo: await input.evaluator.getInfo(),
+    aggregatorInfo: await input.aggregator.getInfo(),
+    analyzerInfo: await input.analyzer.getInfo(),
+    promptGeneratorInfo: await input.promptGenerator.getInfo(),
+    promptSelectorInfo: await input.promptSelector.getInfo(),
   };
 }

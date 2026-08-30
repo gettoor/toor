@@ -28,7 +28,7 @@ export async function generateResponses(
   const tasks: Promise<RPEExecutorOutput>[] = [];
   for (const prompt of prompts) {
     for (const datasetEntry of dataset.entries) {
-      tasks.push(executor({ prompt, datasetEntry }));
+      tasks.push(executor.run({ prompt, datasetEntry }));
     }
   }
 

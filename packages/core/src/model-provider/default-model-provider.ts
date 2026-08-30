@@ -33,6 +33,10 @@ import { ModelProvider } from './model-provider.js';
  * @category Model Provider
  */
 export class DefaultModelProvider implements ModelProvider {
+  private static readonly GEMINI_PREFIX = 'gemini:';
+  private static readonly OPENAI_PREFIX = 'openai:';
+  private static readonly ANTHROPIC_PREFIX = 'anthropic:';
+
   /**
    * Gets a model by name.
    * @param name - The name of the model.
@@ -44,9 +48,8 @@ export class DefaultModelProvider implements ModelProvider {
    */
   public async getModel(name: string): Promise<LLMModel> {
     // gemini
-    const GEMINI_PREFIX = 'gemini:';
-    if (name.startsWith(GEMINI_PREFIX)) {
-      const geminiModel = name.slice(GEMINI_PREFIX.length);
+    if (name.startsWith(DefaultModelProvider.GEMINI_PREFIX)) {
+      const geminiModel = name.slice(DefaultModelProvider.GEMINI_PREFIX.length);
       const geminiAPIKey = process.env.GEMINI_API_KEY;
       if (!geminiAPIKey) {
         throw new MissingApiKeyError('GEMINI_API_KEY');
@@ -61,9 +64,8 @@ export class DefaultModelProvider implements ModelProvider {
     }
   
     // openai
-    const OPENAI_PREFIX = 'openai:';
-    if (name.startsWith(OPENAI_PREFIX)) {
-      const openaiModel = name.slice(OPENAI_PREFIX.length);
+    if (name.startsWith(DefaultModelProvider.OPENAI_PREFIX)) {
+      const openaiModel = name.slice(DefaultModelProvider.OPENAI_PREFIX.length);
       const openaiAPIKey = process.env.OPENAI_API_KEY;
       if (!openaiAPIKey) {
         throw new MissingApiKeyError('OPENAI_API_KEY');
@@ -76,11 +78,12 @@ export class DefaultModelProvider implements ModelProvider {
         model,
       };
     }
-  
+
     // anthropic
-    const ANTHROPIC_PREFIX = 'anthropic:';
-    if (name.startsWith(ANTHROPIC_PREFIX)) {
-      const anthropicModel = name.slice(ANTHROPIC_PREFIX.length);
+    if (name.startsWith(DefaultModelProvider.ANTHROPIC_PREFIX)) {
+      const anthropicModel = name.slice(
+        DefaultModelProvider.ANTHROPIC_PREFIX.length,
+      );
       const anthropicAPIKey = process.env.ANTHROPIC_API_KEY;
       if (!anthropicAPIKey) {
         throw new MissingApiKeyError('ANTHROPIC_API_KEY');
@@ -94,6 +97,19 @@ export class DefaultModelProvider implements ModelProvider {
       };
     }
   
+    throw new ModelNotFoundError(name);
+  }
+
+  public getProviderModelName(name: string): string {
+    if (name.startsWith(DefaultModelProvider.GEMINI_PREFIX)) {
+      return name.slice(DefaultModelProvider.GEMINI_PREFIX.length);
+    }
+    if (name.startsWith(DefaultModelProvider.OPENAI_PREFIX)) {
+      return name.slice(DefaultModelProvider.OPENAI_PREFIX.length);
+    }
+    if (name.startsWith(DefaultModelProvider.ANTHROPIC_PREFIX)) {
+      return name.slice(DefaultModelProvider.ANTHROPIC_PREFIX.length);
+    }
     throw new ModelNotFoundError(name);
   }
 }

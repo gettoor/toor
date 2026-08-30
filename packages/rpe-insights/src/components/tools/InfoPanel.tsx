@@ -1,6 +1,11 @@
 import clsx from 'clsx';
-import { type RPEInsights, sumRPEInsightsUsage } from '@gettoor/core';
+import { 
+  type RPEInsights,
+  type RPEProperties,
+  sumRPEInsightsUsage,
+} from '@gettoor/core';
 
+import { camelCaseToSentenceCase } from '../../string';
 import { Panel, Table } from '../basic';
 import styles from './InfoPanel.module.scss';
 
@@ -34,12 +39,39 @@ export function InfoPanel(props: InfoPanelProps) {
     },
   );
 
+  const renderRPEProperties = (
+    title: string,
+    name: string,
+    rpeProperties?: RPEProperties,
+  ) => {
+    const propertiesRows = (rpeProperties ?? []).map(property => [
+      camelCaseToSentenceCase(property.key),
+      property.value,
+      property.description,
+    ]);
+    return (
+      <>
+        <h2>{title}</h2>
+        <p>
+          <Table
+            header={['Key', 'Value', 'Description']}
+            rows={[
+              ['Name', name, 'Name of the component.'],
+              ...propertiesRows,
+            ]}
+          />
+        </p>
+      </>
+    )
+  }
+
   return (
     <Panel
       title='Info'
       onCloseClick={onCloseClick}
       className={panelClassName}
     >
+      <h1>General</h1>
       <h2>Stop reason</h2>
       <p>{props.rpeInsights.stopReason}</p>
 
@@ -50,7 +82,37 @@ export function InfoPanel(props: InfoPanelProps) {
           rows={usageRows}
         />
       </p>
-
+      <h1>Components info</h1>
+      {renderRPEProperties(
+        'Executor',
+        props.rpeInsights.info.executorInfo.name,
+        props.rpeInsights.info.executorInfo.properties,
+      )}
+      {renderRPEProperties(
+        'Evaluator',
+        props.rpeInsights.info.evaluatorInfo.name,
+        props.rpeInsights.info.evaluatorInfo.properties,
+      )}
+      {renderRPEProperties(
+        'Aggregator',
+        props.rpeInsights.info.aggregatorInfo.name,
+        props.rpeInsights.info.aggregatorInfo.properties,
+      )}
+      {renderRPEProperties(
+        'Analyzer',
+        props.rpeInsights.info.analyzerInfo.name,
+        props.rpeInsights.info.analyzerInfo.properties,
+      )}
+      {renderRPEProperties(
+        'Prompt Generator',
+        props.rpeInsights.info.promptGeneratorInfo.name,
+        props.rpeInsights.info.promptGeneratorInfo.properties,
+      )}
+      {renderRPEProperties(
+        'Prompt Selector',
+        props.rpeInsights.info.promptSelectorInfo.name,
+        props.rpeInsights.info.promptSelectorInfo.properties,
+      )}
     </Panel>
   );
 }

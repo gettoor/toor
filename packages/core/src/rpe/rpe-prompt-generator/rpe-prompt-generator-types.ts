@@ -1,3 +1,4 @@
+import { RPEProperties } from '../rpe-info/index.js';
 import { RPEPrompt } from '../rpe-prompt/index.js';
 import { RPEAggregatorOutput } from '../rpe-aggregator/index.js';
 import { RPEAnalyzerOutput } from '../rpe-analyzer/index.js';
@@ -62,10 +63,37 @@ export interface RPEPromptGeneratorOutput {
 }
 
 /**
+ * Info of the RPE prompt generator.
+ * @category Reflective Prompt Evolution
+ */
+export interface RPEPromptGeneratorInfo {
+  /**
+   * Name of the prompt generator.
+   */
+  name: string;
+
+  /**
+   * Properties of the prompt generator.
+   */
+  properties?: RPEProperties;
+}
+
+/**
  * Responsible for generating a new prompt based on the original prompt,
  * the aggregation of the evaluations and the analysis of the prompt.
  * @category Reflective Prompt Evolution
  */
-export type RPEPromptGenerator = (
-  input: RPEPromptGeneratorInput,
-) => Promise<RPEPromptGeneratorOutput>;
+export interface RPEPromptGenerator {
+  /**
+   * Generate a new prompt.
+   * @param input - Input for the prompt generator.
+   * @returns Prompt generator output.
+   */
+  run(input: RPEPromptGeneratorInput): Promise<RPEPromptGeneratorOutput>;
+
+  /**
+   * Get the info of the prompt generator.
+   * @returns Info of the prompt generator.
+   */
+  getInfo(): Promise<RPEPromptGeneratorInfo>;
+}

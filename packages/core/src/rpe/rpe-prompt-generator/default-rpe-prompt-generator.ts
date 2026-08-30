@@ -4,12 +4,14 @@ import { replacePlaceholders } from '../../string/index.js';
 import { DistributionRange } from '../../math/index.js';
 import { MetricResult, buildModelCallSettings } from '../../llm/index.js';
 import { DefaultModelProvider } from '../../model-provider/index.js';
+import { modelParametersToRPEInfo } from '../rpe-info/index.js';
 import { RPEEvaluatorOutput } from '../rpe-evaluator/rpe-evaluator-types.js';
 import { 
   DEFAULT_RPE_PROMPT_GENERATOR_PROMPT,
 } from './default-rpe-prompt-generator-prompt.js';
 import { 
   RPEPromptGenerator,
+  RPEPromptGeneratorInfo,
   RPEPromptGeneratorInput,
   RPEPromptGeneratorOutput,
 } from './rpe-prompt-generator-types.js';
@@ -24,62 +26,78 @@ export function defaultRPEPromptGenerator(
   const { modelName, modelParameters } = input;
   const modelProvider = input.modelProvider ?? new DefaultModelProvider();
 
-  return async (
-    input: RPEPromptGeneratorInput,
-  ): Promise<RPEPromptGeneratorOutput> => {
-    const prompt = replacePlaceholders(
-      DEFAULT_RPE_PROMPT_GENERATOR_PROMPT,
-      {
-        original_prompt: input.prompt.prompt,
-        aggregated_score: input.aggregation.aggregatedScore,
-        aggregated_metrics: aggregatedMetricsForPrompt(
-          input.aggregation.aggregatedMetrics ?? {},
-        ),
-        score_distribution: scoreDistributionForPrompt(
-          input.aggregation.scoreDistribution,
-        ),
-        strengths: input.analysis.strengths.join('\n'),
-        weaknesses: input.analysis.weaknesses.join('\n'),
-        recommendations: input.analysis.recommendations.join('\n'),
-        failure_patterns: input.analysis.failurePatterns.join('\n'),
-        passed_evaluations: explanationsForPrompt(
-          input.aggregation.passedEvaluations,
-        ),
-        failed_evaluations: explanationsForPrompt(
-          input.aggregation.failedEvaluations,
-        ),
-      },
-    );
+  return {
+    run: async (
+      input: RPEPromptGeneratorInput,
+    ): Promise<RPEPromptGeneratorOutput> => {
+      const prompt = replacePlaceholders(
+        DEFAULT_RPE_PROMPT_GENERATOR_PROMPT,
+        {
+          original_prompt: input.prompt.prompt,
+          aggregated_score: input.aggregation.aggregatedScore,
+          aggregated_metrics: aggregatedMetricsForPrompt(
+            input.aggregation.aggregatedMetrics ?? {},
+          ),
+          score_distribution: scoreDistributionForPrompt(
+            input.aggregation.scoreDistribution,
+          ),
+          strengths: input.analysis.strengths.join('\n'),
+          weaknesses: input.analysis.weaknesses.join('\n'),
+          recommendations: input.analysis.recommendations.join('\n'),
+          failure_patterns: input.analysis.failurePatterns.join('\n'),
+          passed_evaluations: explanationsForPrompt(
+            input.aggregation.passedEvaluations,
+          ),
+          failed_evaluations: explanationsForPrompt(
+            input.aggregation.failedEvaluations,
+          ),
+        },
+      );
 
-    const model = await modelProvider.getModel(modelName);
-    const { output, usage } = await generateText({
-      model: model.model,
-      prompt: prompt.text,
-      ...buildModelCallSettings(modelParameters),
-      output: Output.object({
-        schema: DefaultRPEPromptGeneratorOutputSchema,
-      })
-    });
+      const model = await modelProvider.getModel(modelName);
+      const { output, usage } = await generateText({
+        model: model.model,
+        prompt: prompt.text,
+        ...buildModelCallSettings(modelParameters),
+        output: Output.object({
+          schema: DefaultRPEPromptGeneratorOutputSchema,
+        })
+      });
 
-    return { 
-      prompt: {
-        prompt: output.prompt,
-        parentPromptIds: [input.prompt.promptId],
-      },
-      changes: output.changes.map(change => ({
-        description: change.description,
-        reasoning: change.reasoning,
-      })),
-      usage: {
-        modelUsage: [
+      return { 
+        prompt: {
+          prompt: output.prompt,
+          parentPromptIds: [input.prompt.promptId],
+        },
+        changes: output.changes.map(change => ({
+          description: change.description,
+          reasoning: change.reasoning,
+        })),
+        usage: {
+          modelUsage: [
+            {
+              modelName: model.name,
+              inputTokens: usage.inputTokens,
+              outputTokens: usage.outputTokens,
+            },
+          ],
+        },
+      }
+    },
+
+    getInfo: async (): Promise<RPEPromptGeneratorInfo> => {
+      return {
+        name: 'Default Prompt Generator',
+        properties: [
           {
-            modelName: model.name,
-            inputTokens: usage.inputTokens,
-            outputTokens: usage.outputTokens,
+            key: 'model',
+            value: modelProvider.getProviderModelName(modelName),
+            description: 'Model name used for the prompt generation.',
           },
+          ...modelParametersToRPEInfo(modelParameters),
         ],
-      },
-    }
+      };
+    },
   };
 }
 

@@ -4815,10 +4815,10 @@ function IconButton(props) {
 	});
 }
 var Panel_module_default = {
-	panel: "_panel_e7ejg_1",
-	"panel-header": "_panel-header_e7ejg_19",
-	"panel-header-title": "_panel-header-title_e7ejg_32",
-	"panel-content": "_panel-content_e7ejg_35"
+	panel: "_panel_1qyyl_1",
+	"panel-header": "_panel-header_1qyyl_19",
+	"panel-header-title": "_panel-header-title_1qyyl_32",
+	"panel-content": "_panel-content_1qyyl_35"
 };
 //#endregion
 //#region src/components/basic/Panel.tsx
@@ -4868,10 +4868,19 @@ function Table(props) {
 				gridColumn: columnIndex + 1,
 				gridRow: rowIndex + 2
 			};
+			let value = "";
+			if (typeof cell === "string") value = cell;
+			else if (typeof cell === "number") value = cell.toString();
+			else if (typeof cell === "boolean") {
+				console.log("cell.boolean", cell);
+				value = cell ? "Yes" : "No";
+			} else if (cell === null) value = "";
+			else if (cell === void 0) value = "";
+			else if (typeof cell === "object" && "props" in cell) value = cell;
 			return /* @__PURE__ */ u("div", {
 				className: Table_module_default["cell"],
 				style,
-				children: cell
+				children: value
 			});
 		});
 	};
@@ -11221,10 +11230,22 @@ function sumRPEInsightsUsage(insights) {
 	});
 	return usage;
 }
+//#endregion
+//#region src/string/case.ts
+/**
+* Convert a camel case string to a sentence case string.
+* @param str - The string to convert.
+* @returns The converted string.
+*/
+function camelCaseToSentenceCase(value) {
+	if (!value) return value;
+	const result = value.replace(/([a-z0-9])([A-Z])/g, "$1 $2").replace(/([A-Z])([A-Z][a-z])/g, "$1 $2").toLowerCase();
+	return result.charAt(0).toUpperCase() + result.slice(1);
+}
 var InfoPanel_module_default = {
-	"info-panel": "_info-panel_1yqnm_1",
-	visible: "_visible_1yqnm_5",
-	hidden: "_hidden_1yqnm_11"
+	"info-panel": "_info-panel_1a9g1_1",
+	visible: "_visible_1a9g1_5",
+	hidden: "_hidden_1a9g1_11"
 };
 //#endregion
 //#region src/components/tools/InfoPanel.tsx
@@ -11239,14 +11260,35 @@ function InfoPanel(props) {
 			outputTokens.toString()
 		];
 	});
+	const panelClassName = clsx(InfoPanel_module_default["info-panel"], {
+		[InfoPanel_module_default["visible"]]: visible,
+		[InfoPanel_module_default["hidden"]]: !visible
+	});
+	const renderRPEProperties = (title, name, rpeProperties) => {
+		const propertiesRows = (rpeProperties ?? []).map((property) => [
+			camelCaseToSentenceCase(property.key),
+			property.value,
+			property.description
+		]);
+		return /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("h2", { children: title }), /* @__PURE__ */ u("p", { children: /* @__PURE__ */ u(Table, {
+			header: [
+				"Key",
+				"Value",
+				"Description"
+			],
+			rows: [[
+				"Name",
+				name,
+				"Name of the component."
+			], ...propertiesRows]
+		}) })] });
+	};
 	return /* @__PURE__ */ u(Panel, {
 		title: "Info",
 		onCloseClick,
-		className: clsx(InfoPanel_module_default["info-panel"], {
-			[InfoPanel_module_default["visible"]]: visible,
-			[InfoPanel_module_default["hidden"]]: !visible
-		}),
+		className: panelClassName,
 		children: [
+			/* @__PURE__ */ u("h1", { children: "General" }),
 			/* @__PURE__ */ u("h2", { children: "Stop reason" }),
 			/* @__PURE__ */ u("p", { children: props.rpeInsights.stopReason }),
 			/* @__PURE__ */ u("h2", { children: "Token usage by model" }),
@@ -11257,7 +11299,14 @@ function InfoPanel(props) {
 					"Output tokens"
 				],
 				rows: usageRows
-			}) })
+			}) }),
+			/* @__PURE__ */ u("h1", { children: "Components info" }),
+			renderRPEProperties("Executor", props.rpeInsights.info.executorInfo.name, props.rpeInsights.info.executorInfo.properties),
+			renderRPEProperties("Evaluator", props.rpeInsights.info.evaluatorInfo.name, props.rpeInsights.info.evaluatorInfo.properties),
+			renderRPEProperties("Aggregator", props.rpeInsights.info.aggregatorInfo.name, props.rpeInsights.info.aggregatorInfo.properties),
+			renderRPEProperties("Analyzer", props.rpeInsights.info.analyzerInfo.name, props.rpeInsights.info.analyzerInfo.properties),
+			renderRPEProperties("Prompt Generator", props.rpeInsights.info.promptGeneratorInfo.name, props.rpeInsights.info.promptGeneratorInfo.properties),
+			renderRPEProperties("Prompt Selector", props.rpeInsights.info.promptSelectorInfo.name, props.rpeInsights.info.promptSelectorInfo.properties)
 		]
 	});
 }
@@ -11344,7 +11393,7 @@ function loadRPEInsights() {
 R$1(/* @__PURE__ */ u(App, { rpeInsights: loadRPEInsights() }), document.getElementById("app"));
 //#endregion
 
-//# sourceMappingURL=index-Bo7UOsdP.js.map</script>
+//# sourceMappingURL=index-NEZ_IWBS.js.map</script>
     <style rel="stylesheet" crossorigin>* {
   box-sizing: border-box;
 }
@@ -11485,7 +11534,7 @@ html[data-theme=light] {
   display: flex;
   align-items: center;
   justify-content: center;
-}._panel_e7ejg_1 {
+}._panel_1qyyl_1 {
   border: 1px solid var(--muted);
   border-radius: var(--border-radius);
   background-color: var(--bg-muted);
@@ -11503,7 +11552,7 @@ html[data-theme=light] {
   display: flex;
   flex-direction: column;
 }
-._panel_e7ejg_1 ._panel-header_e7ejg_19 {
+._panel_1qyyl_1 ._panel-header_1qyyl_19 {
   font-family: "Funnel Display", sans-serif;
   font-size: 1.25rem;
   font-weight: 500;
@@ -11516,21 +11565,24 @@ html[data-theme=light] {
   flex-direction: row;
   align-items: center;
 }
-._panel_e7ejg_1 ._panel-header-title_e7ejg_32 {
+._panel_1qyyl_1 ._panel-header-title_1qyyl_32 {
   flex: 1;
 }
-._panel_e7ejg_1 ._panel-content_e7ejg_35 {
+._panel_1qyyl_1 ._panel-content_1qyyl_35 {
   padding: calc(var(--border-radius) * 1.5) calc(var(--border-radius) * 2);
   overflow-y: auto;
   flex: 1;
 }
-._panel_e7ejg_1 h1 {
+._panel_1qyyl_1 h1 {
   font-family: "Funnel Display", sans-serif;
+  font-size: 1.25rem;
   margin-top: 1rem;
   margin-bottom: 1rem;
   padding: 0;
+  font-weight: 500;
+  line-height: 1;
 }
-._panel_e7ejg_1 h2 {
+._panel_1qyyl_1 h2 {
   font-family: "Funnel Display", sans-serif;
   font-size: 0.84rem;
   margin-top: 1rem;
@@ -11638,24 +11690,34 @@ html[data-theme=light] {
   background-color: var(--bg-muted);
   border-radius: 9999px;
   border: 1px solid var(--muted);
-}._info-panel_1yqnm_1 {
-  height: 24rem;
+}._info-panel_1a9g1_1 {
+  height: 32rem;
   max-height: 90vh;
 }
-._info-panel_1yqnm_1._visible_1yqnm_5 {
+._info-panel_1a9g1_1._visible_1a9g1_5 {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
   transition: transform 340ms ease-out;
 }
-._info-panel_1yqnm_1._hidden_1yqnm_11 {
+._info-panel_1a9g1_1._hidden_1a9g1_11 {
   left: 50%;
   top: 50%;
   transition: transform 280ms ease-in;
   transform: translate(-50%, 100vh);
 }
-._info-panel_1yqnm_1 p {
+._info-panel_1a9g1_1 p {
   margin-left: 1rem;
+}
+._info-panel_1a9g1_1 h1 {
+  font-family: "Funnel Display", sans-serif;
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1;
+}
+._info-panel_1a9g1_1 h2 {
+  font-family: "Funnel Display", sans-serif;
+  font-size: 0.84rem;
 }/*$vite$:1*/</style>
   </head>
   <body>

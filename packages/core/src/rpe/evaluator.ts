@@ -24,7 +24,7 @@ export async function evaluatePrompts(
   // tasks
   const tasks = inputs.map(async input => {
     // evaluate the prompt
-    const evaluation = await evaluator(input);
+    const evaluation = await evaluator.run(input);
 
     // keep the evaluation
     const promptId = input.prompt.promptId;

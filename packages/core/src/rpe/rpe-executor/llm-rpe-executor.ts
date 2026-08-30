@@ -4,8 +4,13 @@ import { replacePlaceholders } from '../../string/index.js';
 import { buildModelCallSettings } from '../../llm/index.js';
 import { DefaultModelProvider } from '../../model-provider/index.js';
 import { promptRefFromPrompt } from '../rpe-prompt/index.js';
-import { RPEExecutor, RPEExecutorInput } from './rpe-executor-types.js';
+import { 
+  RPEExecutor,
+  RPEExecutorInfo,
+  RPEExecutorInput,
+} from './rpe-executor-types.js';
 import { LLMRPEExecutorInput } from './llm-rpe-executor-types.js';
+import { modelParametersToRPEInfo } from '../rpe-info/index.js';
 
 /**
  * Creates an RPE executor that uses a LLM to generate a response.
@@ -19,35 +24,51 @@ export function llmRPEExecutor(
   const { modelName, modelParameters } = input;
   const modelProvider = input.modelProvider ?? new DefaultModelProvider();
 
-  return async (input: RPEExecutorInput) => {
-    const model = await modelProvider.getModel(modelName);
-  
-    // build prompt
-    const prompt = replacePlaceholders(
-      input.prompt.prompt,
-      input.datasetEntry.vars ?? {},
-    );
+  return {
+    run: async (input: RPEExecutorInput) => {
+      const model = await modelProvider.getModel(modelName);
+    
+      // build prompt
+      const prompt = replacePlaceholders(
+        input.prompt.prompt,
+        input.datasetEntry.vars ?? {},
+      );
 
-    // generate text response
-    const response = await generateText({
-      model: model.model,
-      prompt: prompt.text,
-      ...buildModelCallSettings(modelParameters),
-    });
+      // generate text response
+      const response = await generateText({
+        model: model.model,
+        prompt: prompt.text,
+        ...buildModelCallSettings(modelParameters),
+      });
 
-    return {
-      promptRef: promptRefFromPrompt(input.prompt),
-      datasetEntry: input.datasetEntry,
-      response: response.text,
-      usage: {
-        modelUsage: [
+      return {
+        promptRef: promptRefFromPrompt(input.prompt),
+        datasetEntry: input.datasetEntry,
+        response: response.text,
+        usage: {
+          modelUsage: [
+            {
+              modelName: model.name,
+              inputTokens: response.usage.inputTokens,
+              outputTokens: response.usage.outputTokens,
+            },
+          ],
+        },
+      };
+    },
+
+    getInfo: async (): Promise<RPEExecutorInfo> => {
+      return {
+        name: 'LLM Executor',
+        properties: [
           {
-            modelName: model.name,
-            inputTokens: response.usage.inputTokens,
-            outputTokens: response.usage.outputTokens,
+            key: 'model',
+            value: modelProvider.getProviderModelName(modelName),
+            description: 'Model name used for the execution.',
           },
+          ...modelParametersToRPEInfo(modelParameters),
         ],
-      },
-    };
+      };
+    },
   };
 }
