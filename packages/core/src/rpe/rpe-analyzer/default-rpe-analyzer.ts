@@ -23,12 +23,18 @@ import {
   DefaultRPEAnalyzerOutputSchema,
 } from './default-rpe-analyzer-types.js';
 
+const DEFAULT_PASSED_EXPLANATIONS_COUNT = 3;
 const DEFAULT_FAILED_EXAMPLES_COUNT = 3;
 
 export function defaultRPEAnalyzer(
   input: DefaultRPEAnalyzerInput,
 ): RPEAnalyzer {
-  const { modelName, modelParameters } = input;
+  const { 
+    modelName,
+    modelParameters,
+    passedEvaluationsCount,
+    failedEvaluationsCount,
+  } = input;
   const modelProvider = input.modelProvider ?? new DefaultModelProvider();
 
   return {
@@ -50,10 +56,11 @@ export function defaultRPEAnalyzer(
           ),
           passed_explanations: explanationsForPrompt(
             input.aggregation.passedEvaluations,
+            passedEvaluationsCount ?? DEFAULT_PASSED_EXPLANATIONS_COUNT,
           ),
           failed_examples: failedExamplesForPrompt(
             input.aggregation.failedEvaluations,
-            DEFAULT_FAILED_EXAMPLES_COUNT,
+            failedEvaluationsCount ?? DEFAULT_FAILED_EXAMPLES_COUNT,
           ),
         },
       );
@@ -127,8 +134,10 @@ function scoreDistributionForPrompt(
 
 function explanationsForPrompt(
   evaluations: RPEEvaluatorOutput[],
+  count: number,
 ): string {
   return evaluations
+    .slice(0, count)
     .map(evaluation => {
       return `- ${evaluation.reasoning}`;
     })

@@ -12,6 +12,9 @@ import {
   defaultRPEAnalyzer,
   defaultRPEPromptGenerator,
   bestScorePromptSelector,
+  SCALAR_METRIC_CORRECTNESS,
+  SCALAR_METRIC_COMPLETENESS,
+  SCALAR_METRIC_RELEVANCE,
 } from '@gettoor/core';
 import { renderRPEInsightsToHTML } from '@gettoor/core/rpe-html-renderer';
 import { EASY_DATASET } from './sentiment-dataset.js';
@@ -48,6 +51,11 @@ async function run(): Promise<void> {
       modelParameters: {
         temperature: 0.0,
       },
+      metrics: [
+        SCALAR_METRIC_CORRECTNESS,
+        SCALAR_METRIC_COMPLETENESS,
+        SCALAR_METRIC_RELEVANCE,
+      ],
     }),
     aggregatorParallelism: 8,
     aggregator: defaultRPEAggregator({

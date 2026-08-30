@@ -35,12 +35,12 @@ export interface LLMUsage {
  */
 export interface MetricResult {
   /**
-   * The score for the metric.
+   * Score normalized to 0..1.
    */
-  score: number;
+  normalizedScore: number;
 
   /**
-   * The reasoning for the metric score.
+   * Reasoning for the metric score.
    */
   reasoning?: string;
 }

@@ -107,20 +107,31 @@ export async function scalar(input: ScalarInput): Promise<ScalarOutput> {
     }),
   });
 
+  // the model returns the final and metrics score according to the scoring
+  // scale, so we need to normalize the score to 0..1
+  const normalizeScore = (score: number) => {
+    return (score - scoringScale.min) / (scoringScale.max - scoringScale.min);
+  }
+
   // collect metrics
+  type MetricFromResponse = {
+    score: number;
+    reasoning: string;
+  }
   const metrics: Record<ScalarMetric['name'], MetricResult> = {};
   for (const metric of input.metrics ?? []) {
-    metrics[metric.name] = response.output[metric.name] as MetricResult;
+    const metricFromResponse = response.output[metric.name] as MetricFromResponse;
+    metrics[metric.name] = {
+      normalizedScore: normalizeScore(metricFromResponse.score),
+      reasoning: metricFromResponse.reasoning,
+    };
   }
 
   // compile result
   const output = response.output;
-  const normalizedScore =
-    (output.score - scoringScale.min) /
-    (scoringScale.max - scoringScale.min);
   const result: ScalarResult = {
     score: output.score,
-    normalizedScore,
+    normalizedScore: normalizeScore(output.score),
     metrics,
   };
   const usage: LLMUsage = {

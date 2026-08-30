@@ -27,7 +27,8 @@ function printResult(result: ScalarOutput): void {
     console.log(`  ${dim('Metrics:')}`);
     for (const name of metricNames) {
       console.log(
-        `     ${dim(capitalize(name))}: ${result.result.metrics[name].score}` +
+        `     ${dim(capitalize(name))}: ` +
+        `${result.result.metrics[name].normalizedScore.toFixed(2)}` +
         ` ${dim('·')} ${result.result.metrics[name].reasoning}`
       );
     }

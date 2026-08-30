@@ -80,10 +80,10 @@ function aggregateMetrics(
   const aggregatedMetrics: Record<string, MetricResult> = {};
   for (const metricName of metricNames) {
     const metricValues = evaluations
-      .map(evaluation => evaluation.metrics?.[metricName]?.score)
+      .map(evaluation => evaluation.metrics?.[metricName]?.normalizedScore)
       .filter(score => score !== undefined);
     aggregatedMetrics[metricName] = {
-      score: aggregationFunc(metricValues),
+      normalizedScore: aggregationFunc(metricValues),
     };
   }
   

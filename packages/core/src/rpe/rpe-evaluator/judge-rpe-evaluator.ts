@@ -62,6 +62,7 @@ export function judgeRPEEvaluator(
         prompt: prompt.prompt,
         response: response,
         scoringScale,
+        metrics,
         evalPrompt: JUDGE_RPE_EVALUATOR_PROMPT,
         additionalPromptValues: {
           expected_response: expectedResponse,

@@ -120,4 +120,14 @@ export interface DefaultRPEAnalyzerInput {
    * Model parameters to use for the analyzer.
    */
   modelParameters?: ModelParameters;
+
+  /**
+   * Number of passed evaluations to include in the analysis.
+   */
+  passedEvaluationsCount?: number;
+
+  /**
+   * Number of failed evaluations to include in the analysis.
+   */
+  failedEvaluationsCount?: number;
 }
