@@ -39,22 +39,30 @@ export async function generatePrompts(
     }
 
     // generate (candidate) prompt
-    const output = await generator.run({
+    const { prompts } = await generator.run({
       prompt: findPromptById(state, aggregationPromptId),
       aggregation,
       analysis,
     });
-    return {
-      ...output,
+    // return {
+    //   ...output,
+    //   prompt: {
+    //     ...output.prompt,
+    //     promptId: `i${state.iterationNo}p${index}`,
+    //   },
+    //   usage: output.usage,
+    // }
+    return prompts.map(prompt => ({
       prompt: {
-        ...output.prompt,
+        ...prompt.prompt,
         promptId: `i${state.iterationNo}p${index}`,
       },
-      usage: output.usage,
-    }
+      changes: prompt.changes,
+      usage: prompt.usage,
+    }));
   });
 
   // run tasks in parallel
   const outputs = await runParallelBatchesOrThrow(tasks, parallelism);
-  return { candidates: outputs };
+  return { candidates: outputs.flat() };
 }

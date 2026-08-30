@@ -14,6 +14,7 @@ import {
   RPEPromptGeneratorInfo,
   RPEPromptGeneratorInput,
   RPEPromptGeneratorOutput,
+  RPEPromptGeneratorPrompt,
 } from './rpe-prompt-generator-types.js';
 import { 
   DefaultRPEPromptGeneratorInput,
@@ -64,7 +65,7 @@ export function defaultRPEPromptGenerator(
         })
       });
 
-      return { 
+      const generatedPrompt: RPEPromptGeneratorPrompt = { 
         prompt: {
           prompt: output.prompt,
           parentPromptIds: [input.prompt.promptId],
@@ -82,6 +83,9 @@ export function defaultRPEPromptGenerator(
             },
           ],
         },
+      };
+      return {
+        prompts: [generatedPrompt],
       }
     },
 
