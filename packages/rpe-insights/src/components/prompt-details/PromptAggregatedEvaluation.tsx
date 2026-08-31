@@ -6,6 +6,7 @@ import {
 
 import { Markdown, Score, Tag } from '../basic';
 import { Separator } from './Separator';
+import { Metrics } from './Metrics';
 import styles from './PromptAggregatedEvaluation.module.scss';
 
 export interface PromptAggregatedEvaluationProps {
@@ -74,6 +75,14 @@ export function PromptAggregatedEvaluation(
           }
           <h2>Reasoning</h2>
           <div><Markdown content={evaluation.reasoning}/></div>
+          { evaluation.metrics &&
+            <>
+              <h2>Metrics</h2>
+              <p>
+                <Metrics metrics={evaluation.metrics}/>
+              </p>
+            </>
+          }
         </div>
       </>
     );
@@ -95,6 +104,14 @@ export function PromptAggregatedEvaluation(
       <div className={styles['aggregated-score']}>
         Aggregated score:&nbsp;
         <Score score={aggregatedEvaluation.aggregatedScore}/>
+        { aggregatedEvaluation.aggregatedMetrics &&
+          <>
+            <h2>Aggregated metrics</h2>
+            <p>
+              <Metrics metrics={aggregatedEvaluation.aggregatedMetrics}/>
+            </p>
+          </>
+        }
       </div>
       {renderEvaluations()}
     </div>

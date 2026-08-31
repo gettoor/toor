@@ -4921,6 +4921,37 @@ var Separator_module_default = { separator: "_separator_6czns_1" };
 function Separator() {
 	return /* @__PURE__ */ u("div", { className: Separator_module_default["separator"] });
 }
+//#endregion
+//#region src/string/case.ts
+/**
+* Convert a camel case string to a sentence case string.
+* @param value - String to convert.
+* @returns Converted string.
+*/
+function camelCaseToSentenceCase(value) {
+	if (!value) return value;
+	const result = value.replace(/([a-z0-9])([A-Z])/g, "$1 $2").replace(/([A-Z])([A-Z][a-z])/g, "$1 $2").toLowerCase();
+	return result.charAt(0).toUpperCase() + result.slice(1);
+}
+/**
+* Capitalize the first letter of a string.
+* @param value - String to capitalize.
+* @returns Capitalized string.
+*/
+function capitalize(value) {
+	if (!value) return value;
+	return value.charAt(0).toUpperCase() + value.slice(1);
+}
+//#endregion
+//#region src/components/prompt-details/Metrics.tsx
+function Metrics(props) {
+	return /* @__PURE__ */ u(Table, {
+		header: ["Metric", "Score"],
+		rows: Object.keys(props.metrics).sort().map((name) => {
+			return [capitalize(name), props.metrics[name].normalizedScore];
+		})
+	});
+}
 var PromptAggregatedEvaluation_module_default = {
 	"prompt-aggregated-evaluation": "_prompt-aggregated-evaluation_1t63t_1",
 	"aggregated-score": "_aggregated-score_1t63t_7",
@@ -4965,7 +4996,8 @@ function PromptAggregatedEvaluation(props) {
 			/* @__PURE__ */ u("div", { children: /* @__PURE__ */ u(Markdown, { content: evaluation.response }) }),
 			expectedResponse && /* @__PURE__ */ u("div", { children: [/* @__PURE__ */ u("h2", { children: "Expected response" }), /* @__PURE__ */ u(Markdown, { content: expectedResponse })] }),
 			/* @__PURE__ */ u("h2", { children: "Reasoning" }),
-			/* @__PURE__ */ u("div", { children: /* @__PURE__ */ u(Markdown, { content: evaluation.reasoning }) })
+			/* @__PURE__ */ u("div", { children: /* @__PURE__ */ u(Markdown, { content: evaluation.reasoning }) }),
+			evaluation.metrics && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("h2", { children: "Metrics" }), /* @__PURE__ */ u("p", { children: /* @__PURE__ */ u(Metrics, { metrics: evaluation.metrics }) })] })
 		] }, key)] });
 	};
 	const renderEvaluations = () => {
@@ -4981,7 +5013,11 @@ function PromptAggregatedEvaluation(props) {
 		className: PromptAggregatedEvaluation_module_default["prompt-aggregated-evaluation"],
 		children: [/* @__PURE__ */ u("div", {
 			className: PromptAggregatedEvaluation_module_default["aggregated-score"],
-			children: ["Aggregated score:\xA0", /* @__PURE__ */ u(Score, { score: aggregatedEvaluation.aggregatedScore })]
+			children: [
+				"Aggregated score:\xA0",
+				/* @__PURE__ */ u(Score, { score: aggregatedEvaluation.aggregatedScore }),
+				aggregatedEvaluation.aggregatedMetrics && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("h2", { children: "Aggregated metrics" }), /* @__PURE__ */ u("p", { children: /* @__PURE__ */ u(Metrics, { metrics: aggregatedEvaluation.aggregatedMetrics }) })] })
+			]
 		}), renderEvaluations()]
 	});
 }
@@ -11228,18 +11264,6 @@ function sumRPEInsightsUsage(insights) {
 	});
 	return usage;
 }
-//#endregion
-//#region src/string/case.ts
-/**
-* Convert a camel case string to a sentence case string.
-* @param str - The string to convert.
-* @returns The converted string.
-*/
-function camelCaseToSentenceCase(value) {
-	if (!value) return value;
-	const result = value.replace(/([a-z0-9])([A-Z])/g, "$1 $2").replace(/([A-Z])([A-Z][a-z])/g, "$1 $2").toLowerCase();
-	return result.charAt(0).toUpperCase() + result.slice(1);
-}
 var InfoPanel_module_default = {
 	"info-panel": "_info-panel_1a9g1_1",
 	visible: "_visible_1a9g1_5",
@@ -11391,7 +11415,7 @@ function loadRPEInsights() {
 R$1(/* @__PURE__ */ u(App, { rpeInsights: loadRPEInsights() }), document.getElementById("app"));
 //#endregion
 
-//# sourceMappingURL=index-Cfn3qR0f.js.map</script>
+//# sourceMappingURL=index-xzhKQShE.js.map</script>
     <style rel="stylesheet" crossorigin>* {
   box-sizing: border-box;
 }
