@@ -1,4 +1,4 @@
-import { type RPEPrompt } from '@gettoor/core';
+import { type RPECandidate } from '@gettoor/core';
 
 import { 
   PADDING,
@@ -15,42 +15,42 @@ import { PromptTreeProps } from './PromptTree';
  * Resolve the boxes for the prompt tree.
  */
 export function resolveBoxes(
-  prompts: RPEPrompt[],
+  candidates: RPECandidate[],
   iterations: PromptTreeProps['iterations'],
   onBoxClick: (promptId: string) => void,
 ): PromptBoxProps[] {
   const boxes: PromptBoxProps[] = [];
   let y = PADDING;
 
-  const findPromptById = (promptId: string) => {
-    const prompt = prompts.find((prompt) => {
-      return prompt.promptId === promptId;
+  const findCandidateById = (candidateId: string) => {
+    const candidate = candidates.find((itr) => {
+      return itr.candidateId === candidateId;
     });
-    if (prompt === undefined) {
-      throw new Error(`Prompt ${promptId} not found`);
+    if (candidate === undefined) {
+      throw new Error(`Candidate ${candidateId} not found`);
     }
-    return prompt;
+    return candidate;
   };
 
-  const findAggregatedEvaluation = (promptId: string) => {
+  const findAggregatedEvaluation = (candidateId: string) => {
     const aggregatedEvaluations = iterations.flatMap((iteration) => {
       return iteration.aggregatedEvaluations;
     });
     const aggregatedEvaluation = aggregatedEvaluations.find(
-      (aggregatedEvaluation) => {
-        return aggregatedEvaluation.promptRef.promptId === promptId;
+      (evaluation) => {
+        return evaluation.candidateRef.candidateId === candidateId;
       },
     );
     return aggregatedEvaluation;
   };
 
-  const findCandidateAggregatedEvaluation = (promptId: string) => {
+  const findCandidateAggregatedEvaluation = (candidateId: string) => {
     const candidateAggregatedEvaluations = iterations.flatMap((iteration) => {
       return iteration.candidateAggregatedEvaluations;
     });
     const candidateAggregatedEvaluation = candidateAggregatedEvaluations.find(
-      (candidateAggregatedEvaluation) => {
-        return candidateAggregatedEvaluation.promptRef.promptId === promptId;
+      (evaluation) => {
+        return evaluation.candidateRef.candidateId === candidateId;
       },
     );
     return candidateAggregatedEvaluation;
@@ -59,13 +59,15 @@ export function resolveBoxes(
   // seed prompts
   const firstIteration = iterations[0];
   let x = PADDING;
-  for (const promptRef of firstIteration.promptRefs) {
-    const prompt = findPromptById(promptRef.promptId);
-    const aggregatedEvaluation = findAggregatedEvaluation(promptRef.promptId);
+  for (const candidateRef of firstIteration.candidateRefs) {
+    const prompt = findCandidateById(candidateRef.candidateId);
+    const aggregatedEvaluation = findAggregatedEvaluation(
+      candidateRef.candidateId,
+    );
     boxes.push({
       data: {
-        promptId: promptRef.promptId,
-        parentPromptIds: prompt.parentPromptIds,
+        promptId: candidateRef.candidateId,
+        parentPromptIds: prompt.parentCandidateIds,
         aggregatedScore: aggregatedEvaluation?.aggregatedScore,
         passedEvaluationsCount: aggregatedEvaluation?.passedEvaluations.length,
         failedEvaluationsCount: aggregatedEvaluation?.failedEvaluations.length,
@@ -75,7 +77,7 @@ export function resolveBoxes(
       width: BOX_WIDTH,
       height: BOX_HEIGHT,
       isSelected: false,
-      onClick: () => onBoxClick(promptRef.promptId),
+      onClick: () => onBoxClick(candidateRef.candidateId),
     });
     x += BOX_WIDTH + BOX_X_SPACING;
   }
@@ -84,33 +86,35 @@ export function resolveBoxes(
   // candidates from each iteration
   for (const iteration of iterations) {
     let x = PADDING;
-    for (const candidate of iteration.candidates) {
-      const prompt = findPromptById(candidate.promptRef.promptId);
-      const candidateAggregatedEvaluation = findCandidateAggregatedEvaluation(
-        prompt.promptId,
+    for (const newCandidate of iteration.candidates) {
+      const candidate = findCandidateById(
+        newCandidate.candidateRef.candidateId,
       );
-      const isSelected = iteration.selectedPromptRefs?.some(
+      const candidateAggregatedEvaluation = findCandidateAggregatedEvaluation(
+        candidate.candidateId,
+      );
+      const isSelected = iteration.selectedCandidateRefs?.some(
         (selectedPromptRef) => {
-          return selectedPromptRef.promptId === prompt.promptId;
+          return selectedPromptRef.candidateId === candidate.candidateId;
         },
       );
       boxes.push({
         data: {
-          promptId: prompt.promptId,
-          parentPromptIds: prompt.parentPromptIds,
+          promptId: candidate.candidateId,
+          parentPromptIds: candidate.parentCandidateIds,
           aggregatedScore: candidateAggregatedEvaluation?.aggregatedScore,
           passedEvaluationsCount:
             candidateAggregatedEvaluation?.passedEvaluations.length,
           failedEvaluationsCount:
             candidateAggregatedEvaluation?.failedEvaluations.length,
-          promptChangesCount: candidate?.changes.length,
+          promptChangesCount: newCandidate.changes.length,
         },
         x,
         y,
         width: BOX_WIDTH,
         height: BOX_HEIGHT,
         isSelected,
-        onClick: () => onBoxClick(prompt.promptId),
+        onClick: () => onBoxClick(candidate.candidateId),
       });
       x += BOX_WIDTH + BOX_X_SPACING;
     }

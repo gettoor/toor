@@ -2,37 +2,37 @@ import {
   type RPEAggregatorOutput,
   type RPEAnalyzerOutput,
   type RPEIteration,
-  type RPEPrompt,
+  type RPECandidate,
 } from '@gettoor/core';
 import { PromptDetailsData } from '../prompt-details';
 
 export function getPromptDetailsData(
-  prompts: RPEPrompt[],
+  candidates: RPECandidate[],
   iterations: RPEIteration[],
-  selectedPromptId: string | null,
+  selectedCandidateId: string | null,
 ): PromptDetailsData | undefined {
-  if (selectedPromptId === null) {
+  if (selectedCandidateId === null) {
     return undefined;
   }
 
-  const findPromptById = (promptId: string) => {
-    const prompt = prompts.find((prompt) => {
-      return prompt.promptId === promptId;
+  const findCandidateById = (candidateId: string) => {
+    const candidate = candidates.find((candidate) => {
+      return candidate.candidateId === candidateId;
     });
-    if (prompt === undefined) {
-      throw new Error(`Prompt ${promptId} not found`);
+    if (candidate === undefined) {
+      throw new Error(`Candidate ${candidateId} not found`);
     }
-    return prompt;
+    return candidate;
   };
 
-  const findAggregatedEvaluationByPromptId = (
+  const findAggregatedEvaluationByCandidateId = (
     iteration: RPEIteration,
-    promptId: string
+    candidateId: string
   ): RPEAggregatorOutput => {
     const { aggregatedEvaluations } = iteration;
     const aggregatedEvaluation = aggregatedEvaluations.find(
       aggregatedEvaluation => {
-        return aggregatedEvaluation.promptRef.promptId === promptId;
+        return aggregatedEvaluation.candidateRef.candidateId === candidateId;
       },
     );
     if (aggregatedEvaluation !== undefined) {
@@ -41,41 +41,41 @@ export function getPromptDetailsData(
 
     const { candidateAggregatedEvaluations } = iteration;
     const candidateAggregatedEvaluation = candidateAggregatedEvaluations.find(
-      candidateAggregatedEvaluation => {
-        return candidateAggregatedEvaluation.promptRef.promptId === promptId;
+      valuation => {
+        return valuation.candidateRef.candidateId === candidateId;
       },
     );
     if (candidateAggregatedEvaluation !== undefined) {
       return candidateAggregatedEvaluation;
     }
     throw new Error(
-      `Aggregated evaluations for prompt ${promptId} not found`,
+      `Aggregated evaluations for prompt ${candidateId} not found`,
     );
   };
 
-  const findAnalysisByPromptId = (
+  const findAnalysisByCandidateId = (
     iteration: RPEIteration,
-    promptId: string
+    candidateId: string
   ): RPEAnalyzerOutput | undefined => {
     const analysis = iteration.analyses.find(analysis => {
-      return analysis.promptRef.promptId === promptId;
+      return analysis.candidateRef.candidateId === candidateId;
     });
     return analysis;
   };
 
   // seed prompts
   const firstIteration = iterations[0];
-  const seedPromptRef = firstIteration.promptRefs.find(promptRef => {
-    return promptRef.promptId === selectedPromptId;
+  const seedCandidateRef = firstIteration.candidateRefs.find(candidateRef => {
+    return candidateRef.candidateId === selectedCandidateId;
   })
-  if (seedPromptRef !== undefined) {
+  if (seedCandidateRef !== undefined) {
     return {
-      prompt: findPromptById(seedPromptRef.promptId),
-      aggregatedEvaluation: findAggregatedEvaluationByPromptId(
+      candidate: findCandidateById(seedCandidateRef.candidateId),
+      aggregatedEvaluation: findAggregatedEvaluationByCandidateId(
         firstIteration,
-        selectedPromptId,
+        selectedCandidateId,
       ),
-      analysis: findAnalysisByPromptId(firstIteration, selectedPromptId),
+      analysis: findAnalysisByCandidateId(firstIteration, selectedCandidateId),
     };
   }
 
@@ -83,17 +83,17 @@ export function getPromptDetailsData(
   // candidates from each iteration
   for (const iteration of iterations) {
     const candidate = iteration.candidates.find(candidate => {
-      return candidate.promptRef.promptId === selectedPromptId;
+      return candidate.candidateRef.candidateId === selectedCandidateId;
     });
     if (candidate !== undefined) {
       data = {
-        prompt: findPromptById(candidate.promptRef.promptId),
-        promptChanges: candidate.changes,
-        aggregatedEvaluation: findAggregatedEvaluationByPromptId(
+        candidate: findCandidateById(candidate.candidateRef.candidateId),
+        candidateChanges: candidate.changes,
+        aggregatedEvaluation: findAggregatedEvaluationByCandidateId(
           iteration,
-          selectedPromptId,
+          selectedCandidateId,
         ),
-        analysis: findAnalysisByPromptId(iteration, selectedPromptId),
+        analysis: findAnalysisByCandidateId(iteration, selectedCandidateId),
       };
       break;
     }

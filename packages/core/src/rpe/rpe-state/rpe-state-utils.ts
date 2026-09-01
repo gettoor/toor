@@ -1,18 +1,23 @@
-import { RPEPrompt } from '../rpe-prompt/index.js';
-import { PromptNotFoundError } from './rpe-state-errors.js';
+import { RPECandidate } from '../rpe-candidate/index.js';
+import { CandidateNotFoundError } from './rpe-state-errors.js';
 import { RPEState } from './rpe-state-types.js';
 
 /**
- * Finds a prompt by its ID.
+ * Finds a candidate by its identifier.
  * @category Reflective Prompt Evolution
  * @param state - State of the RPE process.
- * @param promptId - Identifier of the prompt to find.
- * @returns The prompt.
+ * @param candidateId - Identifier of the candidate to find.
+ * @returns Found candidate.
  */
-export function findPromptById(state: RPEState, promptId: string): RPEPrompt {
-  const prompt = state.prompts.find(prompt => prompt.promptId === promptId);
-  if (!prompt) {
-    throw new PromptNotFoundError(promptId);
+export function findCandidateById(
+  state: RPEState,
+  candidateId: string,
+): RPECandidate {
+  const candidate = state.candidates.find(itr => {
+    return itr.candidateId === candidateId;
+  });
+  if (!candidate) {
+    throw new CandidateNotFoundError(candidateId);
   }
-  return prompt;
+  return candidate;
 }

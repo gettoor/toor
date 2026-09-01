@@ -1,7 +1,7 @@
 import { LLMUsage } from '../../llm/index.js';
 import { RPEProperties } from '../rpe-info/index.js';
 import { RPEDatasetEntry } from '../rpe-dataset/index.js';
-import { RPEPrompt, RPEPromptRef } from '../rpe-prompt/index.js';
+import { RPECandidate, RPECandidateRef } from '../rpe-candidate/index.js';
 
 /**
  * Input for the RPE executor.
@@ -9,9 +9,9 @@ import { RPEPrompt, RPEPromptRef } from '../rpe-prompt/index.js';
  */
 export interface RPEExecutorInput {
   /**
-   * Prompt for which the response is generated.
+   * Candidate for which the response is generated.
    */
-  prompt: RPEPrompt;
+  candidate: RPECandidate;
 
   /**
    * Dataset entry to use for the response generation.
@@ -25,9 +25,9 @@ export interface RPEExecutorInput {
  */
 export interface RPEExecutorOutput {
   /**
-   * Reference to the prompt for which the response is generated.
+   * Reference to the candidate for which the response is generated.
    */
-  promptRef: RPEPromptRef;
+  candidateRef: RPECandidateRef;
 
   /**
    * Dataset entry to use for the response generation.
@@ -62,12 +62,12 @@ export interface RPEExecutorInfo {
 }
 
 /**
- * An executor which takes a prompt and generates a response.
+ * An executor which takes a candidate and generates a response.
  * @category Reflective Prompt Evolution
  */
 export interface RPEExecutor {
   /**
-   * Execute a prompt.
+   * Execute a candidate.
    * @param input - Input for the executor.
    * @returns Executor output.
    */

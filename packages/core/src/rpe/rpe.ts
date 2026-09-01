@@ -1,6 +1,6 @@
-import { promptRefFromPrompt } from './rpe-prompt/index.js';
+import { candidateRefFromCandidate } from './rpe-candidate/index.js';
 import { 
-  findPromptById,
+  findCandidateById,
   RPEIteration,
   RPEIterationInProgress,
   RPEState,
@@ -8,10 +8,10 @@ import {
 import { RPEInsightsInfo } from './rpe-insights/index.js';
 import { RPEInput, RPEOutput } from './rpe-types.js';
 import { generateResponses } from './executor.js';
-import { evaluateResponses } from './evaluator.js';
+import { evaluateCandidateResponses } from './evaluator.js';
 import { aggregateEvaluations } from './aggregator.js';
 import { analyzeAggregatedEvaluations } from './analyzer.js';
-import { generatePrompts } from './prompt-generator.js';
+import { generatePrompts } from './candidate-generator.js';
 
 /**
  * Runs the Reflective Prompt Evolution (RPE) process.
@@ -23,10 +23,12 @@ export async function optimize(
   input: RPEInput,
 ): Promise<RPEOutput> {
   const state: RPEState = {
-    prompts: [...input.seed],
+    candidates: [...input.seed],
     iterationNo: 0,
     iteration: {
-      promptRefs: input.seed.map(prompt => promptRefFromPrompt(prompt)),
+      candidateRefs: input.seed.map(candidate => {
+        return candidateRefFromCandidate(candidate);
+      }),
     },
     iterationHistory: [],
   };
@@ -34,28 +36,26 @@ export async function optimize(
   
   while (true) {
     const iteration: RPEIterationInProgress = state.iteration;
-    const prompts = iteration.promptRefs.map(promptRef => {
-      return findPromptById(state, promptRef.promptId);
+    const iterationCandidates = iteration.candidateRefs.map(candidateRef => {
+      return findCandidateById(state, candidateRef.candidateId);
     });
 
     // generate responses
     const { outputs: responses } = await generateResponses(
-      prompts,
+      iterationCandidates,
       input.trainingDataset,
       input.executor,
     );
     iteration.responses = responses;
 
     // evaluate responses
-    const { evaluations } = await evaluateResponses(
+    const { evaluations } = await evaluateCandidateResponses(
       state,
       responses,
       input.evaluator,
       input.evaluatorParallelism,
     );
     iteration.evaluations = evaluations;
-    console.log('------ evaluations ------');
-    console.log(JSON.stringify(evaluations, null, 2));
 
     // aggregate evaluations
     const aggregatedEvaluations = await aggregateEvaluations(
@@ -65,8 +65,6 @@ export async function optimize(
       input.aggregatorParallelism,
     );
     iteration.aggregatedEvaluations = aggregatedEvaluations;
-    console.log('------ aggregated evaluations ------');
-    console.log(JSON.stringify(aggregatedEvaluations, null, 2));
 
     // should stop?
     const shouldStopAfterEvaluation = await input.stopAfterEvaluation?.(state);
@@ -83,46 +81,40 @@ export async function optimize(
       input.analyzerParallelism,
     );
     iteration.analyses = analyses;
-    console.log('------ analyses ------');
-    console.log(JSON.stringify(analyses, null, 2));
 
-    // generate prompt
+    // generate candidates
     const { candidates } = await generatePrompts(
       state,
       aggregatedEvaluations,
       analyses,
-      input.promptGenerator,
-      input.promptGeneratorParallelism,
+      input.candidateGenerator,
+      input.candidateGeneratorParallelism,
     );
     iteration.candidates = candidates.map(candidate => ({
-      promptRef: promptRefFromPrompt(candidate.prompt),
+      candidateRef: candidateRefFromCandidate(candidate.candidate),
       changes: candidate.changes,
       usage: candidate.usage,
     }));
-    state.prompts.push(...candidates.map(candidate => candidate.prompt));
-    console.log('------ candidates ------');
-    console.log(JSON.stringify({ candidates }, null, 2));
+    state.candidates.push(...candidates.map(candidate => candidate.candidate));
 
     // generate candidate responses
     const { outputs: candidateResponses } = await generateResponses(
-      candidates.map(candidate => candidate.prompt),
+      candidates.map(candidate => candidate.candidate),
       input.trainingDataset,
       input.executor,
     );
     iteration.candidateResponses = candidateResponses;
-    console.log('------ candidate responses ------');
-    console.log(JSON.stringify(candidateResponses, null, 2));
 
     // evaluate candidates
-    const { evaluations: candidateEvaluations } = await evaluateResponses(
+    const {
+      evaluations: candidateEvaluations,
+    } = await evaluateCandidateResponses(
       state,
       candidateResponses,
       input.evaluator,
       input.evaluatorParallelism,
     );
     iteration.candidateEvaluations = candidateEvaluations;
-    console.log('------ candidate evaluations ------');
-    console.log(JSON.stringify(candidateEvaluations, null, 2));
 
     // aggregate candidate evaluations
     const candidateAggregatedEvaluations = await aggregateEvaluations(
@@ -132,16 +124,12 @@ export async function optimize(
       input.aggregatorParallelism,
     );
     iteration.candidateAggregatedEvaluations = candidateAggregatedEvaluations;
-    console.log('------ candidate aggregated evaluations ------');
-    console.log(JSON.stringify(candidateAggregatedEvaluations, null, 2));
 
-    // select prompts
+    // select candidates
     const { 
-      promptRefs: selectedPromptRefs,
-    } = await input.promptSelector.run(state, {});
-    iteration.selectedPromptRefs = selectedPromptRefs;
-    console.log('------ prompts ------');
-    console.log(JSON.stringify(selectedPromptRefs, null, 2));
+      candidateRefs: selectedCandidateRefs,
+    } = await input.candidateSelector.run(state, {});
+    iteration.selectedCandidateRefs = selectedCandidateRefs;
 
     // update history
     state.iterationHistory.push(iteration as RPEIteration);
@@ -155,16 +143,16 @@ export async function optimize(
 
     state.iterationNo++;
     state.iteration = {
-      promptRefs: selectedPromptRefs,
+      candidateRefs: selectedCandidateRefs,
     };
   }
 
   return {
-    prompts: state.iteration.promptRefs.map(promptRef => {
-      return findPromptById(state, promptRef.promptId);
+    candidates: state.iteration.candidateRefs.map(candidateRef => {
+      return findCandidateById(state, candidateRef.candidateId);
     }),
     insights: {
-      prompts: state.prompts,
+      candidates: state.candidates,
       stopReason,
       iterationHistory: state.iterationHistory,
       info: await buildRPEInsightsInfo(input),
@@ -180,7 +168,7 @@ async function buildRPEInsightsInfo(
     evaluatorInfo: await input.evaluator.getInfo(),
     aggregatorInfo: await input.aggregator.getInfo(),
     analyzerInfo: await input.analyzer.getInfo(),
-    promptGeneratorInfo: await input.promptGenerator.getInfo(),
-    promptSelectorInfo: await input.promptSelector.getInfo(),
+    candidateGeneratorInfo: await input.candidateGenerator.getInfo(),
+    candidateSelectorInfo: await input.candidateSelector.getInfo(),
   };
 }

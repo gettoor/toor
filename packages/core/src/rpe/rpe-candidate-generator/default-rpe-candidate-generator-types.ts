@@ -4,10 +4,10 @@ import { ModelParameters } from '../../llm/index.js';
 import { ModelProvider } from '../../model-provider/index.js';
 
 /**
- * Schema for the prompt generator JSON output used by the default RPE flow.
+ * Schema for the candidate generator JSON output used by the default RPE flow.
  * @category Reflective Prompt Evolution
  */
-export const DefaultRPEPromptGeneratorOutputSchema = z.object({
+export const DefaultRPECandidateGeneratorOutputSchema = z.object({
   prompt: z.string().describe('Improved prompt.'),
   changes: z
     .array(
@@ -24,14 +24,14 @@ export const DefaultRPEPromptGeneratorOutputSchema = z.object({
 });
 
 /**
- * Type for the prompt generator JSON output used by the default RPE flow.
+ * Type for the candidate generator JSON output used by the default RPE flow.
  * @category Reflective Prompt Evolution
  */
-export type DefaultRPEPromptGeneratorOutput = z.infer<
-  typeof DefaultRPEPromptGeneratorOutputSchema
+export type DefaultRPECandidateGeneratorOutput = z.infer<
+  typeof DefaultRPECandidateGeneratorOutputSchema
 >;
 
-export interface DefaultRPEPromptGeneratorInput {
+export interface DefaultRPECandidateGeneratorInput {
   /**
    * Model provider to use for the analyzer.
    * If not provided, the default model provider will be used.

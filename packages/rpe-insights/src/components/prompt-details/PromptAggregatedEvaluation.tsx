@@ -49,7 +49,7 @@ export function PromptAggregatedEvaluation(
     status: 'passed' | 'failed',
     evaluation: RPEEvaluatorOutput,
   ) => {
-    const key = `${evaluation.promptRef.promptId}e${index}`;
+    const key = `${evaluation.candidateRef.candidateId}e${index}`;
     const expectedResponse = evaluation.datasetEntry.expectedResponse;
     return (
       <>

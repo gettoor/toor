@@ -1,10 +1,10 @@
 import { clsx } from 'clsx';
 import { useState } from 'preact/hooks';
 import { 
-  type RPEPrompt,
+  type RPECandidate,
   type RPEAggregatorOutput,
   type RPEAnalyzerOutput,
-  type RPEPromptGeneratorChange,
+  type RPECandidateGeneratorChange,
 } from '@gettoor/core';
 
 import { IconButton, Panel } from '../basic';
@@ -15,8 +15,8 @@ import { PromptChanges } from './PromptChanges';
 import styles from './PromptDetails.module.scss';
 
 export interface PromptDetailsData {
-  prompt: RPEPrompt;
-  promptChanges?: RPEPromptGeneratorChange[];
+  candidate: RPECandidate;
+  candidateChanges?: RPECandidateGeneratorChange[];
   aggregatedEvaluation: RPEAggregatorOutput;
   analysis?: RPEAnalyzerOutput;
 }
@@ -68,14 +68,14 @@ export function PromptDetails(props: PromptDetailsProps) {
             />
           </Header>
           <pre className={promptClassName}>
-            {data?.prompt.prompt}
+            {data?.candidate.candidate}
           </pre>
-          { data?.promptChanges &&
+          { data?.candidateChanges &&
             <>
               <Header title='Prompt Changes'/>
               <PromptChanges 
-                promptId={data!.prompt.promptId}
-                changes={data!.promptChanges}
+                candidateId={data!.candidate.candidateId}
+                changes={data!.candidateChanges}
               />
             </>
           }

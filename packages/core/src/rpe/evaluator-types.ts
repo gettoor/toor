@@ -1,18 +1,18 @@
 import { RPEEvaluatorOutput } from './rpe-evaluator/index.js';
-import { RPEPromptRef } from './rpe-prompt/index.js';
+import { RPECandidateRef } from './rpe-candidate/index.js';
 
 /**
- * Output for the RPE evaluator for a single prompt.
+ * Output for the RPE evaluator for a single candidate.
  * @category Reflective Prompt Evolution
  */
-export interface EvaluatorPromptOutput {
+export interface EvaluatorCandidateOutput {
   /**
-   * Reference to the prompt that was evaluated.
+   * Reference to the candidate that was evaluated.
    */
-  promptRef: RPEPromptRef;
+  candidateRef: RPECandidateRef;
 
   /**
-   * Evaluator outputs for the prompt.
+   * Evaluator outputs for the candidate.
    */
   evaluatorOutputs: RPEEvaluatorOutput[];
 }
@@ -23,7 +23,7 @@ export interface EvaluatorPromptOutput {
  */
 export interface EvaluatorOutput {
   /**
-   * Evaluations for the prompts.
+   * Evaluations for the candidates.
    */
-  evaluations: EvaluatorPromptOutput[];
+  evaluations: EvaluatorCandidateOutput[];
 }

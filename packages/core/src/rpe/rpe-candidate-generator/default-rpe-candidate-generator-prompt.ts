@@ -1,4 +1,4 @@
-export const DEFAULT_RPE_PROMPT_GENERATOR_PROMPT = `
+export const DEFAULT_RPE_CANDIDATE_GENERATOR_PROMPT = `
 You are an expert prompt engineer specializing in iterative prompt optimization.
 
 Your task is to improve an existing prompt using the provided evaluation analysis. The goal is to produce a prompt that performs better on future evaluations while preserving the behaviors that already work well.

@@ -10,12 +10,12 @@ export type RPEDatasetEntryVarValue = any;
  */
 export interface RPEDatasetEntry {
   /**
-   * Variables to replace in the prompt.
+   * Variables to replace in the candidate.
    */
   vars?: Record<string, RPEDatasetEntryVarValue>;
 
   /**
-   * Expected response from a LLM model to the prompt.
+   * Expected response from a LLM model to the candidate.
    */
   expectedResponse?: string;
 }

@@ -1,12 +1,12 @@
 import { runParallelBatchesOrThrow } from '../concurrency/index.js';
-import { findPromptById, RPEState } from './rpe-state/index.js';
+import { findCandidateById, RPEState } from './rpe-state/index.js';
 import { RPEAggregator, RPEAggregatorOutput } from './rpe-aggregator/index.js';
 import { DEFAULT_AGGREGATOR_PARALLELISM } from './aggregator-consts.js';
-import { EvaluatorPromptOutput } from './evaluator-types.js';
+import { EvaluatorCandidateOutput } from './evaluator-types.js';
 
 export async function aggregateEvaluations(
   state: RPEState,
-  evaluations: EvaluatorPromptOutput[],
+  evaluations: EvaluatorCandidateOutput[],
   aggregator: RPEAggregator,
   parallelism?: number,
 ): Promise<RPEAggregatorOutput[]> {
@@ -16,7 +16,7 @@ export async function aggregateEvaluations(
   // tasks
   const tasks = evaluations.map(async evaluation => {
     const output = await aggregator.run({
-      prompt: findPromptById(state, evaluation.promptRef.promptId),
+      candidate: findCandidateById(state, evaluation.candidateRef.candidateId),
       evaluations: evaluation.evaluatorOutputs,
     });
     outputs.push(output);

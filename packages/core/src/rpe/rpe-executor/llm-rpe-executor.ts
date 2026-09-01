@@ -3,7 +3,7 @@ import { generateText } from 'ai';
 import { replacePlaceholders } from '../../string/index.js';
 import { buildModelCallSettings } from '../../llm/index.js';
 import { DefaultModelProvider } from '../../model-provider/index.js';
-import { promptRefFromPrompt } from '../rpe-prompt/index.js';
+import { candidateRefFromCandidate } from '../rpe-candidate/index.js';
 import { 
   RPEExecutor,
   RPEExecutorInfo,
@@ -30,7 +30,7 @@ export function llmRPEExecutor(
     
       // build prompt
       const prompt = replacePlaceholders(
-        input.prompt.prompt,
+        input.candidate.candidate,
         input.datasetEntry.vars ?? {},
       );
 
@@ -42,7 +42,7 @@ export function llmRPEExecutor(
       });
 
       return {
-        promptRef: promptRefFromPrompt(input.prompt),
+        candidateRef: candidateRefFromCandidate(input.candidate),
         datasetEntry: input.datasetEntry,
         response: response.text,
         usage: {

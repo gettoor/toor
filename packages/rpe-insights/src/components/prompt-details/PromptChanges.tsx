@@ -1,20 +1,20 @@
-import { type RPEPromptGeneratorChange } from '@gettoor/core';
+import { type RPECandidateGeneratorChange } from '@gettoor/core';
 import { Separator } from './Separator';
 import { Markdown } from '../basic';
 
 export interface PromptChangesProps {
-  promptId: string;
-  changes: RPEPromptGeneratorChange[];
+  candidateId: string;
+  changes: RPECandidateGeneratorChange[];
 }
 
 export function PromptChanges(props: PromptChangesProps) {
-  const { promptId, changes } = props;
+  const { candidateId, changes } = props;
   
   const renderChange = (
     index: number,
-    change: RPEPromptGeneratorChange,
+    change: RPECandidateGeneratorChange,
   ) => {
-    const key = `${promptId}c${index}`;
+    const key = `${candidateId}c${index}`;
     return (
       <>
         { index > 0 && <Separator/> }

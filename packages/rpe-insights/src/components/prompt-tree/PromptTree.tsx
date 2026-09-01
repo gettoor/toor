@@ -1,4 +1,4 @@
-import { type RPEIteration, type RPEPrompt } from '@gettoor/core';
+import { type RPEIteration, type RPECandidate } from '@gettoor/core';
 
 import styles from './PromptTree.module.scss';
 import { PADDING } from './prompt-tree-consts';
@@ -11,31 +11,31 @@ import {
 } from './prompt-tree-utils';
 
 export interface PromptTreeProps {
-  prompts: RPEPrompt[];
+  candidates: RPECandidate[];
   iterations: Pick<RPEIteration, 
-    | 'promptRefs'
+    | 'candidateRefs'
     | 'candidates'
-    | 'selectedPromptRefs'
+    | 'selectedCandidateRefs'
     | 'aggregatedEvaluations'
     | 'candidateAggregatedEvaluations'
   >[];
-  selectedPromptId: string | null;
+  selectedCandidateId: string | null;
   detailsVisible: boolean;
-  onSelectPromptId: (promptId: string) => void;
+  onSelectCandidateId: (candidateId: string) => void;
   onBackgroundClick: () => void;
 }
 
 export function PromptTree(props: PromptTreeProps) {
-  const { selectedPromptId, detailsVisible } = props;
+  const { selectedCandidateId: selectedPromptId, detailsVisible } = props;
 
   const onBoxClick = (promptId: string) => {
-    props.onSelectPromptId(promptId);
+    props.onSelectCandidateId(promptId);
   };
   const onBackgroundClick = () => {
     props.onBackgroundClick();
   };
 
-  const boxes = resolveBoxes(props.prompts, props.iterations, onBoxClick);
+  const boxes = resolveBoxes(props.candidates, props.iterations, onBoxClick);
   const connections = resolveConnections(boxes);
   
   const renderBoxes = () => {
@@ -44,7 +44,11 @@ export function PromptTree(props: PromptTreeProps) {
         key={box.data.promptId}
         {...box}
         isSelected={box.data.promptId === selectedPromptId && detailsVisible}
-        isHighlighted={isHighlighted(boxes, box.data.promptId, selectedPromptId)}
+        isHighlighted={isHighlighted(
+          boxes,
+          box.data.promptId,
+          selectedPromptId,
+        )}
       />
     ));
   };

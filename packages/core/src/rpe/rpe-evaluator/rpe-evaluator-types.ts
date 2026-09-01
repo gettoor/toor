@@ -1,7 +1,7 @@
 import { LLMUsage, MetricResult } from '../../llm/index.js';
 import { RPEProperties } from '../rpe-info/index.js';
 import { RPEDatasetEntry } from '../rpe-dataset/index.js';
-import { RPEPrompt, RPEPromptRef } from '../rpe-prompt/index.js';
+import { RPECandidate, RPECandidateRef } from '../rpe-candidate/index.js';
 
 /**
  * Input for the RPE evaluator.
@@ -9,9 +9,9 @@ import { RPEPrompt, RPEPromptRef } from '../rpe-prompt/index.js';
  */
 export interface RPEEvaluatorInput {
   /**
-   * Prompt to evaluate.
+   * Candidate to evaluate.
    */
-  prompt: RPEPrompt;
+  candidate: RPECandidate;
 
   /**
    * Dataset entry used to generate the response.
@@ -35,9 +35,9 @@ export interface RPEEvaluatorInput {
  */
 export interface RPEEvaluatorOutput {
   /**
-   * Reference to the prompt that was evaluated.
+   * Reference to the candidate that was evaluated.
    */
-  promptRef: RPEPromptRef;
+  candidateRef: RPECandidateRef;
 
   /**
    * Dataset entry used to generate the response.
@@ -88,13 +88,13 @@ export interface RPEEvaluatorInfo {
 }
 
 /**
- * An evaluator which takes a prompt and produces information passed
+ * An evaluator which takes a candidate and produces information passed
  * to a failure analyzer.
  * @category Reflective Prompt Evolution
  */
 export interface RPEEvaluator {
   /**
-   * Evaluate a prompt.
+   * Evaluate a candidate.
    * @param input - Input for the evaluator.
    * @returns Evaluator output.
    */

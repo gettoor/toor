@@ -1,9 +1,9 @@
-import { RPEPrompt, RPEPromptRef } from '../rpe-prompt/index.js';
+import { RPECandidate, RPECandidateRef } from '../rpe-candidate/index.js';
 import { RPEExecutorOutput } from '../rpe-executor/index.js';
-import { EvaluatorPromptOutput } from '../evaluator-types.js';
+import { EvaluatorCandidateOutput } from '../evaluator-types.js';
 import { RPEAggregatorOutput } from '../rpe-aggregator/index.js';
 import { RPEAnalyzerOutput } from '../rpe-analyzer/index.js';
-import { PromptGeneratorCandidate } from '../prompt-generator-types.js';
+import { PromptGeneratorCandidate } from '../candidate-generator-types.js';
 
 /**
  * Represents a completed iteration of the RPE process.
@@ -11,19 +11,19 @@ import { PromptGeneratorCandidate } from '../prompt-generator-types.js';
  */
 export interface RPEIteration {
   /**
-   * References to the prompts evaluated in the current iteration.
+   * References to the candidates evaluated in the current iteration.
    */
-  promptRefs: RPEPromptRef[];
+  candidateRefs: RPECandidateRef[];
   
   /**
-   * The responses generated for the prompts in the current iteration.
+   * The responses generated for the candidates in the current iteration.
    */
   responses: RPEExecutorOutput[];
 
   /**
    * The evaluations of the responses in the current iteration.
    */
-  evaluations: EvaluatorPromptOutput[];
+  evaluations: EvaluatorCandidateOutput[];
 
   /**
    * The aggregated evaluations of the responses in the current iteration.
@@ -36,7 +36,7 @@ export interface RPEIteration {
   analyses: RPEAnalyzerOutput[];
 
   /**
-   * The candidates generated for the prompts in the current iteration.
+   * The candidates generated for the candidates in the current iteration.
    */
   candidates: PromptGeneratorCandidate[];
 
@@ -48,7 +48,7 @@ export interface RPEIteration {
   /**
    * The evaluations of the candidate responses in the current iteration. 
    */
-  candidateEvaluations: EvaluatorPromptOutput[];
+  candidateEvaluations: EvaluatorCandidateOutput[];
 
   /**
    * The aggregated evaluations of the candidate responses
@@ -57,9 +57,9 @@ export interface RPEIteration {
   candidateAggregatedEvaluations: RPEAggregatorOutput[];
 
   /**
-   * References to the prompts selected for the next iteration.
+   * References to the candidates selected for the next iteration.
    */
-  selectedPromptRefs: RPEPromptRef[];
+  selectedCandidateRefs: RPECandidateRef[];
 }
 
 /**
@@ -67,8 +67,8 @@ export interface RPEIteration {
  * @category Reflective Prompt Evolution
  */
 export type RPEIterationInProgress =
-  Partial<Omit<RPEIteration, 'promptRefs'>> &
-  Pick<RPEIteration, 'promptRefs'>;
+  Partial<Omit<RPEIteration, 'candidateRefs'>> &
+  Pick<RPEIteration, 'candidateRefs'>;
 
 /**
  * State of the RPE process.
@@ -76,9 +76,9 @@ export type RPEIterationInProgress =
  */
 export interface RPEState {
   /**
-   * All the prompts from an RPE process.
+   * All the candidates from an RPE process.
    */
-  prompts: RPEPrompt[];
+  candidates: RPECandidate[];
 
   /**
    * The current iteration number of the RPE process (starting from 0).

@@ -7,34 +7,34 @@ import { DefaultModelProvider } from '../../model-provider/index.js';
 import { modelParametersToRPEInfo } from '../rpe-info/index.js';
 import { RPEEvaluatorOutput } from '../rpe-evaluator/rpe-evaluator-types.js';
 import { 
-  DEFAULT_RPE_PROMPT_GENERATOR_PROMPT,
-} from './default-rpe-prompt-generator-prompt.js';
+  DEFAULT_RPE_CANDIDATE_GENERATOR_PROMPT,
+} from './default-rpe-candidate-generator-prompt.js';
 import { 
-  RPEPromptGenerator,
-  RPEPromptGeneratorInfo,
-  RPEPromptGeneratorInput,
-  RPEPromptGeneratorOutput,
-  RPEPromptGeneratorPrompt,
-} from './rpe-prompt-generator-types.js';
+  RPECandidateGenerator,
+  RPECandidateGeneratorInfo,
+  RPECandidateGeneratorInput,
+  RPECandidateGeneratorOutput,
+  RPECandidateGeneratorCandidate,
+} from './rpe-candidate-generator-types.js';
 import { 
-  DefaultRPEPromptGeneratorInput,
-  DefaultRPEPromptGeneratorOutputSchema,
-} from './default-rpe-prompt-generator-types.js';
+  DefaultRPECandidateGeneratorInput,
+  DefaultRPECandidateGeneratorOutputSchema,
+} from './default-rpe-candidate-generator-types.js';
 
-export function defaultRPEPromptGenerator(
-  input: DefaultRPEPromptGeneratorInput,
-): RPEPromptGenerator {
+export function defaultRPECandidateGenerator(
+  input: DefaultRPECandidateGeneratorInput,
+): RPECandidateGenerator {
   const { modelName, modelParameters } = input;
   const modelProvider = input.modelProvider ?? new DefaultModelProvider();
 
   return {
     run: async (
-      input: RPEPromptGeneratorInput,
-    ): Promise<RPEPromptGeneratorOutput> => {
+      input: RPECandidateGeneratorInput,
+    ): Promise<RPECandidateGeneratorOutput> => {
       const prompt = replacePlaceholders(
-        DEFAULT_RPE_PROMPT_GENERATOR_PROMPT,
+        DEFAULT_RPE_CANDIDATE_GENERATOR_PROMPT,
         {
-          original_prompt: input.prompt.prompt,
+          original_prompt: input.candidate.candidate,
           aggregated_score: input.aggregation.aggregatedScore,
           aggregated_metrics: aggregatedMetricsForPrompt(
             input.aggregation.aggregatedMetrics ?? {},
@@ -61,14 +61,14 @@ export function defaultRPEPromptGenerator(
         prompt: prompt.text,
         ...buildModelCallSettings(modelParameters),
         output: Output.object({
-          schema: DefaultRPEPromptGeneratorOutputSchema,
+          schema: DefaultRPECandidateGeneratorOutputSchema,
         })
       });
 
-      const generatedPrompt: RPEPromptGeneratorPrompt = { 
-        prompt: {
-          prompt: output.prompt,
-          parentPromptIds: [input.prompt.promptId],
+      const generatedCandidate: RPECandidateGeneratorCandidate = { 
+        candidate: {
+          candidate: output.prompt,
+          parentCandidateIds: [input.candidate.candidateId],
         },
         changes: output.changes.map(change => ({
           description: change.description,
@@ -85,11 +85,11 @@ export function defaultRPEPromptGenerator(
         },
       };
       return {
-        prompts: [generatedPrompt],
+        candidates: [generatedCandidate],
       }
     },
 
-    getInfo: async (): Promise<RPEPromptGeneratorInfo> => {
+    getInfo: async (): Promise<RPECandidateGeneratorInfo> => {
       return {
         name: 'Default Prompt Generator',
         properties: [

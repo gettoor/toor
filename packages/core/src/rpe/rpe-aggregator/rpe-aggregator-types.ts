@@ -1,7 +1,7 @@
 import { DistributionRange } from '../../math/index.js';
 import { LLMUsage, MetricResult } from '../../llm/index.js';
 import { RPEProperties } from '../rpe-info/index.js';
-import { RPEPrompt, RPEPromptRef } from '../rpe-prompt/index.js';
+import { RPECandidate, RPECandidateRef } from '../rpe-candidate/index.js';
 import { RPEEvaluatorOutput } from '../rpe-evaluator/index.js';
 
 /**
@@ -10,12 +10,12 @@ import { RPEEvaluatorOutput } from '../rpe-evaluator/index.js';
  */
 export interface RPEAggregatorInput {
   /**
-   * Prompt that was evaluated.
+   * Candidate that was evaluated.
    */
-  prompt: RPEPrompt;
+  candidate: RPECandidate;
 
   /**
-   * Evaluations for the prompt.
+   * Evaluations for the candidate.
    */
   evaluations: RPEEvaluatorOutput[];
 }
@@ -26,9 +26,9 @@ export interface RPEAggregatorInput {
  */
 export interface RPEAggregatorOutput {
   /**
-   * Reference to the prompt that was evaluated.
+   * Reference to the candidate that was evaluated.
    */
-  promptRef: RPEPromptRef;
+  candidateRef: RPECandidateRef;
 
   /**
    * Evaluations that passed.
@@ -79,13 +79,13 @@ export interface RPEAggregatorInfo {
 }
 
 /**
- * An aggregator which takes a set of evaluations of a single prompt
+ * An aggregator which takes a set of evaluations of a single candidate
  * and aggregates them into a single evaluation.
  * @category Reflective Prompt Evolution
  */
 export interface RPEAggregator {
   /**
-   * Aggregate evaluations for a prompt.
+   * Aggregate evaluations for a candidate.
    * @param input - Input for the aggregator.
    * @returns Aggregated output.
    */

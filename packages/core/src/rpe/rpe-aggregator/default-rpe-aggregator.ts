@@ -1,6 +1,6 @@
 import { distributeScores, DistributionRange } from '../../math/index.js';
 import { MetricResult } from '../../llm/index.js';
-import { promptRefFromPrompt } from '../rpe-prompt/index.js';
+import { candidateRefFromCandidate } from '../rpe-candidate/index.js';
 import { RPEEvaluatorOutput } from '../rpe-evaluator/index.js';
 import { 
   RPEAggregator,
@@ -26,7 +26,7 @@ export function defaultRPEAggregator(
       const scores = evaluations.map(evaluation => evaluation.score);
       
       return {
-        promptRef: promptRefFromPrompt(input.prompt),
+        candidateRef: candidateRefFromCandidate(input.candidate),
         passedEvaluations: evaluations.filter(evaluation => {
           return evaluation.score >= passedEvaluationThreshold;
         }),

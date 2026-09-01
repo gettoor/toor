@@ -1,10 +1,10 @@
 import { RPEExecutorInfo } from '../rpe-executor/index.js';
 import { RPEEvaluatorInfo } from '../rpe-evaluator/index.js';
-import { RPEPrompt } from '../rpe-prompt/index.js';
+import { RPECandidate } from '../rpe-candidate/index.js';
 import { RPEAggregatorInfo } from '../rpe-aggregator/index.js';
 import { RPEAnalyzerInfo } from '../rpe-analyzer/index.js';
-import { RPEPromptGeneratorInfo } from '../rpe-prompt-generator/index.js';
-import { RPEPromptSelectorInfo } from '../rpe-prompt-selector/index.js';
+import { RPECandidateGeneratorInfo } from '../rpe-candidate-generator/index.js';
+import { RPECandidateSelectorInfo } from '../rpe-candidate-selector/index.js';
 import { RPEIteration } from '../rpe-state/index.js';
 
 /**
@@ -33,14 +33,14 @@ export interface RPEInsightsInfo {
   analyzerInfo: RPEAnalyzerInfo;
 
   /**
-   * Information about the prompt generator used for the RPE process.
+   * Information about the candidate generator used for the RPE process.
    */
-  promptGeneratorInfo: RPEPromptGeneratorInfo;
+  candidateGeneratorInfo: RPECandidateGeneratorInfo;
 
   /**
-   * Information about the prompt selector used for the RPE process.
+   * Information about the candidate selector used for the RPE process.
    */
-  promptSelectorInfo: RPEPromptSelectorInfo;
+  candidateSelectorInfo: RPECandidateSelectorInfo;
 }
 
 /**
@@ -49,9 +49,9 @@ export interface RPEInsightsInfo {
  */
 export interface RPEInsights {
   /**
-   * All the prompts from an RPE process.
+   * All the candidates from an RPE process.
    */
-  prompts: RPEPrompt[];
+  candidates: RPECandidate[];
 
   /**
    * The current iteration of the RPE process.

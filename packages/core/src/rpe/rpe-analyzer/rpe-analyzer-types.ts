@@ -1,7 +1,7 @@
 import { LLMUsage } from '../../llm/index.js';
 import { RPEProperties } from '../rpe-info/index.js';
 import { RPEAggregatorOutput } from '../rpe-aggregator/index.js';
-import { RPEPromptRef } from '../rpe-prompt/index.js';
+import { RPECandidateRef } from '../rpe-candidate/index.js';
 import { RPEState } from '../rpe-state/index.js';
 
 /**
@@ -21,27 +21,27 @@ export interface RPEAnalyzerInput {
  */
 export interface RPEAnalyzerOutput {
   /**
-   * Reference to the prompt for which the analysis is performed.
+   * Reference to the candidate for which the analysis is performed.
    */
-  promptRef: RPEPromptRef;
+  candidateRef: RPECandidateRef;
 
   /**
-   * Strengths of the prompt.
+   * Strengths of the candidate.
    */
   strengths: string[];
 
   /**
-   * Weaknesses of the prompt.
+   * Weaknesses of the candidate.
    */
   weaknesses: string[];
 
   /**
-   * Recommendations for the prompt improvement.
+   * Recommendations for the candidate improvement.
    */
   recommendations: string[];
 
   /**
-   * Failure patterns of the prompt.
+   * Failure patterns of the candidate.
    */
   failurePatterns: string[];
 
@@ -70,7 +70,7 @@ export interface RPEAnalyzerInfo {
 /**
  * An analyzer takes aggregation from evaluations and returns an analysis of
  * the aggregation. It should return strengths, weaknesses, recommendations
- * and summary for the prompt improvement.
+ * and failure patterns for the candidate improvement.
  * @category Reflective Prompt Evolution
  */
 export interface RPEAnalyzer {

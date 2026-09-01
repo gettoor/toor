@@ -104,14 +104,14 @@ export function InfoPanel(props: InfoPanelProps) {
         props.rpeInsights.info.analyzerInfo.properties,
       )}
       {renderRPEProperties(
-        'Prompt Generator',
-        props.rpeInsights.info.promptGeneratorInfo.name,
-        props.rpeInsights.info.promptGeneratorInfo.properties,
+        'Candidate Generator',
+        props.rpeInsights.info.candidateGeneratorInfo.name,
+        props.rpeInsights.info.candidateGeneratorInfo.properties,
       )}
       {renderRPEProperties(
-        'Prompt Selector',
-        props.rpeInsights.info.promptSelectorInfo.name,
-        props.rpeInsights.info.promptSelectorInfo.properties,
+        'Candidate Selector',
+        props.rpeInsights.info.candidateSelectorInfo.name,
+        props.rpeInsights.info.candidateSelectorInfo.properties,
       )}
     </Panel>
   );

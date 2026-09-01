@@ -9,7 +9,7 @@ import {
 } from '../../llm/index.js';
 import { DefaultModelProvider } from '../../model-provider/index.js';
 import { modelParametersToRPEInfo } from '../rpe-info/index.js';
-import { findPromptById, RPEState } from '../rpe-state/index.js';
+import { findCandidateById, RPEState } from '../rpe-state/index.js';
 import { RPEEvaluatorOutput } from '../rpe-evaluator/index.js';
 import { 
   RPEAnalyzer,
@@ -46,7 +46,7 @@ export function defaultRPEAnalyzer(
       const prompt = replacePlaceholders(
         DEFAULT_RPE_ANALYZER_PROMPT,
         {
-          prompt: findPromptById(state, input.aggregation.promptRef.promptId).prompt,
+          prompt: findCandidateById(state, input.aggregation.candidateRef.candidateId).candidate,
           aggregated_score: input.aggregation.aggregatedScore,
           aggregated_metrics: aggregatedMetricsForPrompt(
             input.aggregation.aggregatedMetrics ?? {},
@@ -77,7 +77,7 @@ export function defaultRPEAnalyzer(
       });
 
       return {
-        promptRef: input.aggregation.promptRef,
+        candidateRef: input.aggregation.candidateRef,
         strengths: output.strengths.map(strength => strength.description),
         weaknesses: output.weaknesses.map(weakness => weakness.description),
         recommendations: output.recommendations.map(recommendation => {

@@ -16,7 +16,7 @@ export const DefaultRPEAnalyzerOutputSchema = z.object({
     .object({
       overallAssessment: z
         .string()
-        .describe('Short assessment of overall prompt performance.'),
+        .describe('Short assessment of overall candidate performance.'),
     })
     .describe('High-level summary of strengths and weaknesses.'),
   strengths: z

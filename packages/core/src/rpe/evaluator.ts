@@ -2,39 +2,39 @@ import { runParallelBatchesOrThrow } from '../concurrency/index.js';
 import { RPEExecutorOutput } from './rpe-executor/index.js';
 import { RPEEvaluator, RPEEvaluatorInput } from './rpe-evaluator/index.js';
 import { DEFAULT_EVALUATOR_PARALLELISM } from './evaluator-consts.js';
-import { EvaluatorOutput, EvaluatorPromptOutput } from './evaluator-types.js';
-import { findPromptById, RPEState } from './rpe-state/index.js';
-import { promptRefFromPrompt } from './rpe-prompt/index.js';
+import { EvaluatorOutput, EvaluatorCandidateOutput } from './evaluator-types.js';
+import { findCandidateById, RPEState } from './rpe-state/index.js';
+import { candidateRefFromCandidate } from './rpe-candidate/index.js';
 
 /**
- * Evaluates responses for a number of prompts.
+ * Evaluates responses for a number of candidates.
  * @category Reflective Prompt Evolution
  * @param inputs - Inputs for the evaluations.
  * @param evaluator - Evaluator to use for the evaluations.
  * @returns Evaluations for the responses.
  */
-export async function evaluatePrompts(
+export async function evaluateCandidates(
   inputs: RPEEvaluatorInput[],
   evaluator: RPEEvaluator,
   parallelism?: number,
 ): Promise<EvaluatorOutput> {
   parallelism = parallelism ?? DEFAULT_EVALUATOR_PARALLELISM;
-  const evaluations: Record<string, EvaluatorPromptOutput> = {};
+  const evaluations: Record<string, EvaluatorCandidateOutput> = {};
 
   // tasks
   const tasks = inputs.map(async input => {
-    // evaluate the prompt
+    // evaluate the candidate
     const evaluation = await evaluator.run(input);
 
     // keep the evaluation
-    const promptId = input.prompt.promptId;
-    if (!evaluations[promptId]) {
-      evaluations[promptId] = {
-        promptRef: promptRefFromPrompt(input.prompt),
+    const candidateId = input.candidate.candidateId;
+    if (!evaluations[candidateId]) {
+      evaluations[candidateId] = {
+        candidateRef: candidateRefFromCandidate(input.candidate),
         evaluatorOutputs: [],
       };
     }
-    evaluations[promptId].evaluatorOutputs.push(evaluation);
+    evaluations[candidateId].evaluatorOutputs.push(evaluation);
   });
 
   // run tasks in parallel
@@ -43,31 +43,25 @@ export async function evaluatePrompts(
 }
 
 /**
- * Evaluates responses for a number of prompts.
+ * Evaluates responses for a number of candidates.
  * @category Reflective Prompt Evolution
- * @param prompts - Prompts to evaluate.
+ * @param state - State of the RPE process.
+ * @param responses - Responses to evaluate.
  * @param evaluator - Evaluator to use for the evaluations.
+ * @param parallelism - Number of parallel evaluations to run.
  * @returns Evaluations for the responses.
  */
-export async function evaluateResponses(
+export async function evaluateCandidateResponses(
   state: RPEState,
   responses: RPEExecutorOutput[],
   evaluator: RPEEvaluator,
   parallelism?: number,
 ): Promise<EvaluatorOutput> {
   const inputs = responses.map(response => ({
-    prompt: findPromptById(state, response.promptRef.promptId),
+    candidate: findCandidateById(state, response.candidateRef.candidateId),
     datasetEntry: response.datasetEntry,
     response: response.response,
     expectedResponse: response.datasetEntry.expectedResponse,
   }));
-  return evaluatePrompts(inputs, evaluator, parallelism);
-}
-
-export async function evaluateCandidates(
-  candidates: RPEEvaluatorInput[],
-  evaluator: RPEEvaluator,
-  parallelism?: number,
-): Promise<EvaluatorOutput> {
-  return evaluatePrompts(candidates, evaluator, parallelism);
+  return evaluateCandidates(inputs, evaluator, parallelism);
 }

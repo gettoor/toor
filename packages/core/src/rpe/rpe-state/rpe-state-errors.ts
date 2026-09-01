@@ -1,12 +1,12 @@
 import { NotFoundToorError, ToorError } from '../../errors/index.js';
 
-export class PromptNotFoundError extends NotFoundToorError {
-  public static readonly CODE = 'PromptNotFoundError';
+export class CandidateNotFoundError extends NotFoundToorError {
+  public static readonly CODE = 'CandidateNotFoundError';
 
-  public constructor(promptId: string) {
+  public constructor(candidateId: string) {
     super(
-      PromptNotFoundError.CODE,
-      `Prompt with id ${ToorError.quote(promptId)} not found`,
+      CandidateNotFoundError.CODE,
+      `Candidate with id ${ToorError.quote(candidateId)} not found`,
     );
   }
 }

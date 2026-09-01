@@ -571,39 +571,39 @@ function PromptBoxConnection(props) {
 /**
 * Resolve the boxes for the prompt tree.
 */
-function resolveBoxes(prompts, iterations, onBoxClick) {
+function resolveBoxes(candidates, iterations, onBoxClick) {
 	const boxes = [];
 	let y = 10;
-	const findPromptById = (promptId) => {
-		const prompt = prompts.find((prompt) => {
-			return prompt.promptId === promptId;
+	const findCandidateById = (candidateId) => {
+		const candidate = candidates.find((itr) => {
+			return itr.candidateId === candidateId;
 		});
-		if (prompt === void 0) throw new Error(`Prompt ${promptId} not found`);
-		return prompt;
+		if (candidate === void 0) throw new Error(`Candidate ${candidateId} not found`);
+		return candidate;
 	};
-	const findAggregatedEvaluation = (promptId) => {
+	const findAggregatedEvaluation = (candidateId) => {
 		return iterations.flatMap((iteration) => {
 			return iteration.aggregatedEvaluations;
-		}).find((aggregatedEvaluation) => {
-			return aggregatedEvaluation.promptRef.promptId === promptId;
+		}).find((evaluation) => {
+			return evaluation.candidateRef.candidateId === candidateId;
 		});
 	};
-	const findCandidateAggregatedEvaluation = (promptId) => {
+	const findCandidateAggregatedEvaluation = (candidateId) => {
 		return iterations.flatMap((iteration) => {
 			return iteration.candidateAggregatedEvaluations;
-		}).find((candidateAggregatedEvaluation) => {
-			return candidateAggregatedEvaluation.promptRef.promptId === promptId;
+		}).find((evaluation) => {
+			return evaluation.candidateRef.candidateId === candidateId;
 		});
 	};
 	const firstIteration = iterations[0];
 	let x = 10;
-	for (const promptRef of firstIteration.promptRefs) {
-		const prompt = findPromptById(promptRef.promptId);
-		const aggregatedEvaluation = findAggregatedEvaluation(promptRef.promptId);
+	for (const candidateRef of firstIteration.candidateRefs) {
+		const prompt = findCandidateById(candidateRef.candidateId);
+		const aggregatedEvaluation = findAggregatedEvaluation(candidateRef.candidateId);
 		boxes.push({
 			data: {
-				promptId: promptRef.promptId,
-				parentPromptIds: prompt.parentPromptIds,
+				promptId: candidateRef.candidateId,
+				parentPromptIds: prompt.parentCandidateIds,
 				aggregatedScore: aggregatedEvaluation?.aggregatedScore,
 				passedEvaluationsCount: aggregatedEvaluation?.passedEvaluations.length,
 				failedEvaluationsCount: aggregatedEvaluation?.failedEvaluations.length
@@ -613,34 +613,34 @@ function resolveBoxes(prompts, iterations, onBoxClick) {
 			width: 120,
 			height: 120,
 			isSelected: false,
-			onClick: () => onBoxClick(promptRef.promptId)
+			onClick: () => onBoxClick(candidateRef.candidateId)
 		});
 		x += 140;
 	}
 	y += 160;
 	for (const iteration of iterations) {
 		let x = 10;
-		for (const candidate of iteration.candidates) {
-			const prompt = findPromptById(candidate.promptRef.promptId);
-			const candidateAggregatedEvaluation = findCandidateAggregatedEvaluation(prompt.promptId);
-			const isSelected = iteration.selectedPromptRefs?.some((selectedPromptRef) => {
-				return selectedPromptRef.promptId === prompt.promptId;
+		for (const newCandidate of iteration.candidates) {
+			const candidate = findCandidateById(newCandidate.candidateRef.candidateId);
+			const candidateAggregatedEvaluation = findCandidateAggregatedEvaluation(candidate.candidateId);
+			const isSelected = iteration.selectedCandidateRefs?.some((selectedPromptRef) => {
+				return selectedPromptRef.candidateId === candidate.candidateId;
 			});
 			boxes.push({
 				data: {
-					promptId: prompt.promptId,
-					parentPromptIds: prompt.parentPromptIds,
+					promptId: candidate.candidateId,
+					parentPromptIds: candidate.parentCandidateIds,
 					aggregatedScore: candidateAggregatedEvaluation?.aggregatedScore,
 					passedEvaluationsCount: candidateAggregatedEvaluation?.passedEvaluations.length,
 					failedEvaluationsCount: candidateAggregatedEvaluation?.failedEvaluations.length,
-					promptChangesCount: candidate?.changes.length
+					promptChangesCount: newCandidate.changes.length
 				},
 				x,
 				y,
 				width: 120,
 				height: 120,
 				isSelected,
-				onClick: () => onBoxClick(prompt.promptId)
+				onClick: () => onBoxClick(candidate.candidateId)
 			});
 			x += 140;
 		}
@@ -706,14 +706,14 @@ function isHighlighted(boxes, promptId, selectedPromptId) {
 //#endregion
 //#region src/components/prompt-tree/PromptTree.tsx
 function PromptTree(props) {
-	const { selectedPromptId, detailsVisible } = props;
+	const { selectedCandidateId: selectedPromptId, detailsVisible } = props;
 	const onBoxClick = (promptId) => {
-		props.onSelectPromptId(promptId);
+		props.onSelectCandidateId(promptId);
 	};
 	const onBackgroundClick = () => {
 		props.onBackgroundClick();
 	};
-	const boxes = resolveBoxes(props.prompts, props.iterations, onBoxClick);
+	const boxes = resolveBoxes(props.candidates, props.iterations, onBoxClick);
 	const connections = resolveConnections(boxes);
 	const renderBoxes = () => {
 		return boxes.map((box) => /* @__PURE__ */ u(PromptBox, {
@@ -4979,7 +4979,7 @@ function PromptAggregatedEvaluation(props) {
 		}) })] });
 	};
 	const renderEvaluation = (index, status, evaluation) => {
-		const key = `${evaluation.promptRef.promptId}e${index}`;
+		const key = `${evaluation.candidateRef.candidateId}e${index}`;
 		const expectedResponse = evaluation.datasetEntry.expectedResponse;
 		return /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u(Separator, {}), /* @__PURE__ */ u("div", { children: [
 			/* @__PURE__ */ u("div", { children: [
@@ -5047,9 +5047,9 @@ function PromptAnalysis(props) {
 //#endregion
 //#region src/components/prompt-details/PromptChanges.tsx
 function PromptChanges(props) {
-	const { promptId, changes } = props;
+	const { candidateId, changes } = props;
 	const renderChange = (index, change) => {
-		const key = `${promptId}c${index}`;
+		const key = `${candidateId}c${index}`;
 		return /* @__PURE__ */ u(S$1, { children: [index > 0 && /* @__PURE__ */ u(Separator, {}), /* @__PURE__ */ u("div", { children: [
 			/* @__PURE__ */ u("h2", { children: "Change" }),
 			/* @__PURE__ */ u("div", { children: /* @__PURE__ */ u(Markdown, { content: change.description }) }),
@@ -5098,11 +5098,11 @@ function PromptDetails(props) {
 			}),
 			/* @__PURE__ */ u("pre", {
 				className: promptClassName,
-				children: data?.prompt.prompt
+				children: data?.candidate.candidate
 			}),
-			data?.promptChanges && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u(Header, { title: "Prompt Changes" }), /* @__PURE__ */ u(PromptChanges, {
-				promptId: data.prompt.promptId,
-				changes: data.promptChanges
+			data?.candidateChanges && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u(Header, { title: "Prompt Changes" }), /* @__PURE__ */ u(PromptChanges, {
+				candidateId: data.candidate.candidateId,
+				changes: data.candidateChanges
 			})] }),
 			/* @__PURE__ */ u(Header, { title: "Evaluations" }),
 			/* @__PURE__ */ u(PromptAggregatedEvaluation, { aggregatedEvaluation: data.aggregatedEvaluation }),
@@ -5112,53 +5112,53 @@ function PromptDetails(props) {
 }
 //#endregion
 //#region src/components/prompt-view/prompt-view-utils.ts
-function getPromptDetailsData(prompts, iterations, selectedPromptId) {
-	if (selectedPromptId === null) return;
-	const findPromptById = (promptId) => {
-		const prompt = prompts.find((prompt) => {
-			return prompt.promptId === promptId;
+function getPromptDetailsData(candidates, iterations, selectedCandidateId) {
+	if (selectedCandidateId === null) return;
+	const findCandidateById = (candidateId) => {
+		const candidate = candidates.find((candidate) => {
+			return candidate.candidateId === candidateId;
 		});
-		if (prompt === void 0) throw new Error(`Prompt ${promptId} not found`);
-		return prompt;
+		if (candidate === void 0) throw new Error(`Candidate ${candidateId} not found`);
+		return candidate;
 	};
-	const findAggregatedEvaluationByPromptId = (iteration, promptId) => {
+	const findAggregatedEvaluationByCandidateId = (iteration, candidateId) => {
 		const { aggregatedEvaluations } = iteration;
 		const aggregatedEvaluation = aggregatedEvaluations.find((aggregatedEvaluation) => {
-			return aggregatedEvaluation.promptRef.promptId === promptId;
+			return aggregatedEvaluation.candidateRef.candidateId === candidateId;
 		});
 		if (aggregatedEvaluation !== void 0) return aggregatedEvaluation;
 		const { candidateAggregatedEvaluations } = iteration;
-		const candidateAggregatedEvaluation = candidateAggregatedEvaluations.find((candidateAggregatedEvaluation) => {
-			return candidateAggregatedEvaluation.promptRef.promptId === promptId;
+		const candidateAggregatedEvaluation = candidateAggregatedEvaluations.find((valuation) => {
+			return valuation.candidateRef.candidateId === candidateId;
 		});
 		if (candidateAggregatedEvaluation !== void 0) return candidateAggregatedEvaluation;
-		throw new Error(`Aggregated evaluations for prompt ${promptId} not found`);
+		throw new Error(`Aggregated evaluations for prompt ${candidateId} not found`);
 	};
-	const findAnalysisByPromptId = (iteration, promptId) => {
+	const findAnalysisByCandidateId = (iteration, candidateId) => {
 		return iteration.analyses.find((analysis) => {
-			return analysis.promptRef.promptId === promptId;
+			return analysis.candidateRef.candidateId === candidateId;
 		});
 	};
 	const firstIteration = iterations[0];
-	const seedPromptRef = firstIteration.promptRefs.find((promptRef) => {
-		return promptRef.promptId === selectedPromptId;
+	const seedCandidateRef = firstIteration.candidateRefs.find((candidateRef) => {
+		return candidateRef.candidateId === selectedCandidateId;
 	});
-	if (seedPromptRef !== void 0) return {
-		prompt: findPromptById(seedPromptRef.promptId),
-		aggregatedEvaluation: findAggregatedEvaluationByPromptId(firstIteration, selectedPromptId),
-		analysis: findAnalysisByPromptId(firstIteration, selectedPromptId)
+	if (seedCandidateRef !== void 0) return {
+		candidate: findCandidateById(seedCandidateRef.candidateId),
+		aggregatedEvaluation: findAggregatedEvaluationByCandidateId(firstIteration, selectedCandidateId),
+		analysis: findAnalysisByCandidateId(firstIteration, selectedCandidateId)
 	};
 	let data;
 	for (const iteration of iterations) {
 		const candidate = iteration.candidates.find((candidate) => {
-			return candidate.promptRef.promptId === selectedPromptId;
+			return candidate.candidateRef.candidateId === selectedCandidateId;
 		});
 		if (candidate !== void 0) {
 			data = {
-				prompt: findPromptById(candidate.promptRef.promptId),
-				promptChanges: candidate.changes,
-				aggregatedEvaluation: findAggregatedEvaluationByPromptId(iteration, selectedPromptId),
-				analysis: findAnalysisByPromptId(iteration, selectedPromptId)
+				candidate: findCandidateById(candidate.candidateRef.candidateId),
+				candidateChanges: candidate.changes,
+				aggregatedEvaluation: findAggregatedEvaluationByCandidateId(iteration, selectedCandidateId),
+				analysis: findAnalysisByCandidateId(iteration, selectedCandidateId)
 			};
 			break;
 		}
@@ -11170,7 +11170,7 @@ var FrequencyLevelSchema = _enum([
 	"low"
 ]).describe("Relative level: high, medium, or low.");
 object({
-	summary: object({ overallAssessment: string().describe("Short assessment of overall prompt performance.") }).describe("High-level summary of strengths and weaknesses."),
+	summary: object({ overallAssessment: string().describe("Short assessment of overall candidate performance.") }).describe("High-level summary of strengths and weaknesses."),
 	strengths: array(object({
 		title: string().describe("Short name of the strength."),
 		description: string().describe("Explanation of why this is a strength."),
@@ -11327,8 +11327,8 @@ function InfoPanel(props) {
 			renderRPEProperties("Evaluator", props.rpeInsights.info.evaluatorInfo.name, props.rpeInsights.info.evaluatorInfo.properties),
 			renderRPEProperties("Aggregator", props.rpeInsights.info.aggregatorInfo.name, props.rpeInsights.info.aggregatorInfo.properties),
 			renderRPEProperties("Analyzer", props.rpeInsights.info.analyzerInfo.name, props.rpeInsights.info.analyzerInfo.properties),
-			renderRPEProperties("Prompt Generator", props.rpeInsights.info.promptGeneratorInfo.name, props.rpeInsights.info.promptGeneratorInfo.properties),
-			renderRPEProperties("Prompt Selector", props.rpeInsights.info.promptSelectorInfo.name, props.rpeInsights.info.promptSelectorInfo.properties)
+			renderRPEProperties("Candidate Generator", props.rpeInsights.info.candidateGeneratorInfo.name, props.rpeInsights.info.candidateGeneratorInfo.properties),
+			renderRPEProperties("Candidate Selector", props.rpeInsights.info.candidateSelectorInfo.name, props.rpeInsights.info.candidateSelectorInfo.properties)
 		]
 	});
 }
@@ -11336,7 +11336,7 @@ function InfoPanel(props) {
 //#region src/components/prompt-view/PromptView.tsx
 function PromptView(props) {
 	const { rpeInsights } = props;
-	const { prompts, iterationHistory } = rpeInsights;
+	const { candidates, iterationHistory } = rpeInsights;
 	const [selectedPromptId, setSelectedPromptId] = d$1(null);
 	const [detailsVisible, setDetailsVisible] = d$1(false);
 	const [infoVisible, setInfoVisible] = d$1(false);
@@ -11370,21 +11370,21 @@ function PromptView(props) {
 	};
 	const promptTreeIterations = iterationHistory.map((iteration) => {
 		return {
-			promptRefs: iteration.promptRefs,
+			candidateRefs: iteration.candidateRefs,
 			candidates: iteration.candidates,
-			selectedPromptRefs: iteration.selectedPromptRefs,
+			selectedCandidateRefs: iteration.selectedCandidateRefs,
 			aggregatedEvaluations: iteration.aggregatedEvaluations,
 			candidateAggregatedEvaluations: iteration.candidateAggregatedEvaluations
 		};
 	});
-	const promptDetailsData = selectedPromptId !== null ? getPromptDetailsData(prompts, iterationHistory, selectedPromptId) : void 0;
+	const promptDetailsData = selectedPromptId !== null ? getPromptDetailsData(candidates, iterationHistory, selectedPromptId) : void 0;
 	return /* @__PURE__ */ u(S$1, { children: [
 		/* @__PURE__ */ u(PromptTree, {
-			prompts,
+			candidates,
 			iterations: promptTreeIterations,
-			selectedPromptId,
+			selectedCandidateId: selectedPromptId,
 			detailsVisible,
-			onSelectPromptId: selectPromptId,
+			onSelectCandidateId: selectPromptId,
 			onBackgroundClick
 		}),
 		/* @__PURE__ */ u(PromptDetails, {
@@ -11415,7 +11415,7 @@ function loadRPEInsights() {
 R$1(/* @__PURE__ */ u(App, { rpeInsights: loadRPEInsights() }), document.getElementById("app"));
 //#endregion
 
-//# sourceMappingURL=index-xzhKQShE.js.map</script>
+//# sourceMappingURL=index-IKtT_bgW.js.map</script>
     <style rel="stylesheet" crossorigin>* {
   box-sizing: border-box;
 }

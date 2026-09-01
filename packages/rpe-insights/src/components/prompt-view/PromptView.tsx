@@ -12,7 +12,7 @@ export interface PromptViewProps {
 
 export function PromptView(props: PromptViewProps) {
   const { rpeInsights } = props;
-  const { prompts, iterationHistory } = rpeInsights;
+  const { candidates, iterationHistory } = rpeInsights;
 
   const [
     selectedPromptId,
@@ -64,25 +64,25 @@ export function PromptView(props: PromptViewProps) {
 
   const promptTreeIterations = iterationHistory.map(iteration => {
     return {
-      promptRefs: iteration.promptRefs,
+      candidateRefs: iteration.candidateRefs,
       candidates: iteration.candidates,
-      selectedPromptRefs: iteration.selectedPromptRefs,
+      selectedCandidateRefs: iteration.selectedCandidateRefs,
       aggregatedEvaluations: iteration.aggregatedEvaluations,
       candidateAggregatedEvaluations: iteration.candidateAggregatedEvaluations,
     };
   });
   const promptDetailsData = selectedPromptId !== null
-    ? getPromptDetailsData(prompts, iterationHistory, selectedPromptId)
+    ? getPromptDetailsData(candidates, iterationHistory, selectedPromptId)
     : undefined;
 
   return (
     <>
       <PromptTree
-        prompts={prompts}
+        candidates={candidates}
         iterations={promptTreeIterations}
-        selectedPromptId={selectedPromptId}
+        selectedCandidateId={selectedPromptId}
         detailsVisible={detailsVisible}
-        onSelectPromptId={selectPromptId}
+        onSelectCandidateId={selectPromptId}
         onBackgroundClick={onBackgroundClick}
       />
       <PromptDetails

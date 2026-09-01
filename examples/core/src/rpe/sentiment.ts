@@ -10,8 +10,8 @@ import {
   optimize,
   average,
   defaultRPEAnalyzer,
-  defaultRPEPromptGenerator,
-  bestScorePromptSelector,
+  defaultRPECandidateGenerator,
+  bestScoreCandidateSelector,
   SCALAR_METRIC_CORRECTNESS,
   SCALAR_METRIC_COMPLETENESS,
   SCALAR_METRIC_RELEVANCE,
@@ -28,8 +28,8 @@ async function run(): Promise<void> {
   const input: RPEInput = {
     seed: [
       {
-        prompt: 'What is the sentiment of the following input\n\n<<input>>',
-        promptId: 'seed',
+        candidate: 'What is the sentiment of the following input\n\n<<input>>',
+        candidateId: 'seed',
       },
     ],
     trainingDataset: {
@@ -69,14 +69,14 @@ async function run(): Promise<void> {
         temperature: 0.0,
       },
     }),
-    promptGeneratorParallelism: 8,
-    promptGenerator: defaultRPEPromptGenerator({
+    candidateGeneratorParallelism: 8,
+    candidateGenerator: defaultRPECandidateGenerator({
       modelName: 'gemini:gemini-2.5-flash',
       modelParameters: {
         temperature: 0.0,
       },
     }),
-    promptSelector: bestScorePromptSelector({}),
+    candidateSelector: bestScoreCandidateSelector({}),
     stopAfterIteration: async (state: RPEState) => {
       return {
         stop: state.iterationNo === 0,
