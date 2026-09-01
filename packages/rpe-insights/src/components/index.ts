@@ -1,1 +1,1 @@
-export * from './prompt-view/index.js';
+export * from './candidate-view/index.js';

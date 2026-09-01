@@ -4,17 +4,18 @@ import {
   RPEState,
   RPEInput,
   splitRPEDataset,
-  llmRPEExecutor,
-  judgeRPEEvaluator,
+  singlePromptLLMRPEExecutor,
+  singlePromptJudgeRPEEvaluator,
   defaultRPEAggregator,
   optimize,
   average,
-  defaultRPEAnalyzer,
-  defaultRPECandidateGenerator,
+  singlePromptRPEAnalyzer,
+  singlePromptRPECandidateGenerator,
   bestScoreCandidateSelector,
   SCALAR_METRIC_CORRECTNESS,
   SCALAR_METRIC_COMPLETENESS,
   SCALAR_METRIC_RELEVANCE,
+  buildSinglePromptCandidateModules,
 } from '@gettoor/core';
 import { renderRPEInsightsToHTML } from '@gettoor/core/rpe-html-renderer';
 import { EASY_DATASET } from './sentiment-dataset.js';
@@ -28,7 +29,9 @@ async function run(): Promise<void> {
   const input: RPEInput = {
     seed: [
       {
-        candidate: 'What is the sentiment of the following input\n\n<<input>>',
+        modules: buildSinglePromptCandidateModules(
+          'What is the sentiment of the following input\n\n<<input>>'
+        ),
         candidateId: 'seed',
       },
     ],
@@ -39,14 +42,14 @@ async function run(): Promise<void> {
       entries: validationDataset.entries,
     },
     executorParallelism: 8,
-    executor: llmRPEExecutor({
+    executor: singlePromptLLMRPEExecutor({
       modelName: 'gemini:gemini-2.5-flash',
       modelParameters: {
         temperature: 0.0,
       },
     }),
     evaluatorParallelism: 8,
-    evaluator: judgeRPEEvaluator({
+    evaluator: singlePromptJudgeRPEEvaluator({
       modelName: 'gemini:gemini-2.5-flash',
       modelParameters: {
         temperature: 0.0,
@@ -63,14 +66,14 @@ async function run(): Promise<void> {
       passedEvaluationThreshold: 0.95,
     }),
     analyzerParallelism: 8,
-    analyzer: defaultRPEAnalyzer({
+    analyzer: singlePromptRPEAnalyzer({
       modelName: 'gemini:gemini-2.5-flash',
       modelParameters: {
         temperature: 0.0,
       },
     }),
     candidateGeneratorParallelism: 8,
-    candidateGenerator: defaultRPECandidateGenerator({
+    candidateGenerator: singlePromptRPECandidateGenerator({
       modelName: 'gemini:gemini-2.5-flash',
       modelParameters: {
         temperature: 0.0,

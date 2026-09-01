@@ -1,0 +1,53 @@
+@use '../../styles/_includes.scss' as *;
+
+.candidate-box-foreign-object {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  @include font-medium;
+
+  &.muted {
+    opacity: 0.25;
+  }
+
+  .candidate-box-info-properties {
+    display: grid;
+    grid-template-columns: auto 2rem;
+    @include font-small;
+  }
+
+  .candidate-box-score-name {
+    @include font-small;
+  }
+
+  .candidate-box-score-value {
+    font-size: 1rem;
+  }
+
+  .candidate-box-score-value {
+    font-weight: bold;
+    margin-top: -0.25rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .candidate-box-info-name {
+    text-align: right;
+    padding-right: 0.25rem;
+  }
+
+  .candidate-box-info-value {
+    font-weight: bold;
+  }
+
+  .candidate-box-info-value-red {
+    color: var(--red);
+  }
+
+  .candidate-box-info-value-green {
+    color: var(--green);
+  }
+}

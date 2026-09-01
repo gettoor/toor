@@ -431,8 +431,8 @@ function D(n, t) {
 	return "function" == typeof t ? t(n) : t;
 }
 //#endregion
-//#region src/components/prompt-tree/PromptTree.module.scss
-var PromptTree_module_default = { "prompt-tree": "_prompt-tree_1692c_1" };
+//#region src/components/candidate-tree/CandidateTree.module.scss
+var CandidateTree_module_default = { "candidate-tree": "_candidate-tree_njqup_1" };
 //#endregion
 //#region ../../node_modules/.pnpm/clsx@2.1.1/node_modules/clsx/dist/clsx.mjs
 function r(e) {
@@ -448,16 +448,16 @@ function clsx() {
 	for (var e, t, f = 0, n = "", o = arguments.length; f < o; f++) (e = arguments[f]) && (t = r(e)) && (n && (n += " "), n += t);
 	return n;
 }
-var PromptBox_module_default = {
-	"prompt-box-foreign-object": "_prompt-box-foreign-object_1po55_1",
-	muted: "_muted_1po55_11",
-	"prompt-box-info-properties": "_prompt-box-info-properties_1po55_14",
-	"prompt-box-score-name": "_prompt-box-score-name_1po55_19",
-	"prompt-box-score-value": "_prompt-box-score-value_1po55_22",
-	"prompt-box-info-name": "_prompt-box-info-name_1po55_30",
-	"prompt-box-info-value": "_prompt-box-info-value_1po55_34",
-	"prompt-box-info-value-red": "_prompt-box-info-value-red_1po55_37",
-	"prompt-box-info-value-green": "_prompt-box-info-value-green_1po55_40"
+var CandidateBox_module_default = {
+	"candidate-box-foreign-object": "_candidate-box-foreign-object_1ico9_1",
+	muted: "_muted_1ico9_11",
+	"candidate-box-info-properties": "_candidate-box-info-properties_1ico9_14",
+	"candidate-box-score-name": "_candidate-box-score-name_1ico9_19",
+	"candidate-box-score-value": "_candidate-box-score-value_1ico9_22",
+	"candidate-box-info-name": "_candidate-box-info-name_1ico9_30",
+	"candidate-box-info-value": "_candidate-box-info-value_1ico9_34",
+	"candidate-box-info-value-red": "_candidate-box-info-value-red_1ico9_37",
+	"candidate-box-info-value-green": "_candidate-box-info-value-green_1ico9_40"
 };
 //#endregion
 //#region ../../node_modules/.pnpm/preact@10.29.8/node_modules/preact/jsx-runtime/dist/jsxRuntime.module.js
@@ -488,11 +488,11 @@ function u(e, t, n, o, i, u) {
 	return l$1.vnode && l$1.vnode(l), l;
 }
 //#endregion
-//#region src/components/prompt-tree/PromptBox.tsx
-function PromptBox(props) {
-	const infoClassName = clsx(PromptBox_module_default["prompt-box-foreign-object"], { [PromptBox_module_default.muted]: props.isHighlighted == false });
-	const passedEvaluationsCountClassName = clsx(PromptBox_module_default["prompt-box-info-value"], { [PromptBox_module_default["prompt-box-info-value-green"]]: props.data.passedEvaluationsCount !== void 0 && props.data.passedEvaluationsCount > 0 });
-	const failedEvaluationsCountClassName = clsx(PromptBox_module_default["prompt-box-info-value"], { [PromptBox_module_default["prompt-box-info-value-red"]]: props.data.failedEvaluationsCount !== void 0 && props.data.failedEvaluationsCount > 0 });
+//#region src/components/candidate-tree/CandidateBox.tsx
+function CandidateBox(props) {
+	const infoClassName = clsx(CandidateBox_module_default["candidate-box-foreign-object"], { [CandidateBox_module_default.muted]: props.isHighlighted == false });
+	const passedEvaluationsCountClassName = clsx(CandidateBox_module_default["candidate-box-info-value"], { [CandidateBox_module_default["candidate-box-info-value-green"]]: props.data.passedEvaluationsCount !== void 0 && props.data.passedEvaluationsCount > 0 });
+	const failedEvaluationsCountClassName = clsx(CandidateBox_module_default["candidate-box-info-value"], { [CandidateBox_module_default["candidate-box-info-value-red"]]: props.data.failedEvaluationsCount !== void 0 && props.data.failedEvaluationsCount > 0 });
 	const stroke = props.isSelected ? "var(--stroke-selected)" : "var(--stroke)";
 	return /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("rect", {
 		x: props.x + .5,
@@ -517,16 +517,16 @@ function PromptBox(props) {
 		children: /* @__PURE__ */ u("div", {
 			className: infoClassName,
 			children: [props.data.aggregatedScore !== void 0 && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("div", {
-				className: PromptBox_module_default["prompt-box-score-name"],
+				className: CandidateBox_module_default["candidate-box-score-name"],
 				children: "Score"
 			}), /* @__PURE__ */ u("div", {
-				className: PromptBox_module_default["prompt-box-score-value"],
+				className: CandidateBox_module_default["candidate-box-score-value"],
 				children: props.data.aggregatedScore.toFixed(2)
 			})] }), /* @__PURE__ */ u("div", {
-				className: PromptBox_module_default["prompt-box-info-properties"],
+				className: CandidateBox_module_default["candidate-box-info-properties"],
 				children: [
 					/* @__PURE__ */ u("div", {
-						className: PromptBox_module_default["prompt-box-info-name"],
+						className: CandidateBox_module_default["candidate-box-info-name"],
 						children: "Passed:"
 					}),
 					/* @__PURE__ */ u("div", {
@@ -534,7 +534,7 @@ function PromptBox(props) {
 						children: props.data.passedEvaluationsCount ?? "-"
 					}),
 					/* @__PURE__ */ u("div", {
-						className: PromptBox_module_default["prompt-box-info-name"],
+						className: CandidateBox_module_default["candidate-box-info-name"],
 						children: "Failed:"
 					}),
 					/* @__PURE__ */ u("div", {
@@ -542,12 +542,12 @@ function PromptBox(props) {
 						children: props.data.failedEvaluationsCount ?? "-"
 					}),
 					/* @__PURE__ */ u("div", {
-						className: PromptBox_module_default["prompt-box-info-name"],
+						className: CandidateBox_module_default["candidate-box-info-name"],
 						children: "Changes:"
 					}),
 					/* @__PURE__ */ u("div", {
-						className: PromptBox_module_default["prompt-box-info-value"],
-						children: props.data.promptChangesCount ?? "-"
+						className: CandidateBox_module_default["candidate-box-info-value"],
+						children: props.data.candidateChangesCount ?? "-"
 					})
 				]
 			})]
@@ -555,8 +555,8 @@ function PromptBox(props) {
 	})] });
 }
 //#endregion
-//#region src/components/prompt-tree/PromptBoxConnection.tsx
-function PromptBoxConnection(props) {
+//#region src/components/candidate-tree/CandidateBoxConnection.tsx
+function CandidateBoxConnection(props) {
 	const { fromX, fromY, toX, toY } = props;
 	return /* @__PURE__ */ u("path", {
 		d: `M ${fromX + .5} ${fromY + .5} C ${fromX + .5} ${toY + .5}, ${toX + .5} ${fromY + .5}, ${toX + .5} ${toY + .5}`,
@@ -567,7 +567,7 @@ function PromptBoxConnection(props) {
 	});
 }
 //#endregion
-//#region src/components/prompt-tree/prompt-tree-utils.ts
+//#region src/components/candidate-tree/candidate-tree-utils.ts
 /**
 * Resolve the boxes for the prompt tree.
 */
@@ -602,8 +602,8 @@ function resolveBoxes(candidates, iterations, onBoxClick) {
 		const aggregatedEvaluation = findAggregatedEvaluation(candidateRef.candidateId);
 		boxes.push({
 			data: {
-				promptId: candidateRef.candidateId,
-				parentPromptIds: prompt.parentCandidateIds,
+				candidateId: candidateRef.candidateId,
+				parentCandidateIds: prompt.parentCandidateIds,
 				aggregatedScore: aggregatedEvaluation?.aggregatedScore,
 				passedEvaluationsCount: aggregatedEvaluation?.passedEvaluations.length,
 				failedEvaluationsCount: aggregatedEvaluation?.failedEvaluations.length
@@ -628,12 +628,12 @@ function resolveBoxes(candidates, iterations, onBoxClick) {
 			});
 			boxes.push({
 				data: {
-					promptId: candidate.candidateId,
-					parentPromptIds: candidate.parentCandidateIds,
+					candidateId: candidate.candidateId,
+					parentCandidateIds: candidate.parentCandidateIds,
 					aggregatedScore: candidateAggregatedEvaluation?.aggregatedScore,
 					passedEvaluationsCount: candidateAggregatedEvaluation?.passedEvaluations.length,
 					failedEvaluationsCount: candidateAggregatedEvaluation?.failedEvaluations.length,
-					promptChangesCount: newCandidate.changes.length
+					candidateChangesCount: newCandidate.changes.length
 				},
 				x,
 				y,
@@ -654,12 +654,12 @@ function resolveBoxes(candidates, iterations, onBoxClick) {
 function resolveConnections(boxes) {
 	const connections = [];
 	for (const boxA of boxes) for (const boxB of boxes) {
-		if (boxA.data.promptId === boxB.data.promptId) continue;
-		if (boxB.data.parentPromptIds?.includes(boxA.data.promptId)) connections.push({
-			fromPromptId: boxA.data.promptId,
+		if (boxA.data.candidateId === boxB.data.candidateId) continue;
+		if (boxB.data.parentCandidateIds?.includes(boxA.data.candidateId)) connections.push({
+			fromCandidateId: boxA.data.candidateId,
 			fromX: boxA.x + boxA.width / 2,
 			fromY: boxA.y + boxA.height,
-			toPromptId: boxB.data.promptId,
+			toCandidateId: boxB.data.candidateId,
 			toX: boxB.x + boxB.width / 2,
 			toY: boxB.y
 		});
@@ -668,7 +668,7 @@ function resolveConnections(boxes) {
 }
 function getAncestors(boxes, promptId) {
 	let box = boxes.find((box) => {
-		return box.data.promptId === promptId;
+		return box.data.candidateId === promptId;
 	});
 	if (box === void 0) return [];
 	const ancestors = [];
@@ -676,9 +676,9 @@ function getAncestors(boxes, promptId) {
 	while (currentBoxes.length > 0) {
 		const box = currentBoxes.shift();
 		ancestors.push(box);
-		const parentBoxes = (box.data.parentPromptIds ?? []).map((parentPromptId) => {
+		const parentBoxes = (box.data.parentCandidateIds ?? []).map((parentPromptId) => {
 			const parentBox = boxes.find((box) => {
-				return box.data.promptId === parentPromptId;
+				return box.data.candidateId === parentPromptId;
 			});
 			if (parentBox === void 0) throw new Error(`Parent prompt ${parentPromptId} not found`);
 			return parentBox;
@@ -686,7 +686,7 @@ function getAncestors(boxes, promptId) {
 		currentBoxes.push(...parentBoxes);
 	}
 	return ancestors.filter((ancestor) => {
-		return ancestor.data.promptId !== promptId;
+		return ancestor.data.candidateId !== promptId;
 	});
 }
 /**
@@ -696,16 +696,16 @@ function isHighlighted(boxes, promptId, selectedPromptId) {
 	if (selectedPromptId === null) return;
 	if (promptId === selectedPromptId) return true;
 	if (getAncestors(boxes, selectedPromptId).some((ancestor) => {
-		return ancestor.data.promptId === promptId;
+		return ancestor.data.candidateId === promptId;
 	})) return true;
 	if (getAncestors(boxes, promptId).some((ancestor) => {
-		return ancestor.data.promptId === selectedPromptId;
+		return ancestor.data.candidateId === selectedPromptId;
 	})) return true;
 	return false;
 }
 //#endregion
-//#region src/components/prompt-tree/PromptTree.tsx
-function PromptTree(props) {
+//#region src/components/candidate-tree/CandidateTree.tsx
+function CandidateTree(props) {
 	const { selectedCandidateId: selectedPromptId, detailsVisible } = props;
 	const onBoxClick = (promptId) => {
 		props.onSelectCandidateId(promptId);
@@ -716,17 +716,17 @@ function PromptTree(props) {
 	const boxes = resolveBoxes(props.candidates, props.iterations, onBoxClick);
 	const connections = resolveConnections(boxes);
 	const renderBoxes = () => {
-		return boxes.map((box) => /* @__PURE__ */ u(PromptBox, {
+		return boxes.map((box) => /* @__PURE__ */ u(CandidateBox, {
 			...box,
-			isSelected: box.data.promptId === selectedPromptId && detailsVisible,
-			isHighlighted: isHighlighted(boxes, box.data.promptId, selectedPromptId)
-		}, box.data.promptId));
+			isSelected: box.data.candidateId === selectedPromptId && detailsVisible,
+			isHighlighted: isHighlighted(boxes, box.data.candidateId, selectedPromptId)
+		}, box.data.candidateId));
 	};
 	const renderConnections = () => {
 		return connections.map((connection) => {
-			const id = `${connection.fromPromptId}-${connection.toPromptId}`;
-			const isConnectionHighlighted = isHighlighted(boxes, connection.fromPromptId, selectedPromptId) && isHighlighted(boxes, connection.toPromptId, selectedPromptId);
-			return /* @__PURE__ */ u(PromptBoxConnection, {
+			const id = `${connection.fromCandidateId}-${connection.toCandidateId}`;
+			const isConnectionHighlighted = isHighlighted(boxes, connection.fromCandidateId, selectedPromptId) && isHighlighted(boxes, connection.toCandidateId, selectedPromptId);
+			return /* @__PURE__ */ u(CandidateBoxConnection, {
 				...connection,
 				isHighlighted: isConnectionHighlighted
 			}, id);
@@ -739,7 +739,7 @@ function PromptTree(props) {
 		return Math.max(max, box.y + box.height);
 	}, 0);
 	return /* @__PURE__ */ u("svg", {
-		className: PromptTree_module_default["prompt-tree"],
+		className: CandidateTree_module_default["candidate-tree"],
 		width: `${width}px`,
 		height: `${height}px`,
 		viewBox: `0 0 ${width} ${height}`,
@@ -4897,17 +4897,16 @@ var Header_module_default = {
 	"header-side-bar": "_header-side-bar_1ok9e_25"
 };
 //#endregion
-//#region src/components/prompt-details/Header.tsx
+//#region src/components/candidate-details/Header.tsx
 function Header(props) {
-	const { title, level = 1, children } = props;
-	const headerTitleClassName = clsx(Header_module_default["header-title"], {
-		[Header_module_default["header-title-level-1"]]: level === 1,
-		[Header_module_default["header-title-level-2"]]: level === 2
-	});
+	const { title, level = 1, children, className } = props;
 	return /* @__PURE__ */ u("div", {
-		className: Header_module_default["header"],
+		className: clsx(Header_module_default["header"], className),
 		children: [/* @__PURE__ */ u("div", {
-			className: headerTitleClassName,
+			className: clsx(Header_module_default["header-title"], {
+				[Header_module_default["header-title-level-1"]]: level === 1,
+				[Header_module_default["header-title-level-2"]]: level === 2
+			}),
 			children: title
 		}), children && /* @__PURE__ */ u("div", {
 			className: Header_module_default["header-side-bar"],
@@ -4917,7 +4916,7 @@ function Header(props) {
 }
 var Separator_module_default = { separator: "_separator_6czns_1" };
 //#endregion
-//#region src/components/prompt-details/Separator.tsx
+//#region src/components/candidate-details/Separator.tsx
 function Separator() {
 	return /* @__PURE__ */ u("div", { className: Separator_module_default["separator"] });
 }
@@ -4943,7 +4942,7 @@ function capitalize(value) {
 	return value.charAt(0).toUpperCase() + value.slice(1);
 }
 //#endregion
-//#region src/components/prompt-details/Metrics.tsx
+//#region src/components/candidate-details/Metrics.tsx
 function Metrics(props) {
 	return /* @__PURE__ */ u(Table, {
 		header: ["Metric", "Score"],
@@ -4952,15 +4951,15 @@ function Metrics(props) {
 		})
 	});
 }
-var PromptAggregatedEvaluation_module_default = {
-	"prompt-aggregated-evaluation": "_prompt-aggregated-evaluation_1t63t_1",
-	"aggregated-score": "_aggregated-score_1t63t_7",
-	status: "_status_1t63t_11",
-	"dataset-entry-key": "_dataset-entry-key_1t63t_15"
+var CandidateAggregatedEvaluation_module_default = {
+	"candidate-aggregated-evaluation": "_candidate-aggregated-evaluation_z4upv_1",
+	"aggregated-score": "_aggregated-score_z4upv_7",
+	status: "_status_z4upv_11",
+	"dataset-entry-key": "_dataset-entry-key_z4upv_15"
 };
 //#endregion
-//#region src/components/prompt-details/PromptAggregatedEvaluation.tsx
-function PromptAggregatedEvaluation(props) {
+//#region src/components/candidate-details/CandidateAggregatedEvaluation.tsx
+function CandidateAggregatedEvaluation(props) {
 	const { aggregatedEvaluation } = props;
 	const renderDatasetEntry = (datasetEntry) => {
 		if (datasetEntry.vars == void 0) return;
@@ -4970,7 +4969,7 @@ function PromptAggregatedEvaluation(props) {
 			const valueString = typeof value === "object" ? JSON.stringify(value) : value.toString();
 			return /* @__PURE__ */ u("div", { children: [
 				/* @__PURE__ */ u("code", {
-					className: PromptAggregatedEvaluation_module_default["dataset-entry-key"],
+					className: CandidateAggregatedEvaluation_module_default["dataset-entry-key"],
 					children: key
 				}),
 				"\xA0",
@@ -4988,7 +4987,7 @@ function PromptAggregatedEvaluation(props) {
 				/* @__PURE__ */ u(Tag, {
 					label: status,
 					color: status === "passed" ? "green" : "red",
-					className: PromptAggregatedEvaluation_module_default["status"]
+					className: CandidateAggregatedEvaluation_module_default["status"]
 				})
 			] }),
 			renderDatasetEntry(evaluation.datasetEntry),
@@ -5010,9 +5009,9 @@ function PromptAggregatedEvaluation(props) {
 		return [...passedEvaluations, ...failedEvaluations];
 	};
 	return /* @__PURE__ */ u("div", {
-		className: PromptAggregatedEvaluation_module_default["prompt-aggregated-evaluation"],
+		className: CandidateAggregatedEvaluation_module_default["candidate-aggregated-evaluation"],
 		children: [/* @__PURE__ */ u("div", {
-			className: PromptAggregatedEvaluation_module_default["aggregated-score"],
+			className: CandidateAggregatedEvaluation_module_default["aggregated-score"],
 			children: [
 				"Aggregated score:\xA0",
 				/* @__PURE__ */ u(Score, { score: aggregatedEvaluation.aggregatedScore }),
@@ -5022,16 +5021,16 @@ function PromptAggregatedEvaluation(props) {
 	});
 }
 //#endregion
-//#region src/components/prompt-details/PromptAnalysis.module.scss
-var PromptAnalysis_module_default = { "prompt-analysis": "_prompt-analysis_1665e_1" };
+//#region src/components/candidate-details/CandidateAnalysis.module.scss
+var CandidateAnalysis_module_default = { "candidate-analysis": "_candidate-analysis_1d4bo_1" };
 //#endregion
-//#region src/components/prompt-details/PromptAnalysis.tsx
-function PromptAnalysis(props) {
+//#region src/components/candidate-details/CandidateAnalysis.tsx
+function CandidateAnalysis(props) {
 	const renderList = (list) => {
 		return /* @__PURE__ */ u("ul", { children: list.map((item, index) => /* @__PURE__ */ u("li", { children: item }, index)) });
 	};
 	return /* @__PURE__ */ u("div", {
-		className: PromptAnalysis_module_default.promptAnalysis,
+		className: CandidateAnalysis_module_default["candidate-analysis"],
 		children: [
 			/* @__PURE__ */ u("h2", { children: "Strengths" }),
 			renderList(props.analysis.strengths),
@@ -5045,8 +5044,8 @@ function PromptAnalysis(props) {
 	});
 }
 //#endregion
-//#region src/components/prompt-details/PromptChanges.tsx
-function PromptChanges(props) {
+//#region src/components/candidate-details/CandidateChanges.tsx
+function CandidateChanges(props) {
 	const { candidateId, changes } = props;
 	const renderChange = (index, change) => {
 		const key = `${candidateId}c${index}`;
@@ -5062,57 +5061,83 @@ function PromptChanges(props) {
 	};
 	return /* @__PURE__ */ u("div", { children: renderChanges() });
 }
-var PromptDetails_module_default = {
-	"prompt-details-panel": "_prompt-details-panel_13vdj_1",
-	visible: "_visible_13vdj_5",
-	hidden: "_hidden_13vdj_10",
-	"prompt-details-prompt": "_prompt-details-prompt_13vdj_16",
-	"prompt-details-prompt-expanded": "_prompt-details-prompt-expanded_13vdj_26"
+var CandidateModule_module_default = {
+	"candidate-module": "_candidate-module_1vddl_1",
+	header: "_header_1vddl_1",
+	module: "_module_1vddl_5",
+	"module-expanded": "_module-expanded_1vddl_14"
 };
 //#endregion
-//#region src/components/prompt-details/PromptDetails.tsx
-function PromptDetails(props) {
+//#region src/components/candidate-details/CandidateModule.tsx
+function CandidateModule(props) {
+	const { name, module } = props;
+	const [expanded, setExpanded] = d$1(false);
+	const onExpandClick = () => {
+		setExpanded(!expanded);
+	};
+	const moduleClassName = clsx(CandidateModule_module_default["module"], { [CandidateModule_module_default["module-expanded"]]: expanded });
+	const expandIconName = expanded ? "unfold_less" : "unfold_more";
+	return /* @__PURE__ */ u("div", {
+		className: CandidateModule_module_default["candidate-module"],
+		children: [/* @__PURE__ */ u(Header, {
+			title: camelCaseToSentenceCase(name),
+			level: 2,
+			className: CandidateModule_module_default["header"],
+			children: /* @__PURE__ */ u(IconButton, {
+				name: expandIconName,
+				title: "Expand/collapse module",
+				onClick: onExpandClick
+			})
+		}), /* @__PURE__ */ u("pre", {
+			className: moduleClassName,
+			children: module
+		})]
+	});
+}
+var CandidateDetails_module_default = {
+	"candidate-details-panel": "_candidate-details-panel_kt8uo_1",
+	visible: "_visible_kt8uo_5",
+	hidden: "_hidden_kt8uo_10",
+	"candidate-details-prompt": "_candidate-details-prompt_kt8uo_16",
+	"candidate-details-prompt-expanded": "_candidate-details-prompt-expanded_kt8uo_26"
+};
+//#endregion
+//#region src/components/candidate-details/CandidateDetails.tsx
+function CandidateDetails(props) {
 	const { data, visible, onCloseClick } = props;
 	const hasData = !!data;
-	const [promptExpanded, setPromptExpanded] = d$1(false);
-	const onPromptExpandClick = () => {
-		setPromptExpanded(!promptExpanded);
+	const renderModules = () => {
+		return Object.keys(data?.candidate.modules || {}).sort().map((name) => {
+			const module = data?.candidate.modules[name];
+			return /* @__PURE__ */ u(CandidateModule, {
+				name,
+				module: module.content
+			}, name);
+		});
 	};
-	const boxClassName = clsx(PromptDetails_module_default["prompt-details-panel"], {
-		[PromptDetails_module_default.visible]: visible,
-		[PromptDetails_module_default.hidden]: !visible
-	});
-	const promptClassName = clsx(PromptDetails_module_default["prompt-details-prompt"], { [PromptDetails_module_default["prompt-details-prompt-expanded"]]: promptExpanded });
 	return /* @__PURE__ */ u(Panel, {
-		className: boxClassName,
-		title: "Prompt details",
+		className: clsx(CandidateDetails_module_default["candidate-details-panel"], {
+			[CandidateDetails_module_default.visible]: visible,
+			[CandidateDetails_module_default.hidden]: !visible
+		}),
+		title: "Candidate details",
 		onCloseClick,
 		children: hasData && /* @__PURE__ */ u(S$1, { children: [
-			/* @__PURE__ */ u(Header, {
-				title: "Prompt",
-				children: /* @__PURE__ */ u(IconButton, {
-					name: promptExpanded ? "unfold_less" : "unfold_more",
-					title: "Expand/collapse prompt",
-					onClick: onPromptExpandClick
-				})
-			}),
-			/* @__PURE__ */ u("pre", {
-				className: promptClassName,
-				children: data?.candidate.candidate
-			}),
-			data?.candidateChanges && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u(Header, { title: "Prompt Changes" }), /* @__PURE__ */ u(PromptChanges, {
+			/* @__PURE__ */ u(Header, { title: "Modules" }),
+			renderModules(),
+			data?.candidateChanges && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u(Header, { title: "Candidate Changes" }), /* @__PURE__ */ u(CandidateChanges, {
 				candidateId: data.candidate.candidateId,
 				changes: data.candidateChanges
 			})] }),
 			/* @__PURE__ */ u(Header, { title: "Evaluations" }),
-			/* @__PURE__ */ u(PromptAggregatedEvaluation, { aggregatedEvaluation: data.aggregatedEvaluation }),
-			data.analysis && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u(Header, { title: "Analysis" }), /* @__PURE__ */ u(PromptAnalysis, { analysis: data.analysis })] })
+			/* @__PURE__ */ u(CandidateAggregatedEvaluation, { aggregatedEvaluation: data.aggregatedEvaluation }),
+			data.analysis && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u(Header, { title: "Analysis" }), /* @__PURE__ */ u(CandidateAnalysis, { analysis: data.analysis })] })
 		] })
 	});
 }
 //#endregion
-//#region src/components/prompt-view/prompt-view-utils.ts
-function getPromptDetailsData(candidates, iterations, selectedCandidateId) {
+//#region src/components/candidate-view/candidate-view-utils.ts
+function getCandidateDetailsData(candidates, iterations, selectedCandidateId) {
 	if (selectedCandidateId === null) return;
 	const findCandidateById = (candidateId) => {
 		const candidate = candidates.find((candidate) => {
@@ -5132,7 +5157,7 @@ function getPromptDetailsData(candidates, iterations, selectedCandidateId) {
 			return valuation.candidateRef.candidateId === candidateId;
 		});
 		if (candidateAggregatedEvaluation !== void 0) return candidateAggregatedEvaluation;
-		throw new Error(`Aggregated evaluations for prompt ${candidateId} not found`);
+		throw new Error(`Aggregated evaluations for candidate ${candidateId} not found`);
 	};
 	const findAnalysisByCandidateId = (iteration, candidateId) => {
 		return iteration.analyses.find((analysis) => {
@@ -11163,7 +11188,7 @@ function superRefine(fn, params) {
 	return /* @__PURE__ */ _superRefine(fn, params);
 }
 //#endregion
-//#region ../core/dist/rpe/rpe-analyzer/default-rpe-analyzer-types.js
+//#region ../core/dist/rpe/rpe-analyzer/single-prompt-rpe-analyzer-types.js
 var FrequencyLevelSchema = _enum([
 	"high",
 	"medium",
@@ -11265,9 +11290,9 @@ function sumRPEInsightsUsage(insights) {
 	return usage;
 }
 var InfoPanel_module_default = {
-	"info-panel": "_info-panel_1a9g1_1",
-	visible: "_visible_1a9g1_5",
-	hidden: "_hidden_1a9g1_11"
+	"info-panel": "_info-panel_1jq9m_1",
+	visible: "_visible_1jq9m_5",
+	hidden: "_hidden_1jq9m_11"
 };
 //#endregion
 //#region src/components/tools/InfoPanel.tsx
@@ -11333,7 +11358,7 @@ function InfoPanel(props) {
 	});
 }
 //#endregion
-//#region src/components/prompt-view/PromptView.tsx
+//#region src/components/candidate-view/PromptView.tsx
 function PromptView(props) {
 	const { rpeInsights } = props;
 	const { candidates, iterationHistory } = rpeInsights;
@@ -11377,9 +11402,9 @@ function PromptView(props) {
 			candidateAggregatedEvaluations: iteration.candidateAggregatedEvaluations
 		};
 	});
-	const promptDetailsData = selectedPromptId !== null ? getPromptDetailsData(candidates, iterationHistory, selectedPromptId) : void 0;
+	const promptDetailsData = selectedPromptId !== null ? getCandidateDetailsData(candidates, iterationHistory, selectedPromptId) : void 0;
 	return /* @__PURE__ */ u(S$1, { children: [
-		/* @__PURE__ */ u(PromptTree, {
+		/* @__PURE__ */ u(CandidateTree, {
 			candidates,
 			iterations: promptTreeIterations,
 			selectedCandidateId: selectedPromptId,
@@ -11387,7 +11412,7 @@ function PromptView(props) {
 			onSelectCandidateId: selectPromptId,
 			onBackgroundClick
 		}),
-		/* @__PURE__ */ u(PromptDetails, {
+		/* @__PURE__ */ u(CandidateDetails, {
 			data: promptDetailsData,
 			visible: detailsVisible,
 			onCloseClick
@@ -11415,7 +11440,7 @@ function loadRPEInsights() {
 R$1(/* @__PURE__ */ u(App, { rpeInsights: loadRPEInsights() }), document.getElementById("app"));
 //#endregion
 
-//# sourceMappingURL=index-IKtT_bgW.js.map</script>
+//# sourceMappingURL=index-BnhTI73X.js.map</script>
     <style rel="stylesheet" crossorigin>* {
   box-sizing: border-box;
 }
@@ -11456,10 +11481,10 @@ pre {
 ::-webkit-scrollbar-thumb:window-inactive {
   background: var(--muted);
 }:root {
-  --bg: #171413;
-  --bg-muted: #1c1918;
+  --bg: #111317;
+  --bg-muted: #181a20;
   --muted: #353130;
-  --text: #d9d9d8;
+  --text: #d2d4d9;
   --shadow: none;
   --border-radius: 8px;
   --border-highlighted: #b3b3b2;
@@ -11477,11 +11502,11 @@ html[data-theme=light] {
   --border-highlighted: #29395c;
   --red: #D2042D;
   --green: #009E60;
-}._prompt-tree_1692c_1 {
+}._candidate-tree_njqup_1 {
   --fill: var(--bg-muted);
   --stroke: var(--muted);
   --stroke-selected: var(--border-highlighted);
-}._prompt-box-foreign-object_1po55_1 {
+}._candidate-box-foreign-object_1ico9_1 {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -11491,36 +11516,36 @@ html[data-theme=light] {
   cursor: pointer;
   font-size: 0.84rem;
 }
-._prompt-box-foreign-object_1po55_1._muted_1po55_11 {
+._candidate-box-foreign-object_1ico9_1._muted_1ico9_11 {
   opacity: 0.25;
 }
-._prompt-box-foreign-object_1po55_1 ._prompt-box-info-properties_1po55_14 {
+._candidate-box-foreign-object_1ico9_1 ._candidate-box-info-properties_1ico9_14 {
   display: grid;
   grid-template-columns: auto 2rem;
   font-size: 0.72rem;
 }
-._prompt-box-foreign-object_1po55_1 ._prompt-box-score-name_1po55_19 {
+._candidate-box-foreign-object_1ico9_1 ._candidate-box-score-name_1ico9_19 {
   font-size: 0.72rem;
 }
-._prompt-box-foreign-object_1po55_1 ._prompt-box-score-value_1po55_22 {
+._candidate-box-foreign-object_1ico9_1 ._candidate-box-score-value_1ico9_22 {
   font-size: 1rem;
 }
-._prompt-box-foreign-object_1po55_1 ._prompt-box-score-value_1po55_22 {
+._candidate-box-foreign-object_1ico9_1 ._candidate-box-score-value_1ico9_22 {
   font-weight: bold;
   margin-top: -0.25rem;
   margin-bottom: 0.25rem;
 }
-._prompt-box-foreign-object_1po55_1 ._prompt-box-info-name_1po55_30 {
+._candidate-box-foreign-object_1ico9_1 ._candidate-box-info-name_1ico9_30 {
   text-align: right;
   padding-right: 0.25rem;
 }
-._prompt-box-foreign-object_1po55_1 ._prompt-box-info-value_1po55_34 {
+._candidate-box-foreign-object_1ico9_1 ._candidate-box-info-value_1ico9_34 {
   font-weight: bold;
 }
-._prompt-box-foreign-object_1po55_1 ._prompt-box-info-value-red_1po55_37 {
+._candidate-box-foreign-object_1ico9_1 ._candidate-box-info-value-red_1ico9_37 {
   color: var(--red);
 }
-._prompt-box-foreign-object_1po55_1 ._prompt-box-info-value-green_1po55_40 {
+._candidate-box-foreign-object_1ico9_1 ._candidate-box-info-value-green_1ico9_40 {
   color: var(--green);
 }._tag_u8n2g_1 {
   padding: 0.125rem 0.377rem;
@@ -11653,41 +11678,59 @@ html[data-theme=light] {
   background-color: var(--muted);
   padding: 0;
   margin: 0;
-}._prompt-aggregated-evaluation_1t63t_1 {
+}._candidate-aggregated-evaluation_z4upv_1 {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-._aggregated-score_1t63t_7 {
+._aggregated-score_z4upv_7 {
   margin-bottom: 1rem;
 }
 
-._status_1t63t_11 {
+._status_z4upv_11 {
   margin-left: 0.5rem;
 }
 
-._dataset-entry-key_1t63t_15 {
+._dataset-entry-key_z4upv_15 {
   font-weight: bold;
   font-size: 0.72rem;
-}._prompt-analysis_1665e_1 {
+}._candidate-analysis_1d4bo_1 {
   margin-top: 1rem;
-}._prompt-details-panel_13vdj_1 {
+}._candidate-module_1vddl_1 ._header_1vddl_1 {
+  margin-left: var(--border-radius);
+  margin-bottom: 0;
+}
+._candidate-module_1vddl_1 ._module_1vddl_5 {
+  max-height: 12rem;
+  font-size: 0.72rem;
+  border: 1px solid var(--muted);
+  border-radius: var(--border-radius);
+  padding: var(--border-radius);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+._candidate-module_1vddl_1 ._module-expanded_1vddl_14 {
+  max-height: 36rem;
+}
+._candidate-module_1vddl_1 pre {
+  margin-top: 0.25rem;
+}._candidate-details-panel_kt8uo_1 {
   left: 50%;
   transform: translate(-50%, -110%);
 }
-._prompt-details-panel_13vdj_1._visible_13vdj_5 {
+._candidate-details-panel_kt8uo_1._visible_kt8uo_5 {
   left: 50%;
   transform: translate(-50%, 0);
   transition: transform 340ms ease-out;
 }
-._prompt-details-panel_13vdj_1._hidden_13vdj_10 {
+._candidate-details-panel_kt8uo_1._hidden_kt8uo_10 {
   left: 50%;
   transition: transform 280ms ease-in;
   transform: translate(-50%, 110%);
 }
 
-._prompt-details-prompt_13vdj_16 {
+._candidate-details-prompt_kt8uo_16 {
   max-height: 12rem;
   font-size: 0.72rem;
   border: 1px solid var(--muted);
@@ -11697,7 +11740,7 @@ html[data-theme=light] {
   overflow-wrap: anywhere;
 }
 
-._prompt-details-prompt-expanded_13vdj_26 {
+._candidate-details-prompt-expanded_kt8uo_26 {
   max-height: 36rem;
 }._toolbar_17c56_1 {
   position: fixed;
@@ -11712,32 +11755,32 @@ html[data-theme=light] {
   background-color: var(--bg-muted);
   border-radius: 9999px;
   border: 1px solid var(--muted);
-}._info-panel_1a9g1_1 {
-  height: 32rem;
+}._info-panel_1jq9m_1 {
+  height: 64rem;
   max-height: 90vh;
 }
-._info-panel_1a9g1_1._visible_1a9g1_5 {
+._info-panel_1jq9m_1._visible_1jq9m_5 {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
   transition: transform 340ms ease-out;
 }
-._info-panel_1a9g1_1._hidden_1a9g1_11 {
+._info-panel_1jq9m_1._hidden_1jq9m_11 {
   left: 50%;
   top: 50%;
   transition: transform 280ms ease-in;
   transform: translate(-50%, 100vh);
 }
-._info-panel_1a9g1_1 p {
+._info-panel_1jq9m_1 p {
   margin-left: 1rem;
 }
-._info-panel_1a9g1_1 h1 {
+._info-panel_1jq9m_1 h1 {
   font-family: "Funnel Display", sans-serif;
   font-size: 1.25rem;
   font-weight: 500;
   line-height: 1;
 }
-._info-panel_1a9g1_1 h2 {
+._info-panel_1jq9m_1 h2 {
   font-family: "Funnel Display", sans-serif;
   font-size: 0.84rem;
 }/*$vite$:1*/</style>

@@ -1,2 +1,2 @@
 export * from './rpe-evaluator-types.js';
-export * from './judge-rpe-evaluator.js';
+export * from './single-prompt-judge-rpe-evaluator.js';

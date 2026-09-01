@@ -1,3 +1,3 @@
 export * from './rpe-candidate-generator-types.js';
-export * from './default-rpe-candidate-generator-types.js';
-export * from './default-rpe-candidate-generator.js';
+export * from './single-prompt-rpe-candidate-generator-types.js';
+export * from './single-prompt-rpe-candidate-generator.js';

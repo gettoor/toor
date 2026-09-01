@@ -1,8 +1,30 @@
 /**
+ * A module of a candidate.
+ * @category Reflective Prompt Evolution
+ */
+export interface RPECandidateModule {
+  /**
+   * Content of the module.
+   */
+  content: string;
+}
+
+/**
+ * A collection of candidate modules.
+ * @category Reflective Prompt Evolution
+ */
+export type RPECandidateModules = Record<string, RPECandidateModule>;
+
+/**
  * A candidate representation.
  * @category Reflective Prompt Evolution
  */
 export interface RPECandidate {
+  /**
+   * Unique identifier of the candidate.
+   */
+  candidateId: string;
+
   /**
    * Parents of the candidate. Used to create a tree of candidates.
    * There can be multiple parents when a new candidate is created from
@@ -11,14 +33,9 @@ export interface RPECandidate {
   parentCandidateIds?: string[];
 
   /**
-   * Candidate to evaluate.
+   * Candidate modules.
    */
-  candidate: string;
-
-  /**
-   * Unique identifier of the candidate.
-   */
-  candidateId: string;
+  modules: RPECandidateModules;
 }
 
 /**

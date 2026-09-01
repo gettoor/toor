@@ -1,2 +1,2 @@
 export * from './rpe-analyzer-types.js';
-export * from './default-rpe-analyzer.js';
+export * from './single-prompt-rpe-analyzer.js';

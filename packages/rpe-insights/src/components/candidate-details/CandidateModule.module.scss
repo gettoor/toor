@@ -1,0 +1,26 @@
+@use '../../styles/_includes.scss' as *;
+
+.candidate-module {
+  .header {
+    margin-left: var(--border-radius);
+    margin-bottom: 0;
+  }
+
+  .module {
+    max-height: 12rem;
+    @include font-small;
+    border: 1px solid var(--muted);
+    border-radius: var(--border-radius);
+    padding: var(--border-radius);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  .module-expanded {
+    max-height: 36rem;
+  }
+
+  pre {
+    margin-top: 0.25rem;
+  }
+}
