@@ -31,9 +31,14 @@ export async function optimize(
       }),
     },
     iterationHistory: [],
+    metadata: {},
   };
   let stopReason = '';
+
+  // initialize metadata
+  await input.initializeMetadata?.(state);
   
+  // run the RPE process
   while (true) {
     const iteration: RPEIterationInProgress = state.iteration;
     const iterationCandidates = iteration.candidateRefs.map(candidateRef => {
@@ -137,6 +142,9 @@ export async function optimize(
       stopReason = shouldStopAfterIteration.stopReason;
       break;
     }
+
+    // update metadata after iteration
+    await input.updateMetadataAfterIteration?.(state);
 
     state.iterationNo++;
     state.iteration = {

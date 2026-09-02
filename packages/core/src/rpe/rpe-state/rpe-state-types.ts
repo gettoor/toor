@@ -1,3 +1,4 @@
+import { RPEMetadata } from '../rpe-core/index.js';
 import { RPECandidate, RPECandidateRef } from '../rpe-candidate/index.js';
 import { RPEExecutorOutput } from '../rpe-executor/index.js';
 import { EvaluatorCandidateOutput } from '../evaluator-types.js';
@@ -94,4 +95,9 @@ export interface RPEState {
    * The history of iterations of the RPE process.
    */
   iterationHistory: RPEIteration[];
+
+  /**
+   * Metadata for the RPE process.
+   */
+  metadata: RPEMetadata;
 }

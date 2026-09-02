@@ -11,6 +11,12 @@ import { RPEState } from './rpe-state/index.js';
 import { RPEInsights } from './rpe-insights/index.js';
 
 /**
+ * Function to update the metadata of the RPE state.
+ * @category Reflective Prompt Evolution
+ */
+export type RPEUpdateMetadataFunc = (state: RPEState) => Promise<void>;
+
+/**
  * Reflective Prompt Evolution (RPE) settings and configuration.
  * @category Reflective Prompt Evolution
  */
@@ -105,6 +111,16 @@ export interface RPEInput {
    * Function to determine if the optimization should stop after an iteration.
    */
   stopAfterIteration: RPEStopFunc;
+
+  /**
+   * Function to initialize the metadata of the RPE state.
+   */
+  initializeMetadata?: RPEUpdateMetadataFunc;
+
+  /**
+   * Function to update the metadata of the RPE state after an iteration.
+   */
+  updateMetadataAfterIteration?: RPEUpdateMetadataFunc;
 }
 
 /**
