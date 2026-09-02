@@ -35,6 +35,11 @@ export type SinglePromptRPECandidateGeneratorOutput = z.infer<
 
 export interface SinglePromptRPECandidateGeneratorInput {
   /**
+   * Parallelism for the candidate generation.
+   */
+  parallelism?: number;
+
+  /**
    * Model provider to use for the candidate generator.
    * If not provided, the default model provider will be used.
    */

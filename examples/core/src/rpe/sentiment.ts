@@ -72,8 +72,8 @@ async function run(): Promise<void> {
         temperature: 0.0,
       },
     }),
-    candidateGeneratorParallelism: 8,
     candidateGenerator: singlePromptRPECandidateGenerator({
+      parallelism: 8,
       modelName: 'gemini:gemini-2.5-flash',
       modelParameters: {
         temperature: 0.0,

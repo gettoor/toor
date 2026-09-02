@@ -89,12 +89,6 @@ export interface RPEInput {
   analyzer: RPEAnalyzer;
 
   /**
-   * Number of concurrent candidate generators to use. Defaults to 1 that means
-   * that the candidate generators are run sequentially.
-   */
-  candidateGeneratorParallelism?: number;
-
-  /**
    * Candidate generator to use for the RPE. A candidate generator is responsible
    * for generating new candidates based on the aggregated evaluations
    * and analyses.

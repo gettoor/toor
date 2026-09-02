@@ -1,15 +1,28 @@
 import { generateText, Output } from 'ai';
 
 import { replacePlaceholders } from '../../string/index.js';
+import { InternalToorError, ToorError } from '../../errors/index.js';
 import { DistributionRange } from '../../math/index.js';
-import { MetricResult, buildModelCallSettings } from '../../llm/index.js';
-import { DefaultModelProvider } from '../../model-provider/index.js';
+import { runParallelBatchesOrThrow } from '../../concurrency/index.js';
+import {
+  MetricResult,
+  ModelParameters,
+  buildModelCallSettings,
+} from '../../llm/index.js';
+import {
+  DefaultModelProvider,
+  ModelProvider,
+} from '../../model-provider/index.js';
 import { modelParametersToRPEInfo } from '../rpe-info/index.js';
+import { findCandidateById, RPEState } from '../rpe-state/index.js';
 import {
   buildSinglePromptCandidateModules,
   requireSinglePromptCandidateModule,
+  RPECandidate,
 } from '../rpe-candidate/index.js';
 import { RPEEvaluatorOutput } from '../rpe-evaluator/rpe-evaluator-types.js';
+import { RPEAggregatorOutput } from '../rpe-aggregator/index.js';
+import { RPEAnalyzerOutput } from '../rpe-analyzer/index.js';
 import { 
   SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_PROMPT,
 } from './single-prompt-rpe-candidate-generator-prompt.js';
@@ -20,6 +33,9 @@ import {
   RPECandidateGeneratorOutput,
   RPECandidateGeneratorCandidate,
 } from './rpe-candidate-generator-types.js';
+import {
+  DEFAULT_SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_PARALLELISM,
+} from './single-prompt-rpe-candidate-generator-consts.js';
 import { 
   SinglePromptRPECandidateGeneratorInput,
   SinglePromptRPECandidateGeneratorOutputSchema,
@@ -36,71 +52,63 @@ import {
 export function singlePromptRPECandidateGenerator(
   input: SinglePromptRPECandidateGeneratorInput,
 ): RPECandidateGenerator {
-  const { modelName, modelParameters } = input;
+  const { modelName, modelParameters, parallelism } = input;
   const modelProvider = input.modelProvider ?? new DefaultModelProvider();
 
   return {
     run: async (
+      state: RPEState,
       input: RPECandidateGeneratorInput,
     ): Promise<RPECandidateGeneratorOutput> => {
-      const prompt = replacePlaceholders(
-        SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_PROMPT,
-        {
-          original_prompt: requireSinglePromptCandidateModule(
-            input.candidate.modules,
-          ),
-          aggregated_score: input.aggregation.aggregatedScore,
-          aggregated_metrics: aggregatedMetricsForPrompt(
-            input.aggregation.aggregatedMetrics ?? {},
-          ),
-          score_distribution: scoreDistributionForPrompt(
-            input.aggregation.scoreDistribution,
-          ),
-          strengths: input.analysis.strengths.join('\n'),
-          weaknesses: input.analysis.weaknesses.join('\n'),
-          recommendations: input.analysis.recommendations.join('\n'),
-          failure_patterns: input.analysis.failurePatterns.join('\n'),
-          passed_evaluations: explanationsForPrompt(
-            input.aggregation.passedEvaluations,
-          ),
-          failed_evaluations: explanationsForPrompt(
-            input.aggregation.failedEvaluations,
-          ),
-        },
-      );
+      const { iteration } = state;
+      const { aggregatedEvaluations, analyses } = iteration;
+      if (!aggregatedEvaluations) {
+        throw new InternalToorError(
+          `Aggregated evaluations not found during candidate generation`,
+        );
+      }
+      if (!analyses) {
+        throw new InternalToorError(
+          `Analyses not found during candidate generation`,
+        );
+      }
 
-      const model = await modelProvider.getModel(modelName);
-      const { output, usage } = await generateText({
-        model: model.model,
-        prompt: prompt.text,
-        ...buildModelCallSettings(modelParameters),
-        output: Output.object({
-          schema: SinglePromptRPECandidateGeneratorOutputSchema,
-        })
+      // tasks
+      const tasks = aggregatedEvaluations.map(async (aggregation, index) => {
+        const aggregationCandidateId = aggregation.candidateRef.candidateId;
+
+        // find analysis
+        const analysis = analyses.find(analysis => {
+          return analysis.candidateRef.candidateId === aggregationCandidateId;
+        });
+        if (!analysis) {
+          throw new InternalToorError(
+            `Analysis not found for candidate ` +
+            `${ToorError.quote(aggregationCandidateId)} ` +
+            `during candidate generation`,
+          );
+        }
+
+        // generate candidate
+        const newCandidateId = `i${state.iterationNo}p${index}`;
+        const candidate = await generateCandidate(
+          modelProvider,
+          modelName,
+          modelParameters,
+          findCandidateById(state, aggregationCandidateId),
+          newCandidateId,
+          aggregation,
+          analysis,
+        );
+        return candidate;
       });
 
-      const generatedCandidate: RPECandidateGeneratorCandidate = { 
-        candidate: {
-          modules: buildSinglePromptCandidateModules(output.prompt),
-          parentCandidateIds: [input.candidate.candidateId],
-        },
-        changes: output.changes.map(change => ({
-          description: change.description,
-          reasoning: change.reasoning,
-        })),
-        usage: {
-          modelUsage: [
-            {
-              modelName: model.name,
-              inputTokens: usage.inputTokens,
-              outputTokens: usage.outputTokens,
-            },
-          ],
-        },
-      };
-      return {
-        candidates: [generatedCandidate],
-      }
+      // run tasks in parallel
+      const outputs = await runParallelBatchesOrThrow(
+        tasks,
+        parallelism ?? DEFAULT_SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_PARALLELISM,
+      );
+      return { candidates: outputs.flat() };
     },
 
     getInfo: async (): Promise<RPECandidateGeneratorInfo> => {
@@ -117,6 +125,74 @@ export function singlePromptRPECandidateGenerator(
       };
     },
   };
+}
+
+async function generateCandidate(
+  modelProvider: ModelProvider,
+  modelName: string,
+  modelParameters: ModelParameters | undefined,
+  candidate: RPECandidate,
+  newCandidateId: string,
+  aggregation: RPEAggregatorOutput,
+  analysis: RPEAnalyzerOutput,
+): Promise<RPECandidateGeneratorCandidate> {
+  const prompt = replacePlaceholders(
+    SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_PROMPT,
+    {
+      original_prompt: requireSinglePromptCandidateModule(
+        candidate.modules,
+      ),
+      aggregated_score: aggregation.aggregatedScore,
+      aggregated_metrics: aggregatedMetricsForPrompt(
+        aggregation.aggregatedMetrics ?? {},
+      ),
+      score_distribution: scoreDistributionForPrompt(
+        aggregation.scoreDistribution,
+      ),
+      strengths: analysis.strengths.join('\n'),
+      weaknesses: analysis.weaknesses.join('\n'),
+      recommendations: analysis.recommendations.join('\n'),
+      failure_patterns: analysis.failurePatterns.join('\n'),
+      passed_evaluations: explanationsForPrompt(
+        aggregation.passedEvaluations,
+      ),
+      failed_evaluations: explanationsForPrompt(
+        aggregation.failedEvaluations,
+      ),
+    },
+  );
+
+  const model = await modelProvider.getModel(modelName);
+  const { output, usage } = await generateText({
+    model: model.model,
+    prompt: prompt.text,
+    ...buildModelCallSettings(modelParameters),
+    output: Output.object({
+      schema: SinglePromptRPECandidateGeneratorOutputSchema,
+    })
+  });
+
+  const generatedCandidate: RPECandidateGeneratorCandidate = {
+    candidate: {
+      candidateId: newCandidateId,
+      modules: buildSinglePromptCandidateModules(output.prompt),
+      parentCandidateIds: [candidate.candidateId],
+    },
+    changes: output.changes.map(change => ({
+      description: change.description,
+      reasoning: change.reasoning,
+    })),
+    usage: {
+      modelUsage: [
+        {
+          modelName: model.name,
+          inputTokens: usage.inputTokens,
+          outputTokens: usage.outputTokens,
+        },
+      ],
+    },
+  };
+  return generatedCandidate;
 }
 
 function aggregatedMetricsForPrompt(

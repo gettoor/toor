@@ -1,29 +1,13 @@
 import { RPEProperties } from '../rpe-info/index.js';
 import { RPECandidate } from '../rpe-candidate/index.js';
-import { RPEAggregatorOutput } from '../rpe-aggregator/index.js';
-import { RPEAnalyzerOutput } from '../rpe-analyzer/index.js';
+import { RPEState } from '../rpe-state/index.js';
 import { LLMUsage } from '../../llm/index.js';
 
 /**
  * Input for the RPE candidate generator.
  * @category Reflective Prompt Evolution
  */
-export interface RPECandidateGeneratorInput {
-  /**
-   * Original candidate.
-   */
-  candidate: RPECandidate;
-
-  /**
-   * Aggregation of the evaluations.
-   */
-  aggregation: RPEAggregatorOutput;
-
-  /**
-   * Analysis of the candidate.
-   */
-  analysis: RPEAnalyzerOutput;
-}
+export interface RPECandidateGeneratorInput {}
 
 /**
  * Change made to the candidate.
@@ -49,7 +33,7 @@ export interface RPECandidateGeneratorCandidate {
   /**
    * New candidate.
    */
-  candidate: Omit<RPECandidate, 'candidateId'>;
+  candidate: RPECandidate;
 
   /**
    * Changes made to the candidate.
@@ -100,7 +84,10 @@ export interface RPECandidateGenerator {
    * @param input - Input for the candidate generator.
    * @returns Candidate generator output.
    */
-  run(input: RPECandidateGeneratorInput): Promise<RPECandidateGeneratorOutput>;
+  run(
+    state: RPEState,
+    input: RPECandidateGeneratorInput,
+  ): Promise<RPECandidateGeneratorOutput>;
 
   /**
    * Get the info of the candidate generator.

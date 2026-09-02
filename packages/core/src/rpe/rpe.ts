@@ -11,7 +11,7 @@ import { generateResponses } from './executor.js';
 import { evaluateCandidateResponses } from './evaluator.js';
 import { aggregateEvaluations } from './aggregator.js';
 import { analyzeAggregatedEvaluations } from './analyzer.js';
-import { generatePrompts } from './candidate-generator.js';
+import { generateCandidates } from './candidate-generator.js';
 
 /**
  * Runs the Reflective Prompt Evolution (RPE) process.
@@ -83,12 +83,9 @@ export async function optimize(
     iteration.analyses = analyses;
 
     // generate candidates
-    const { candidates } = await generatePrompts(
+    const { candidates } = await generateCandidates(
       state,
-      aggregatedEvaluations,
-      analyses,
       input.candidateGenerator,
-      input.candidateGeneratorParallelism,
     );
     iteration.candidates = candidates.map(candidate => ({
       candidateRef: candidateRefFromCandidate(candidate.candidate),
