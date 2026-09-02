@@ -8,6 +8,7 @@ import {
   removeNewlines,
 } from '../../llm/index.js';
 import { DefaultModelProvider } from '../../model-provider/index.js';
+import { responseToString } from '../rpe-core/index.js';
 import { modelParametersToRPEInfo } from '../rpe-info/index.js';
 import { requireSinglePromptCandidateModule } from '../rpe-candidate/index.js';
 import { findCandidateById, RPEState } from '../rpe-state/index.js';
@@ -163,13 +164,19 @@ function failedExamplesForPrompt(
   return evaluations
     .slice(0, count)
     .map(({ response, datasetEntry, reasoning }, index) => {
+      const no = `${index + 1}.`;
+
       const expectedResponse = datasetEntry.expectedResponse;
-      const no = `${index + 1}.`
-      const expectedResponseEntry = expectedResponse
-        ? `   **Expected response**: ${removeNewlines(expectedResponse)}`
+      const expectedResponseString = expectedResponse
+        ? responseToString(expectedResponse)
         : '';
+      const expectedResponseEntry = expectedResponse
+        ? `   **Expected response**: ${expectedResponseString}`
+        : '';
+      
+      const responseString = removeNewlines(responseToString(response));
       return [
-        `${no} **Response from model**: ${removeNewlines(response)}`,
+        `${no} **Response from model**: ${responseString}`,
         expectedResponseEntry,
         `   **Explanation from evaluator**: ${removeNewlines(reasoning)}`,
       ]

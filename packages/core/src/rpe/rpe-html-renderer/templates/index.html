@@ -4914,320 +4914,6 @@ function Header(props) {
 		})]
 	});
 }
-var Separator_module_default = { separator: "_separator_6czns_1" };
-//#endregion
-//#region src/components/candidate-details/Separator.tsx
-function Separator() {
-	return /* @__PURE__ */ u("div", { className: Separator_module_default["separator"] });
-}
-//#endregion
-//#region src/string/case.ts
-/**
-* Convert a camel case string to a sentence case string.
-* @param value - String to convert.
-* @returns Converted string.
-*/
-function camelCaseToSentenceCase(value) {
-	if (!value) return value;
-	const result = value.replace(/([a-z0-9])([A-Z])/g, "$1 $2").replace(/([A-Z])([A-Z][a-z])/g, "$1 $2").toLowerCase();
-	return result.charAt(0).toUpperCase() + result.slice(1);
-}
-/**
-* Capitalize the first letter of a string.
-* @param value - String to capitalize.
-* @returns Capitalized string.
-*/
-function capitalize(value) {
-	if (!value) return value;
-	return value.charAt(0).toUpperCase() + value.slice(1);
-}
-//#endregion
-//#region src/components/candidate-details/Metrics.tsx
-function Metrics(props) {
-	return /* @__PURE__ */ u(Table, {
-		header: ["Metric", "Score"],
-		rows: Object.keys(props.metrics).sort().map((name) => {
-			return [capitalize(name), props.metrics[name].normalizedScore];
-		})
-	});
-}
-var CandidateAggregatedEvaluation_module_default = {
-	"candidate-aggregated-evaluation": "_candidate-aggregated-evaluation_z4upv_1",
-	"aggregated-score": "_aggregated-score_z4upv_7",
-	status: "_status_z4upv_11",
-	"dataset-entry-key": "_dataset-entry-key_z4upv_15"
-};
-//#endregion
-//#region src/components/candidate-details/CandidateAggregatedEvaluation.tsx
-function CandidateAggregatedEvaluation(props) {
-	const { aggregatedEvaluation } = props;
-	const renderDatasetEntry = (datasetEntry) => {
-		if (datasetEntry.vars == void 0) return;
-		const keys = Object.keys(datasetEntry.vars).sort();
-		return /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("h2", { children: "Dataset entry" }), /* @__PURE__ */ u("p", { children: keys.map((key) => {
-			const value = datasetEntry.vars[key];
-			const valueString = typeof value === "object" ? JSON.stringify(value) : value.toString();
-			return /* @__PURE__ */ u("div", { children: [
-				/* @__PURE__ */ u("code", {
-					className: CandidateAggregatedEvaluation_module_default["dataset-entry-key"],
-					children: key
-				}),
-				"\xA0",
-				valueString
-			] }, key);
-		}) })] });
-	};
-	const renderEvaluation = (index, status, evaluation) => {
-		const key = `${evaluation.candidateRef.candidateId}e${index}`;
-		const expectedResponse = evaluation.datasetEntry.expectedResponse;
-		return /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u(Separator, {}), /* @__PURE__ */ u("div", { children: [
-			/* @__PURE__ */ u("div", { children: [
-				"Score:\xA0",
-				/* @__PURE__ */ u(Score, { score: evaluation.score }),
-				/* @__PURE__ */ u(Tag, {
-					label: status,
-					color: status === "passed" ? "green" : "red",
-					className: CandidateAggregatedEvaluation_module_default["status"]
-				})
-			] }),
-			renderDatasetEntry(evaluation.datasetEntry),
-			/* @__PURE__ */ u("h2", { children: "Response" }),
-			/* @__PURE__ */ u("div", { children: /* @__PURE__ */ u(Markdown, { content: evaluation.response }) }),
-			expectedResponse && /* @__PURE__ */ u("div", { children: [/* @__PURE__ */ u("h2", { children: "Expected response" }), /* @__PURE__ */ u(Markdown, { content: expectedResponse })] }),
-			/* @__PURE__ */ u("h2", { children: "Reasoning" }),
-			/* @__PURE__ */ u("div", { children: /* @__PURE__ */ u(Markdown, { content: evaluation.reasoning }) }),
-			evaluation.metrics && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("h2", { children: "Metrics" }), /* @__PURE__ */ u("p", { children: /* @__PURE__ */ u(Metrics, { metrics: evaluation.metrics }) })] })
-		] }, key)] });
-	};
-	const renderEvaluations = () => {
-		const passedEvaluations = aggregatedEvaluation.passedEvaluations.map((evaluation, index) => {
-			return renderEvaluation(index, "passed", evaluation);
-		});
-		const failedEvaluations = aggregatedEvaluation.failedEvaluations.map((evaluation, index) => {
-			return renderEvaluation(index, "failed", evaluation);
-		});
-		return [...passedEvaluations, ...failedEvaluations];
-	};
-	return /* @__PURE__ */ u("div", {
-		className: CandidateAggregatedEvaluation_module_default["candidate-aggregated-evaluation"],
-		children: [/* @__PURE__ */ u("div", {
-			className: CandidateAggregatedEvaluation_module_default["aggregated-score"],
-			children: [
-				"Aggregated score:\xA0",
-				/* @__PURE__ */ u(Score, { score: aggregatedEvaluation.aggregatedScore }),
-				aggregatedEvaluation.aggregatedMetrics && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("h2", { children: "Aggregated metrics" }), /* @__PURE__ */ u("p", { children: /* @__PURE__ */ u(Metrics, { metrics: aggregatedEvaluation.aggregatedMetrics }) })] })
-			]
-		}), renderEvaluations()]
-	});
-}
-//#endregion
-//#region src/components/candidate-details/CandidateAnalysis.module.scss
-var CandidateAnalysis_module_default = { "candidate-analysis": "_candidate-analysis_1d4bo_1" };
-//#endregion
-//#region src/components/candidate-details/CandidateAnalysis.tsx
-function CandidateAnalysis(props) {
-	const renderList = (list) => {
-		return /* @__PURE__ */ u("ul", { children: list.map((item, index) => /* @__PURE__ */ u("li", { children: item }, index)) });
-	};
-	return /* @__PURE__ */ u("div", {
-		className: CandidateAnalysis_module_default["candidate-analysis"],
-		children: [
-			/* @__PURE__ */ u("h2", { children: "Strengths" }),
-			renderList(props.analysis.strengths),
-			/* @__PURE__ */ u("h2", { children: "Weaknesses" }),
-			renderList(props.analysis.weaknesses),
-			/* @__PURE__ */ u("h2", { children: "Recommendations" }),
-			renderList(props.analysis.recommendations),
-			/* @__PURE__ */ u("h2", { children: "Failure Patterns" }),
-			renderList(props.analysis.failurePatterns)
-		]
-	});
-}
-//#endregion
-//#region src/components/candidate-details/CandidateChanges.tsx
-function CandidateChanges(props) {
-	const { candidateId, changes } = props;
-	const renderChange = (index, change) => {
-		const key = `${candidateId}c${index}`;
-		return /* @__PURE__ */ u(S$1, { children: [index > 0 && /* @__PURE__ */ u(Separator, {}), /* @__PURE__ */ u("div", { children: [
-			/* @__PURE__ */ u("h2", { children: "Change" }),
-			/* @__PURE__ */ u("div", { children: /* @__PURE__ */ u(Markdown, { content: change.description }) }),
-			/* @__PURE__ */ u("h2", { children: "Reasoning" }),
-			/* @__PURE__ */ u("div", { children: /* @__PURE__ */ u(Markdown, { content: change.reasoning }) })
-		] }, key)] });
-	};
-	const renderChanges = () => {
-		return changes.map((change, index) => renderChange(index, change));
-	};
-	return /* @__PURE__ */ u("div", { children: renderChanges() });
-}
-var CandidateModule_module_default = {
-	"candidate-module": "_candidate-module_1vddl_1",
-	header: "_header_1vddl_1",
-	module: "_module_1vddl_5",
-	"module-expanded": "_module-expanded_1vddl_14"
-};
-//#endregion
-//#region src/components/candidate-details/CandidateModule.tsx
-function CandidateModule(props) {
-	const { name, module } = props;
-	const [expanded, setExpanded] = d$1(false);
-	const onExpandClick = () => {
-		setExpanded(!expanded);
-	};
-	const moduleClassName = clsx(CandidateModule_module_default["module"], { [CandidateModule_module_default["module-expanded"]]: expanded });
-	const expandIconName = expanded ? "unfold_less" : "unfold_more";
-	return /* @__PURE__ */ u("div", {
-		className: CandidateModule_module_default["candidate-module"],
-		children: [/* @__PURE__ */ u(Header, {
-			title: camelCaseToSentenceCase(name),
-			level: 2,
-			className: CandidateModule_module_default["header"],
-			children: /* @__PURE__ */ u(IconButton, {
-				name: expandIconName,
-				title: "Expand/collapse module",
-				onClick: onExpandClick
-			})
-		}), /* @__PURE__ */ u("pre", {
-			className: moduleClassName,
-			children: module
-		})]
-	});
-}
-var CandidateDetails_module_default = {
-	"candidate-details-panel": "_candidate-details-panel_kt8uo_1",
-	visible: "_visible_kt8uo_5",
-	hidden: "_hidden_kt8uo_10",
-	"candidate-details-prompt": "_candidate-details-prompt_kt8uo_16",
-	"candidate-details-prompt-expanded": "_candidate-details-prompt-expanded_kt8uo_26"
-};
-//#endregion
-//#region src/components/candidate-details/CandidateDetails.tsx
-function CandidateDetails(props) {
-	const { data, visible, onCloseClick } = props;
-	const hasData = !!data;
-	const renderModules = () => {
-		return Object.keys(data?.candidate.modules || {}).sort().map((name) => {
-			const module = data?.candidate.modules[name];
-			return /* @__PURE__ */ u(CandidateModule, {
-				name,
-				module: module.content
-			}, name);
-		});
-	};
-	return /* @__PURE__ */ u(Panel, {
-		className: clsx(CandidateDetails_module_default["candidate-details-panel"], {
-			[CandidateDetails_module_default.visible]: visible,
-			[CandidateDetails_module_default.hidden]: !visible
-		}),
-		title: "Candidate details",
-		onCloseClick,
-		children: hasData && /* @__PURE__ */ u(S$1, { children: [
-			/* @__PURE__ */ u(Header, { title: "Modules" }),
-			renderModules(),
-			data?.candidateChanges && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u(Header, { title: "Candidate Changes" }), /* @__PURE__ */ u(CandidateChanges, {
-				candidateId: data.candidate.candidateId,
-				changes: data.candidateChanges
-			})] }),
-			/* @__PURE__ */ u(Header, { title: "Evaluations" }),
-			/* @__PURE__ */ u(CandidateAggregatedEvaluation, { aggregatedEvaluation: data.aggregatedEvaluation }),
-			data.analysis && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u(Header, { title: "Analysis" }), /* @__PURE__ */ u(CandidateAnalysis, { analysis: data.analysis })] })
-		] })
-	});
-}
-//#endregion
-//#region src/components/candidate-view/candidate-view-utils.ts
-function getCandidateDetailsData(candidates, iterations, selectedCandidateId) {
-	if (selectedCandidateId === null) return;
-	const findCandidateById = (candidateId) => {
-		const candidate = candidates.find((candidate) => {
-			return candidate.candidateId === candidateId;
-		});
-		if (candidate === void 0) throw new Error(`Candidate ${candidateId} not found`);
-		return candidate;
-	};
-	const findAggregatedEvaluationByCandidateId = (iteration, candidateId) => {
-		const { aggregatedEvaluations } = iteration;
-		const aggregatedEvaluation = aggregatedEvaluations.find((aggregatedEvaluation) => {
-			return aggregatedEvaluation.candidateRef.candidateId === candidateId;
-		});
-		if (aggregatedEvaluation !== void 0) return aggregatedEvaluation;
-		const { candidateAggregatedEvaluations } = iteration;
-		const candidateAggregatedEvaluation = candidateAggregatedEvaluations.find((valuation) => {
-			return valuation.candidateRef.candidateId === candidateId;
-		});
-		if (candidateAggregatedEvaluation !== void 0) return candidateAggregatedEvaluation;
-		throw new Error(`Aggregated evaluations for candidate ${candidateId} not found`);
-	};
-	const findAnalysisByCandidateId = (iteration, candidateId) => {
-		return iteration.analyses.find((analysis) => {
-			return analysis.candidateRef.candidateId === candidateId;
-		});
-	};
-	const firstIteration = iterations[0];
-	const seedCandidateRef = firstIteration.candidateRefs.find((candidateRef) => {
-		return candidateRef.candidateId === selectedCandidateId;
-	});
-	if (seedCandidateRef !== void 0) return {
-		candidate: findCandidateById(seedCandidateRef.candidateId),
-		aggregatedEvaluation: findAggregatedEvaluationByCandidateId(firstIteration, selectedCandidateId),
-		analysis: findAnalysisByCandidateId(firstIteration, selectedCandidateId)
-	};
-	let data;
-	for (const iteration of iterations) {
-		const candidate = iteration.candidates.find((candidate) => {
-			return candidate.candidateRef.candidateId === selectedCandidateId;
-		});
-		if (candidate !== void 0) {
-			data = {
-				candidate: findCandidateById(candidate.candidateRef.candidateId),
-				candidateChanges: candidate.changes,
-				aggregatedEvaluation: findAggregatedEvaluationByCandidateId(iteration, selectedCandidateId),
-				analysis: findAnalysisByCandidateId(iteration, selectedCandidateId)
-			};
-			break;
-		}
-	}
-	if (prompt === void 0) return;
-	return data;
-}
-//#endregion
-//#region src/components/tools/ThemeSwitch.module.scss
-var ThemeSwitch_module_default = {};
-//#endregion
-//#region src/components/tools/ThemeSwitch.tsx
-function ThemeSwitch() {
-	const [theme, setTheme] = d$1("light");
-	const iconName = theme === "dark" ? "bedtime" : "sunny";
-	const toggleTheme = () => {
-		setTheme(theme === "light" ? "dark" : "light");
-		document.documentElement.setAttribute("data-theme", theme);
-	};
-	return /* @__PURE__ */ u(IconButton, {
-		className: ThemeSwitch_module_default["theme-switch"],
-		name: iconName,
-		title: "Theme Switch",
-		onClick: toggleTheme
-	});
-}
-//#endregion
-//#region src/components/tools/Info.tsx
-function Info(props) {
-	return /* @__PURE__ */ u(IconButton, {
-		name: "info",
-		title: "Info",
-		onClick: props.onClick
-	});
-}
-var Toolbar_module_default = { toolbar: "_toolbar_17c56_1" };
-//#endregion
-//#region src/components/tools/Toolbar.tsx
-function Toolbar(props) {
-	return /* @__PURE__ */ u("div", {
-		className: Toolbar_module_default["toolbar"],
-		children: [/* @__PURE__ */ u(ThemeSwitch, {}), /* @__PURE__ */ u(Info, { onClick: props.onInfoClick })]
-	});
-}
 //#endregion
 //#region ../../node_modules/.pnpm/yaml@2.9.0/node_modules/yaml/browser/dist/nodes/identity.js
 var ALIAS = Symbol.for("yaml.alias");
@@ -5618,6 +5304,51 @@ function anchorIsValid(anchor) {
 		throw new Error(msg);
 	}
 	return true;
+}
+function anchorNames(root) {
+	const anchors = /* @__PURE__ */ new Set();
+	visit$1(root, { Value(_key, node) {
+		if (node.anchor) anchors.add(node.anchor);
+	} });
+	return anchors;
+}
+/** Find a new anchor name with the given `prefix` and a one-indexed suffix. */
+function findNewAnchor(prefix, exclude) {
+	for (let i = 1;; ++i) {
+		const name = `${prefix}${i}`;
+		if (!exclude.has(name)) return name;
+	}
+}
+function createNodeAnchors(doc, prefix) {
+	const aliasObjects = [];
+	const sourceObjects = /* @__PURE__ */ new Map();
+	let prevAnchors = null;
+	return {
+		onAnchor: (source) => {
+			aliasObjects.push(source);
+			prevAnchors ?? (prevAnchors = anchorNames(doc));
+			const anchor = findNewAnchor(prefix, prevAnchors);
+			prevAnchors.add(anchor);
+			return anchor;
+		},
+		/**
+		* With circular references, the source node is only resolved after all
+		* of its child nodes are. This is why anchors are set only after all of
+		* the nodes have been created.
+		*/
+		setAnchors: () => {
+			for (const source of aliasObjects) {
+				const ref = sourceObjects.get(source);
+				if (typeof ref === "object" && ref.anchor && (isScalar(ref.node) || isCollection(ref.node))) ref.node.anchor = ref.anchor;
+				else {
+					const error = /* @__PURE__ */ new Error("Failed to resolve repeated object (this should not happen)");
+					error.source = source;
+					throw error;
+				}
+			}
+		},
+		sourceObjects
+	};
 }
 //#endregion
 //#region ../../node_modules/.pnpm/yaml@2.9.0/node_modules/yaml/browser/dist/doc/applyReviver.js
@@ -6423,7 +6154,7 @@ function stringifyProps(node, tagObj, { anchors, doc }) {
 	if (tag) props.push(doc.directives.tagString(tag));
 	return props.join(" ");
 }
-function stringify(item, ctx, onComment, onChompKeep) {
+function stringify$1(item, ctx, onComment, onChompKeep) {
 	if (isPair(item)) return item.toString(ctx, onComment, onChompKeep);
 	if (isAlias(item)) {
 		if (ctx.doc.directives) return item.toString(ctx);
@@ -6460,7 +6191,7 @@ function stringifyPair({ key, value }, ctx, onComment, onChompKeep) {
 	});
 	let keyCommentDone = false;
 	let chompKeep = false;
-	let str = stringify(key, ctx, () => keyCommentDone = true, () => chompKeep = true);
+	let str = stringify$1(key, ctx, () => keyCommentDone = true, () => chompKeep = true);
 	if (!explicitKey && !ctx.inFlow && str.length > 1024) {
 		if (simpleKeys) throw new Error("With simple keys, single line scalar must not span more than 1024 characters");
 		explicitKey = true;
@@ -6500,7 +6231,7 @@ function stringifyPair({ key, value }, ctx, onComment, onChompKeep) {
 	chompKeep = false;
 	if (!indentSeq && indentStep.length >= 2 && !ctx.inFlow && !explicitKey && isSeq(value) && !value.flow && !value.tag && !value.anchor) ctx.indent = ctx.indent.substring(2);
 	let valueCommentDone = false;
-	const valueStr = stringify(value, ctx, () => valueCommentDone = true, () => chompKeep = true);
+	const valueStr = stringify$1(value, ctx, () => valueCommentDone = true, () => chompKeep = true);
 	let ws = " ";
 	if (keyComment || vsb || vcb) {
 		ws = vsb ? "\n" : "";
@@ -6669,7 +6400,7 @@ function stringifyBlockCollection({ comment, items }, ctx, { blockItemPrefix, fl
 			}
 		}
 		chompKeep = false;
-		let str = stringify(item, itemCtx, () => comment = null, () => chompKeep = true);
+		let str = stringify$1(item, itemCtx, () => comment = null, () => chompKeep = true);
 		if (comment) str += lineComment(str, itemIndent, commentString(comment));
 		if (chompKeep && comment) chompKeep = false;
 		lines.push(blockItemPrefix + str);
@@ -6721,7 +6452,7 @@ function stringifyFlowCollection({ items }, ctx, { flowChars, itemIndent }) {
 			} else if (item.value == null && ik?.comment) comment = ik.comment;
 		}
 		if (comment) reqNewline = true;
-		let str = stringify(item, itemCtx, () => comment = null);
+		let str = stringify$1(item, itemCtx, () => comment = null);
 		reqNewline || (reqNewline = lines.length > linesAtValue || str.includes("\n"));
 		if (i < items.length - 1) str += ",";
 		else if (ctx.options.trailingComma) {
@@ -6976,8 +6707,149 @@ var seq = {
 	createNode: (schema, obj, ctx) => YAMLSeq.from(schema, obj, ctx)
 };
 //#endregion
+//#region ../../node_modules/.pnpm/yaml@2.9.0/node_modules/yaml/browser/dist/schema/common/string.js
+var string$2 = {
+	identify: (value) => typeof value === "string",
+	default: true,
+	tag: "tag:yaml.org,2002:str",
+	resolve: (str) => str,
+	stringify(item, ctx, onComment, onChompKeep) {
+		ctx = Object.assign({ actualString: true }, ctx);
+		return stringifyString(item, ctx, onComment, onChompKeep);
+	}
+};
+//#endregion
+//#region ../../node_modules/.pnpm/yaml@2.9.0/node_modules/yaml/browser/dist/schema/common/null.js
+var nullTag = {
+	identify: (value) => value == null,
+	createNode: () => new Scalar(null),
+	default: true,
+	tag: "tag:yaml.org,2002:null",
+	test: /^(?:~|[Nn]ull|NULL)?$/,
+	resolve: () => new Scalar(null),
+	stringify: ({ source }, ctx) => typeof source === "string" && nullTag.test.test(source) ? source : ctx.options.nullStr
+};
+//#endregion
+//#region ../../node_modules/.pnpm/yaml@2.9.0/node_modules/yaml/browser/dist/schema/core/bool.js
+var boolTag = {
+	identify: (value) => typeof value === "boolean",
+	default: true,
+	tag: "tag:yaml.org,2002:bool",
+	test: /^(?:[Tt]rue|TRUE|[Ff]alse|FALSE)$/,
+	resolve: (str) => new Scalar(str[0] === "t" || str[0] === "T"),
+	stringify({ source, value }, ctx) {
+		if (source && boolTag.test.test(source)) {
+			if (value === (source[0] === "t" || source[0] === "T")) return source;
+		}
+		return value ? ctx.options.trueStr : ctx.options.falseStr;
+	}
+};
+//#endregion
+//#region ../../node_modules/.pnpm/yaml@2.9.0/node_modules/yaml/browser/dist/stringify/stringifyNumber.js
+function stringifyNumber({ format, minFractionDigits, tag, value }) {
+	if (typeof value === "bigint") return String(value);
+	const num = typeof value === "number" ? value : Number(value);
+	if (!isFinite(num)) return isNaN(num) ? ".nan" : num < 0 ? "-.inf" : ".inf";
+	let n = Object.is(value, -0) ? "-0" : JSON.stringify(value);
+	if (!format && minFractionDigits && (!tag || tag === "tag:yaml.org,2002:float") && /^-?\d/.test(n) && !n.includes("e")) {
+		let i = n.indexOf(".");
+		if (i < 0) {
+			i = n.length;
+			n += ".";
+		}
+		let d = minFractionDigits - (n.length - i - 1);
+		while (d-- > 0) n += "0";
+	}
+	return n;
+}
+//#endregion
+//#region ../../node_modules/.pnpm/yaml@2.9.0/node_modules/yaml/browser/dist/schema/core/float.js
+var floatNaN$1 = {
+	identify: (value) => typeof value === "number",
+	default: true,
+	tag: "tag:yaml.org,2002:float",
+	test: /^(?:[-+]?\.(?:inf|Inf|INF)|\.nan|\.NaN|\.NAN)$/,
+	resolve: (str) => str.slice(-3).toLowerCase() === "nan" ? NaN : str[0] === "-" ? Number.NEGATIVE_INFINITY : Number.POSITIVE_INFINITY,
+	stringify: stringifyNumber
+};
+var floatExp$1 = {
+	identify: (value) => typeof value === "number",
+	default: true,
+	tag: "tag:yaml.org,2002:float",
+	format: "EXP",
+	test: /^[-+]?(?:\.[0-9]+|[0-9]+(?:\.[0-9]*)?)[eE][-+]?[0-9]+$/,
+	resolve: (str) => parseFloat(str),
+	stringify(node) {
+		const num = Number(node.value);
+		return isFinite(num) ? num.toExponential() : stringifyNumber(node);
+	}
+};
+var float$1 = {
+	identify: (value) => typeof value === "number",
+	default: true,
+	tag: "tag:yaml.org,2002:float",
+	test: /^[-+]?(?:\.[0-9]+|[0-9]+\.[0-9]*)$/,
+	resolve(str) {
+		const node = new Scalar(parseFloat(str));
+		const dot = str.indexOf(".");
+		if (dot !== -1 && str[str.length - 1] === "0") node.minFractionDigits = str.length - dot - 1;
+		return node;
+	},
+	stringify: stringifyNumber
+};
+//#endregion
+//#region ../../node_modules/.pnpm/yaml@2.9.0/node_modules/yaml/browser/dist/schema/core/int.js
+var intIdentify$2 = (value) => typeof value === "bigint" || Number.isInteger(value);
+var intResolve$1 = (str, offset, radix, { intAsBigInt }) => intAsBigInt ? BigInt(str) : parseInt(str.substring(offset), radix);
+function intStringify$1(node, radix, prefix) {
+	const { value } = node;
+	if (intIdentify$2(value) && value >= 0) return prefix + value.toString(radix);
+	return stringifyNumber(node);
+}
+var intOct$1 = {
+	identify: (value) => intIdentify$2(value) && value >= 0,
+	default: true,
+	tag: "tag:yaml.org,2002:int",
+	format: "OCT",
+	test: /^0o[0-7]+$/,
+	resolve: (str, _onError, opt) => intResolve$1(str, 2, 8, opt),
+	stringify: (node) => intStringify$1(node, 8, "0o")
+};
+var int$2 = {
+	identify: intIdentify$2,
+	default: true,
+	tag: "tag:yaml.org,2002:int",
+	test: /^[-+]?[0-9]+$/,
+	resolve: (str, _onError, opt) => intResolve$1(str, 0, 10, opt),
+	stringify: stringifyNumber
+};
+var intHex$1 = {
+	identify: (value) => intIdentify$2(value) && value >= 0,
+	default: true,
+	tag: "tag:yaml.org,2002:int",
+	format: "HEX",
+	test: /^0x[0-9a-fA-F]+$/,
+	resolve: (str, _onError, opt) => intResolve$1(str, 2, 16, opt),
+	stringify: (node) => intStringify$1(node, 16, "0x")
+};
+//#endregion
+//#region ../../node_modules/.pnpm/yaml@2.9.0/node_modules/yaml/browser/dist/schema/core/schema.js
+var schema$2 = [
+	map,
+	seq,
+	string$2,
+	nullTag,
+	boolTag,
+	intOct$1,
+	int$2,
+	intHex$1,
+	floatNaN$1,
+	floatExp$1,
+	float$1
+];
+//#endregion
 //#region ../../node_modules/.pnpm/yaml@2.9.0/node_modules/yaml/browser/dist/schema/json/schema.js
-function intIdentify(value) {
+function intIdentify$1(value) {
 	return typeof value === "bigint" || Number.isInteger(value);
 }
 var stringifyJSON = ({ value }) => JSON.stringify(value);
@@ -7007,12 +6879,12 @@ var jsonScalars = [
 		stringify: stringifyJSON
 	},
 	{
-		identify: intIdentify,
+		identify: intIdentify$1,
 		default: true,
 		tag: "tag:yaml.org,2002:int",
 		test: /^-?(?:0|[1-9][0-9]*)$/,
 		resolve: (str, _onError, { intAsBigInt }) => intAsBigInt ? BigInt(str) : parseInt(str, 10),
-		stringify: ({ value }) => intIdentify(value) ? value.toString() : JSON.stringify(value)
+		stringify: ({ value }) => intIdentify$1(value) ? value.toString() : JSON.stringify(value)
 	},
 	{
 		identify: (value) => typeof value === "number",
@@ -7023,7 +6895,7 @@ var jsonScalars = [
 		stringify: stringifyJSON
 	}
 ];
-[map, seq].concat(jsonScalars, {
+var schema$1 = [map, seq].concat(jsonScalars, {
 	default: true,
 	tag: "",
 	test: /^/,
@@ -7033,7 +6905,75 @@ var jsonScalars = [
 	}
 });
 //#endregion
+//#region ../../node_modules/.pnpm/yaml@2.9.0/node_modules/yaml/browser/dist/schema/yaml-1.1/binary.js
+var binary = {
+	identify: (value) => value instanceof Uint8Array,
+	default: false,
+	tag: "tag:yaml.org,2002:binary",
+	/**
+	* Returns a Buffer in node and an Uint8Array in browsers
+	*
+	* To use the resulting buffer as an image, you'll want to do something like:
+	*
+	*   const blob = new Blob([buffer], { type: 'image/jpeg' })
+	*   document.querySelector('#photo').src = URL.createObjectURL(blob)
+	*/
+	resolve(src, onError) {
+		if (typeof atob === "function") {
+			const str = atob(src.replace(/[\n\r]/g, ""));
+			const buffer = new Uint8Array(str.length);
+			for (let i = 0; i < str.length; ++i) buffer[i] = str.charCodeAt(i);
+			return buffer;
+		} else {
+			onError("This environment does not support reading binary tags; either Buffer or atob is required");
+			return src;
+		}
+	},
+	stringify({ comment, type, value }, ctx, onComment, onChompKeep) {
+		if (!value) return "";
+		const buf = value;
+		let str;
+		if (typeof btoa === "function") {
+			let s = "";
+			for (let i = 0; i < buf.length; ++i) s += String.fromCharCode(buf[i]);
+			str = btoa(s);
+		} else throw new Error("This environment does not support writing binary tags; either Buffer or btoa is required");
+		type ?? (type = Scalar.BLOCK_LITERAL);
+		if (type !== Scalar.QUOTE_DOUBLE) {
+			const lineWidth = Math.max(ctx.options.lineWidth - ctx.indent.length, ctx.options.minContentWidth);
+			const n = Math.ceil(str.length / lineWidth);
+			const lines = new Array(n);
+			for (let i = 0, o = 0; i < n; ++i, o += lineWidth) lines[i] = str.substr(o, lineWidth);
+			str = lines.join(type === Scalar.BLOCK_LITERAL ? "\n" : " ");
+		}
+		return stringifyString({
+			comment,
+			type,
+			value: str
+		}, ctx, onComment, onChompKeep);
+	}
+};
+//#endregion
 //#region ../../node_modules/.pnpm/yaml@2.9.0/node_modules/yaml/browser/dist/schema/yaml-1.1/pairs.js
+function resolvePairs(seq, onError) {
+	if (isSeq(seq)) for (let i = 0; i < seq.items.length; ++i) {
+		let item = seq.items[i];
+		if (isPair(item)) continue;
+		else if (isMap(item)) {
+			if (item.items.length > 1) onError("Each pair must have its own sequence indicator");
+			const pair = item.items[0] || new Pair(new Scalar(null));
+			if (item.commentBefore) pair.key.commentBefore = pair.key.commentBefore ? `${item.commentBefore}\n${pair.key.commentBefore}` : item.commentBefore;
+			if (item.comment) {
+				const cn = pair.value ?? pair.key;
+				cn.comment = cn.comment ? `${item.comment}\n${cn.comment}` : item.comment;
+			}
+			item = pair;
+		}
+		seq.items[i] = isPair(item) ? item : new Pair(item);
+	}
+	else onError("Expected a sequence for this tag");
+	return seq;
+}
 function createPairs(schema, iterable, ctx) {
 	const { replacer } = ctx;
 	const pairs = new YAMLSeq(schema);
@@ -7058,6 +6998,13 @@ function createPairs(schema, iterable, ctx) {
 	}
 	return pairs;
 }
+var pairs = {
+	collection: "seq",
+	default: false,
+	tag: "tag:yaml.org,2002:pairs",
+	resolve: resolvePairs,
+	createNode: createPairs
+};
 //#endregion
 //#region ../../node_modules/.pnpm/yaml@2.9.0/node_modules/yaml/browser/dist/schema/yaml-1.1/omap.js
 var YAMLOMap = class YAMLOMap extends YAMLSeq {
@@ -7097,6 +7044,149 @@ var YAMLOMap = class YAMLOMap extends YAMLSeq {
 	}
 };
 YAMLOMap.tag = "tag:yaml.org,2002:omap";
+var omap = {
+	collection: "seq",
+	identify: (value) => value instanceof Map,
+	nodeClass: YAMLOMap,
+	default: false,
+	tag: "tag:yaml.org,2002:omap",
+	resolve(seq, onError) {
+		const pairs = resolvePairs(seq, onError);
+		const seenKeys = [];
+		for (const { key } of pairs.items) if (isScalar(key)) {
+			if (seenKeys.includes(key.value)) onError(`Ordered maps must not include duplicate keys: ${key.value}`);
+			else seenKeys.push(key.value);
+		}
+		return Object.assign(new YAMLOMap(), pairs);
+	},
+	createNode: (schema, iterable, ctx) => YAMLOMap.from(schema, iterable, ctx)
+};
+//#endregion
+//#region ../../node_modules/.pnpm/yaml@2.9.0/node_modules/yaml/browser/dist/schema/yaml-1.1/bool.js
+function boolStringify({ value, source }, ctx) {
+	if (source && (value ? trueTag : falseTag).test.test(source)) return source;
+	return value ? ctx.options.trueStr : ctx.options.falseStr;
+}
+var trueTag = {
+	identify: (value) => value === true,
+	default: true,
+	tag: "tag:yaml.org,2002:bool",
+	test: /^(?:Y|y|[Yy]es|YES|[Tt]rue|TRUE|[Oo]n|ON)$/,
+	resolve: () => new Scalar(true),
+	stringify: boolStringify
+};
+var falseTag = {
+	identify: (value) => value === false,
+	default: true,
+	tag: "tag:yaml.org,2002:bool",
+	test: /^(?:N|n|[Nn]o|NO|[Ff]alse|FALSE|[Oo]ff|OFF)$/,
+	resolve: () => new Scalar(false),
+	stringify: boolStringify
+};
+//#endregion
+//#region ../../node_modules/.pnpm/yaml@2.9.0/node_modules/yaml/browser/dist/schema/yaml-1.1/float.js
+var floatNaN = {
+	identify: (value) => typeof value === "number",
+	default: true,
+	tag: "tag:yaml.org,2002:float",
+	test: /^(?:[-+]?\.(?:inf|Inf|INF)|\.nan|\.NaN|\.NAN)$/,
+	resolve: (str) => str.slice(-3).toLowerCase() === "nan" ? NaN : str[0] === "-" ? Number.NEGATIVE_INFINITY : Number.POSITIVE_INFINITY,
+	stringify: stringifyNumber
+};
+var floatExp = {
+	identify: (value) => typeof value === "number",
+	default: true,
+	tag: "tag:yaml.org,2002:float",
+	format: "EXP",
+	test: /^[-+]?(?:[0-9][0-9_]*)?(?:\.[0-9_]*)?[eE][-+]?[0-9]+$/,
+	resolve: (str) => parseFloat(str.replace(/_/g, "")),
+	stringify(node) {
+		const num = Number(node.value);
+		return isFinite(num) ? num.toExponential() : stringifyNumber(node);
+	}
+};
+var float = {
+	identify: (value) => typeof value === "number",
+	default: true,
+	tag: "tag:yaml.org,2002:float",
+	test: /^[-+]?(?:[0-9][0-9_]*)?\.[0-9_]*$/,
+	resolve(str) {
+		const node = new Scalar(parseFloat(str.replace(/_/g, "")));
+		const dot = str.indexOf(".");
+		if (dot !== -1) {
+			const f = str.substring(dot + 1).replace(/_/g, "");
+			if (f[f.length - 1] === "0") node.minFractionDigits = f.length;
+		}
+		return node;
+	},
+	stringify: stringifyNumber
+};
+//#endregion
+//#region ../../node_modules/.pnpm/yaml@2.9.0/node_modules/yaml/browser/dist/schema/yaml-1.1/int.js
+var intIdentify = (value) => typeof value === "bigint" || Number.isInteger(value);
+function intResolve(str, offset, radix, { intAsBigInt }) {
+	const sign = str[0];
+	if (sign === "-" || sign === "+") offset += 1;
+	str = str.substring(offset).replace(/_/g, "");
+	if (intAsBigInt) {
+		switch (radix) {
+			case 2:
+				str = `0b${str}`;
+				break;
+			case 8:
+				str = `0o${str}`;
+				break;
+			case 16: str = `0x${str}`;
+		}
+		const n = BigInt(str);
+		return sign === "-" ? BigInt(-1) * n : n;
+	}
+	const n = parseInt(str, radix);
+	return sign === "-" ? -1 * n : n;
+}
+function intStringify(node, radix, prefix) {
+	const { value } = node;
+	if (intIdentify(value)) {
+		const str = value.toString(radix);
+		return value < 0 ? "-" + prefix + str.substr(1) : prefix + str;
+	}
+	return stringifyNumber(node);
+}
+var intBin = {
+	identify: intIdentify,
+	default: true,
+	tag: "tag:yaml.org,2002:int",
+	format: "BIN",
+	test: /^[-+]?0b[0-1_]+$/,
+	resolve: (str, _onError, opt) => intResolve(str, 2, 2, opt),
+	stringify: (node) => intStringify(node, 2, "0b")
+};
+var intOct = {
+	identify: intIdentify,
+	default: true,
+	tag: "tag:yaml.org,2002:int",
+	format: "OCT",
+	test: /^[-+]?0[0-7_]+$/,
+	resolve: (str, _onError, opt) => intResolve(str, 1, 8, opt),
+	stringify: (node) => intStringify(node, 8, "0")
+};
+var int$1 = {
+	identify: intIdentify,
+	default: true,
+	tag: "tag:yaml.org,2002:int",
+	test: /^[-+]?[0-9][0-9_]*$/,
+	resolve: (str, _onError, opt) => intResolve(str, 0, 10, opt),
+	stringify: stringifyNumber
+};
+var intHex = {
+	identify: intIdentify,
+	default: true,
+	tag: "tag:yaml.org,2002:int",
+	format: "HEX",
+	test: /^[-+]?0x[0-9a-fA-F_]+$/,
+	resolve: (str, _onError, opt) => intResolve(str, 2, 16, opt),
+	stringify: (node) => intStringify(node, 16, "0x")
+};
 //#endregion
 //#region ../../node_modules/.pnpm/yaml@2.9.0/node_modules/yaml/browser/dist/schema/yaml-1.1/set.js
 var YAMLSet = class YAMLSet extends YAMLMap {
@@ -7144,6 +7234,531 @@ var YAMLSet = class YAMLSet extends YAMLMap {
 	}
 };
 YAMLSet.tag = "tag:yaml.org,2002:set";
+var set = {
+	collection: "map",
+	identify: (value) => value instanceof Set,
+	nodeClass: YAMLSet,
+	default: false,
+	tag: "tag:yaml.org,2002:set",
+	createNode: (schema, iterable, ctx) => YAMLSet.from(schema, iterable, ctx),
+	resolve(map, onError) {
+		if (isMap(map)) {
+			if (map.hasAllNullValues(true)) return Object.assign(new YAMLSet(), map);
+			else onError("Set items must all have null values");
+		} else onError("Expected a mapping for this tag");
+		return map;
+	}
+};
+//#endregion
+//#region ../../node_modules/.pnpm/yaml@2.9.0/node_modules/yaml/browser/dist/schema/yaml-1.1/timestamp.js
+/** Internal types handle bigint as number, because TS can't figure it out. */
+function parseSexagesimal(str, asBigInt) {
+	const sign = str[0];
+	const parts = sign === "-" || sign === "+" ? str.substring(1) : str;
+	const num = (n) => asBigInt ? BigInt(n) : Number(n);
+	const res = parts.replace(/_/g, "").split(":").reduce((res, p) => res * num(60) + num(p), num(0));
+	return sign === "-" ? num(-1) * res : res;
+}
+/**
+* hhhh:mm:ss.sss
+*
+* Internal types handle bigint as number, because TS can't figure it out.
+*/
+function stringifySexagesimal(node) {
+	let { value } = node;
+	let num = (n) => n;
+	if (typeof value === "bigint") num = (n) => BigInt(n);
+	else if (isNaN(value) || !isFinite(value)) return stringifyNumber(node);
+	let sign = "";
+	if (value < 0) {
+		sign = "-";
+		value *= num(-1);
+	}
+	const _60 = num(60);
+	const parts = [value % _60];
+	if (value < 60) parts.unshift(0);
+	else {
+		value = (value - parts[0]) / _60;
+		parts.unshift(value % _60);
+		if (value >= 60) {
+			value = (value - parts[0]) / _60;
+			parts.unshift(value);
+		}
+	}
+	return sign + parts.map((n) => String(n).padStart(2, "0")).join(":").replace(/000000\d*$/, "");
+}
+var intTime = {
+	identify: (value) => typeof value === "bigint" || Number.isInteger(value),
+	default: true,
+	tag: "tag:yaml.org,2002:int",
+	format: "TIME",
+	test: /^[-+]?[0-9][0-9_]*(?::[0-5]?[0-9])+$/,
+	resolve: (str, _onError, { intAsBigInt }) => parseSexagesimal(str, intAsBigInt),
+	stringify: stringifySexagesimal
+};
+var floatTime = {
+	identify: (value) => typeof value === "number",
+	default: true,
+	tag: "tag:yaml.org,2002:float",
+	format: "TIME",
+	test: /^[-+]?[0-9][0-9_]*(?::[0-5]?[0-9])+\.[0-9_]*$/,
+	resolve: (str) => parseSexagesimal(str, false),
+	stringify: stringifySexagesimal
+};
+var timestamp = {
+	identify: (value) => value instanceof Date,
+	default: true,
+	tag: "tag:yaml.org,2002:timestamp",
+	test: RegExp("^([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})(?:(?:t|T|[ \\t]+)([0-9]{1,2}):([0-9]{1,2}):([0-9]{1,2}(\\.[0-9]+)?)(?:[ \\t]*(Z|[-+][012]?[0-9](?::[0-9]{2})?))?)?$"),
+	resolve(str) {
+		const match = str.match(timestamp.test);
+		if (!match) throw new Error("!!timestamp expects a date, starting with yyyy-mm-dd");
+		const [, year, month, day, hour, minute, second] = match.map(Number);
+		const millisec = match[7] ? Number((match[7] + "00").substr(1, 3)) : 0;
+		let date = Date.UTC(year, month - 1, day, hour || 0, minute || 0, second || 0, millisec);
+		const tz = match[8];
+		if (tz && tz !== "Z") {
+			let d = parseSexagesimal(tz, false);
+			if (Math.abs(d) < 30) d *= 60;
+			date -= 6e4 * d;
+		}
+		return new Date(date);
+	},
+	stringify: ({ value }) => value?.toISOString().replace(/(T00:00:00)?\.000Z$/, "") ?? ""
+};
+//#endregion
+//#region ../../node_modules/.pnpm/yaml@2.9.0/node_modules/yaml/browser/dist/schema/yaml-1.1/schema.js
+var schema = [
+	map,
+	seq,
+	string$2,
+	nullTag,
+	trueTag,
+	falseTag,
+	intBin,
+	intOct,
+	int$1,
+	intHex,
+	floatNaN,
+	floatExp,
+	float,
+	binary,
+	merge$1,
+	omap,
+	pairs,
+	set,
+	intTime,
+	floatTime,
+	timestamp
+];
+//#endregion
+//#region ../../node_modules/.pnpm/yaml@2.9.0/node_modules/yaml/browser/dist/schema/tags.js
+var schemas = /* @__PURE__ */ new Map([
+	["core", schema$2],
+	["failsafe", [
+		map,
+		seq,
+		string$2
+	]],
+	["json", schema$1],
+	["yaml11", schema],
+	["yaml-1.1", schema]
+]);
+var tagsByName = {
+	binary,
+	bool: boolTag,
+	float: float$1,
+	floatExp: floatExp$1,
+	floatNaN: floatNaN$1,
+	floatTime,
+	int: int$2,
+	intHex: intHex$1,
+	intOct: intOct$1,
+	intTime,
+	map,
+	merge: merge$1,
+	null: nullTag,
+	omap,
+	pairs,
+	seq,
+	set,
+	timestamp
+};
+var coreKnownTags = {
+	"tag:yaml.org,2002:binary": binary,
+	"tag:yaml.org,2002:merge": merge$1,
+	"tag:yaml.org,2002:omap": omap,
+	"tag:yaml.org,2002:pairs": pairs,
+	"tag:yaml.org,2002:set": set,
+	"tag:yaml.org,2002:timestamp": timestamp
+};
+function getTags(customTags, schemaName, addMergeTag) {
+	const schemaTags = schemas.get(schemaName);
+	if (schemaTags && !customTags) return addMergeTag && !schemaTags.includes(merge$1) ? schemaTags.concat(merge$1) : schemaTags.slice();
+	let tags = schemaTags;
+	if (!tags) {
+		if (Array.isArray(customTags)) tags = [];
+		else {
+			const keys = Array.from(schemas.keys()).filter((key) => key !== "yaml11").map((key) => JSON.stringify(key)).join(", ");
+			throw new Error(`Unknown schema "${schemaName}"; use one of ${keys} or define customTags array`);
+		}
+	}
+	if (Array.isArray(customTags)) for (const tag of customTags) tags = tags.concat(tag);
+	else if (typeof customTags === "function") tags = customTags(tags.slice());
+	if (addMergeTag) tags = tags.concat(merge$1);
+	return tags.reduce((tags, tag) => {
+		const tagObj = typeof tag === "string" ? tagsByName[tag] : tag;
+		if (!tagObj) {
+			const tagName = JSON.stringify(tag);
+			const keys = Object.keys(tagsByName).map((key) => JSON.stringify(key)).join(", ");
+			throw new Error(`Unknown custom tag ${tagName}; use one of ${keys}`);
+		}
+		if (!tags.includes(tagObj)) tags.push(tagObj);
+		return tags;
+	}, []);
+}
+//#endregion
+//#region ../../node_modules/.pnpm/yaml@2.9.0/node_modules/yaml/browser/dist/schema/Schema.js
+var sortMapEntriesByKey = (a, b) => a.key < b.key ? -1 : a.key > b.key ? 1 : 0;
+var Schema = class Schema {
+	constructor({ compat, customTags, merge, resolveKnownTags, schema, sortMapEntries, toStringDefaults }) {
+		this.compat = Array.isArray(compat) ? getTags(compat, "compat") : compat ? getTags(null, compat) : null;
+		this.name = typeof schema === "string" && schema || "core";
+		this.knownTags = resolveKnownTags ? coreKnownTags : {};
+		this.tags = getTags(customTags, this.name, merge);
+		this.toStringOptions = toStringDefaults ?? null;
+		Object.defineProperty(this, MAP, { value: map });
+		Object.defineProperty(this, SCALAR, { value: string$2 });
+		Object.defineProperty(this, SEQ, { value: seq });
+		this.sortMapEntries = typeof sortMapEntries === "function" ? sortMapEntries : sortMapEntries === true ? sortMapEntriesByKey : null;
+	}
+	clone() {
+		const copy = Object.create(Schema.prototype, Object.getOwnPropertyDescriptors(this));
+		copy.tags = this.tags.slice();
+		return copy;
+	}
+};
+//#endregion
+//#region ../../node_modules/.pnpm/yaml@2.9.0/node_modules/yaml/browser/dist/stringify/stringifyDocument.js
+function stringifyDocument(doc, options) {
+	const lines = [];
+	let hasDirectives = options.directives === true;
+	if (options.directives !== false && doc.directives) {
+		const dir = doc.directives.toString(doc);
+		if (dir) {
+			lines.push(dir);
+			hasDirectives = true;
+		} else if (doc.directives.docStart) hasDirectives = true;
+	}
+	if (hasDirectives) lines.push("---");
+	const ctx = createStringifyContext(doc, options);
+	const { commentString } = ctx.options;
+	if (doc.commentBefore) {
+		if (lines.length !== 1) lines.unshift("");
+		const cs = commentString(doc.commentBefore);
+		lines.unshift(indentComment(cs, ""));
+	}
+	let chompKeep = false;
+	let contentComment = null;
+	if (doc.contents) {
+		if (isNode(doc.contents)) {
+			if (doc.contents.spaceBefore && hasDirectives) lines.push("");
+			if (doc.contents.commentBefore) {
+				const cs = commentString(doc.contents.commentBefore);
+				lines.push(indentComment(cs, ""));
+			}
+			ctx.forceBlockIndent = !!doc.comment;
+			contentComment = doc.contents.comment;
+		}
+		const onChompKeep = contentComment ? void 0 : () => chompKeep = true;
+		let body = stringify$1(doc.contents, ctx, () => contentComment = null, onChompKeep);
+		if (contentComment) body += lineComment(body, "", commentString(contentComment));
+		if ((body[0] === "|" || body[0] === ">") && lines[lines.length - 1] === "---") lines[lines.length - 1] = `--- ${body}`;
+		else lines.push(body);
+	} else lines.push(stringify$1(doc.contents, ctx));
+	if (doc.directives?.docEnd) {
+		if (doc.comment) {
+			const cs = commentString(doc.comment);
+			if (cs.includes("\n")) {
+				lines.push("...");
+				lines.push(indentComment(cs, ""));
+			} else lines.push(`... ${cs}`);
+		} else lines.push("...");
+	} else {
+		let dc = doc.comment;
+		if (dc && chompKeep) dc = dc.replace(/^\n+/, "");
+		if (dc) {
+			if ((!chompKeep || contentComment) && lines[lines.length - 1] !== "") lines.push("");
+			lines.push(indentComment(commentString(dc), ""));
+		}
+	}
+	return lines.join("\n") + "\n";
+}
+//#endregion
+//#region ../../node_modules/.pnpm/yaml@2.9.0/node_modules/yaml/browser/dist/doc/Document.js
+var Document = class Document {
+	constructor(value, replacer, options) {
+		/** A comment before this Document */
+		this.commentBefore = null;
+		/** A comment immediately after this Document */
+		this.comment = null;
+		/** Errors encountered during parsing. */
+		this.errors = [];
+		/** Warnings encountered during parsing. */
+		this.warnings = [];
+		Object.defineProperty(this, NODE_TYPE, { value: DOC });
+		let _replacer = null;
+		if (typeof replacer === "function" || Array.isArray(replacer)) _replacer = replacer;
+		else if (options === void 0 && replacer) {
+			options = replacer;
+			replacer = void 0;
+		}
+		const opt = Object.assign({
+			intAsBigInt: false,
+			keepSourceTokens: false,
+			logLevel: "warn",
+			prettyErrors: true,
+			strict: true,
+			stringKeys: false,
+			uniqueKeys: true,
+			version: "1.2"
+		}, options);
+		this.options = opt;
+		let { version } = opt;
+		if (options?._directives) {
+			this.directives = options._directives.atDocument();
+			if (this.directives.yaml.explicit) version = this.directives.yaml.version;
+		} else this.directives = new Directives({ version });
+		this.setSchema(version, options);
+		this.contents = value === void 0 ? null : this.createNode(value, _replacer, options);
+	}
+	/**
+	* Create a deep copy of this Document and its contents.
+	*
+	* Custom Node values that inherit from `Object` still refer to their original instances.
+	*/
+	clone() {
+		const copy = Object.create(Document.prototype, { [NODE_TYPE]: { value: DOC } });
+		copy.commentBefore = this.commentBefore;
+		copy.comment = this.comment;
+		copy.errors = this.errors.slice();
+		copy.warnings = this.warnings.slice();
+		copy.options = Object.assign({}, this.options);
+		if (this.directives) copy.directives = this.directives.clone();
+		copy.schema = this.schema.clone();
+		copy.contents = isNode(this.contents) ? this.contents.clone(copy.schema) : this.contents;
+		if (this.range) copy.range = this.range.slice();
+		return copy;
+	}
+	/** Adds a value to the document. */
+	add(value) {
+		if (assertCollection(this.contents)) this.contents.add(value);
+	}
+	/** Adds a value to the document. */
+	addIn(path, value) {
+		if (assertCollection(this.contents)) this.contents.addIn(path, value);
+	}
+	/**
+	* Create a new `Alias` node, ensuring that the target `node` has the required anchor.
+	*
+	* If `node` already has an anchor, `name` is ignored.
+	* Otherwise, the `node.anchor` value will be set to `name`,
+	* or if an anchor with that name is already present in the document,
+	* `name` will be used as a prefix for a new unique anchor.
+	* If `name` is undefined, the generated anchor will use 'a' as a prefix.
+	*/
+	createAlias(node, name) {
+		if (!node.anchor) {
+			const prev = anchorNames(this);
+			node.anchor = !name || prev.has(name) ? findNewAnchor(name || "a", prev) : name;
+		}
+		return new Alias(node.anchor);
+	}
+	createNode(value, replacer, options) {
+		let _replacer = void 0;
+		if (typeof replacer === "function") {
+			value = replacer.call({ "": value }, "", value);
+			_replacer = replacer;
+		} else if (Array.isArray(replacer)) {
+			const keyToStr = (v) => typeof v === "number" || v instanceof String || v instanceof Number;
+			const asStr = replacer.filter(keyToStr).map(String);
+			if (asStr.length > 0) replacer = replacer.concat(asStr);
+			_replacer = replacer;
+		} else if (options === void 0 && replacer) {
+			options = replacer;
+			replacer = void 0;
+		}
+		const { aliasDuplicateObjects, anchorPrefix, flow, keepUndefined, onTagObj, tag } = options ?? {};
+		const { onAnchor, setAnchors, sourceObjects } = createNodeAnchors(this, anchorPrefix || "a");
+		const ctx = {
+			aliasDuplicateObjects: aliasDuplicateObjects ?? true,
+			keepUndefined: keepUndefined ?? false,
+			onAnchor,
+			onTagObj,
+			replacer: _replacer,
+			schema: this.schema,
+			sourceObjects
+		};
+		const node = createNode(value, tag, ctx);
+		if (flow && isCollection(node)) node.flow = true;
+		setAnchors();
+		return node;
+	}
+	/**
+	* Convert a key and a value into a `Pair` using the current schema,
+	* recursively wrapping all values as `Scalar` or `Collection` nodes.
+	*/
+	createPair(key, value, options = {}) {
+		return new Pair(this.createNode(key, null, options), this.createNode(value, null, options));
+	}
+	/**
+	* Removes a value from the document.
+	* @returns `true` if the item was found and removed.
+	*/
+	delete(key) {
+		return assertCollection(this.contents) ? this.contents.delete(key) : false;
+	}
+	/**
+	* Removes a value from the document.
+	* @returns `true` if the item was found and removed.
+	*/
+	deleteIn(path) {
+		if (isEmptyPath(path)) {
+			if (this.contents == null) return false;
+			this.contents = null;
+			return true;
+		}
+		return assertCollection(this.contents) ? this.contents.deleteIn(path) : false;
+	}
+	/**
+	* Returns item at `key`, or `undefined` if not found. By default unwraps
+	* scalar values from their surrounding node; to disable set `keepScalar` to
+	* `true` (collections are always returned intact).
+	*/
+	get(key, keepScalar) {
+		return isCollection(this.contents) ? this.contents.get(key, keepScalar) : void 0;
+	}
+	/**
+	* Returns item at `path`, or `undefined` if not found. By default unwraps
+	* scalar values from their surrounding node; to disable set `keepScalar` to
+	* `true` (collections are always returned intact).
+	*/
+	getIn(path, keepScalar) {
+		if (isEmptyPath(path)) return !keepScalar && isScalar(this.contents) ? this.contents.value : this.contents;
+		return isCollection(this.contents) ? this.contents.getIn(path, keepScalar) : void 0;
+	}
+	/**
+	* Checks if the document includes a value with the key `key`.
+	*/
+	has(key) {
+		return isCollection(this.contents) ? this.contents.has(key) : false;
+	}
+	/**
+	* Checks if the document includes a value at `path`.
+	*/
+	hasIn(path) {
+		if (isEmptyPath(path)) return this.contents !== void 0;
+		return isCollection(this.contents) ? this.contents.hasIn(path) : false;
+	}
+	/**
+	* Sets a value in this document. For `!!set`, `value` needs to be a
+	* boolean to add/remove the item from the set.
+	*/
+	set(key, value) {
+		if (this.contents == null) this.contents = collectionFromPath(this.schema, [key], value);
+		else if (assertCollection(this.contents)) this.contents.set(key, value);
+	}
+	/**
+	* Sets a value in this document. For `!!set`, `value` needs to be a
+	* boolean to add/remove the item from the set.
+	*/
+	setIn(path, value) {
+		if (isEmptyPath(path)) this.contents = value;
+		else if (this.contents == null) this.contents = collectionFromPath(this.schema, Array.from(path), value);
+		else if (assertCollection(this.contents)) this.contents.setIn(path, value);
+	}
+	/**
+	* Change the YAML version and schema used by the document.
+	* A `null` version disables support for directives, explicit tags, anchors, and aliases.
+	* It also requires the `schema` option to be given as a `Schema` instance value.
+	*
+	* Overrides all previously set schema options.
+	*/
+	setSchema(version, options = {}) {
+		if (typeof version === "number") version = String(version);
+		let opt;
+		switch (version) {
+			case "1.1":
+				if (this.directives) this.directives.yaml.version = "1.1";
+				else this.directives = new Directives({ version: "1.1" });
+				opt = {
+					resolveKnownTags: false,
+					schema: "yaml-1.1"
+				};
+				break;
+			case "1.2":
+			case "next":
+				if (this.directives) this.directives.yaml.version = version;
+				else this.directives = new Directives({ version });
+				opt = {
+					resolveKnownTags: true,
+					schema: "core"
+				};
+				break;
+			case null:
+				if (this.directives) delete this.directives;
+				opt = null;
+				break;
+			default: {
+				const sv = JSON.stringify(version);
+				throw new Error(`Expected '1.1', '1.2' or null as first argument, but found: ${sv}`);
+			}
+		}
+		if (options.schema instanceof Object) this.schema = options.schema;
+		else if (opt) this.schema = new Schema(Object.assign(opt, options));
+		else throw new Error(`With a null YAML version, the { schema: Schema } option is required`);
+	}
+	toJS({ json, jsonArg, mapAsMap, maxAliasCount, onAnchor, reviver } = {}) {
+		const ctx = {
+			anchors: /* @__PURE__ */ new Map(),
+			doc: this,
+			keep: !json,
+			mapAsMap: mapAsMap === true,
+			mapKeyWarned: false,
+			maxAliasCount: typeof maxAliasCount === "number" ? maxAliasCount : 100
+		};
+		const res = toJS(this.contents, jsonArg ?? "", ctx);
+		if (typeof onAnchor === "function") for (const { count, res } of ctx.anchors.values()) onAnchor(res, count);
+		return typeof reviver === "function" ? applyReviver(reviver, { "": res }, "", res) : res;
+	}
+	/**
+	* A JSON representation of the document `contents`.
+	*
+	* @param jsonArg Used by `JSON.stringify` to indicate the array index or
+	*   property name.
+	*/
+	toJSON(jsonArg, onAnchor) {
+		return this.toJS({
+			json: true,
+			jsonArg,
+			mapAsMap: false,
+			onAnchor
+		});
+	}
+	/** A YAML representation of the document. */
+	toString(options = {}) {
+		if (this.errors.length > 0) throw new Error("Document with errors cannot be stringified");
+		if ("indent" in options && (!Number.isInteger(options.indent) || Number(options.indent) <= 0)) {
+			const s = JSON.stringify(options.indent);
+			throw new Error(`"indent" option must be a positive integer, not ${s}`);
+		}
+		return stringifyDocument(this, options);
+	}
+};
+function assertCollection(contents) {
+	if (isCollection(contents)) return true;
+	throw new Error("Expected a YAML collection as document contents");
+}
 //#endregion
 //#region ../../node_modules/.pnpm/yaml@2.9.0/node_modules/yaml/browser/dist/parse/cst-visit.js
 var BREAK = Symbol("break visit");
@@ -7231,6 +7846,342 @@ function _visit(path, item, visitor) {
 		}
 	}
 	return typeof ctrl === "function" ? ctrl(item, path) : ctrl;
+}
+//#endregion
+//#region ../../node_modules/.pnpm/yaml@2.9.0/node_modules/yaml/browser/dist/public-api.js
+function stringify(value, replacer, options) {
+	let _replacer = null;
+	if (typeof replacer === "function" || Array.isArray(replacer)) _replacer = replacer;
+	else if (options === void 0 && replacer) options = replacer;
+	if (typeof options === "string") options = options.length;
+	if (typeof options === "number") {
+		const indent = Math.round(options);
+		options = indent < 1 ? void 0 : indent > 8 ? { indent: 8 } : { indent };
+	}
+	if (value === void 0) {
+		const { keepUndefined } = options ?? replacer ?? {};
+		if (!keepUndefined) return void 0;
+	}
+	if (isDocument(value) && !_replacer) return value.toString(options);
+	return new Document(value, _replacer, options).toString(options);
+}
+var Separator_module_default = { separator: "_separator_6czns_1" };
+//#endregion
+//#region src/components/candidate-details/Separator.tsx
+function Separator() {
+	return /* @__PURE__ */ u("div", { className: Separator_module_default["separator"] });
+}
+//#endregion
+//#region src/string/case.ts
+/**
+* Convert a camel case string to a sentence case string.
+* @param value - String to convert.
+* @returns Converted string.
+*/
+function camelCaseToSentenceCase(value) {
+	if (!value) return value;
+	const result = value.replace(/([a-z0-9])([A-Z])/g, "$1 $2").replace(/([A-Z])([A-Z][a-z])/g, "$1 $2").toLowerCase();
+	return result.charAt(0).toUpperCase() + result.slice(1);
+}
+/**
+* Capitalize the first letter of a string.
+* @param value - String to capitalize.
+* @returns Capitalized string.
+*/
+function capitalize(value) {
+	if (!value) return value;
+	return value.charAt(0).toUpperCase() + value.slice(1);
+}
+//#endregion
+//#region src/components/candidate-details/Metrics.tsx
+function Metrics(props) {
+	return /* @__PURE__ */ u(Table, {
+		header: ["Metric", "Score"],
+		rows: Object.keys(props.metrics).sort().map((name) => {
+			return [capitalize(name), props.metrics[name].normalizedScore];
+		})
+	});
+}
+var CandidateAggregatedEvaluation_module_default = {
+	"candidate-aggregated-evaluation": "_candidate-aggregated-evaluation_z4upv_1",
+	"aggregated-score": "_aggregated-score_z4upv_7",
+	status: "_status_z4upv_11",
+	"dataset-entry-key": "_dataset-entry-key_z4upv_15"
+};
+//#endregion
+//#region src/components/candidate-details/CandidateAggregatedEvaluation.tsx
+function CandidateAggregatedEvaluation(props) {
+	const { aggregatedEvaluation } = props;
+	const responseToString = (response) => {
+		if (typeof response === "string") return response;
+		return stringify(response);
+	};
+	const renderDatasetEntry = (datasetEntry) => {
+		if (datasetEntry.vars == void 0) return;
+		const keys = Object.keys(datasetEntry.vars).sort();
+		return /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("h2", { children: "Dataset entry" }), /* @__PURE__ */ u("p", { children: keys.map((key) => {
+			const value = datasetEntry.vars[key];
+			const valueString = typeof value === "object" ? JSON.stringify(value) : value.toString();
+			return /* @__PURE__ */ u("div", { children: [
+				/* @__PURE__ */ u("code", {
+					className: CandidateAggregatedEvaluation_module_default["dataset-entry-key"],
+					children: key
+				}),
+				"\xA0",
+				valueString
+			] }, key);
+		}) })] });
+	};
+	const renderEvaluation = (index, status, evaluation) => {
+		const key = `${evaluation.candidateRef.candidateId}e${index}`;
+		const expectedResponse = evaluation.datasetEntry.expectedResponse;
+		return /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u(Separator, {}), /* @__PURE__ */ u("div", { children: [
+			/* @__PURE__ */ u("div", { children: [
+				"Score:\xA0",
+				/* @__PURE__ */ u(Score, { score: evaluation.score }),
+				/* @__PURE__ */ u(Tag, {
+					label: status,
+					color: status === "passed" ? "green" : "red",
+					className: CandidateAggregatedEvaluation_module_default["status"]
+				})
+			] }),
+			renderDatasetEntry(evaluation.datasetEntry),
+			/* @__PURE__ */ u("h2", { children: "Response" }),
+			/* @__PURE__ */ u("div", { children: /* @__PURE__ */ u(Markdown, { content: responseToString(evaluation.response) }) }),
+			expectedResponse && /* @__PURE__ */ u("div", { children: [/* @__PURE__ */ u("h2", { children: "Expected response" }), /* @__PURE__ */ u(Markdown, { content: responseToString(expectedResponse) })] }),
+			/* @__PURE__ */ u("h2", { children: "Reasoning" }),
+			/* @__PURE__ */ u("div", { children: /* @__PURE__ */ u(Markdown, { content: evaluation.reasoning }) }),
+			evaluation.metrics && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("h2", { children: "Metrics" }), /* @__PURE__ */ u("p", { children: /* @__PURE__ */ u(Metrics, { metrics: evaluation.metrics }) })] })
+		] }, key)] });
+	};
+	const renderEvaluations = () => {
+		const passedEvaluations = aggregatedEvaluation.passedEvaluations.map((evaluation, index) => {
+			return renderEvaluation(index, "passed", evaluation);
+		});
+		const failedEvaluations = aggregatedEvaluation.failedEvaluations.map((evaluation, index) => {
+			return renderEvaluation(index, "failed", evaluation);
+		});
+		return [...passedEvaluations, ...failedEvaluations];
+	};
+	return /* @__PURE__ */ u("div", {
+		className: CandidateAggregatedEvaluation_module_default["candidate-aggregated-evaluation"],
+		children: [/* @__PURE__ */ u("div", {
+			className: CandidateAggregatedEvaluation_module_default["aggregated-score"],
+			children: [
+				"Aggregated score:\xA0",
+				/* @__PURE__ */ u(Score, { score: aggregatedEvaluation.aggregatedScore }),
+				aggregatedEvaluation.aggregatedMetrics && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("h2", { children: "Aggregated metrics" }), /* @__PURE__ */ u("p", { children: /* @__PURE__ */ u(Metrics, { metrics: aggregatedEvaluation.aggregatedMetrics }) })] })
+			]
+		}), renderEvaluations()]
+	});
+}
+//#endregion
+//#region src/components/candidate-details/CandidateAnalysis.module.scss
+var CandidateAnalysis_module_default = { "candidate-analysis": "_candidate-analysis_1d4bo_1" };
+//#endregion
+//#region src/components/candidate-details/CandidateAnalysis.tsx
+function CandidateAnalysis(props) {
+	const renderList = (list) => {
+		return /* @__PURE__ */ u("ul", { children: list.map((item, index) => /* @__PURE__ */ u("li", { children: item }, index)) });
+	};
+	return /* @__PURE__ */ u("div", {
+		className: CandidateAnalysis_module_default["candidate-analysis"],
+		children: [
+			/* @__PURE__ */ u("h2", { children: "Strengths" }),
+			renderList(props.analysis.strengths),
+			/* @__PURE__ */ u("h2", { children: "Weaknesses" }),
+			renderList(props.analysis.weaknesses),
+			/* @__PURE__ */ u("h2", { children: "Recommendations" }),
+			renderList(props.analysis.recommendations),
+			/* @__PURE__ */ u("h2", { children: "Failure Patterns" }),
+			renderList(props.analysis.failurePatterns)
+		]
+	});
+}
+//#endregion
+//#region src/components/candidate-details/CandidateChanges.tsx
+function CandidateChanges(props) {
+	const { candidateId, changes } = props;
+	const renderChange = (index, change) => {
+		const key = `${candidateId}c${index}`;
+		return /* @__PURE__ */ u(S$1, { children: [index > 0 && /* @__PURE__ */ u(Separator, {}), /* @__PURE__ */ u("div", { children: [
+			/* @__PURE__ */ u("h2", { children: "Change" }),
+			/* @__PURE__ */ u("div", { children: /* @__PURE__ */ u(Markdown, { content: change.description }) }),
+			/* @__PURE__ */ u("h2", { children: "Reasoning" }),
+			/* @__PURE__ */ u("div", { children: /* @__PURE__ */ u(Markdown, { content: change.reasoning }) })
+		] }, key)] });
+	};
+	const renderChanges = () => {
+		return changes.map((change, index) => renderChange(index, change));
+	};
+	return /* @__PURE__ */ u("div", { children: renderChanges() });
+}
+var CandidateModule_module_default = {
+	"candidate-module": "_candidate-module_1vddl_1",
+	header: "_header_1vddl_1",
+	module: "_module_1vddl_5",
+	"module-expanded": "_module-expanded_1vddl_14"
+};
+//#endregion
+//#region src/components/candidate-details/CandidateModule.tsx
+function CandidateModule(props) {
+	const { name, module } = props;
+	const [expanded, setExpanded] = d$1(false);
+	const onExpandClick = () => {
+		setExpanded(!expanded);
+	};
+	const moduleClassName = clsx(CandidateModule_module_default["module"], { [CandidateModule_module_default["module-expanded"]]: expanded });
+	const expandIconName = expanded ? "unfold_less" : "unfold_more";
+	return /* @__PURE__ */ u("div", {
+		className: CandidateModule_module_default["candidate-module"],
+		children: [/* @__PURE__ */ u(Header, {
+			title: camelCaseToSentenceCase(name),
+			level: 2,
+			className: CandidateModule_module_default["header"],
+			children: /* @__PURE__ */ u(IconButton, {
+				name: expandIconName,
+				title: "Expand/collapse module",
+				onClick: onExpandClick
+			})
+		}), /* @__PURE__ */ u("pre", {
+			className: moduleClassName,
+			children: module
+		})]
+	});
+}
+var CandidateDetails_module_default = {
+	"candidate-details-panel": "_candidate-details-panel_kt8uo_1",
+	visible: "_visible_kt8uo_5",
+	hidden: "_hidden_kt8uo_10",
+	"candidate-details-prompt": "_candidate-details-prompt_kt8uo_16",
+	"candidate-details-prompt-expanded": "_candidate-details-prompt-expanded_kt8uo_26"
+};
+//#endregion
+//#region src/components/candidate-details/CandidateDetails.tsx
+function CandidateDetails(props) {
+	const { data, visible, onCloseClick } = props;
+	const hasData = !!data;
+	const renderModules = () => {
+		return Object.keys(data?.candidate.modules || {}).sort().map((name) => {
+			const module = data?.candidate.modules[name];
+			return /* @__PURE__ */ u(CandidateModule, {
+				name,
+				module: module.content
+			}, name);
+		});
+	};
+	return /* @__PURE__ */ u(Panel, {
+		className: clsx(CandidateDetails_module_default["candidate-details-panel"], {
+			[CandidateDetails_module_default.visible]: visible,
+			[CandidateDetails_module_default.hidden]: !visible
+		}),
+		title: "Candidate details",
+		onCloseClick,
+		children: hasData && /* @__PURE__ */ u(S$1, { children: [
+			/* @__PURE__ */ u(Header, { title: "Modules" }),
+			renderModules(),
+			data?.candidateChanges && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u(Header, { title: "Candidate Changes" }), /* @__PURE__ */ u(CandidateChanges, {
+				candidateId: data.candidate.candidateId,
+				changes: data.candidateChanges
+			})] }),
+			/* @__PURE__ */ u(Header, { title: "Evaluations" }),
+			/* @__PURE__ */ u(CandidateAggregatedEvaluation, { aggregatedEvaluation: data.aggregatedEvaluation }),
+			data.analysis && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u(Header, { title: "Analysis" }), /* @__PURE__ */ u(CandidateAnalysis, { analysis: data.analysis })] })
+		] })
+	});
+}
+//#endregion
+//#region src/components/candidate-view/candidate-view-utils.ts
+function getCandidateDetailsData(candidates, iterations, selectedCandidateId) {
+	if (selectedCandidateId === null) return;
+	const findCandidateById = (candidateId) => {
+		const candidate = candidates.find((candidate) => {
+			return candidate.candidateId === candidateId;
+		});
+		if (candidate === void 0) throw new Error(`Candidate ${candidateId} not found`);
+		return candidate;
+	};
+	const findAggregatedEvaluationByCandidateId = (iteration, candidateId) => {
+		const { aggregatedEvaluations } = iteration;
+		const aggregatedEvaluation = aggregatedEvaluations.find((aggregatedEvaluation) => {
+			return aggregatedEvaluation.candidateRef.candidateId === candidateId;
+		});
+		if (aggregatedEvaluation !== void 0) return aggregatedEvaluation;
+		const { candidateAggregatedEvaluations } = iteration;
+		const candidateAggregatedEvaluation = candidateAggregatedEvaluations.find((valuation) => {
+			return valuation.candidateRef.candidateId === candidateId;
+		});
+		if (candidateAggregatedEvaluation !== void 0) return candidateAggregatedEvaluation;
+		throw new Error(`Aggregated evaluations for candidate ${candidateId} not found`);
+	};
+	const findAnalysisByCandidateId = (iteration, candidateId) => {
+		return iteration.analyses.find((analysis) => {
+			return analysis.candidateRef.candidateId === candidateId;
+		});
+	};
+	const firstIteration = iterations[0];
+	const seedCandidateRef = firstIteration.candidateRefs.find((candidateRef) => {
+		return candidateRef.candidateId === selectedCandidateId;
+	});
+	if (seedCandidateRef !== void 0) return {
+		candidate: findCandidateById(seedCandidateRef.candidateId),
+		aggregatedEvaluation: findAggregatedEvaluationByCandidateId(firstIteration, selectedCandidateId),
+		analysis: findAnalysisByCandidateId(firstIteration, selectedCandidateId)
+	};
+	let data;
+	for (const iteration of iterations) {
+		const candidate = iteration.candidates.find((candidate) => {
+			return candidate.candidateRef.candidateId === selectedCandidateId;
+		});
+		if (candidate !== void 0) {
+			data = {
+				candidate: findCandidateById(candidate.candidateRef.candidateId),
+				candidateChanges: candidate.changes,
+				aggregatedEvaluation: findAggregatedEvaluationByCandidateId(iteration, selectedCandidateId),
+				analysis: findAnalysisByCandidateId(iteration, selectedCandidateId)
+			};
+			break;
+		}
+	}
+	if (prompt === void 0) return;
+	return data;
+}
+//#endregion
+//#region src/components/tools/ThemeSwitch.module.scss
+var ThemeSwitch_module_default = {};
+//#endregion
+//#region src/components/tools/ThemeSwitch.tsx
+function ThemeSwitch() {
+	const [theme, setTheme] = d$1("light");
+	const iconName = theme === "dark" ? "bedtime" : "sunny";
+	const toggleTheme = () => {
+		setTheme(theme === "light" ? "dark" : "light");
+		document.documentElement.setAttribute("data-theme", theme);
+	};
+	return /* @__PURE__ */ u(IconButton, {
+		className: ThemeSwitch_module_default["theme-switch"],
+		name: iconName,
+		title: "Theme Switch",
+		onClick: toggleTheme
+	});
+}
+//#endregion
+//#region src/components/tools/Info.tsx
+function Info(props) {
+	return /* @__PURE__ */ u(IconButton, {
+		name: "info",
+		title: "Info",
+		onClick: props.onClick
+	});
+}
+var Toolbar_module_default = { toolbar: "_toolbar_17c56_1" };
+//#endregion
+//#region src/components/tools/Toolbar.tsx
+function Toolbar(props) {
+	return /* @__PURE__ */ u("div", {
+		className: Toolbar_module_default["toolbar"],
+		children: [/* @__PURE__ */ u(ThemeSwitch, {}), /* @__PURE__ */ u(Info, { onClick: props.onInfoClick })]
+	});
 }
 //#endregion
 //#region ../../node_modules/.pnpm/zod@4.4.3/node_modules/zod/v4/core/core.js
@@ -11440,7 +12391,7 @@ function loadRPEInsights() {
 R$1(/* @__PURE__ */ u(App, { rpeInsights: loadRPEInsights() }), document.getElementById("app"));
 //#endregion
 
-//# sourceMappingURL=index-BnhTI73X.js.map</script>
+//# sourceMappingURL=index-stGWEUax.js.map</script>
     <style rel="stylesheet" crossorigin>* {
   box-sizing: border-box;
 }

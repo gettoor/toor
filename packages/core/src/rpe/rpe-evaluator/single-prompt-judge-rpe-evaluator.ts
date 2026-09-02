@@ -1,5 +1,7 @@
 import { DefaultModelProvider } from '../../model-provider/index.js';
 import { scalar, SCALAR_SCORING_DEFAULT } from '../../llm-as-a-judge/index.js';
+import { responseToString } from '../rpe-core/index.js';
+import { modelParametersToRPEInfo } from '../rpe-info/index.js';
 import {
   candidateRefFromCandidate,
   requireSinglePromptCandidateModule,
@@ -16,7 +18,6 @@ import {
 import {
   SINGLE_PROMPT_JUDGE_RPE_EVALUATOR_PROMPT,
 } from './single-prompt-judge-rpe-evaluator-prompt.js';
-import { modelParametersToRPEInfo } from '../rpe-info/index.js';
 
 /**
  * A single-prompt RPE evaluator that uses a LLM-as-a-judge to evaluate a
@@ -47,7 +48,7 @@ export function singlePromptJudgeRPEEvaluator(
           modelProvider,
           modelParameters,
           prompt: requireSinglePromptCandidateModule(candidate.modules),
-          response: response,
+          response: responseToString(response),
           scoringScale,
           metrics,
         });
@@ -68,12 +69,12 @@ export function singlePromptJudgeRPEEvaluator(
         modelProvider,
         modelParameters,
         prompt: requireSinglePromptCandidateModule(candidate.modules),
-        response: response,
+        response: responseToString(response),
         scoringScale,
         metrics,
         evalPrompt: SINGLE_PROMPT_JUDGE_RPE_EVALUATOR_PROMPT,
         additionalPromptValues: {
-          expected_response: expectedResponse,
+          expected_response: responseToString(expectedResponse),
         },
       });
       return {

@@ -1,4 +1,6 @@
-import { 
+import * as YAML from 'yaml';
+import {
+  type RPEResponse,
   type RPEAggregatorOutput,
   type RPEDatasetEntry,
   type RPEEvaluatorOutput,
@@ -17,6 +19,13 @@ export function CandidateAggregatedEvaluation(
   props: CandidateAggregatedEvaluationProps,
 ) {
   const { aggregatedEvaluation } = props;
+
+  const responseToString = (response: RPEResponse) => {
+    if (typeof response === 'string') {
+      return response;
+    }
+    return YAML.stringify(response);
+  };
 
   const renderDatasetEntry = (datasetEntry: RPEDatasetEntry) => {
     if (datasetEntry.vars == undefined) {
@@ -66,11 +75,13 @@ export function CandidateAggregatedEvaluation(
           </div>
           {renderDatasetEntry(evaluation.datasetEntry)}
           <h2>Response</h2>
-          <div><Markdown content={evaluation.response}/></div>
+          <div>
+            <Markdown content={responseToString(evaluation.response)}/>
+          </div>
           { expectedResponse &&
             <div>
               <h2>Expected response</h2>
-              <Markdown content={expectedResponse}/>
+              <Markdown content={responseToString(expectedResponse)}/>
             </div>
           }
           <h2>Reasoning</h2>

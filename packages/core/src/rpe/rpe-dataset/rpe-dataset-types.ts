@@ -1,3 +1,5 @@
+import { RPEResponse } from '../rpe-core/index.js';
+
 /**
  * RPE dataset entry variable value.
  * @category Reflective Prompt Evolution
@@ -17,7 +19,7 @@ export interface RPEDatasetEntry {
   /**
    * Expected response from a LLM model to the candidate.
    */
-  expectedResponse?: string;
+  expectedResponse?: RPEResponse;
 }
 
 /**

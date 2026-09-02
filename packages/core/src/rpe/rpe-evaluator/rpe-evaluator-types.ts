@@ -1,4 +1,5 @@
 import { LLMUsage, MetricResult } from '../../llm/index.js';
+import { RPEResponse } from '../rpe-core/index.js';
 import { RPEProperties } from '../rpe-info/index.js';
 import { RPEDatasetEntry } from '../rpe-dataset/index.js';
 import { RPECandidate, RPECandidateRef } from '../rpe-candidate/index.js';
@@ -21,12 +22,12 @@ export interface RPEEvaluatorInput {
   /**
    * Response to evaluate.
    */
-  response: string;
+  response: RPEResponse;
 
   /**
    * Expected response.
    */
-  expectedResponse?: string;
+  expectedResponse?: RPEResponse;
 }
 
 /**
@@ -47,7 +48,7 @@ export interface RPEEvaluatorOutput {
   /**
    * Response to evaluate.
    */
-  response: string;
+  response: RPEResponse;
 
   /**
    * Score normalized to 0..1.
