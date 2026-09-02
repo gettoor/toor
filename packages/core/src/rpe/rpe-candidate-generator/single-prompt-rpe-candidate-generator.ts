@@ -122,8 +122,16 @@ export function singlePromptRPECandidateGenerator(
 function aggregatedMetricsForPrompt(
   metrics: Record<string, MetricResult>,
 ): string {
-  // TODO: implement
-  return '';
+  if (Object.keys(metrics).length === 0) {
+    return 'No aggregated metrics';
+  }
+
+  const names = Object.keys(metrics).sort();
+  return names.map(name => {
+    const { normalizedScore, reasoning } = metrics[name];
+    const reasoningString = reasoning ? ` (${reasoning})` : '';
+    return `- ${name}: ${normalizedScore.toFixed(2)}${reasoningString}`;
+  }).join('\n');
 }
 
 function scoreDistributionForPrompt(
