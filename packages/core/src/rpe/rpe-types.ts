@@ -11,10 +11,10 @@ import { RPEState } from './rpe-state/index.js';
 import { RPEInsights } from './rpe-insights/index.js';
 
 /**
- * Function to update the metadata of the RPE state.
+ * Function to update the RPE state (typically metadata).
  * @category Reflective Prompt Evolution
  */
-export type RPEUpdateMetadataFunc = (state: RPEState) => Promise<void>;
+export type RPEUpdateStateFunc = (state: RPEState) => Promise<void>;
 
 /**
  * Reflective Prompt Evolution (RPE) settings and configuration.
@@ -115,12 +115,17 @@ export interface RPEInput {
   /**
    * Function to initialize the metadata of the RPE state.
    */
-  initializeMetadata?: RPEUpdateMetadataFunc;
+  initializeState?: RPEUpdateStateFunc;
 
   /**
    * Function to update the metadata of the RPE state after an iteration.
    */
-  updateMetadataAfterIteration?: RPEUpdateMetadataFunc;
+  updateStateBeforeIteration?: RPEUpdateStateFunc;
+
+  /**
+   * Function to update the metadata of the RPE state after an iteration.
+   */
+  updateStateAfterIteration?: RPEUpdateStateFunc;
 }
 
 /**

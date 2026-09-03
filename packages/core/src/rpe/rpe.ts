@@ -35,8 +35,8 @@ export async function optimize(
   };
   let stopReason = '';
 
-  // initialize metadata
-  await input.initializeMetadata?.(state);
+  // initialize state
+  await input.initializeState?.(state);
   
   // run the RPE process
   while (true) {
@@ -44,6 +44,9 @@ export async function optimize(
     const iterationCandidates = iteration.candidateRefs.map(candidateRef => {
       return findCandidateById(state, candidateRef.candidateId);
     });
+
+    // update state before iteration
+    await input.updateStateBeforeIteration?.(state);
 
     // generate responses
     const { outputs: responses } = await generateResponses(
@@ -102,7 +105,7 @@ export async function optimize(
     // generate candidate responses
     const { outputs: candidateResponses } = await generateResponses(
       candidates.map(candidate => candidate.candidate),
-      input.trainingDataset,
+      input.validationDataset,
       input.executor,
     );
     iteration.candidateResponses = candidateResponses;
@@ -143,9 +146,10 @@ export async function optimize(
       break;
     }
 
-    // update metadata after iteration
-    await input.updateMetadataAfterIteration?.(state);
+    // update state after iteration
+    await input.updateStateAfterIteration?.(state);
 
+    // update iteration
     state.iterationNo++;
     state.iteration = {
       candidateRefs: selectedCandidateRefs,
