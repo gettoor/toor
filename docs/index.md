@@ -4,9 +4,10 @@ Toor is a set of packages of utilities for LLM evaluations and experimentation. 
 - `@gettoor/core` - The core package with all types and functions for evaluations and experimentation.
 - `@gettoor/cli` - Command-line interface to run evaluations and experiments based on a configuration file.
 
-Toor supports the following evaluations and experiments:
+Toor supports the following:
 - [LLM-as-a-judge](/core/llm-as-a-judge.md) - An evaluation in which an output from a model is evaluated against predefined criteria by assigning scores (e.g. overall score, correctness, relevance or completeness).
 - [LLM experiments](/core/llm-experiments.md) -  A process to measure performance of different models, model parameters, prompts on a dataset, typically to find the best combination.
+- [Reflective Prompt Evolution](/rpe/index.md) - A process to iteratively evolve a prompt to improve its performance through repeated evaluations, analysis and refinement.
 
 ## Installation
 

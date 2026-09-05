@@ -10,7 +10,7 @@ Toor provides the possibility to run an LLM experiment over the following parame
 
 Each combination of model, model parameters, prompt, and dataset is evaluated.
 
-::: info <Badge type="tip" text="NOTE" />
+::: info
 The total number of evaluations is:
 `models × model parameters × prompts × dataset entries`.
 
@@ -19,13 +19,6 @@ For example, adding one `model` increases evaluations by `model parameters × pr
 
 This in turn increases the time required to run the experiment and the cost of the evaluation.
 :::
-
-<VPFeatures>
-  <VPFeature
-    title="Simple"
-    details="Easy to use"
-  />
-</VPFeatures>
 
 ## Example
 

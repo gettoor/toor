@@ -18,7 +18,7 @@ export default {
       {
         items: [
           { text: 'Getting started', link: '/' },
-          { 
+          {
             text: 'Core',
             link: '/core/index.md',
             items: [
@@ -27,8 +27,16 @@ export default {
               { text: 'Model provider', link: '/core/model-provider.md' },
             ]
           },
-          { 
-            text: 'CLI', 
+          {
+            text: 'Reflective Prompt Evolution',
+            link: '/rpe/index.md',
+            items: [
+              { text: 'RPE process', link: '/rpe/process.md' },
+              { text: 'RPE presets', link: '/rpe/presets.md' },
+            ]
+          },
+          {
+            text: 'CLI',
             link: '/cli/index.md',
             items: [
               { text: 'LLM experiments', link: '/cli/llm-experiments.md' },
@@ -47,6 +55,6 @@ export default {
 
     search: {
       provider: 'local'
-    }    
+    }
   },
 };
