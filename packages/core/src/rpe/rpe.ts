@@ -49,9 +49,8 @@ export async function optimize(
     await input.updateStateBeforeIteration?.(state);
 
     // generate responses
-    const { outputs: responses } = await generateResponses(
+    const { responses } = await generateResponses(
       iterationCandidates,
-      input.trainingDataset,
       input.executor,
     );
     iteration.responses = responses;
@@ -103,10 +102,9 @@ export async function optimize(
     state.candidates.push(...candidates.map(candidate => candidate.candidate));
 
     // generate candidate responses
-    const { outputs: candidateResponses } = await generateResponses(
+    const { responses: candidateResponses } = await generateResponses(
       candidates.map(candidate => candidate.candidate),
-      input.validationDataset,
-      input.executor,
+      input.candidateExecutor ?? input.executor,
     );
     iteration.candidateResponses = candidateResponses;
 
@@ -116,8 +114,8 @@ export async function optimize(
     } = await evaluateCandidateResponses(
       state,
       candidateResponses,
-      input.evaluator,
-      input.evaluatorParallelism,
+      input.candidateEvaluator ?? input.evaluator,
+      input.candidateEvaluatorParallelism ?? input.evaluatorParallelism,
     );
     iteration.candidateEvaluations = candidateEvaluations;
 
@@ -125,8 +123,8 @@ export async function optimize(
     const candidateAggregatedEvaluations = await aggregateEvaluations(
       state,
       candidateEvaluations,
-      input.aggregator,
-      input.aggregatorParallelism,
+      input.candidateAggregator ?? input.aggregator,
+      input.candidateAggregatorParallelism ?? input.aggregatorParallelism,
     );
     iteration.candidateAggregatedEvaluations = candidateAggregatedEvaluations;
 

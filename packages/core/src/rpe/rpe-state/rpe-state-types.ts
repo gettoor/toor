@@ -1,6 +1,6 @@
 import { RPEMetadata } from '../rpe-core/index.js';
 import { RPECandidate, RPECandidateRef } from '../rpe-candidate/index.js';
-import { RPEExecutorOutput } from '../rpe-executor/index.js';
+import { RPEExecutorResponse } from '../rpe-executor/index.js';
 import { EvaluatorCandidateOutput } from '../evaluator-types.js';
 import { RPEAggregatorOutput } from '../rpe-aggregator/index.js';
 import { RPEAnalyzerOutput } from '../rpe-analyzer/index.js';
@@ -19,7 +19,7 @@ export interface RPEIteration {
   /**
    * The responses generated for the candidates in the current iteration.
    */
-  responses: RPEExecutorOutput[];
+  responses: RPEExecutorResponse[];
 
   /**
    * The evaluations of the responses in the current iteration.
@@ -44,7 +44,7 @@ export interface RPEIteration {
   /**
    * The responses generated for the candidates in the current iteration.
    */
-  candidateResponses: RPEExecutorOutput[];
+  candidateResponses: RPEExecutorResponse[];
 
   /**
    * The evaluations of the candidate responses in the current iteration. 

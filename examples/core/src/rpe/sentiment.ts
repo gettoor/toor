@@ -22,9 +22,9 @@ import { EASY_DATASET } from './sentiment-dataset.js';
 
 async function run(): Promise<void> {
   const dataset: RPEDataset = {
-    entries: EASY_DATASET.slice(0, 3),
+    entries: EASY_DATASET.slice(0, 2),
   };
-  const [trainingDataset, validationDataset] = splitRPEDataset(dataset, 2, 1);
+  const [trainingDataset, validationDataset] = splitRPEDataset(dataset, 2);
 
   const input: RPEInput = {
     seed: [
@@ -35,18 +35,13 @@ async function run(): Promise<void> {
         candidateId: 'seed',
       },
     ],
-    trainingDataset: {
-      entries: trainingDataset.entries,
-    },
-    validationDataset: {
-      entries: validationDataset.entries,
-    },
-    executorParallelism: 8,
     executor: singlePromptLLMRPEExecutor({
       modelName: 'gemini:gemini-2.5-flash',
       modelParameters: {
         temperature: 0.0,
       },
+      dataset: trainingDataset,
+      parallelism: 8,
     }),
     evaluatorParallelism: 8,
     evaluator: singlePromptJudgeRPEEvaluator({

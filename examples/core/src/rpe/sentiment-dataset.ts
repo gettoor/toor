@@ -17,6 +17,12 @@ export const EASY_DATASET: RPEDatasetEntry[] = [
     'I absolutely loved the product. It exceeded all my expectations.',
     'positive'
   ),
+  // TODO: move to HERE
+  entry(
+    'The battery barely lasts an hour.',
+    'negative'
+  ),
+    
   entry(
     'The service was fast, friendly, and professional.',
     'positive'
@@ -193,10 +199,7 @@ export const EASY_DATASET: RPEDatasetEntry[] = [
     'I wouldn\'t recommend this product to anyone.',
     'negative'
   ),
-  entry(
-    'The battery barely lasts an hour.',
-    'negative'
-  ),
+  // HERE
   entry(
     'The website keeps showing errors.',
     'negative'

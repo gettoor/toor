@@ -1,5 +1,5 @@
 import { runParallelBatchesOrThrow } from '../concurrency/index.js';
-import { RPEExecutorOutput } from './rpe-executor/index.js';
+import { RPEExecutorResponse } from './rpe-executor/index.js';
 import { RPEEvaluator, RPEEvaluatorInput } from './rpe-evaluator/index.js';
 import { DEFAULT_EVALUATOR_PARALLELISM } from './evaluator-consts.js';
 import { EvaluatorOutput, EvaluatorCandidateOutput } from './evaluator-types.js';
@@ -51,9 +51,9 @@ export async function evaluateCandidates(
  * @param parallelism - Number of parallel evaluations to run.
  * @returns Evaluations for the responses.
  */
-export async function evaluateCandidateResponses(
+export async function   evaluateCandidateResponses(
   state: RPEState,
-  responses: RPEExecutorOutput[],
+  responses: RPEExecutorResponse[],
   evaluator: RPEEvaluator,
   parallelism?: number,
 ): Promise<EvaluatorOutput> {
