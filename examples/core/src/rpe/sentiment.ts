@@ -11,7 +11,8 @@ import {
   average,
   singlePromptRPEAnalyzer,
   singlePromptRPECandidateGenerator,
-  bestScoreCandidateSelector,
+  isCandidateImprovedByScore,
+  improvedCandidateSelector,
   SCALAR_METRIC_CORRECTNESS,
   SCALAR_METRIC_COMPLETENESS,
   SCALAR_METRIC_RELEVANCE,
@@ -74,7 +75,10 @@ async function run(): Promise<void> {
         temperature: 0.0,
       },
     }),
-    candidateSelector: bestScoreCandidateSelector({}),
+    candidateSelector: improvedCandidateSelector({
+      isCandidateImproved: isCandidateImprovedByScore,
+      selectParentCandidatesIfBetter: true,
+    }),
     stopAfterIteration: async (state: RPEState) => {
       return {
         stop: state.iterationNo === 0,
