@@ -1,6 +1,6 @@
 # Reflective Prompt Evolution
 
-Reflective Prompt Evolution (RPE) is a process for iteratively evolving a prompt to improve its performance through repeated evaluations, analysis and refinement.
+Reflective Prompt Evolution (RPE) is a process for iteratively evolving a prompt to improve its performance through repeated evaluation, analysis, and refinement.
 
 
 
@@ -12,7 +12,7 @@ RPE simplifies this process by turning prompt improvement into an automated and 
 
 ## RPE process overview
 
-RPE treats prompt improvement as an iterative optimization process. A prompt is evaluated against a dataset, its performance is analyzed, and based on the analysis, new candidate prompt(s) are generated. The candidate prompts are further evaluated, and based on the candidate evaluations, prompts for the next iteration are picked or discarded if they are not good enough. This process is repeated until a stopping criterion is met.
+RPE treats prompt improvement as an iterative optimization process. A prompt is evaluated against a dataset, its performance is analyzed, and based on the analysis, one or more new candidate prompts are generated. The candidate prompts are then evaluated, and based on those evaluations, prompts are selected for the next iteration or discarded if they are not good enough. This process is repeated until a stopping criterion is met.
 
 A dataset is a collection of entries (examples) that are used to evaluate the performance of a prompt. Each entry contains inputs and optionally an expected response. The inputs are used to generate responses from the prompt.
 
@@ -26,9 +26,9 @@ At a high level, an RPE iteration consists of the following steps:
 6. Select prompts for the next iteration
 7. Repeat until a stopping criterion is met
 
-Each iteration produces both new potentially improved prompts and insights why the new prompts perform differently. This approach allows for a more nuanced understanding of the prompt and its performance across a dataset.
+Each iteration produces both new, potentially improved prompts and insights into why the new prompts perform differently. This approach allows for a more nuanced understanding of the prompt and its performance across a dataset.
 
-RPE heavily relies on textual diagnosis (reflection) of the prompts to generate candidates instead of fully relying on score and metrics only. It analyzes strengths, weaknesses and failure patterns in form of textual analysis. These signals are used to generate new candidate prompts.
+RPE relies heavily on textual diagnosis (reflection) of the prompts to generate candidates rather than relying solely on scores and metrics. It analyzes strengths, weaknesses, and failure patterns in the form of textual analysis. These signals are used to generate new candidate prompts.
 
 See [RPE process](/rpe/process.md) for more details.
 
@@ -36,10 +36,10 @@ See [RPE process](/rpe/process.md) for more details.
 
 The most important idea behind RPE is that it uses two complementary sources of feedback to guide prompt evolution: **optimization signals** and **reflection**.
 
-Optimization signals are scores or metrics. It can also be pass/fail results or other structured outputs. They answer the question *What is good/bad in a prompt?*. These signals make it possible to compare prompts and tell if a candidate represents an improvement over the previous prompt.
+Optimization signals are scores or metrics. They can also be pass/fail results or other structured outputs. They answer the question *What is good/bad in a prompt?* These signals make it possible to compare prompts and determine whether a candidate represents an improvement over the previous prompt.
 
-A low score indicates that a prompt performed poorly. Metrics or per-dataset entry scores tell where the prompt performed poorly. However, the signals don't tell why the prompt performed poorly and what needs to be changed to improve it.
+A low score indicates that a prompt performed poorly. Metrics or per-dataset-entry scores show where the prompt performed poorly. However, the signals don't explain why the prompt performed poorly or what needs to be changed to improve it.
 
-Reflection provides the additional insight into why a prompt performed poorly and what needs to be changed to improve it. It answers the question *Why is this prompt good/bad?* and *What needs to be changed to improve it?*.
+Reflection provides additional insight into why a prompt performed poorly and what needs to be changed to improve it. It answers the questions *Why is this prompt good/bad?* and *What needs to be changed to improve it?*
 
-Reflection has textual form and provides information about the prompt's strengths, weaknesses and failure patterns.
+Reflection takes textual form and provides information about the prompt's strengths, weaknesses, and failure patterns.
