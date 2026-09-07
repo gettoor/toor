@@ -30,7 +30,7 @@ async function copyIndexHtmlToCore() {
     'packages',
     'core',
     'src',
-    'rpe',
+    'rpe-core',
     'rpe-html-renderer',
     'templates',
     'index.html',

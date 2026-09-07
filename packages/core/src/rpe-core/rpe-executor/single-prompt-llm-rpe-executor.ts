@@ -25,7 +25,7 @@ import {
   SinglePromptLLMRPEExecutorInput,
 } from './single-prompt-llm-rpe-executor-types.js';
 import {
-  DEFAULT_SINGLE_PROMPT_LLM_RPE_EXECUTOR_PARALLELISM,
+  SINGLE_PROMPT_LLM_RPE_EXECUTOR_PARALLELISM,
 } from './single-prompt-llm-rpe-executor-consts.js';
 
 /**
@@ -56,7 +56,7 @@ export function singlePromptLLMRPEExecutor(
       // run tasks in parallel
       const responses = await runParallelBatchesOrThrow(
         tasks,
-        parallelism ?? DEFAULT_SINGLE_PROMPT_LLM_RPE_EXECUTOR_PARALLELISM,
+        parallelism ?? SINGLE_PROMPT_LLM_RPE_EXECUTOR_PARALLELISM,
       );
       return { responses };
     },
