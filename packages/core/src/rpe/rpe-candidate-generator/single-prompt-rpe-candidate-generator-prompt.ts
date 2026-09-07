@@ -1,5 +1,17 @@
+/**
+ * Prompt to use for the single-prompt RPE candidate generator.
+ * @category Reflective Prompt Evolution
+ */
 export const SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_PROMPT = {
+  /**
+   * Placeholders to ignore in the prompt. These are examples of placeholders
+   * that are not to be replaced with their values.
+   */
    ignorePlaceholders: ['variable_name', '...'],
+
+  /**
+   * Prompt to use for the single-prompt RPE candidate generator.
+   */
    prompt: `
 You are an expert prompt engineer specializing in iterative prompt optimization.
 

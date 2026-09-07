@@ -1,3 +1,7 @@
+/**
+ * The default prompt for the single-prompt RPE analyzer.
+ * @category Reflective Prompt Evolution
+ */
 export const SINGLE_PROMPT_RPE_ANALYZER_PROMPT = `
 You are an expert prompt analysis system.
 
@@ -9,7 +13,7 @@ You are given the following information.
 
 ## Original Prompt
 
-{{prompt}}
+{{original_prompt}}
 
 ## Aggregated Overall Score (0-1)
 

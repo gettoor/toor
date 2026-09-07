@@ -54,4 +54,23 @@ export interface SinglePromptRPECandidateGeneratorInput {
    * Model parameters to use for the candidate generator.
    */
   modelParameters?: ModelParameters;
+
+  /**
+   * Prompt to use for the candidate generator. The following placeholders are
+   * injected:
+   * - `original_prompt` - original prompt,
+   * - `aggregated_score` - aggregated overall score (number),
+   * - `aggregated_metrics` - aggregated metric scores
+   *   (list of name-value pairs with optional reasoning),
+   * - `score_distribution` - score distribution,
+   * - `strengths` - list of strengths of the original prompt,
+   * - `weaknesses` - list of weaknesses of the original prompt,
+   * - `recommendations` - list of recommendations for improving
+   *    the original prompt,
+   * - `failure_patterns` - failure patterns,
+   * - `passed_evaluations` - list of explanations of passed evaluations,
+   * - `failed_evaluations` - list of explanations of failed evaluations.
+   * @default {@link SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_PROMPT}
+   */
+  prompt?: string;
 }

@@ -123,11 +123,26 @@ export interface SinglePromptRPEAnalyzerInput {
 
   /**
    * Number of passed evaluations to include in the analysis.
+   * @default {@link SINGLE_PROMPT_RPE_ANALYZER_PASSED_EXPLANATIONS_COUNT}
    */
   passedEvaluationsCount?: number;
 
   /**
    * Number of failed evaluations to include in the analysis.
+   * @default {@link SINGLE_PROMPT_RPE_ANALYZER_FAILED_EXAMPLES_COUNT}
    */
   failedEvaluationsCount?: number;
+
+  /**
+   * Prompt to use for the analyzer. The following placeholders are injected:
+   * - `original_prompt` - original prompt,
+   * - `aggregated_score` - aggregated overall score (number),
+   * - `aggregated_metrics` - aggregated metric scores
+   *   (list of name-value pairs with optional reasoning),
+   * - `score_distribution` - score distribution (list pairs: range-count),
+   * - `passed_explanations` - passed evaluations explanations,
+   * - `failed_examples` - failed examples (dataset entries).
+   * @default {@link SINGLE_PROMPT_RPE_ANALYZER_PROMPT}
+   */
+  prompt?: string;
 }

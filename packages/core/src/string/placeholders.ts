@@ -31,7 +31,7 @@ const PLACEHOLDER_PATTERN = /\{\{([^{}]+)\}\}/g;
 
 /**
  * Replaces placeholders in a string with values.
- * The placeholders are of the form `<key>` in the string.
+ * The placeholders are of the form <span v-pre>`{{key}}`</span> in the string.
  * @category Utils
  * @example
  * ```ts

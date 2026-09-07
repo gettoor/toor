@@ -12,5 +12,6 @@ export * from './rpe-info/index.js';
 export * from './rpe-insights/index.js';
 export * from './rpe-stop/index.js';
 export * from './candidate-generator-types.js';
+export * from './evaluator-types.js';
 export * from './rpe-types.js';
 export * from './rpe.js';

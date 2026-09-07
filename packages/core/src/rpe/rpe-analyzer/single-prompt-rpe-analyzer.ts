@@ -20,15 +20,16 @@ import {
   RPEAnalyzerOutput,
 } from './rpe-analyzer-types.js';
 import {
+  SINGLE_PROMPT_RPE_ANALYZER_PASSED_EXPLANATIONS_COUNT,
+  SINGLE_PROMPT_RPE_ANALYZER_FAILED_EXAMPLES_COUNT,
+} from './single-prompt-rpe-analyzer-consts.js';
+import {
   SINGLE_PROMPT_RPE_ANALYZER_PROMPT,
 } from './single-prompt-rpe-analyzer-prompt.js';
 import { 
   SinglePromptRPEAnalyzerInput,
   SinglePromptRPEAnalyzerOutputSchema,
 } from './single-prompt-rpe-analyzer-types.js';
-
-const DEFAULT_PASSED_EXPLANATIONS_COUNT = 3;
-const DEFAULT_FAILED_EXAMPLES_COUNT = 3;
 
 /**
  * Creates a single-prompt RPE analyzer. Requires a single-prompt candidate.
@@ -44,6 +45,7 @@ export function singlePromptRPEAnalyzer(
     modelParameters,
     passedEvaluationsCount,
     failedEvaluationsCount,
+    prompt: analyzerPrompt,
   } = input;
   const modelProvider = input.modelProvider ?? new DefaultModelProvider();
 
@@ -57,9 +59,11 @@ export function singlePromptRPEAnalyzer(
         state, input.aggregation.candidateRef.candidateId,
       );
       const prompt = replacePlaceholders(
-        SINGLE_PROMPT_RPE_ANALYZER_PROMPT,
+        analyzerPrompt ?? SINGLE_PROMPT_RPE_ANALYZER_PROMPT,
         {
-          prompt: requireSinglePromptCandidateModule(candidate.modules),
+          original_prompt: requireSinglePromptCandidateModule(
+            candidate.modules,
+          ),
           aggregated_score: input.aggregation.aggregatedScore,
           aggregated_metrics: aggregatedMetricsForPrompt(
             input.aggregation.aggregatedMetrics ?? {},
@@ -69,11 +73,13 @@ export function singlePromptRPEAnalyzer(
           ),
           passed_explanations: explanationsForPrompt(
             input.aggregation.passedEvaluations,
-            passedEvaluationsCount ?? DEFAULT_PASSED_EXPLANATIONS_COUNT,
+            passedEvaluationsCount ??
+              SINGLE_PROMPT_RPE_ANALYZER_PASSED_EXPLANATIONS_COUNT,
           ),
           failed_examples: failedExamplesForPrompt(
             input.aggregation.failedEvaluations,
-            failedEvaluationsCount ?? DEFAULT_FAILED_EXAMPLES_COUNT,
+            failedEvaluationsCount ??
+              SINGLE_PROMPT_RPE_ANALYZER_FAILED_EXAMPLES_COUNT,
           ),
         },
       );
@@ -130,8 +136,14 @@ export function singlePromptRPEAnalyzer(
 function aggregatedMetricsForPrompt(
   metrics: Record<string, MetricResult>,
 ): string {
-  // TODO: implement
-  return '';
+  const sorted = Object.keys(metrics).sort((a, b) => a.localeCompare(b));
+  return sorted
+    .map(name => {
+      const metric = metrics[name];
+      const reasoning = metric.reasoning ? ` (${metric.reasoning})` : '';
+      return `${name}: ${metric.normalizedScore.toFixed(2)}${reasoning}`;
+    })
+    .join('\n');
 }
 
 function scoreDistributionForPrompt(

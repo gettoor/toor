@@ -34,7 +34,7 @@ import {
   RPECandidateGeneratorCandidate,
 } from './rpe-candidate-generator-types.js';
 import {
-  DEFAULT_SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_PARALLELISM,
+  SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_PARALLELISM,
 } from './single-prompt-rpe-candidate-generator-consts.js';
 import { 
   SinglePromptRPECandidateGeneratorInput,
@@ -52,7 +52,12 @@ import {
 export function singlePromptRPECandidateGenerator(
   input: SinglePromptRPECandidateGeneratorInput,
 ): RPECandidateGenerator {
-  const { modelName, modelParameters, parallelism } = input;
+  const {
+    modelName,
+    modelParameters,
+    parallelism,
+    prompt: candidateGeneratorPrompt,
+  } = input;
   const modelProvider = input.modelProvider ?? new DefaultModelProvider();
 
   return {
@@ -95,6 +100,8 @@ export function singlePromptRPECandidateGenerator(
           modelProvider,
           modelName,
           modelParameters,
+          candidateGeneratorPrompt ??
+            SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_PROMPT.prompt,
           findCandidateById(state, aggregationCandidateId),
           newCandidateId,
           aggregation,
@@ -106,7 +113,7 @@ export function singlePromptRPECandidateGenerator(
       // run tasks in parallel
       const outputs = await runParallelBatchesOrThrow(
         tasks,
-        parallelism ?? DEFAULT_SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_PARALLELISM,
+        parallelism ?? SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_PARALLELISM,
       );
       return { candidates: outputs.flat() };
     },
@@ -131,13 +138,14 @@ async function generateCandidate(
   modelProvider: ModelProvider,
   modelName: string,
   modelParameters: ModelParameters | undefined,
+  generatorPrompt: string,
   candidate: RPECandidate,
   newCandidateId: string,
   aggregation: RPEAggregatorOutput,
   analysis: RPEAnalyzerOutput,
 ): Promise<RPECandidateGeneratorCandidate> {
   const prompt = replacePlaceholders(
-    SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_PROMPT.prompt,
+    generatorPrompt,
     {
       original_prompt: requireSinglePromptCandidateModule(
         candidate.modules,

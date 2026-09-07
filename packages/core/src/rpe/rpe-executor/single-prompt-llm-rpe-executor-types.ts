@@ -29,6 +29,7 @@ export interface SinglePromptLLMRPEExecutorInput {
 
   /**
    * Number of concurrent executions to use.
+   * @default {@link SINGLE_PROMPT_LLM_RPE_EXECUTOR_PARALLELISM}
    */
   parallelism?: number;
 }
