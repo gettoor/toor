@@ -10,7 +10,7 @@ Toor provides the possibility to run an LLM experiment over the following parame
 
 Each combination of model, model parameters, prompt, and dataset is evaluated.
 
-::: info
+::: info <Badge type="tip" text="NOTE" />
 The total number of evaluations is:
 `models × model parameters × prompts × dataset entries`.
 
@@ -29,13 +29,13 @@ You are a strict evaluator.
 Your task is to assess how well the RESPONSE satisfies the PROMPT using the provided SCORING_SCALE.
 
 PROMPT:
-<<prompt>>
+{{prompt}}
 
 RESPONSE:
-<<response>>
+{{response}}
 
 SCORING_SCALE:
-<<scoring_scale>>
+{{scoring_scale}}
 
 Evaluation Guidelines:
 
@@ -94,7 +94,7 @@ const results = await runExperiment({
 Classify the sentiment of the review.
 
 Review:
-<<review>>
+{{review}}
 
 Return one of:
 - positive
@@ -108,7 +108,7 @@ Return one of:
 Read the review and tell me what you think.
 
 Review:
-<<review>>
+{{review}}
 `,
     }
   ],
@@ -166,8 +166,8 @@ The binary evaluator returns a numeric score:
 - 1 (passed).
 
 The binary evaluator uses the binary LLM-as-a-judge to evaluate the response. This means that `evalPrompt` must contain the placeholders:
-- `<<prompt>>` replaced with the prompt to evaluate,
-- `<<response>>` replaced with the response to the prompt.
+- <span v-pre>`{{prompt}}`</span> replaced with the prompt to evaluate,
+- <span v-pre>`{{response}}`</span> replaced with the response to the prompt.
 
 See [Binary `evalPrompt`](/core/llm-as-a-judge.md#binary-evalprompt) for more details.
 
@@ -197,9 +197,10 @@ const results = await runExperiment({
 The scalar evaluator returns a numeric score according to the provided scoring scale (`scoringScale`). See [Scales](/core/llm-as-a-judge.md#scales) for predefined scoring scales.
 
 The scalar evaluator uses the scalar LLM-as-a-judge to evaluate the response. This means that `evalPrompt` must contain the placeholders:
-- `<<prompt>>` replaced with the prompt to evaluate,
-- `<<response>>` replaced with the response to the prompt,
-- `<<scoring_scale>>` replaced with the scoring scale to use for the evaluation.
+- <span v-pre>`{{prompt}}`</span> replaced with the prompt to evaluate,
+- <span v-pre>`{{response}}`</span> replaced with the response to the prompt,
+- <span v-pre>`{{scoring_scale}}`</span> replaced with the scoring scale to use for the evaluation.
+- <span v-pre>`{{metrics}}`</span> replaced with the metrics to use for the evaluation.
 
 See [Scalar `evalPrompt`](/core/llm-as-a-judge.md#scalar-evalprompt) for more details.
 
@@ -303,7 +304,7 @@ The prompts to evaluate are passed under the field `prompts`. Each prompt object
 - `name` - unique name,
 - `prompt` - prompt to evaluate.
 
-Each prompt can contain placeholders of the form `<<placeholder>>`. The placeholders are replaced with the variables from the dataset entries.
+Each prompt can contain placeholders of the form <span v-pre>`{{placeholder}}`</span>. The placeholders are replaced with the variables from the dataset entries.
 
 For N prompts and M dataset entries, a total of N × M prompts are generated and evaluated. For example, if there are 2 prompts and 3 dataset entries, then 6 prompts to evaluate are generated.
 
@@ -314,7 +315,7 @@ const sentimentPrompt = `
 Classify the sentiment of the review.
 
 Review:
-<<review>>
+{{review}}
 
 Return one of:
 - positive
@@ -326,7 +327,7 @@ const reviewPrompt = `
 Read the review and tell me what you think.
 
 Review:
-<<review>>
+{{review}}
 `;
 
 const results = await runExperiment({
@@ -381,13 +382,13 @@ A dataset is a set of entries with variables that are substituted in the prompts
 - `name` - unique name,
 - `vars` - record of variables where the key is a string and the value can be anything.
 
-The values in `vars` can be of any type (primitives, objects, and arrays). Placeholders let you specify the format in which values are inserted into the prompt. A placeholder with a format has the form `<<placeholder:format>>`. The supported formats are:
+The values in `vars` can be of any type (primitives, objects, and arrays). Placeholders let you specify the format in which values are inserted into the prompt. A placeholder with a format has the form <span v-pre>`{{placeholder:format}}`</span>. The supported formats are:
 - `string` (default) - the value is converted to a string using `toString()`. An error is thrown if the value is not a primitive.
 - `json` - the value is converted to a single-line JSON string.
 - `json-pretty` - the value is converted to a multi-line JSON string.
 - `yaml`, `yml` - the value is converted to a YAML string.
 
-Consider the example below, where the placeholder `<<input:yaml>>` is replaced with the `input` variable converted to a YAML string for each dataset entry.
+Consider the example below, where the placeholder <span v-pre>`{{input:yaml}}`</span> is replaced with the `input` variable converted to a YAML string for each dataset entry.
 
 ```ts{24,38-41,47-50}
 import { binaryEvaluator, runExperiment } from '@gettoor/core';
@@ -413,7 +414,7 @@ const results = await runExperiment({
       prompt: `
 Determine whether the candidate is a good match for the job.
 
-<<input:yaml>>
+{{input:yaml}}
 
 Respond with exactly one of:
 match

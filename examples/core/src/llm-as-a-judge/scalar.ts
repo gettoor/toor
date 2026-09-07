@@ -103,16 +103,16 @@ async function customPrompt(): Promise<void> {
 You are an evaluator. Does the response correctly satisfy the prompt?
 
 PROMPT:
-<<prompt>>
+{{prompt}}
 
 RESPONSE:
-<<response>>
+{{response}}
 
 SCORING_SCALE:
-<<scoring_scale>>
+{{scoring_scale}}
 
 METRICS:
-<<metrics>>
+{{metrics}}
 `,
   });
   printResult(result);

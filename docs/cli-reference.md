@@ -83,7 +83,7 @@ prompts:
       - category: "bug" | "billing" | "feature" | "question"
 
       Ticket:
-      <<ticket>>
+      {{ticket}}
 
   # Prompt from a file (relative to the configuration file).
   - name: ...
@@ -120,7 +120,7 @@ datasets:
 ```
 
 ::: info <Badge type="tip" text="NOTE" />
-The placeholders in prompts are placed inside the square brackets, e.g. `<<ticket>>`.
+The placeholders in prompts are placed inside the curly braces, e.g. <span v-pre>`{{ticket}}`</span>.
 
 ```yaml
 prompt: |
@@ -131,6 +131,6 @@ prompt: |
   - category: "bug" | "billing" | "feature" | "question"
 
   Ticket:
-  <<ticket>>
+  {{ticket}}
 ```
 :::

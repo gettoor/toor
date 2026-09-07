@@ -27,13 +27,13 @@ You are a strict evaluator.
 Your task is to assess how well the RESPONSE satisfies the PROMPT using the provided SCORING_SCALE.
 
 PROMPT:
-<<prompt>>
+{{prompt}}
 
 RESPONSE:
-<<response>>
+{{response}}
 
 SCORING_SCALE:
-<<scoring_scale>>
+{{scoring_scale}}
 
 Evaluation Guidelines:
 
@@ -92,7 +92,7 @@ Return only the final score.
 Classify the sentiment of the review.
 
 Review:
-<<review>>
+{{review}}
 
 Return one of:
 - positive
@@ -106,7 +106,7 @@ Return one of:
 Read the review and tell me what you think.
 
 Review:
-<<review>>
+{{review}}
 `,
       }
     ],

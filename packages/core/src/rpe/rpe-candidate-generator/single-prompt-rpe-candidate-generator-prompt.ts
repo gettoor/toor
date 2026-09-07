@@ -6,34 +6,34 @@ Your task is to improve an existing prompt using the provided evaluation analysi
 You are given the following information.
 
 ORIGINAL_PROMPT:
-<<original_prompt>>
+{{original_prompt}}
 
 AGGREGATED_SCORE:
-<<aggregated_score>>
+{{aggregated_score}}
 
 AGGREGATED_METRICS:
-<<aggregated_metrics>>
+{{aggregated_metrics}}
 
 SCORE_DISTRIBUTION:
-<<score_distribution>>
+{{score_distribution}}
 
 STRENGTHS:
-<<strengths>>
+{{strengths}}
 
 WEAKNESSES:
-<<weaknesses>>
+{{weaknesses}}
 
 RECOMMENDATIONS:
-<<recommendations>>
+{{recommendations}}
 
 FAILURE_PATTERNS:
-<<failure_patterns>>
+{{failure_patterns}}
 
 PASSED_EVALUATIONS:
-<<passed_evaluations>>
+{{passed_evaluations}}
 
 FAILED_EVALUATIONS:
-<<failed_evaluations>>
+{{failed_evaluations}}
 
 Your objective is to create an improved version of the ORIGINAL_PROMPT.
 

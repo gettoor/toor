@@ -3,7 +3,6 @@ import {
   RPEDataset,
   RPEState,
   RPEInput,
-  splitRPEDataset,
   singlePromptLLMRPEExecutor,
   singlePromptJudgeRPEEvaluator,
   defaultRPEAggregator,
@@ -22,16 +21,15 @@ import { renderRPEInsightsToHTML } from '@gettoor/core/rpe-html-renderer';
 import { EASY_DATASET } from './sentiment-dataset.js';
 
 async function run(): Promise<void> {
-  const dataset: RPEDataset = {
+  const trainingDataset: RPEDataset = {
     entries: EASY_DATASET.slice(0, 2),
   };
-  const [trainingDataset, validationDataset] = splitRPEDataset(dataset, 2);
 
   const input: RPEInput = {
     seed: [
       {
         modules: buildSinglePromptCandidateModules(
-          'What is the sentiment of the following input\n\n<<input>>'
+          'What is the sentiment of the following input\n\n{{input}}'
         ),
         candidateId: 'seed',
       },

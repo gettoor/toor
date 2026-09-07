@@ -31,7 +31,7 @@ model-parameters:
 # prompts to evaluate
 prompts:
   - name: support
-    prompt: "Answer clearly: <<question>>"
+    prompt: "Answer clearly: {{question}}"
 
 # dataset values substituted into prompts
 dataset:
@@ -116,8 +116,8 @@ Set the matching API key environment variable for the provider you use:
 ### Binary evaluation prompt
 
 The binary evaluator prompt must have the following placeholders:
-- `<<prompt>>` replaced with the prompt to evaluate,
-- `<<response>>` replaced with the response to the prompt.
+- <span v-pre>`{{prompt}}`</span> replaced with the prompt to evaluate,
+- <span v-pre>`{{response}}`</span> replaced with the response to the prompt.
 
 The evaluator is expected to return structured output with:
 - `passed` - `true` or `false`
@@ -129,19 +129,19 @@ Evaluation fails if required placeholders are missing.
 You are an evaluator. Does the response correctly satisfy the prompt?
 
 Prompt:
-<<prompt>>
+{{prompt}}
 
 Response:
-<<response>>
+{{response}}
 ```
 
 ### Scalar evaluation prompt
 
 The scalar evaluator prompt must have the following properties:
-- `<<prompt>>` replaced with the prompt to evaluate,
-- `<<response>>` replaced with the response to the prompt,
-- `<<scoring_scale>>` replaced with the scoring scale to use for the evaluation,
-- `<<metrics>>` replaced with the metrics to use for the evaluation.
+- <span v-pre>`{{prompt}}`</span> replaced with the prompt to evaluate,
+- <span v-pre>`{{response}}`</span> replaced with the response to the prompt,
+- <span v-pre>`{{scoring_scale}}`</span> replaced with the scoring scale to use for the evaluation,
+- <span v-pre>`{{metrics}}`</span> replaced with the metrics to use for the evaluation.
 
 The evaluator is expected to return structured output with:
 - `score` - numeric score
@@ -153,16 +153,16 @@ Evaluation fails if required placeholders are missing.
 You are an evaluator. Does the response correctly satisfy the prompt?
 
 PROMPT:
-<<prompt>>
+{{prompt}}
 
 RESPONSE:
-<<response>>
+{{response}}
 
 SCORING_SCALE:
-<<scoring_scale>>
+{{scoring_scale}}
 
 METRICS:
-<<metrics>>
+{{metrics}}
 ```
 
 ## Models
@@ -189,7 +189,7 @@ Prompts to evaluate are passed under the `prompts` field in the experiment objec
 - `name` - unique name,
 - `prompt` - prompt to evaluate.
 
-Prompt templates can include placeholders like `<<placeholder>>`.
+Prompt templates can include placeholders like <span v-pre>`{{placeholder}}`</span>.
 Values are injected from each dataset entry's `vars`.
 
 ### Prompts from files
@@ -232,7 +232,7 @@ prompts:
       - category: "bug" | "billing" | "feature" | "question"
 
       Ticket:
-      <<ticket>>
+      {{ticket}}
 
 structured-output:
   schema:
@@ -261,13 +261,13 @@ A dataset is a set of entries with variables that are substituted in the prompts
 
 ### Dataset variables
 
-The values in `vars` can be of any type (primitives, objects, and arrays). Placeholders let you specify the format in which values are inserted into the prompt. A placeholder with a format has the form `<<placeholder:format>>`. The supported formats are:
+The values in `vars` can be of any type (primitives, objects, and arrays). Placeholders let you specify the format in which values are inserted into the prompt. A placeholder with a format has the form <span v-pre>`{{placeholder:format}}`</span>. The supported formats are:
 - `string` (default) - the value is converted to a string.
 - `json` - the value is converted to a single-line JSON string.
 - `json-pretty` - the value is converted to a multi-line JSON string.
 - `yaml`, `yml` - the value is converted to a YAML string.
 
-Consider the example below, where the placeholder `<<input:yaml>>` is replaced with the `input` variable converted to a YAML string for each dataset entry.
+Consider the example below, where the placeholder <span v-pre>`{{input:yaml}}`</span> is replaced with the `input` variable converted to a YAML string for each dataset entry.
 
 ```yaml
 # other fields of the experiment...
@@ -277,7 +277,7 @@ prompts:
     prompt: |
       Determine whether the candidate is a good match for the job.
 
-      <<input:yaml>>
+      {{input:yaml}}
 
       Respond with exactly one of:
       match

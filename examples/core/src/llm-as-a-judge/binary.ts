@@ -26,10 +26,10 @@ async function customPrompt(): Promise<void> {
 You are an evaluator. Does the response correctly satisfy the prompt?
 
 PROMPT:
-<<prompt>>
+{{prompt}}
 
 RESPONSE:
-<<response>>
+{{response}}
 `,
   });
   printResult(result);

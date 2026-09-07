@@ -24,7 +24,7 @@ async function minimal(): Promise<void> {
       {
         // prompts to evaluate
         name: 'support',
-        prompt: 'Answer clearly: <<question>>' },
+        prompt: 'Answer clearly: {{question}}' },
       ],
 
       // dataset with variables to replace in the prompts

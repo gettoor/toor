@@ -13,12 +13,12 @@ A dataset is a collection of entries. Each entry, in turn, provides inputs (vari
 
 A dataset is typically split into training and validation datasets. The training dataset is used to generate improved prompts. The validation dataset is used to evaluate the generated prompts and decide which ones to keep and which ones to discard.
 
-The example below shows a prompt for detecting the sentiment of a review and a very basic dataset with two entries. The prompt contains a placeholder, `<<review>>`, which is replaced with the inputs from the dataset.
+The example below shows a prompt for detecting the sentiment of a review and a very basic dataset with two entries. The prompt contains a placeholder, <span v-pre>`{{review}}`</span>, which is replaced with the inputs from the dataset.
 
 ```txt
 What is the sentiment of the following review?
 
-<<review>>
+{{review}}
 ```
 
 ```yaml
@@ -84,7 +84,7 @@ Each item in the list is evaluated. There are multiple methods for evaluating a 
 
 An evaluation should result in quantitative (e.g., scores and metrics) and qualitative assessments (textual feedback). It is important that an evaluation provides textual feedback. It is used to build the reflection, which, in turn, fuels candidate generation.
 
-::: info
+::: info <Badge type="tip" text="NOTE" />
 It is crucial that the evaluation provides textual feedback that drives reflection and candidate generation.
 :::
 
@@ -224,7 +224,7 @@ Below is a new candidate generated for the example. Even though the original pro
 ```txt
 What is the sentiment of the following input?
 Respond with only a single word: 'positive', 'negative', or 'neutral'.
-<<input>>
+{{review}}
 ```
 
 ## Candidate evaluation

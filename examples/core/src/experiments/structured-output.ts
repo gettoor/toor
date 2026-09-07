@@ -57,7 +57,7 @@ Return structured output with:
 - category: "bug" | "billing" | "feature" | "question"
 
 Ticket:
-<<ticket>>
+{{ticket}}
 `,
       },
     ],

@@ -87,8 +87,8 @@ console.log(
 ### Binary `evalPrompt`
 
 The field `evalPrompt` can be used to provide a custom evaluation prompt. The prompt must contain the placeholders:
-- `<<prompt>>` replaced with the prompt to evaluate,
-- `<<response>>` replaced with the response to the prompt.
+- <span v-pre>`{{prompt}}`</span> replaced with the prompt to evaluate,
+- <span v-pre>`{{response}}`</span> replaced with the response to the prompt.
 
 The evaluation will fail if any of the placeholders are not provided.
 
@@ -101,10 +101,10 @@ const result = await binary({
 You are an evaluator. Does the response correctly satisfy the prompt?
 
 Prompt:
-<<prompt>>
+{{prompt}}
 
 Response:
-<<response>>
+{{response}}
 `,
 });
 ```
@@ -168,7 +168,7 @@ There are 3 predefined scoring scales (score 1 is the lowest score):
 
 ### Custom scale
 
-You will need to provide an object of type [`ScalarScoringScale`](/api/interfaces/ScalarScoringScale.md) to build your own scoring scale. The prompt in the field `prompt` is injected into the evaluation prompt as `<<scoring_scale>>`. The fields `min` and `max` are used to normalize the score to the range [0, 1].
+You will need to provide an object of type [`ScalarScoringScale`](/api/interfaces/ScalarScoringScale.md) to build your own scoring scale. The prompt in the field `prompt` is injected into the evaluation prompt as `{{scoring_scale}}`. The fields `min` and `max` are used to normalize the score to the range [0, 1].
 
 See the below example for a custom scoring scale.
 
@@ -231,10 +231,10 @@ Toor provides the following predefined metrics:
 ### Scalar `evalPrompt`
 
 The field `evalPrompt` can be used to provide a custom evaluation prompt. The prompt must contain the placeholders:
-- `<<prompt>>` replaced with the prompt to evaluate,
-- `<<response>>` replaced with the response to the prompt,
-- `<<scoring_scale>>` replaced with the scoring scale to use for the evaluation,
-- `<<metrics>>` replaced with the metrics to use for the evaluation.
+- <span v-pre>`{{prompt}}`</span> replaced with the prompt to evaluate,
+- <span v-pre>`{{response}}`</span> replaced with the response to the prompt,
+- <span v-pre>`{{scoring_scale}}`</span> replaced with the scoring scale to use for the evaluation,
+- <span v-pre>`{{metrics}}`</span> replaced with the metrics to use for the evaluation.
 
 The evaluation will fail if any of the placeholders is not provided.
 
@@ -247,16 +247,16 @@ const result = await scalar({
 You are an evaluator. Does the response correctly satisfy the prompt?
 
 PROMPT:
-<<prompt>>
+{{prompt}}
 
 RESPONSE:
-<<response>>
+{{response}}
 
 SCORING_SCALE:
-<<scoring_scale>>
+{{scoring_scale}}
 
 METRICS:
-<<metrics>>
+{{metrics}}
 `,
 });
 ```

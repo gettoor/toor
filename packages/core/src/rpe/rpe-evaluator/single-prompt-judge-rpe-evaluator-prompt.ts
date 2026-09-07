@@ -15,16 +15,16 @@ RESPONSE is factually equivalent, equally complete, and satisfies all
 requirements of the PROMPT.
 
 PROMPT:
-<<prompt>>
+{{prompt}}
 
 RESPONSE:
-<<response>>
+{{response}}
 
 SCORING_SCALE:
-<<scoring_scale>>
+{{scoring_scale}}
 
 EXPECTED_RESPONSE:
-<<expected_response>>
+{{expected_response}}
 
 Evaluation Guidelines:
 
@@ -38,7 +38,7 @@ Evaluation Guidelines:
     -   absence of contradictions,
     -   absence of hallucinations,
     -   factual equivalence (not wording similarity).
-<<metrics>>
+{{metrics}}
 4.  Do not infer missing information or assume omitted details are correct.
 5.  Penalize:
     -   missing required information,

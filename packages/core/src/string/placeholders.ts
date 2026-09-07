@@ -26,14 +26,15 @@ export interface ReplacePlaceholderOutput {
   unusedValueKeys: string[];
 }
 
-const PLACEHOLDER_PATTERN = /<<([^<>]+)>>/g;
+const PLACEHOLDER_PATTERN = /\{\{([^{}]+)\}\}/g;
 
 /**
  * Replaces placeholders in a string with values.
  * The placeholders are of the form `<key>` in the string.
+ * @category Utils
  * @example
  * ```ts
- * const text = 'Hello <<name>>!';
+ * const text = 'Hello {{name}}!';
  * const values = { name: 'John', age: '27' };
  * const output = replacePlaceholders(text, values);
  * // The output will be:
@@ -42,7 +43,6 @@ const PLACEHOLDER_PATTERN = /<<([^<>]+)>>/g;
  * //   unusedValueKeys: ['age'],
  * // }
  * ```
- * @category Utils
  * @param text - The text to replace placeholders in.
  * @param values - The values to replace placeholders with.
  * @returns The string with placeholders replaced with values.
@@ -74,7 +74,7 @@ export function replacePlaceholders(
     if (value === undefined) {
       throw new NoValueForPlaceholderError([placeholder]);
     }
-    const placeholderWithBrackets = `<<${placeholder}>>`;
+    const placeholderWithBrackets = `{{${placeholder}}}`;
     text = text.replace(
       placeholderWithBrackets,
       formatValue(key, value, format),

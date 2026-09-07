@@ -1,8 +1,8 @@
 /**
  * The default prompt to use for the binary evaluation. 
  * It takes the placeholders:
- * - `<<prompt>>`: The prompt to evaluate.
- * - `<<response>>`: The response to evaluate.
+ * - `{{prompt}}`: The prompt to evaluate.
+ * - `{{response}}`: The response to evaluate.
  * @category LLM-as-a-judge
  */
 export const BINARY_PROMPT = `
@@ -11,10 +11,10 @@ You are a strict evaluator.
 Your task is to determine whether the RESPONSE satisfies the EVALUATION_PROMPT.
 
 PROMPT:
-<<prompt>>
+{{prompt}}
 
 RESPONSE:
-<<response>>
+{{response}}
 
 Definition of "satisfies":
 

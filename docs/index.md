@@ -69,7 +69,7 @@ const results = await runExperiment({
     {
       // prompts to evaluate
       name: 'support',
-      prompt: 'Answer clearly: <<question>>' },
+      prompt: 'Answer clearly: {{question}}' },
     ],
 
     // dataset with variables to replace in the prompts
@@ -115,7 +115,7 @@ model-parameters:
 # prompts to evaluate
 prompts:
   - name: support
-    prompt: "Answer clearly: <<question>>"
+    prompt: "Answer clearly: {{question}}"
 
 # dataset with variables to replace in the prompts
 dataset:

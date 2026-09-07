@@ -50,7 +50,7 @@ low
 
 Ticket:
 
-<<ticket>>
+{{ticket}}
 `;
 
   const results = await runExperiment({

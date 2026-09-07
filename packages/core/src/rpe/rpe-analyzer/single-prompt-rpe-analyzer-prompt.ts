@@ -9,29 +9,29 @@ You are given the following information.
 
 ## Original Prompt
 
-<<prompt>>
+{{prompt}}
 
 ## Aggregated Overall Score (0-1)
 
-<<aggregated_score>>
+{{aggregated_score}}
 
 ## Aggregated Metric Scores (0-1)
 
-<<aggregated_metrics>>
+{{aggregated_metrics}}
 
 Aggregated metric scores may be absent. When metrics are provided, treat them as diagnostic signals representing performance along specific evaluation dimensions.
 
 ## Score Distribution
 
-<<score_distribution>>
+{{score_distribution}}
 
 ## Passed Evaluation Explanations
 
-<<passed_explanations>>
+{{passed_explanations}}
 
 ## Representative Failed Examples
 
-<<failed_examples>>
+{{failed_examples}}
 
 ## Analysis Guidelines
 

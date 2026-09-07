@@ -1,9 +1,10 @@
 /**
  * The default prompt to use for the scalar evaluation.
  * It takes the parameters (each in double curly braces):
- * - `<<prompt>>`: The prompt to evaluate.
- * - `<<response>>`: The response to evaluate.
- * - `<<scoring_scale>>`: The scoring scale to use.
+ * - `{{prompt}}`: The prompt to evaluate.
+ * - `{{response}}`: The response to evaluate.
+ * - `{{scoring_scale}}`: The scoring scale to use.
+ * - `{{metrics}}`: The metrics to use.
  * @category LLM-as-a-judge
  */
 export const SCALAR_PROMPT = `
@@ -12,20 +13,20 @@ You are a strict evaluator.
 Your task is to assess how well the RESPONSE satisfies the PROMPT using the provided SCORING_SCALE.
 
 PROMPT:
-<<prompt>>
+{{prompt}}
 
 RESPONSE:
-<<response>>
+{{response}}
 
 SCORING_SCALE:
-<<scoring_scale>>
+{{scoring_scale}}
 
 Evaluation Guidelines:
 
 1. Focus only on whether the RESPONSE fulfills the intent and requirements of the PROMPT.
 2. Consider:
    - Absence of contradictions
-<<metrics>>
+{{metrics}}
 3. Do not reward partially correct answers as fully correct.
 4. Be strict and conservative in scoring.
 5. Do not consider writing style unless explicitly required by the PROMPT.

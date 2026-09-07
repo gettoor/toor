@@ -40,7 +40,7 @@ async function datasetVariables(): Promise<void> {
         prompt: `
 Determine whether the candidate is a good match for the job.
 
-<<input:yaml>>
+{{input:yaml}}
 
 Respond with exactly one of:
 match
