@@ -9,6 +9,7 @@ import {
   NoValueForPlaceholderError,
   UnknownPlaceholdersError,
 } from './placeholders-errors.js';
+import { ReplacePlaceholdersOptions } from './placeholders-types.js';
 
 /**
  * Output of the {@link replacePlaceholders} function.
@@ -50,11 +51,18 @@ const PLACEHOLDER_PATTERN = /\{\{([^{}]+)\}\}/g;
 export function replacePlaceholders(
   text: string,
   values: Record<string, any>,
+  options?: ReplacePlaceholdersOptions,
 ): ReplacePlaceholderOutput {
+  const ignorePlaceholders = options?.ignorePlaceholders ?? [];
+
   // find all placeholders in the text
   const placeholdersInText = new Set<string>();
   for (const match of text.matchAll(PLACEHOLDER_PATTERN)) {
-    placeholdersInText.add(match[1].trim());
+    const placeholder = match[1].trim();
+    if (ignorePlaceholders.includes(placeholder)) {
+      continue;
+    }
+    placeholdersInText.add(placeholder);
   }
   
   // check if all placeholders are provided

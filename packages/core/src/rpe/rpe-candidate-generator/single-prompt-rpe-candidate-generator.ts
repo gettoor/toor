@@ -137,7 +137,7 @@ async function generateCandidate(
   analysis: RPEAnalyzerOutput,
 ): Promise<RPECandidateGeneratorCandidate> {
   const prompt = replacePlaceholders(
-    SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_PROMPT,
+    SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_PROMPT.prompt,
     {
       original_prompt: requireSinglePromptCandidateModule(
         candidate.modules,
@@ -159,6 +159,10 @@ async function generateCandidate(
       failed_evaluations: explanationsForPrompt(
         aggregation.failedEvaluations,
       ),
+    },
+    {
+      ignorePlaceholders:
+        SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_PROMPT.ignorePlaceholders,
     },
   );
 
