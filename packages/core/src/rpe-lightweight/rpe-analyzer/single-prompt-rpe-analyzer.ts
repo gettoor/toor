@@ -8,17 +8,18 @@ import {
   removeNewlines,
 } from '../../llm/index.js';
 import { DefaultModelProvider } from '../../model-provider/index.js';
-import { responseToString } from '../rpe-core/index.js';
-import { modelParametersToRPEInfo } from '../rpe-info/index.js';
-import { requireSinglePromptCandidateModule } from '../rpe-candidate/index.js';
-import { findCandidateById, RPEState } from '../rpe-state/index.js';
-import { RPEEvaluatorOutput } from '../rpe-evaluator/index.js';
-import { 
+import {
+  responseToString,
+  modelParametersToRPEInfo,
+  requireSinglePromptCandidateModule,
+  RPEEvaluatorOutput,
+  findCandidateById,
+  RPEState,
   RPEAnalyzer,
   RPEAnalyzerInfo,
   RPEAnalyzerInput,
   RPEAnalyzerOutput,
-} from './rpe-analyzer-types.js';
+} from '../../rpe-core/index.js';
 import {
   SINGLE_PROMPT_RPE_ANALYZER_PASSED_EXPLANATIONS_COUNT,
   SINGLE_PROMPT_RPE_ANALYZER_FAILED_EXAMPLES_COUNT,
@@ -95,15 +96,25 @@ export function singlePromptRPEAnalyzer(
         })
       });
 
+      const failedExampleAnalysis = output.failedExampleAnalysis
+        .filter((_, index) => {
+          return index < input.aggregation.failedEvaluations.length;
+        })
+        .map((analysis, index) => {
+          const evaluation = input.aggregation.failedEvaluations[index];
+          return {
+            datasetEntryId: evaluation.datasetEntry.datasetEntryId,
+            ...analysis,
+          }
+        },
+      );
+
       return {
         candidateRef: input.aggregation.candidateRef,
         strengths: output.strengths.map(strength => strength.description),
-        weaknesses: output.weaknesses.map(weakness => weakness.description),
+        failedExampleAnalysis,
         recommendations: output.recommendations.map(recommendation => {
           return `${recommendation.goal} (${recommendation.reason})`;
-        }),
-        failurePatterns: output.failurePatterns.map(failurePattern => {
-          return failurePattern.description;
         }),
         usage: {
           modelUsage: [
@@ -178,18 +189,20 @@ function failedExamplesForPrompt(
     .map(({ response, datasetEntry, reasoning }, index) => {
       const no = `${index + 1}.`;
 
-      const expectedResponse = datasetEntry.expectedResponse;
-      const expectedResponseString = expectedResponse
-        ? responseToString(expectedResponse)
+      const expectedResponse = datasetEntry.expectedResponse
+        ? `   **Expected response**: ` +
+          `${responseToString(datasetEntry.expectedResponse)}`
         : '';
-      const expectedResponseEntry = expectedResponse
-        ? `   **Expected response**: ${expectedResponseString}`
+      const expectedResponseReasoning = datasetEntry.expectedResponseReasoning
+        ? `   **Expected response reasoning**: ` +
+          `${datasetEntry.expectedResponseReasoning}`
         : '';
       
       const responseString = removeNewlines(responseToString(response));
       return [
         `${no} **Response from model**: ${responseString}`,
-        expectedResponseEntry,
+        expectedResponse,
+        expectedResponseReasoning,
         `   **Explanation from evaluator**: ${removeNewlines(reasoning)}`,
       ]
       .filter(line => line !== '')

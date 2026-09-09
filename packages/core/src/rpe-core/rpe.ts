@@ -24,6 +24,7 @@ export async function optimize(
 ): Promise<RPEOutput> {
   const state: RPEState = {
     candidates: [...input.seed],
+    datasetEntries: [...input.datasetEntries],
     iterationNo: 0,
     iteration: {
       candidateRefs: input.seed.map(candidate => {
@@ -40,6 +41,8 @@ export async function optimize(
   
   // run the RPE process
   while (true) {
+    console.log(`Iteration #${state.iterationNo + 1}`);
+
     const iteration: RPEIterationInProgress = state.iteration;
     const iterationCandidates = iteration.candidateRefs.map(candidateRef => {
       return findCandidateById(state, candidateRef.candidateId);
@@ -133,6 +136,14 @@ export async function optimize(
       candidateRefs: selectedCandidateRefs,
     } = await input.candidateSelector.run(state, {});
     iteration.selectedCandidateRefs = selectedCandidateRefs;
+
+    // there always should be at least one selected candidate
+    if (selectedCandidateRefs.length === 0) {
+      stopReason = 'No candidates selected';
+      break;
+    }
+
+    console.log(`Selected candidates: ${selectedCandidateRefs.map(c => c.candidateId).join(', ')}`);
 
     // update history
     state.iterationHistory.push(iteration as RPEIteration);

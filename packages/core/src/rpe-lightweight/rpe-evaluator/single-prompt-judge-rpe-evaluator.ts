@@ -1,17 +1,15 @@
 import { DefaultModelProvider } from '../../model-provider/index.js';
 import { scalar, SCALAR_SCORING_DEFAULT } from '../../llm-as-a-judge/index.js';
-import { responseToString } from '../rpe-core/index.js';
-import { modelParametersToRPEInfo } from '../rpe-info/index.js';
 import {
+  responseToString,
+  modelParametersToRPEInfo,
   candidateRefFromCandidate,
   requireSinglePromptCandidateModule,
-} from '../rpe-candidate/index.js';
-import { 
   RPEEvaluator,
   RPEEvaluatorInfo,
   RPEEvaluatorInput,
   RPEEvaluatorOutput,
-} from './rpe-evaluator-types.js';
+} from '../../rpe-core/index.js';
 import {
   SinglePromptJudgeRPEEvaluatorInput,
 } from './single-prompt-judge-rpe-evaluator-types.js';

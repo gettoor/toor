@@ -1,4 +1,4 @@
-import { InternalToorError } from '../../errors/index.js';
+import { InternalToorError, ToorError } from '../../errors/index.js';
 import { RPECandidateRef } from '../rpe-candidate/index.js';
 import { RPEState } from '../rpe-state/index.js';
 import {
@@ -41,14 +41,36 @@ export function improvedCandidateSelector(
           'No new aggregated evaluations in improved candidate selector.'
         );
       }
+      
+      const findCandidateById = (candidateId: string) => {
+        const candidate = state.candidates.find(candidate => {
+          return candidate.candidateId === candidateId;
+        });
+        if (!candidate) {
+          throw new InternalToorError(
+            `Candidate ${ToorError.quote(candidateId)} ` +
+            `not found in improved candidate selector.`
+          );
+        }
+        return candidate;
+      };
 
       const selectedCandidateRefs: RPECandidateRef[] = [];
       // check which candidates are improved
       for (const newEvaluation of newEvaluations)
       {
+        const newCandidate = findCandidateById(
+          newEvaluation.candidateRef.candidateId,
+        );
+
         // find the parent evaluation for the candidate
         const parentEvaluation = parentEvaluations.find(evaluation => {
-          return evaluation.candidateRef === newEvaluation.candidateRef;
+          const parentCandidate = findCandidateById(
+            evaluation.candidateRef.candidateId,
+          );
+          return newCandidate.parentCandidateIds?.includes(
+            parentCandidate.candidateId,
+          );
         });
         if (!parentEvaluation) {
           continue;

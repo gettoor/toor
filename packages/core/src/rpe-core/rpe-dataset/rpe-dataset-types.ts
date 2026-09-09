@@ -12,6 +12,11 @@ export type RPEDatasetEntryVarValue = any;
  */
 export interface RPEDatasetEntry {
   /**
+   * Unique identifier of the dataset entry.
+   */
+  datasetEntryId: string;
+
+  /**
    * Variables to replace in the candidate.
    */
   vars?: Record<string, RPEDatasetEntryVarValue>;
@@ -20,6 +25,11 @@ export interface RPEDatasetEntry {
    * Expected response from a LLM model to the candidate.
    */
   expectedResponse?: RPEResponse;
+
+  /**
+   * Reasoning for why the expected response is correct.
+   */
+  expectedResponseReasoning?: string;
 }
 
 /**

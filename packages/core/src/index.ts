@@ -6,3 +6,4 @@ export * from './llm/index.js';
 export * from './llm-as-a-judge/index.js';
 export * from './llm-experimentation/index.js';
 export * from './rpe-core/index.js';
+export * from './rpe-lightweight/index.js';

@@ -1,4 +1,5 @@
 import { RPEMetadata } from '../rpe-core/index.js';
+import { RPEDatasetEntry } from '../rpe-dataset/index.js';
 import { RPECandidate, RPECandidateRef } from '../rpe-candidate/index.js';
 import { RPEExecutorResponse } from '../rpe-executor/index.js';
 import { EvaluatorCandidateOutput } from '../evaluator-types.js';
@@ -80,6 +81,11 @@ export interface RPEState {
    * All the candidates from an RPE process.
    */
   candidates: RPECandidate[];
+
+  /**
+   * All the dataset entries used in the RPE process.
+   */
+  datasetEntries: RPEDatasetEntry[];
 
   /**
    * The current iteration number of the RPE process (starting from 0).

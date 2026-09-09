@@ -1,10 +1,12 @@
+import { AggregationFunc } from './statistics-types.js';
+
 /**
  * Calculates the average of an array of numbers.
  * @category Math
  * @param values - The array of numbers to calculate the average of.
  * @returns The average of the numbers.
  */
-export function average(values: number[]): number {
+export const average: AggregationFunc = (values: number[]): number => {
   if (values.length === 0) {
     return 0;
   }
@@ -17,7 +19,7 @@ export function average(values: number[]): number {
  * @param values - The array of numbers to calculate the median of.
  * @returns The median of the numbers.
  */
-export function median(values: number[]): number {
+export const median: AggregationFunc = (values: number[]): number => {
   if (values.length === 0) {
     return 0;
   }

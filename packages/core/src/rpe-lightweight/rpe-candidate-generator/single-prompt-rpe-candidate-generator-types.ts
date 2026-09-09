@@ -33,11 +33,22 @@ export type SinglePromptRPECandidateGeneratorOutput = z.infer<
   typeof SinglePromptRPECandidateGeneratorOutputSchema
 >;
 
+/**
+ * Input for the single-prompt RPE candidate generator.
+ * @category Reflective Prompt Evolution
+ */
 export interface SinglePromptRPECandidateGeneratorInput {
   /**
    * Parallelism for the candidate generation.
    */
   parallelism?: number;
+
+  /**
+   * Indicates whether to include expected responses and expected response
+   * reasoning of failed evaluations.
+   * @default true
+   */
+  includeFailedExpectedResponses?: boolean;
 
   /**
    * Model provider to use for the candidate generator.

@@ -16,6 +16,47 @@ export interface RPEAnalyzerInput {
 }
 
 /**
+ * Analysis of a failed example (dataset entry).
+ * @category Reflective Prompt Evolution
+ */
+export interface RPEAnalyzerFailedExampleAnalysis {
+  /**
+   * Identifier of the dataset entry.
+   */
+  datasetEntryId: string;
+
+  /**
+   * Response from the model.
+   */
+  response: string;
+
+  /**
+   * What went wrong, not why.
+   */
+  failureReason: string;
+
+  /**
+   * Why the current prompt plausibly led the model to that failure.
+   */
+  plausibleCause: string;
+
+  /**
+   * Concept the prompt fails to distinguish correctly.
+   */
+  missingConceptualDistinction: string;
+
+  /**
+   * Rule that could fix other similar examples.
+   */
+  generalRule: string;
+
+  /**
+   * Already-successful behaviors or examples that could become worse if generalRule is applied too broadly.
+   */
+  regressionRisks: string[];
+}
+
+/**
  * Output for the RPE analyzer.
  * @category Reflective Prompt Evolution
  */
@@ -31,19 +72,14 @@ export interface RPEAnalyzerOutput {
   strengths: string[];
 
   /**
-   * Weaknesses of the candidate.
+   * Analysis of each failed example.
    */
-  weaknesses: string[];
+  failedExampleAnalysis: RPEAnalyzerFailedExampleAnalysis[];
 
   /**
    * Recommendations for the candidate improvement.
    */
   recommendations: string[];
-
-  /**
-   * Failure patterns of the candidate.
-   */
-  failurePatterns: string[];
 
   /**
    * Usage of the model.

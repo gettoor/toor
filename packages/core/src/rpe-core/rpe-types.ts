@@ -1,3 +1,4 @@
+import { RPEDatasetEntry } from './rpe-dataset/index.js';
 import { RPECandidate } from './rpe-candidate/index.js';
 import { RPEExecutor } from './rpe-executor/index.js';
 import { RPEEvaluator } from './rpe-evaluator/index.js';
@@ -21,9 +22,14 @@ export type RPEUpdateStateFunc = (state: RPEState) => Promise<void>;
  */
 export interface RPEInput {
   /**
-   * The initial candidates (seed candidates).
+   * Initial candidates (seed candidates).
    */
   seed: RPECandidate[];
+
+  /**
+   * All the dataset entries used in the RPE process.
+   */
+  datasetEntries: RPEDatasetEntry[];
 
   /**
    * Executor to use for the RPE. An executor is responsible for generating

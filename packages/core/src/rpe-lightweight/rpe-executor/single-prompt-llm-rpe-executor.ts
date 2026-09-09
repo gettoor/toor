@@ -8,19 +8,17 @@ import {
   ModelParameters,
 } from '../../llm/index.js';
 import { DefaultModelProvider } from '../../model-provider/index.js';
-import { modelParametersToRPEInfo } from '../rpe-info/index.js';
-import { RPEDatasetEntry } from '../rpe-dataset/index.js';
 import {
+  modelParametersToRPEInfo,
+  RPEDatasetEntry,
   candidateRefFromCandidate,
   requireSinglePromptCandidateModule,
   RPECandidate,
-} from '../rpe-candidate/index.js';
-import { 
   RPEExecutor,
   RPEExecutorInfo,
   RPEExecutorInput,
   RPEExecutorResponse,
-} from './rpe-executor-types.js';
+} from '../../rpe-core/index.js';
 import {
   SinglePromptLLMRPEExecutorInput,
 } from './single-prompt-llm-rpe-executor-types.js';

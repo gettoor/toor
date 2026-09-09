@@ -11,8 +11,8 @@
       "import": "./dist/index.js"
     },
     "./rpe-html-renderer": {
-      "types": "./dist/rpe/rpe-html-renderer/index.d.ts",
-      "import": "./dist/rpe/rpe-html-renderer/index.js"
+      "types": "./dist/rpe-core/rpe-html-renderer/index.d.ts",
+      "import": "./dist/rpe-core/rpe-html-renderer/index.js"
     }
   },
   "scripts": {

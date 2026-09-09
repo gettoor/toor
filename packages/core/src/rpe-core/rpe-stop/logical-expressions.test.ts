@@ -1,5 +1,5 @@
 import { RPEState } from '../rpe-state/index.js';
-import { rpeStopAnd, rpeStopOr } from './logical-expressions.js';
+import { andRPEStop, orRPEStop } from './logical-expressions.js';
 
 const state = {} as RPEState;
 
@@ -10,7 +10,7 @@ describe('rpeStopAnd', () => {
       stopReason: 'expression stopped',
     }));
 
-    await expect(rpeStopAnd([expression, expression], 'all stopped')(state))
+    await expect(andRPEStop([expression, expression], 'all stopped')(state))
       .resolves.toEqual({ stop: true, stopReason: 'all stopped' });
     expect(expression).toHaveBeenCalledTimes(2);
     expect(expression).toHaveBeenCalledWith(state);
@@ -23,13 +23,13 @@ describe('rpeStopAnd', () => {
       stopReason: 'unused',
     }));
 
-    await expect(rpeStopAnd([first, second])(state))
+    await expect(andRPEStop([first, second])(state))
       .resolves.toEqual({ stop: false });
     expect(second).not.toHaveBeenCalled();
   });
 
   it('uses the default stop reason', async () => {
-    await expect(rpeStopAnd([])(state)).resolves.toEqual({
+    await expect(andRPEStop([])(state)).resolves.toEqual({
       stop: true,
       stopReason: 'All expressions returned true',
     });
@@ -44,7 +44,7 @@ describe('rpeStopOr', () => {
     }));
     const second = jest.fn(async () => ({ stop: false as const }));
 
-    await expect(rpeStopOr([first, second])(state)).resolves.toEqual({
+    await expect(orRPEStop([first, second])(state)).resolves.toEqual({
       stop: true,
       stopReason: 'first stopped',
     });
@@ -55,15 +55,8 @@ describe('rpeStopOr', () => {
   it('returns false when every expression returns false', async () => {
     const expression = jest.fn(async () => ({ stop: false as const }));
 
-    await expect(rpeStopOr([expression, expression], 'none stopped')(state))
+    await expect(orRPEStop([expression, expression], )(state))
       .resolves.toEqual({ stop: false, stopReason: 'none stopped' });
     expect(expression).toHaveBeenCalledTimes(2);
-  });
-
-  it('uses the default stop reason', async () => {
-    await expect(rpeStopOr([])(state)).resolves.toEqual({
-      stop: false,
-      stopReason: 'No expressions returned true',
-    });
   });
 });

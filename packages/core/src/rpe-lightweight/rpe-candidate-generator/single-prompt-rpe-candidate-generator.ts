@@ -2,7 +2,6 @@ import { generateText, Output } from 'ai';
 
 import { replacePlaceholders } from '../../string/index.js';
 import { InternalToorError, ToorError } from '../../errors/index.js';
-import { DistributionRange } from '../../math/index.js';
 import { runParallelBatchesOrThrow } from '../../concurrency/index.js';
 import {
   MetricResult,
@@ -13,26 +12,27 @@ import {
   DefaultModelProvider,
   ModelProvider,
 } from '../../model-provider/index.js';
-import { modelParametersToRPEInfo } from '../rpe-info/index.js';
-import { findCandidateById, RPEState } from '../rpe-state/index.js';
 import {
+  RPEDatasetEntry,
+  RPEState,
+  modelParametersToRPEInfo,
+  findCandidateById,
   buildSinglePromptCandidateModules,
   requireSinglePromptCandidateModule,
   RPECandidate,
-} from '../rpe-candidate/index.js';
-import { RPEEvaluatorOutput } from '../rpe-evaluator/rpe-evaluator-types.js';
-import { RPEAggregatorOutput } from '../rpe-aggregator/index.js';
-import { RPEAnalyzerOutput } from '../rpe-analyzer/index.js';
-import { 
-  SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_PROMPT,
-} from './single-prompt-rpe-candidate-generator-prompt.js';
-import { 
+  RPEEvaluatorOutput,
+  RPEAggregatorOutput,
+  RPEAnalyzerOutput,
   RPECandidateGenerator,
   RPECandidateGeneratorInfo,
   RPECandidateGeneratorInput,
   RPECandidateGeneratorOutput,
   RPECandidateGeneratorCandidate,
-} from './rpe-candidate-generator-types.js';
+  RPEAnalyzerFailedExampleAnalysis,
+} from '../../rpe-core/index.js';
+import { 
+  SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_PROMPT,
+} from './single-prompt-rpe-candidate-generator-prompt.js';
 import {
   SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_PARALLELISM,
 } from './single-prompt-rpe-candidate-generator-consts.js';
@@ -53,9 +53,10 @@ export function singlePromptRPECandidateGenerator(
   input: SinglePromptRPECandidateGeneratorInput,
 ): RPECandidateGenerator {
   const {
+    parallelism,
+    includeFailedExpectedResponses = true,
     modelName,
     modelParameters,
-    parallelism,
     prompt: candidateGeneratorPrompt,
   } = input;
   const modelProvider = input.modelProvider ?? new DefaultModelProvider();
@@ -106,6 +107,8 @@ export function singlePromptRPECandidateGenerator(
           newCandidateId,
           aggregation,
           analysis,
+          state.datasetEntries,
+          includeFailedExpectedResponses,
         );
         return candidate;
       });
@@ -143,6 +146,8 @@ async function generateCandidate(
   newCandidateId: string,
   aggregation: RPEAggregatorOutput,
   analysis: RPEAnalyzerOutput,
+  datasetEntries: RPEDatasetEntry[],
+  includeExpectedResponse: boolean,
 ): Promise<RPECandidateGeneratorCandidate> {
   const prompt = replacePlaceholders(
     generatorPrompt,
@@ -150,22 +155,18 @@ async function generateCandidate(
       original_prompt: requireSinglePromptCandidateModule(
         candidate.modules,
       ),
-      aggregated_score: aggregation.aggregatedScore,
       aggregated_metrics: aggregatedMetricsForPrompt(
         aggregation.aggregatedMetrics ?? {},
       ),
-      score_distribution: scoreDistributionForPrompt(
-        aggregation.scoreDistribution,
-      ),
       strengths: analysis.strengths.join('\n'),
-      weaknesses: analysis.weaknesses.join('\n'),
       recommendations: analysis.recommendations.join('\n'),
-      failure_patterns: analysis.failurePatterns.join('\n'),
-      passed_evaluations: explanationsForPrompt(
+      passed_evaluations: passedEvaluationsForPrompt(
         aggregation.passedEvaluations,
       ),
-      failed_evaluations: explanationsForPrompt(
-        aggregation.failedEvaluations,
+      failed_examples: failedExampleAnalysisForPrompt(
+        datasetEntries,
+        analysis.failedExampleAnalysis,
+        includeExpectedResponse,
       ),
     },
     {
@@ -222,18 +223,7 @@ function aggregatedMetricsForPrompt(
   }).join('\n');
 }
 
-function scoreDistributionForPrompt(
-  ranges: DistributionRange[],
-): string {
-  const sorted = [...ranges].sort((a, b) => a.min - b.min);
-  return sorted
-    .map(range => {
-      return `${range.min}-${range.max}: ${range.count}`;
-    })
-    .join('\n');
-}
-
-function explanationsForPrompt(
+function passedEvaluationsForPrompt(
   evaluations: RPEEvaluatorOutput[],
 ): string {
   return evaluations
@@ -241,4 +231,74 @@ function explanationsForPrompt(
       return `- ${evaluation.reasoning}`;
     })
     .join('\n');
+}
+
+function failedExampleAnalysisForPrompt(
+  datasetEntries: RPEDatasetEntry[],
+  failedExampleAnalysis: RPEAnalyzerFailedExampleAnalysis[],
+  includeFailedExpectedResponses: boolean,
+): string {
+  let output = '';
+
+  failedExampleAnalysis
+    .filter(analysis => {
+      return datasetEntries.some(entry => {
+        return entry.datasetEntryId === analysis.datasetEntryId;
+      });
+    })
+    .forEach((analysis, index) => {
+      output += `FAILED EXAMPLE ${index + 1}\n\n`;
+
+      // dataset entry
+      const datasetEntry = datasetEntries.find(entry => {
+        return entry.datasetEntryId === analysis.datasetEntryId;
+      })!;
+
+      // input
+      const varNames = Object.keys(datasetEntry.vars ?? {});
+      if (varNames.length > 0) {
+        output += 'Input:\n';
+        varNames.forEach(name => {
+          output += `${name}: ${datasetEntry.vars![name]}\n`;
+        });
+        output += '\n';
+      }
+
+      // response
+      output += `Response:\n${analysis.response}\n\n`;
+
+      // expected response
+      if (includeFailedExpectedResponses) {
+        if (datasetEntry.expectedResponse) {
+          output += `Expected Response:\n` +
+            `${datasetEntry.expectedResponse}\n\n`;
+        }
+        if (datasetEntry.expectedResponseReasoning) {
+          output += `Expected Response Reasoning:\n` +
+            `${datasetEntry.expectedResponseReasoning}\n\n`;
+        }
+      }
+
+      // failure reason
+      output += `Failure Reason:\n` +
+        `${ analysis.failureReason } \n\n`;
+
+      // plausible cause
+      output += `Plausible Cause:\n` +
+        `${ analysis.plausibleCause } \n\n`;
+      
+      // missing conceptual distinction
+      output += `Missing Conceptual Distinction:\n` +
+        `${ analysis.missingConceptualDistinction } \n\n`;
+      
+      // general rule
+      output += `General Rule:\n` +
+        `${analysis.generalRule}\n\n`;
+      
+      // regression risks
+      output += `Regression Risks:\n` +
+        `${analysis.regressionRisks.join('\n')}\n`;
+    });
+
+  return output;
 }

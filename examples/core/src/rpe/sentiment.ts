@@ -1,8 +1,11 @@
 import fs from 'fs/promises';
 import { 
+  RPECandidate,
   RPEDataset,
-  RPEState,
   RPEInput,
+  orRPEStop,
+  maximumIterationsRPEStop,
+  minimumScoreRPEStop,
   singlePromptLLMRPEExecutor,
   singlePromptJudgeRPEEvaluator,
   defaultRPEAggregator,
@@ -18,22 +21,22 @@ import {
   buildSinglePromptCandidateModules,
 } from '@gettoor/core';
 import { renderRPEInsightsToHTML } from '@gettoor/core/rpe-html-renderer';
-import { EASY_DATASET } from './sentiment-dataset.js';
+import { HARD_DATASET } from './sentiment-dataset.js';
 
 async function run(): Promise<void> {
   const trainingDataset: RPEDataset = {
-    entries: EASY_DATASET.slice(0, 2),
+    entries: HARD_DATASET.slice(0, 4),
+  };
+  const seedPrompt: RPECandidate = {
+    modules: buildSinglePromptCandidateModules(
+      'What is the sentiment of the following input\n\n{{input}}'
+    ),
+    candidateId: 'seed',
   };
 
   const input: RPEInput = {
-    seed: [
-      {
-        modules: buildSinglePromptCandidateModules(
-          'What is the sentiment of the following input\n\n{{input}}'
-        ),
-        candidateId: 'seed',
-      },
-    ],
+    seed: [seedPrompt],
+    datasetEntries: [...trainingDataset.entries],
     executor: singlePromptLLMRPEExecutor({
       modelName: 'gemini:gemini-2.5-flash',
       modelParameters: {
@@ -77,12 +80,10 @@ async function run(): Promise<void> {
       isCandidateImproved: isCandidateImprovedByScore,
       selectParentCandidatesIfBetter: true,
     }),
-    stopAfterIteration: async (state: RPEState) => {
-      return {
-        stop: state.iterationNo === 0,
-        stopReason: `Hit iteration limit`,
-      };
-    }
+    stopAfterIteration: orRPEStop([
+      maximumIterationsRPEStop({ maxIterations: 1 }),
+      minimumScoreRPEStop({ score: 0.95 }),
+    ]),
   };
 
   const { insights } = await optimize(input);

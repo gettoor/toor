@@ -1,6 +1,6 @@
 import { ModelParameters } from '../../llm/index.js';
 import { ModelProvider } from '../../model-provider/index.js';
-import { RPEDataset } from '../rpe-dataset/index.js';
+import { RPEDataset } from '../../rpe-core/index.js';
 
 /**
  * Input for the single-prompt LLM RPE executor.

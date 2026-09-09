@@ -3,9 +3,42 @@ import { z } from 'zod';
 import { ModelParameters } from '../../llm/index.js';
 import { ModelProvider } from '../../model-provider/index.js';
 
-const FrequencyLevelSchema = z
-  .enum(['high', 'medium', 'low'])
-  .describe('Relative level: high, medium, or low.');
+/**
+ * Schema for the analysis of a failed example (dataset entry).
+ * @category Reflective Prompt Evolution
+ */
+export const SinglePromptRPEAnalyzerFailedExampleAnalysisSchema = z.object({
+  response: z
+    .string()
+    .describe('Response from the model.'),
+  expectedResponse: z
+    .string()
+    .optional()
+    .describe('Expected response from the model.'),
+  expectedResponseReasoning: z
+    .string()
+    .optional()
+    .describe('Reasoning for why the expected response is correct.'),
+  failureReason: z
+    .string()
+    .describe('What went wrong, not why.'),
+  plausibleCause: z
+    .string()
+    .describe(
+      'Why the current prompt plausibly led the model to that failure.',
+    ),
+  missingConceptualDistinction: z
+    .string()
+    .describe('Concept the prompt fails to distinguish correctly.'),
+  generalRule: z
+    .string()
+    .describe('Rule that could fix other similar examples.'),
+  regressionRisks: z
+    .array(z.string())
+    .describe(
+      'Already-successful behaviors or examples that could become worse ' +
+      'if generalRule is applied too broadly.'),
+});
 
 /**
  * Schema for the analyzer JSON output used by the single-prompt RPE flow.
@@ -32,38 +65,9 @@ export const SinglePromptRPEAnalyzerOutputSchema = z.object({
       }),
     )
     .describe('Detailed list of identified strengths.'),
-  weaknesses: z
-    .array(
-      z.object({
-        title: z.string().describe('Short name of the weakness.'),
-        description: z
-          .string()
-          .describe('Explanation of why this is a weakness.'),
-        supportingEvidence: z
-          .string()
-          .describe('Evidence from evaluations supporting this weakness.'),
-      }),
-    )
-    .describe('Detailed list of identified weaknesses.'),    
-  failurePatterns: z
-    .array(
-      z.object({
-        title: z.string().describe('Short name of the failure pattern.'),
-        description: z
-          .string()
-          .describe('Explanation of recurring failure behavior.'),
-        frequency: FrequencyLevelSchema.describe(
-          'How often this pattern appears.',
-        ),
-        impact: FrequencyLevelSchema.describe(
-          'How much this pattern harms results.',
-        ),
-        supportingEvidence: z
-          .string()
-          .describe('Evidence from evaluations supporting this pattern.'),
-      }),
-    )
-    .describe('Recurring failure patterns with severity and impact.'),
+  failedExampleAnalysis: z
+    .array(SinglePromptRPEAnalyzerFailedExampleAnalysisSchema)
+    .describe('Detailed analysis of each failed example (dataset entry).'),
   metricAnalysis: z
     .array(
       z.object({
