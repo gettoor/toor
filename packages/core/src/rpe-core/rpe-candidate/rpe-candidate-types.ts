@@ -1,3 +1,5 @@
+import { RPEMetadata } from '../rpe-core/index.js';
+
 /**
  * A module of a candidate.
  * @category Reflective Prompt Evolution
@@ -36,6 +38,11 @@ export interface RPECandidate {
    * Candidate modules.
    */
   modules: RPECandidateModules;
+
+  /**
+   * Metadata of the candidate.
+   */
+  metadata?: RPEMetadata;
 }
 
 /**

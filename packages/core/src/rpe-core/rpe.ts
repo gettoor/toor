@@ -143,8 +143,6 @@ export async function optimize(
       break;
     }
 
-    console.log(`Selected candidates: ${selectedCandidateRefs.map(c => c.candidateId).join(', ')}`);
-
     // update history
     state.iterationHistory.push(iteration as RPEIteration);
 
@@ -170,6 +168,7 @@ export async function optimize(
       return findCandidateById(state, candidateRef.candidateId);
     }),
     insights: {
+      datasetEntries: state.datasetEntries,
       candidates: state.candidates,
       stopReason,
       iterationHistory: state.iterationHistory,

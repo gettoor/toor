@@ -7996,16 +7996,31 @@ var CandidateAnalysis_module_default = { "candidate-analysis": "_candidate-analy
 //#endregion
 //#region src/components/candidate-details/CandidateAnalysis.tsx
 function CandidateAnalysis(props) {
+	const { datasetEntries, analysis } = props;
 	const renderList = (list) => {
 		return /* @__PURE__ */ u("ul", { children: list.map((item, index) => /* @__PURE__ */ u("li", { children: item }, index)) });
 	};
+	const renderFailedExampleAnalysis = (failedExampleAnalysis) => {
+		const datasetEntry = props.datasetEntries.find((itr) => {
+			return itr.datasetEntryId === failedExampleAnalysis.datasetEntryId;
+		});
+		const varNames = Object.keys(datasetEntry.vars ?? {}).sort();
+		return /* @__PURE__ */ u("p", { children: /* @__PURE__ */ u("ul", { children: [/* @__PURE__ */ u("li", { children: [/* @__PURE__ */ u("b", { children: "Dataset entry: " }), /* @__PURE__ */ u("span", { children: datasetEntry.datasetEntryId })] }), varNames.length > 0 && /* @__PURE__ */ u("li", { children: /* @__PURE__ */ u("b", { children: "Variables: " }) })] }) });
+	};
+	const failedExampleAnalysis = analysis.failedExampleAnalysis.filter((itr) => {
+		return datasetEntries.some((entry) => {
+			return entry.datasetEntryId === itr.datasetEntryId;
+		});
+	});
 	return /* @__PURE__ */ u("div", {
 		className: CandidateAnalysis_module_default["candidate-analysis"],
 		children: [
 			/* @__PURE__ */ u("h2", { children: "Strengths" }),
-			renderList(props.analysis.strengths),
+			renderList(analysis.strengths),
 			/* @__PURE__ */ u("h2", { children: "Recommendations" }),
-			renderList(props.analysis.recommendations)
+			renderList(analysis.recommendations),
+			/* @__PURE__ */ u("h2", { children: "Failed example analysis" }),
+			failedExampleAnalysis.map((item) => renderFailedExampleAnalysis(item))
 		]
 	});
 }
@@ -8097,13 +8112,16 @@ function CandidateDetails(props) {
 			})] }),
 			/* @__PURE__ */ u(Header, { title: "Evaluations" }),
 			/* @__PURE__ */ u(CandidateAggregatedEvaluation, { aggregatedEvaluation: data.aggregatedEvaluation }),
-			data.analysis && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u(Header, { title: "Analysis" }), /* @__PURE__ */ u(CandidateAnalysis, { analysis: data.analysis })] })
+			data.analysis && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u(Header, { title: "Analysis" }), /* @__PURE__ */ u(CandidateAnalysis, {
+				datasetEntries: data.datasetEntries,
+				analysis: data.analysis
+			})] })
 		] })
 	});
 }
 //#endregion
 //#region src/components/candidate-view/candidate-view-utils.ts
-function getCandidateDetailsData(candidates, iterations, selectedCandidateId) {
+function getCandidateDetailsData(datasetEntries, candidates, iterations, selectedCandidateId) {
 	if (selectedCandidateId === null) return;
 	const findCandidateById = (candidateId) => {
 		const candidate = candidates.find((candidate) => {
@@ -8135,6 +8153,7 @@ function getCandidateDetailsData(candidates, iterations, selectedCandidateId) {
 		return candidateRef.candidateId === selectedCandidateId;
 	});
 	if (seedCandidateRef !== void 0) return {
+		datasetEntries,
 		candidate: findCandidateById(seedCandidateRef.candidateId),
 		aggregatedEvaluation: findAggregatedEvaluationByCandidateId(firstIteration, selectedCandidateId),
 		analysis: findAnalysisByCandidateId(firstIteration, selectedCandidateId)
@@ -8146,6 +8165,7 @@ function getCandidateDetailsData(candidates, iterations, selectedCandidateId) {
 		});
 		if (candidate !== void 0) {
 			data = {
+				datasetEntries,
 				candidate: findCandidateById(candidate.candidateRef.candidateId),
 				candidateChanges: candidate.changes,
 				aggregatedEvaluation: findAggregatedEvaluationByCandidateId(iteration, selectedCandidateId),
@@ -12252,6 +12272,44 @@ object({
 		reason: string().describe("Rationale for why this goal should improve outcomes.")
 	})).describe("Prioritized optimization goals with rationale.")
 });
+//#endregion
+//#region ../core/dist/rpe-lightweight/rpe-candidate-generator/single-prompt-rpe-candidate-generator-consts.js
+/**
+* Create an instruction for the single-prompt RPE candidate generator.
+*/
+function instruction(id, instruction) {
+	return {
+		id,
+		instruction
+	};
+}
+/**
+* Instructions for the single-prompt RPE candidate generator.
+* @category Reflective Prompt Evolution
+*/
+var SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_INSTRUCTIONS = {
+	defaultInstruction: instruction("defaultInstruction", "Make the smallest effective set of substantive changes supported by the evaluation evidence. Prioritize the highest-impact weaknesses while preserving successful behaviors. Do not pursue diversity or novelty for its own sake."),
+	minimalFix: instruction("minimalFix", "Make the smallest possible change that addresses the highest- impact failure while preserving the rest of the prompt"),
+	structuralRedesign: instruction("structuralRedesign", "Reorganize the prompt substantially to make its logic, hierarchy, and decision process clearer."),
+	explicitDecisionRules: instruction("explicitDecisionRules", "Convert vague guidance into concrete rules, conditions, priorities, and tie-breaking logic."),
+	conceptualDistinctions: instruction("conceptualDistinctions", "Focus on explicitly encoding the distinctions that the current prompt appears to be missing."),
+	failureDriven: instruction("failureDriven", "Optimize primarily for the recurring failure patterns found in the evaluation evidence."),
+	strengthPreserving: instruction("strengthPreserving", "Start from the behaviors responsible for passed evaluations and extend them to cover the failures with minimal regression risk."),
+	simplification: instruction("simplification", "Remove unnecessary instructions, redundancy, or ambiguity while still addressing the observed failures."),
+	reasoningDecomposition: instruction("reasoningDecomposition", "Break the task into explicit intermediate reasoning or decision steps where doing so could improve reliability."),
+	constraintFirst: instruction("constraintFirst", "Put the most important constraints, invariants, and forbidden behaviors at the center of the prompt design."),
+	edgeCaseFocused: instruction("edgeCaseFocused", "Optimize specifically for difficult, ambiguous, borderline, or adversarial examples while preserving normal-case performance."),
+	generalizationFirst: instruction("generalizationFirst", "Fix the underlying class of failures rather than adding instructions that are specific to the observed examples."),
+	alternativeFormulation: instruction("alternativeFormulation", "Solve the same optimization problem using a materially different instructional approach from the parent prompt."),
+	robustnessFocused: instruction("robustnessFocused", "Prefer instructions that reduce dependence on subtle wording, ordering, or implicit assumptions."),
+	priorityDriven: instruction("priorityDriven", "Explicitly define which objectives take precedence when instructions or signals conflict."),
+	exampleGuided: instruction("exampleGuided", "Use carefully chosen abstract examples or counterexamples to communicate distinctions that are difficult to express as rules alone."),
+	noExampleApproach: instruction("noExampleApproach", "Solve the same problems using only general rules and principles, without relying on examples."),
+	compactDecisionProcedure: instruction("compactDecisionProcedure", "Turn the prompt into a short, deterministic-looking procedure the model can follow consistently."),
+	richDecisionProcedure: instruction("richDecisionProcedure", "Use a more detailed procedure with checks, exceptions, and explicit handling of uncertainty."),
+	conservativeCandidate: instruction("conservativeCandidate", "Avoid introducing new behavior unless strongly supported by evaluation evidence."),
+	aggressiveCandidate: instruction("aggressiveCandidate", "Allow substantial changes to the prompt's strategy when the evidence suggests the current formulation is fundamentally inadequate.")
+};
 object({
 	prompt: string().describe("Improved prompt."),
 	changes: array(object({
@@ -12259,6 +12317,7 @@ object({
 		reasoning: string().describe("Why this change improves the prompt.")
 	})).describe("List of prompt changes and rationale.")
 });
+SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_INSTRUCTIONS.minimalFix, SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_INSTRUCTIONS.structuralRedesign, SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_INSTRUCTIONS.explicitDecisionRules, SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_INSTRUCTIONS.conceptualDistinctions;
 var InfoPanel_module_default = {
 	"info-panel": "_info-panel_1jq9m_1",
 	visible: "_visible_1jq9m_5",
@@ -12331,7 +12390,7 @@ function InfoPanel(props) {
 //#region src/components/candidate-view/PromptView.tsx
 function PromptView(props) {
 	const { rpeInsights } = props;
-	const { candidates, iterationHistory } = rpeInsights;
+	const { datasetEntries, candidates, iterationHistory } = rpeInsights;
 	const [selectedPromptId, setSelectedPromptId] = d$1(null);
 	const [detailsVisible, setDetailsVisible] = d$1(false);
 	const [infoVisible, setInfoVisible] = d$1(false);
@@ -12372,7 +12431,7 @@ function PromptView(props) {
 			candidateAggregatedEvaluations: iteration.candidateAggregatedEvaluations
 		};
 	});
-	const promptDetailsData = selectedPromptId !== null ? getCandidateDetailsData(candidates, iterationHistory, selectedPromptId) : void 0;
+	const promptDetailsData = selectedPromptId !== null ? getCandidateDetailsData(datasetEntries, candidates, iterationHistory, selectedPromptId) : void 0;
 	return /* @__PURE__ */ u(S$1, { children: [
 		/* @__PURE__ */ u(CandidateTree, {
 			candidates,
@@ -12410,7 +12469,7 @@ function loadRPEInsights() {
 R$1(/* @__PURE__ */ u(App, { rpeInsights: loadRPEInsights() }), document.getElementById("app"));
 //#endregion
 
-//# sourceMappingURL=index-B9XxBDCx.js.map</script>
+//# sourceMappingURL=index-LQEa924f.js.map</script>
     <style rel="stylesheet" crossorigin>* {
   box-sizing: border-box;
 }

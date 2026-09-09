@@ -12,7 +12,7 @@ export interface PromptViewProps {
 
 export function PromptView(props: PromptViewProps) {
   const { rpeInsights } = props;
-  const { candidates, iterationHistory } = rpeInsights;
+  const { datasetEntries, candidates, iterationHistory } = rpeInsights;
 
   const [
     selectedPromptId,
@@ -72,7 +72,12 @@ export function PromptView(props: PromptViewProps) {
     };
   });
   const promptDetailsData = selectedPromptId !== null
-    ? getCandidateDetailsData(candidates, iterationHistory, selectedPromptId)
+    ? getCandidateDetailsData(
+      datasetEntries,
+      candidates,
+      iterationHistory,
+      selectedPromptId,
+    )
     : undefined;
 
   return (

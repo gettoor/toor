@@ -14,7 +14,9 @@ import {
   singlePromptRPECandidateGenerator,
 } from './rpe-candidate-generator/index.js';
 import {
+  DEFAULT_RPE_LIGHTWEIGHT_DEFAULT_PARALLELISM,
   DEFAULT_RPE_LIGHTWEIGHT_PASSED_EVALUATION_THRESHOLD,
+  DEFAULT_RPE_LIGHTWEIGHT_CANDIDATE_GENERATOR_INSTRUCTIONS,
 } from './rpe-lightweight-consts.js';
 import { RPELightweightInput } from './rpe-lightweight-types.js';
 
@@ -34,6 +36,8 @@ export function rpeLightweight(input: RPELightweightInput): RPEInput {
       modelParameters: parameters ?? input.modelParameters,
     };
   };
+  const parallelism = input.parallelism ??
+    DEFAULT_RPE_LIGHTWEIGHT_DEFAULT_PARALLELISM;
 
   return {
     seed: input.seed,
@@ -41,17 +45,21 @@ export function rpeLightweight(input: RPELightweightInput): RPEInput {
     executor: singlePromptLLMRPEExecutor({
       ...model(input.executorModelName, input.executorModelParameters),
       dataset: input.dataset,
+      parallelism,
     }),
+    evaluatorParallelism: parallelism,
     evaluator: singlePromptJudgeRPEEvaluator({
       ...model(input.evaluatorModelName, input.evaluatorModelParameters),
       metrics: input.metrics,
     }),
+    aggregatorParallelism: parallelism,
     aggregator: defaultRPEAggregator({
       aggregationFunc: input.aggregationFunc ?? average,
       passedEvaluationThreshold:
         input.passedEvaluationThreshold ??
         DEFAULT_RPE_LIGHTWEIGHT_PASSED_EVALUATION_THRESHOLD,
     }),
+    analyzerParallelism: parallelism,
     analyzer: singlePromptRPEAnalyzer({
       ...model(input.analyzerModelName, input.analyzerModelParameters),
     }),
@@ -60,6 +68,9 @@ export function rpeLightweight(input: RPELightweightInput): RPEInput {
         input.candidateGeneratorModelName,
         input.candidateGeneratorModelParameters,
       ),
+      candidateInstructions: input.candidateInstructions ??
+        DEFAULT_RPE_LIGHTWEIGHT_CANDIDATE_GENERATOR_INSTRUCTIONS,
+      parallelism,
     }),
     candidateSelector: improvedCandidateSelector({
       isCandidateImproved: isCandidateImprovedByScore,

@@ -3,10 +3,12 @@ import {
   type RPEAnalyzerOutput,
   type RPEIteration,
   type RPECandidate,
+  RPEDatasetEntry,
 } from '@gettoor/core';
 import { CandidateDetailsData } from '../candidate-details';
 
 export function getCandidateDetailsData(
+  datasetEntries: RPEDatasetEntry[],
   candidates: RPECandidate[],
   iterations: RPEIteration[],
   selectedCandidateId: string | null,
@@ -70,6 +72,7 @@ export function getCandidateDetailsData(
   })
   if (seedCandidateRef !== undefined) {
     return {
+      datasetEntries,
       candidate: findCandidateById(seedCandidateRef.candidateId),
       aggregatedEvaluation: findAggregatedEvaluationByCandidateId(
         firstIteration,
@@ -87,6 +90,7 @@ export function getCandidateDetailsData(
     });
     if (candidate !== undefined) {
       data = {
+        datasetEntries,
         candidate: findCandidateById(candidate.candidateRef.candidateId),
         candidateChanges: candidate.changes,
         aggregatedEvaluation: findAggregatedEvaluationByCandidateId(

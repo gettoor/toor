@@ -1,9 +1,11 @@
 .table {
   display: grid;
-  grid-auto-columns: max-content;
+  grid-auto-columns: minmax(0, auto);
 
   .cell {
     padding: 0.125rem 0.875rem;
+    min-width: 0;
+    overflow-wrap: anywhere;
   }
 
   .header-cell {

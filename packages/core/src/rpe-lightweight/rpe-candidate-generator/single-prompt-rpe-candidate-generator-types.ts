@@ -4,6 +4,25 @@ import { ModelParameters } from '../../llm/index.js';
 import { ModelProvider } from '../../model-provider/index.js';
 
 /**
+ * Instruction how to generate a candidate prompt for the single-prompt
+ * RPE candidate generator. One new candidate prompt is generated for each
+ * instruction. This is used to generate a diverse set of candidate prompts
+ * and to perform exploration.
+ * @category Reflective Prompt Evolution
+ */
+export interface SinglePromptRPECandidateGeneratorInstruction {
+  /**
+   * Identifier of the instruction.
+   */
+  id: string;
+
+  /**
+   * Instruction how to generate a candidate prompt.
+   */
+  instruction: string;
+}
+
+/**
  * Schema for the candidate generator JSON output used by the single-prompt
  * RPE flow.
  * @category Reflective Prompt Evolution
@@ -49,6 +68,11 @@ export interface SinglePromptRPECandidateGeneratorInput {
    * @default true
    */
   includeFailedExpectedResponses?: boolean;
+
+  /**
+   * Candidate instructions to use for the candidate generator.
+   */
+  candidateInstructions?: SinglePromptRPECandidateGeneratorInstruction[];
 
   /**
    * Model provider to use for the candidate generator.

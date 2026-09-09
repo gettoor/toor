@@ -6,6 +6,7 @@ import {
   type RPEEvaluatorOutput,
 } from '@gettoor/core';
 
+import { hasMetrics } from './metrics';
 import { Markdown, Score, Tag } from '../basic';
 import { Separator } from './Separator';
 import { Metrics } from './Metrics';
@@ -86,11 +87,11 @@ export function CandidateAggregatedEvaluation(
           }
           <h2>Reasoning</h2>
           <div><Markdown content={evaluation.reasoning}/></div>
-          { evaluation.metrics &&
+          { hasMetrics(evaluation.metrics) &&
             <>
               <h2>Metrics</h2>
               <p>
-                <Metrics metrics={evaluation.metrics}/>
+                <Metrics metrics={evaluation.metrics!}/>
               </p>
             </>
           }
@@ -115,11 +116,11 @@ export function CandidateAggregatedEvaluation(
       <div className={styles['aggregated-score']}>
         Aggregated score:&nbsp;
         <Score score={aggregatedEvaluation.aggregatedScore}/>
-        { aggregatedEvaluation.aggregatedMetrics &&
+        { hasMetrics(aggregatedEvaluation.aggregatedMetrics) &&
           <>
             <h2>Aggregated metrics</h2>
             <p>
-              <Metrics metrics={aggregatedEvaluation.aggregatedMetrics}/>
+              <Metrics metrics={aggregatedEvaluation.aggregatedMetrics!}/>
             </p>
           </>
         }

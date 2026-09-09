@@ -1,3 +1,4 @@
+import { RPEDatasetEntry } from '../rpe-dataset/index.js';
 import { RPEExecutorInfo } from '../rpe-executor/index.js';
 import { RPEEvaluatorInfo } from '../rpe-evaluator/index.js';
 import { RPECandidate } from '../rpe-candidate/index.js';
@@ -48,6 +49,11 @@ export interface RPEInsightsInfo {
  * @category Reflective Prompt Evolution
  */
 export interface RPEInsights {
+  /**
+   * All the dataset entries from an RPE process.
+   */
+  datasetEntries: RPEDatasetEntry[];
+
   /**
    * All the candidates from an RPE process.
    */

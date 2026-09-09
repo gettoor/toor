@@ -38,11 +38,6 @@ export function CandidateModule(props: CandidateModuleProps) {
         level={2}
         className={styles['header']}
       >
-        {/* <IconButton
-          name='content_copy'
-          title='Copy'
-          onClick={onCopyClick}
-        /> */}
         <IconButton
           name={expandIconName}
           title='Expand/collapse module'

@@ -19,6 +19,7 @@ import {
   SCALAR_METRIC_COMPLETENESS,
   SCALAR_METRIC_RELEVANCE,
   buildSinglePromptCandidateModules,
+  DEFAULT_RPE_LIGHTWEIGHT_CANDIDATE_GENERATOR_INSTRUCTIONS,
 } from '@gettoor/core';
 import { renderRPEInsightsToHTML } from '@gettoor/core/rpe-html-renderer';
 import { HARD_DATASET } from './sentiment-dataset.js';
@@ -47,7 +48,7 @@ async function run(): Promise<void> {
     }),
     evaluatorParallelism: 8,
     evaluator: singlePromptJudgeRPEEvaluator({
-      modelName: 'gemini:gemini-2.5-flash',
+      modelName: 'gemini:gemini-3.5-flash',
       modelParameters: {
         temperature: 0.0,
       },
@@ -64,17 +65,19 @@ async function run(): Promise<void> {
     }),
     analyzerParallelism: 8,
     analyzer: singlePromptRPEAnalyzer({
-      modelName: 'gemini:gemini-2.5-flash',
+      modelName: 'gemini:gemini-3.5-flash',
       modelParameters: {
         temperature: 0.0,
       },
     }),
     candidateGenerator: singlePromptRPECandidateGenerator({
       parallelism: 8,
-      modelName: 'gemini:gemini-2.5-flash',
+      modelName: 'gemini:gemini-3.5-flash',
       modelParameters: {
-        temperature: 0.0,
+        temperature: 0.7,
       },
+      candidateInstructions:
+        DEFAULT_RPE_LIGHTWEIGHT_CANDIDATE_GENERATOR_INSTRUCTIONS,
     }),
     candidateSelector: improvedCandidateSelector({
       isCandidateImproved: isCandidateImprovedByScore,

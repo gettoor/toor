@@ -34,10 +34,12 @@ import {
   SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_PROMPT,
 } from './single-prompt-rpe-candidate-generator-prompt.js';
 import {
+  SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_INSTRUCTIONS,
   SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_PARALLELISM,
 } from './single-prompt-rpe-candidate-generator-consts.js';
 import { 
   SinglePromptRPECandidateGeneratorInput,
+  SinglePromptRPECandidateGeneratorInstruction,
   SinglePromptRPECandidateGeneratorOutputSchema,
 } from './single-prompt-rpe-candidate-generator-types.js';
 
@@ -55,6 +57,9 @@ export function singlePromptRPECandidateGenerator(
   const {
     parallelism,
     includeFailedExpectedResponses = true,
+    candidateInstructions = [
+      SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_INSTRUCTIONS.defaultInstruction,
+    ],
     modelName,
     modelParameters,
     prompt: candidateGeneratorPrompt,
@@ -79,22 +84,42 @@ export function singlePromptRPECandidateGenerator(
         );
       }
 
-      // tasks
-      const tasks = aggregatedEvaluations.map(async (aggregation, index) => {
-        const aggregationCandidateId = aggregation.candidateRef.candidateId;
+      // one task entry represents one new candidate
+      type TaskEntry = {
+        candidateId: string;
+        aggregation: RPEAggregatorOutput;
+        analysis: RPEAnalyzerOutput;
+        candidateInstruction: SinglePromptRPECandidateGeneratorInstruction;
+      };
+      const taskEntries: TaskEntry[] = [];
 
-        // find analysis
+      // for each candidate analysis
+      aggregatedEvaluations.forEach(aggregation => {
+        const candidateId = aggregation.candidateRef.candidateId;
         const analysis = analyses.find(analysis => {
-          return analysis.candidateRef.candidateId === aggregationCandidateId;
+          return analysis.candidateRef.candidateId === candidateId;
         });
         if (!analysis) {
           throw new InternalToorError(
             `Analysis not found for candidate ` +
-            `${ToorError.quote(aggregationCandidateId)} ` +
+            `${ToorError.quote(candidateId)} ` +
             `during candidate generation`,
           );
         }
 
+        // for each candidate instruction
+        candidateInstructions.forEach(candidateInstruction => {
+          taskEntries.push({
+            candidateId,
+            aggregation,
+            analysis,
+            candidateInstruction,
+          });
+        });
+      });
+
+      // tasks
+      const tasks = taskEntries.map(async (taskEntry, index) => {
         // generate candidate
         const newCandidateId = `i${state.iterationNo}p${index}`;
         const candidate = await generateCandidate(
@@ -103,10 +128,11 @@ export function singlePromptRPECandidateGenerator(
           modelParameters,
           candidateGeneratorPrompt ??
             SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_PROMPT.prompt,
-          findCandidateById(state, aggregationCandidateId),
+          findCandidateById(state, taskEntry.candidateId),
+          taskEntry.candidateInstruction,
           newCandidateId,
-          aggregation,
-          analysis,
+          taskEntry.aggregation,
+          taskEntry.analysis,
           state.datasetEntries,
           includeFailedExpectedResponses,
         );
@@ -143,6 +169,7 @@ async function generateCandidate(
   modelParameters: ModelParameters | undefined,
   generatorPrompt: string,
   candidate: RPECandidate,
+  candidateInstruction: SinglePromptRPECandidateGeneratorInstruction,
   newCandidateId: string,
   aggregation: RPEAggregatorOutput,
   analysis: RPEAnalyzerOutput,
@@ -168,6 +195,7 @@ async function generateCandidate(
         analysis.failedExampleAnalysis,
         includeExpectedResponse,
       ),
+      candidate_instruction: candidateInstruction.instruction,
     },
     {
       ignorePlaceholders:
@@ -190,6 +218,9 @@ async function generateCandidate(
       candidateId: newCandidateId,
       modules: buildSinglePromptCandidateModules(output.prompt),
       parentCandidateIds: [candidate.candidateId],
+      metadata: {
+        candidateInstructionId: candidateInstruction.id,
+      },
     },
     changes: output.changes.map(change => ({
       description: change.description,

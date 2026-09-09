@@ -3,6 +3,9 @@ import { ModelParameters } from '../llm/index.js';
 import { ModelProvider } from '../model-provider/index.js';
 import { ScalarMetric } from '../llm-as-a-judge/index.js';
 import { RPECandidate, RPEDataset } from '../rpe-core/index.js';
+import {
+  SinglePromptRPECandidateGeneratorInstruction,
+} from './rpe-candidate-generator/index.js';
 
 /**
  * Input for the RPE lightweight preset.
@@ -37,6 +40,21 @@ export interface RPELightweightInput {
    * @default {@link DEFAULT_RPE_LIGHTWEIGHT_PASSED_EVALUATION_THRESHOLD}
    */
   passedEvaluationThreshold?: number;
+
+  /**
+   * Instructions to use for the candidate generator.
+   * If not provided, the default instruction will be used.
+   * @default {@link
+   *   SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_INSTRUCTIONS.defaultInstruction}
+   */
+  candidateInstructions?: SinglePromptRPECandidateGeneratorInstruction[];
+
+  /**
+   * Parallelism for the RPE process.
+   * If not provided, the default parallelism will be used.
+   * @default {@link DEFAULT_RPE_LIGHTWEIGHT_DEFAULT_PARALLELISM}
+   */
+  parallelism?: number;
 
   /**
    * Model provider to use for the candidate generator.
