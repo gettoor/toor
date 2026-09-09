@@ -11,5 +11,5 @@ export function isCandidateImprovedByScore(
   newEvaluation: RPEAggregatorOutput,
   parentEvaluation: RPEAggregatorOutput,
 ) {
-  return newEvaluation.aggregatedScore >= parentEvaluation.aggregatedScore;
+  return newEvaluation.aggregatedScore > parentEvaluation.aggregatedScore;
 }
