@@ -1,7 +1,6 @@
 import { generateText, Output } from 'ai';
 
 import { replacePlaceholders } from '../../string/index.js';
-import { DistributionRange } from '../../math/index.js';
 import { 
   buildModelCallSettings,
   MetricResult,
@@ -68,9 +67,6 @@ export function singlePromptRPEAnalyzer(
           aggregated_score: input.aggregation.aggregatedScore,
           aggregated_metrics: aggregatedMetricsForPrompt(
             input.aggregation.aggregatedMetrics ?? {},
-          ),
-          score_distribution: scoreDistributionForPrompt(
-            input.aggregation.scoreDistribution,
           ),
           passed_explanations: explanationsForPrompt(
             input.aggregation.passedEvaluations,
@@ -154,17 +150,6 @@ function aggregatedMetricsForPrompt(
       const metric = metrics[name];
       const reasoning = metric.reasoning ? ` (${metric.reasoning})` : '';
       return `${name}: ${metric.normalizedScore.toFixed(2)}${reasoning}`;
-    })
-    .join('\n');
-}
-
-function scoreDistributionForPrompt(
-  ranges: DistributionRange[],
-): string {
-  const sorted = [...ranges].sort((a, b) => a.min - b.min);
-  return sorted
-    .map(range => {
-      return `${range.min}-${range.max}: ${range.count}`;
     })
     .join('\n');
 }

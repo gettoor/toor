@@ -32,10 +32,6 @@ Do NOT:
 
 Metrics may be absent. When present, use them only as diagnostic signals, not as root causes.
 
-### Score Distribution
-
-{{score_distribution}}
-
 ### Passed Evaluation Explanations
 
 {{passed_explanations}}

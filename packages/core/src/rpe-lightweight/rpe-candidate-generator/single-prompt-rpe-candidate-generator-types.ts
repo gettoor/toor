@@ -97,7 +97,6 @@ export interface SinglePromptRPECandidateGeneratorInput {
    * - `aggregated_score` - aggregated overall score (number),
    * - `aggregated_metrics` - aggregated metric scores
    *   (list of name-value pairs with optional reasoning),
-   * - `score_distribution` - score distribution,
    * - `strengths` - list of strengths of the original prompt,
    * - `weaknesses` - list of weaknesses of the original prompt,
    * - `recommendations` - list of recommendations for improving

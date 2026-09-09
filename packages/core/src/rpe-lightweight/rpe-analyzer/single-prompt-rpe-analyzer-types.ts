@@ -143,7 +143,6 @@ export interface SinglePromptRPEAnalyzerInput {
    * - `aggregated_score` - aggregated overall score (number),
    * - `aggregated_metrics` - aggregated metric scores
    *   (list of name-value pairs with optional reasoning),
-   * - `score_distribution` - score distribution (list pairs: range-count),
    * - `passed_explanations` - passed evaluations explanations,
    * - `failed_examples` - failed examples (dataset entries).
    * @default {@link SINGLE_PROMPT_RPE_ANALYZER_PROMPT}

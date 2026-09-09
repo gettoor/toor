@@ -1,4 +1,3 @@
-import { DistributionRange } from '../../math/index.js';
 import { LLMUsage, MetricResult } from '../../llm/index.js';
 import { RPEProperties } from '../rpe-info/index.js';
 import { RPECandidate, RPECandidateRef } from '../rpe-candidate/index.js';
@@ -50,11 +49,6 @@ export interface RPEAggregatorOutput {
    * Metric scores are normalized to 0..1.
    */
   aggregatedMetrics?: Record<string, MetricResult>;
-
-  /**
-   * Distribution of the scores.
-   */
-  scoreDistribution: DistributionRange[];
 
   /**
    * Usage of the model.
