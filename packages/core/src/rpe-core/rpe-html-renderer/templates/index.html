@@ -7934,7 +7934,11 @@ function CandidateAggregatedEvaluation(props) {
 	const renderDatasetEntry = (datasetEntry) => {
 		if (datasetEntry.vars == void 0) return;
 		const keys = Object.keys(datasetEntry.vars).sort();
-		return /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("h2", { children: "Dataset entry" }), /* @__PURE__ */ u("p", { children: keys.map((key) => {
+		return /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("h2", { children: [
+			"Dataset entry (",
+			datasetEntry.datasetEntryId,
+			")"
+		] }), /* @__PURE__ */ u("p", { children: keys.map((key) => {
 			const value = datasetEntry.vars[key];
 			const valueString = typeof value === "object" ? JSON.stringify(value) : value.toString();
 			return /* @__PURE__ */ u("div", { children: [
@@ -7962,8 +7966,8 @@ function CandidateAggregatedEvaluation(props) {
 			] }),
 			renderDatasetEntry(evaluation.datasetEntry),
 			/* @__PURE__ */ u("h2", { children: "Response" }),
-			/* @__PURE__ */ u("div", { children: /* @__PURE__ */ u(Markdown, { content: responseToString(evaluation.response) }) }),
-			expectedResponse && /* @__PURE__ */ u("div", { children: [/* @__PURE__ */ u("h2", { children: "Expected response" }), /* @__PURE__ */ u(Markdown, { content: responseToString(expectedResponse) })] }),
+			/* @__PURE__ */ u("p", { children: /* @__PURE__ */ u(Markdown, { content: responseToString(evaluation.response) }) }),
+			expectedResponse && /* @__PURE__ */ u("p", { children: [/* @__PURE__ */ u("h2", { children: "Expected response" }), /* @__PURE__ */ u(Markdown, { content: responseToString(expectedResponse) })] }),
 			/* @__PURE__ */ u("h2", { children: "Reasoning" }),
 			/* @__PURE__ */ u("div", { children: /* @__PURE__ */ u(Markdown, { content: evaluation.reasoning }) }),
 			hasMetrics(evaluation.metrics) && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("h2", { children: "Metrics" }), /* @__PURE__ */ u("p", { children: /* @__PURE__ */ u(Metrics, { metrics: evaluation.metrics }) })] })
@@ -7991,6 +7995,43 @@ function CandidateAggregatedEvaluation(props) {
 	});
 }
 //#endregion
+//#region src/components/candidate-details/DatasetEntry.module.scss
+var DatasetEntry_module_default = { "dataset-entry-key": "_dataset-entry-key_1436g_1" };
+//#endregion
+//#region src/components/candidate-details/DatasetEntry.tsx
+function DatasetEntry(props) {
+	const { datasetEntry } = props;
+	const responseToString = (response) => {
+		if (typeof response === "string") return response;
+		return stringify(response);
+	};
+	const renderVariables = () => {
+		if (datasetEntry.vars == void 0) return;
+		return /* @__PURE__ */ u("p", { children: Object.keys(datasetEntry.vars).sort().map((key) => {
+			const value = datasetEntry.vars[key];
+			const valueString = typeof value === "object" ? JSON.stringify(value) : value.toString();
+			return /* @__PURE__ */ u("div", { children: [
+				/* @__PURE__ */ u("code", {
+					className: DatasetEntry_module_default["dataset-entry-key"],
+					children: key
+				}),
+				"\xA0",
+				valueString
+			] }, key);
+		}) });
+	};
+	return /* @__PURE__ */ u(S$1, { children: [
+		/* @__PURE__ */ u("h2", { children: [
+			"Dataset entry (",
+			datasetEntry.datasetEntryId,
+			")"
+		] }),
+		renderVariables(),
+		datasetEntry.expectedResponse && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("h2", { children: "Expected response" }), /* @__PURE__ */ u("p", { children: /* @__PURE__ */ u(Markdown, { content: responseToString(datasetEntry.expectedResponse) }) })] }),
+		datasetEntry.expectedResponseReasoning && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("h2", { children: "Expected response reasoning" }), /* @__PURE__ */ u("p", { children: datasetEntry.expectedResponseReasoning })] })
+	] });
+}
+//#endregion
 //#region src/components/candidate-details/CandidateAnalysis.module.scss
 var CandidateAnalysis_module_default = { "candidate-analysis": "_candidate-analysis_1d4bo_1" };
 //#endregion
@@ -7998,14 +8039,28 @@ var CandidateAnalysis_module_default = { "candidate-analysis": "_candidate-analy
 function CandidateAnalysis(props) {
 	const { datasetEntries, analysis } = props;
 	const renderList = (list) => {
-		return /* @__PURE__ */ u("ul", { children: list.map((item, index) => /* @__PURE__ */ u("li", { children: item }, index)) });
+		return /* @__PURE__ */ u("p", { children: /* @__PURE__ */ u("ul", { children: list.map((item, index) => /* @__PURE__ */ u("li", { children: item }, index)) }) });
 	};
 	const renderFailedExampleAnalysis = (failedExampleAnalysis) => {
 		const datasetEntry = props.datasetEntries.find((itr) => {
 			return itr.datasetEntryId === failedExampleAnalysis.datasetEntryId;
 		});
-		const varNames = Object.keys(datasetEntry.vars ?? {}).sort();
-		return /* @__PURE__ */ u("p", { children: /* @__PURE__ */ u("ul", { children: [/* @__PURE__ */ u("li", { children: [/* @__PURE__ */ u("b", { children: "Dataset entry: " }), /* @__PURE__ */ u("span", { children: datasetEntry.datasetEntryId })] }), varNames.length > 0 && /* @__PURE__ */ u("li", { children: /* @__PURE__ */ u("b", { children: "Variables: " }) })] }) });
+		const regressionRisks = failedExampleAnalysis.regressionRisks;
+		return /* @__PURE__ */ u(S$1, { children: [
+			/* @__PURE__ */ u(Separator, {}),
+			/* @__PURE__ */ u(DatasetEntry, { datasetEntry }),
+			/* @__PURE__ */ u("h2", { children: "Response" }),
+			/* @__PURE__ */ u("p", { children: failedExampleAnalysis.response }),
+			/* @__PURE__ */ u("h2", { children: "Failure reason" }),
+			/* @__PURE__ */ u("p", { children: failedExampleAnalysis.failureReason }),
+			/* @__PURE__ */ u("h2", { children: "Plausible cause" }),
+			/* @__PURE__ */ u("p", { children: failedExampleAnalysis.plausibleCause }),
+			/* @__PURE__ */ u("h2", { children: "Missing conceptual distinction" }),
+			/* @__PURE__ */ u("p", { children: failedExampleAnalysis.missingConceptualDistinction }),
+			/* @__PURE__ */ u("h2", { children: "General rule" }),
+			/* @__PURE__ */ u("p", { children: failedExampleAnalysis.generalRule }),
+			regressionRisks.length > 0 && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("h2", { children: "Regression risks" }), renderList(regressionRisks)] })
+		] });
 	};
 	const failedExampleAnalysis = analysis.failedExampleAnalysis.filter((itr) => {
 		return datasetEntries.some((entry) => {
@@ -8019,7 +8074,7 @@ function CandidateAnalysis(props) {
 			renderList(analysis.strengths),
 			/* @__PURE__ */ u("h2", { children: "Recommendations" }),
 			renderList(analysis.recommendations),
-			/* @__PURE__ */ u("h2", { children: "Failed example analysis" }),
+			/* @__PURE__ */ u("h1", { children: "Failed example analysis" }),
 			failedExampleAnalysis.map((item) => renderFailedExampleAnalysis(item))
 		]
 	});
@@ -8185,7 +8240,7 @@ var ThemeSwitch_module_default = {};
 var THEME_STORAGE_KEY = "toor_rpe_insights_theme";
 function ThemeSwitch() {
 	const [theme, setTheme] = d$1("light");
-	const iconName = theme === "dark" ? "bedtime" : "sunny";
+	const iconName = theme === "dark" ? "sunny" : "bedtime";
 	h(() => {
 		const storedTheme = localStorage.getItem(THEME_STORAGE_KEY);
 		if (storedTheme === "light" || storedTheme === "dark") {
@@ -12411,13 +12466,6 @@ function PromptView(props) {
 	const onCloseClick = () => {
 		setDetailsVisible(false);
 	};
-	const onBackgroundClick = () => {
-		if (!detailsVisible) {
-			clearPromptId();
-			return;
-		}
-		hideDetails();
-	};
 	const onInfoClick = () => {
 		if (detailsVisible) hideDetails();
 		setInfoVisible(!infoVisible);
@@ -12439,7 +12487,7 @@ function PromptView(props) {
 			selectedCandidateId: selectedPromptId,
 			detailsVisible,
 			onSelectCandidateId: selectPromptId,
-			onBackgroundClick
+			onBackgroundClick: () => {}
 		}),
 		/* @__PURE__ */ u(CandidateDetails, {
 			data: promptDetailsData,
@@ -12469,7 +12517,7 @@ function loadRPEInsights() {
 R$1(/* @__PURE__ */ u(App, { rpeInsights: loadRPEInsights() }), document.getElementById("app"));
 //#endregion
 
-//# sourceMappingURL=index-LQEa924f.js.map</script>
+//# sourceMappingURL=index-8gYBD6vB.js.map</script>
     <style rel="stylesheet" crossorigin>* {
   box-sizing: border-box;
 }
@@ -12520,6 +12568,9 @@ pre {
   --red: #D2042D;
   --green: #009E60;
 }
+:root p {
+  color: #a0a2a7;
+}
 
 html[data-theme=light] {
   --bg: #f3f5fa;
@@ -12531,6 +12582,9 @@ html[data-theme=light] {
   --border-highlighted: #29395c;
   --red: #D2042D;
   --green: #009E60;
+}
+html[data-theme=light] p {
+  color: #454c5b;
 }._candidate-tree_njqup_1 {
   --fill: var(--bg-muted);
   --stroke: var(--muted);
@@ -12724,6 +12778,9 @@ html[data-theme=light] {
 }
 
 ._dataset-entry-key_z4upv_15 {
+  font-weight: bold;
+  font-size: 0.72rem;
+}._dataset-entry-key_1436g_1 {
   font-weight: bold;
   font-size: 0.72rem;
 }._candidate-analysis_1d4bo_1 {

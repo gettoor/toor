@@ -3,6 +3,9 @@ import {
   type RPEAnalyzerOutput,
   type RPEAnalyzerFailedExampleAnalysis,
 } from '@gettoor/core';
+
+import { Separator } from './Separator';
+import { DatasetEntry } from './DatasetEntry';
 import styles from './CandidateAnalysis.module.scss';
 
 export interface CandidateAnalysisProps {
@@ -15,13 +18,16 @@ export function CandidateAnalysis(props: CandidateAnalysisProps) {
 
   const renderList = (list: string[]) => {
     return (
-      <ul>
-        {list.map((item, index) => (
-          <li key={index}>{item}</li>
-        ))}
-      </ul>
+      <p>
+        <ul>
+          {list.map((item, index) => (
+            <li key={index}>{item}</li>
+          ))}
+        </ul>
+      </p>
     );
   };
+
 
   const renderFailedExampleAnalysis = (
     failedExampleAnalysis: RPEAnalyzerFailedExampleAnalysis
@@ -29,21 +35,28 @@ export function CandidateAnalysis(props: CandidateAnalysisProps) {
     const datasetEntry = props.datasetEntries.find(itr => {
       return itr.datasetEntryId === failedExampleAnalysis.datasetEntryId;
     })!;
-    const varNames = Object.keys(datasetEntry.vars ?? {}).sort();
+    const regressionRisks = failedExampleAnalysis.regressionRisks;
     return (
-      <p>
-        <ul>
-          <li>
-            <b>Dataset entry: </b>
-            <span>{datasetEntry.datasetEntryId}</span>
-          </li>
-          {varNames.length > 0 &&
-            <li>
-              <b>Variables: </b>
-            </li>  
-          }
-        </ul>
-      </p>
+      <>
+        <Separator/>
+        <DatasetEntry datasetEntry={datasetEntry}/>
+        <h2>Response</h2>
+        <p>{failedExampleAnalysis.response}</p>
+        <h2>Failure reason</h2>
+        <p>{failedExampleAnalysis.failureReason}</p>
+        <h2>Plausible cause</h2>
+        <p>{failedExampleAnalysis.plausibleCause}</p>
+        <h2>Missing conceptual distinction</h2>
+        <p>{failedExampleAnalysis.missingConceptualDistinction}</p>
+        <h2>General rule</h2>
+        <p>{failedExampleAnalysis.generalRule}</p>
+        { regressionRisks.length > 0 &&
+          <>
+            <h2>Regression risks</h2>
+            {renderList(regressionRisks)}
+          </>
+        }
+      </>
     );
   };
 
@@ -61,7 +74,7 @@ export function CandidateAnalysis(props: CandidateAnalysisProps) {
       {renderList(analysis.strengths)}
       <h2>Recommendations</h2>
       {renderList(analysis.recommendations)}
-      <h2>Failed example analysis</h2>
+      <h1>Failed example analysis</h1>
       {failedExampleAnalysis.map(item => renderFailedExampleAnalysis(item))}
     </div>
   );

@@ -9,6 +9,10 @@
 
   --red: #D2042D;
   --green: #009E60;
+
+  p {
+    color: #a0a2a7;
+  }
 }
 
 html[data-theme="light"] {
@@ -22,4 +26,8 @@ html[data-theme="light"] {
 
   --red: #D2042D;
   --green: #009E60;
+
+  p {
+    color: #454c5b;
+  }
 }

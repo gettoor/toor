@@ -5,6 +5,10 @@ import {
   RPEProperty,
 } from './rpe-info-types.js';
 
+export function booleanToRPEInfoValue(value?: boolean): string {
+  return value ? 'Yes' : 'No';
+}
+
 export function rpePropertyIfDef(
   value: RPEPropertyValue | undefined,
   key: string,

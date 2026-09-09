@@ -1,0 +1,6 @@
+@use '../../styles/_includes.scss' as *;
+
+.dataset-entry-key {
+  font-weight: bold;
+  @include font-small;
+}

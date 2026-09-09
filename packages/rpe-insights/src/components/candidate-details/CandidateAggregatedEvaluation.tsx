@@ -35,7 +35,7 @@ export function CandidateAggregatedEvaluation(
     const keys = Object.keys(datasetEntry.vars).sort();
     return (
       <>
-        <h2>Dataset entry</h2>
+        <h2>Dataset entry ({datasetEntry.datasetEntryId})</h2>
         <p>
           {keys.map(key => {
             const value = datasetEntry.vars![key];
@@ -76,14 +76,14 @@ export function CandidateAggregatedEvaluation(
           </div>
           {renderDatasetEntry(evaluation.datasetEntry)}
           <h2>Response</h2>
-          <div>
+          <p>
             <Markdown content={responseToString(evaluation.response)}/>
-          </div>
+          </p>
           { expectedResponse &&
-            <div>
+            <p>
               <h2>Expected response</h2>
               <Markdown content={responseToString(expectedResponse)}/>
-            </div>
+            </p>
           }
           <h2>Reasoning</h2>
           <div><Markdown content={evaluation.reasoning}/></div>

@@ -7,7 +7,7 @@ const THEME_STORAGE_KEY = 'toor_rpe_insights_theme';
 
 export function ThemeSwitch() {
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
-  const iconName = theme === 'dark' ? 'bedtime' : 'sunny';
+  const iconName = theme === 'dark' ? 'sunny' : 'bedtime';
 
   useEffect(
     () => {

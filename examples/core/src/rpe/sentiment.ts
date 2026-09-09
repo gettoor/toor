@@ -7,7 +7,7 @@ import {
   maximumIterationsRPEStop,
   minimumScoreRPEStop,
   singlePromptLLMRPEExecutor,
-  singlePromptJudgeRPEEvaluator,
+  exactMatchRPEEvaluator,
   defaultRPEAggregator,
   optimize,
   average,
@@ -47,17 +47,7 @@ async function run(): Promise<void> {
       parallelism: 8,
     }),
     evaluatorParallelism: 8,
-    evaluator: singlePromptJudgeRPEEvaluator({
-      modelName: 'gemini:gemini-3.5-flash',
-      modelParameters: {
-        temperature: 0.0,
-      },
-      metrics: [
-        SCALAR_METRIC_CORRECTNESS,
-        SCALAR_METRIC_COMPLETENESS,
-        SCALAR_METRIC_RELEVANCE,
-      ],
-    }),
+    evaluator: exactMatchRPEEvaluator(),
     aggregatorParallelism: 8,
     aggregator: defaultRPEAggregator({
       aggregationFunc: average,
@@ -67,7 +57,7 @@ async function run(): Promise<void> {
     analyzer: singlePromptRPEAnalyzer({
       modelName: 'gemini:gemini-3.5-flash',
       modelParameters: {
-        temperature: 0.0,
+        temperature: 0.3,
       },
     }),
     candidateGenerator: singlePromptRPECandidateGenerator({
