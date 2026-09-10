@@ -55,8 +55,8 @@ describe('rpeStopOr', () => {
   it('returns false when every expression returns false', async () => {
     const expression = jest.fn(async () => ({ stop: false as const }));
 
-    await expect(orRPEStop([expression, expression], )(state))
-      .resolves.toEqual({ stop: false, stopReason: 'none stopped' });
+    await expect(orRPEStop([expression, expression])(state))
+      .resolves.toEqual({ stop: false });
     expect(expression).toHaveBeenCalledTimes(2);
   });
 });

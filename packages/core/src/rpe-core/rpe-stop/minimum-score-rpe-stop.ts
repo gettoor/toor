@@ -20,7 +20,7 @@ export function minimumScoreRPEStop(
 
   return async (state: RPEState) => {
     const { iteration } = state;
-    const evaluations = iteration.aggregatedEvaluations ?? [];
+    const evaluations = iteration.candidateAggregatedEvaluations ?? [];
 
     const hasCandidate = evaluations.some(evaluation => {
       return evaluation.aggregatedScore >= input.score;

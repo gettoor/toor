@@ -41,8 +41,6 @@ export async function optimize(
   
   // run the RPE process
   while (true) {
-    console.log(`Iteration #${state.iterationNo + 1}`);
-
     const iteration: RPEIterationInProgress = state.iteration;
     const iterationCandidates = iteration.candidateRefs.map(candidateRef => {
       return findCandidateById(state, candidateRef.candidateId);

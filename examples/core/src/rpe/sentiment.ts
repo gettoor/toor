@@ -15,11 +15,9 @@ import {
   singlePromptRPECandidateGenerator,
   isCandidateImprovedByScore,
   improvedCandidateSelector,
-  SCALAR_METRIC_CORRECTNESS,
-  SCALAR_METRIC_COMPLETENESS,
-  SCALAR_METRIC_RELEVANCE,
   buildSinglePromptCandidateModules,
   DEFAULT_RPE_LIGHTWEIGHT_CANDIDATE_GENERATOR_INSTRUCTIONS,
+  patienceRPEStop,
 } from '@gettoor/core';
 import { renderRPEInsightsToHTML } from '@gettoor/core/rpe-html-renderer';
 import { HARD_DATASET } from './sentiment-dataset.js';
@@ -74,8 +72,9 @@ async function run(): Promise<void> {
       selectParentCandidatesIfBetter: true,
     }),
     stopAfterIteration: orRPEStop([
-      maximumIterationsRPEStop({ maxIterations: 1 }),
+      maximumIterationsRPEStop({ maxIterations: 8 }),
       minimumScoreRPEStop({ score: 0.95 }),
+      patienceRPEStop({ noImprovementCount: 4, minScoreImprovement: 0.01 }),
     ]),
   };
 

@@ -45,6 +45,11 @@ export function PromptView(props: PromptViewProps) {
   const clearPromptId = () => {
     setSelectedPromptId(null);
   };
+  const onBackgroundClick = () => {
+    clearPromptId();
+    setDetailsVisible(false);
+    setInfoVisible(false);
+  };
   const onCloseClick = () => {
     setDetailsVisible(false);
   };
@@ -81,7 +86,7 @@ export function PromptView(props: PromptViewProps) {
         selectedCandidateId={selectedPromptId}
         detailsVisible={detailsVisible}
         onSelectCandidateId={selectPromptId}
-        onBackgroundClick={() => {}}
+        onBackgroundClick={onBackgroundClick}
       />
       <CandidateDetails
         data={promptDetailsData}

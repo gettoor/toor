@@ -12463,6 +12463,11 @@ function PromptView(props) {
 	const clearPromptId = () => {
 		setSelectedPromptId(null);
 	};
+	const onBackgroundClick = () => {
+		clearPromptId();
+		setDetailsVisible(false);
+		setInfoVisible(false);
+	};
 	const onCloseClick = () => {
 		setDetailsVisible(false);
 	};
@@ -12487,7 +12492,7 @@ function PromptView(props) {
 			selectedCandidateId: selectedPromptId,
 			detailsVisible,
 			onSelectCandidateId: selectPromptId,
-			onBackgroundClick: () => {}
+			onBackgroundClick
 		}),
 		/* @__PURE__ */ u(CandidateDetails, {
 			data: promptDetailsData,
@@ -12517,7 +12522,7 @@ function loadRPEInsights() {
 R$1(/* @__PURE__ */ u(App, { rpeInsights: loadRPEInsights() }), document.getElementById("app"));
 //#endregion
 
-//# sourceMappingURL=index-8gYBD6vB.js.map</script>
+//# sourceMappingURL=index-MuKJvdeT.js.map</script>
     <style rel="stylesheet" crossorigin>* {
   box-sizing: border-box;
 }
