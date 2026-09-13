@@ -157,6 +157,10 @@ Before producing the final result, verify that every \'{{...}}\' variable from t
 
 20. Do not include commentary, explanations, analysis, or a changelog in the improved prompt unless the Original Prompt itself requires them.
 
+21. Do not derive narrow rules that merely encode the specific inputs, phrases, topics, or surface patterns present in failed examples.
+
+22. Any new rule must describe a general conceptual distinction that is expected to apply to unseen inputs of the same class.
+
 ## Candidate Strategy Check
 
 Before producing the final result, verify that the improved prompt meaningfully reflects the Candidate Instruction.

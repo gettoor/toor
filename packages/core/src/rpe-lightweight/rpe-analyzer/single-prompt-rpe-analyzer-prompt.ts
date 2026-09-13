@@ -93,9 +93,27 @@ Do not merely state that the evaluator marked it correct.
 
 ### Missing conceptual distinction
 
-Identify the missing distinction, constraint, decision criterion, priority rule, or reasoning rule that plausibly caused the failure.
+Identify the specific distinction, constraint, decision criterion, priority rule, or reasoning rule that is missing or insufficiently expressed in the current prompt and that plausibly explains the failure.
 
-Prefer precise distinctions over generic statements such as "the prompt needs more detail."
+The distinction should describe a **generalizable difference in how the task should be interpreted or solved**, not merely restate the observed error.
+
+Prefer distinctions such as:
+
+* distinguishing one semantic target from another,
+* deciding which signal should take priority when cues conflict,
+* separating surface wording from underlying intent,
+* identifying when an exception overrides a default rule,
+* distinguishing output-format requirements from task reasoning,
+* clarifying how ambiguous or mixed cases should be resolved.
+
+Avoid:
+
+* generic statements such as "the prompt needs more detail," "the model should be more accurate," or "the model should consider nuance,"
+* distinctions that simply repeat the expected answer,
+* rules tied narrowly to the wording, topic, entities, or phrases of the failed example,
+* recommendations for exact replacement wording.
+
+The distinction should be specific enough that it could guide a prompt change for **other unseen examples exhibiting the same underlying failure pattern**.
 
 ### General rule
 
