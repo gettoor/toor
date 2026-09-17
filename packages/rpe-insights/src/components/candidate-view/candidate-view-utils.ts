@@ -31,8 +31,8 @@ export function getCandidateDetailsData(
     iteration: RPEIteration,
     candidateId: string
   ): RPEAggregatorOutput => {
-    const { aggregatedEvaluations } = iteration;
-    const aggregatedEvaluation = aggregatedEvaluations.find(
+    const { trainingAggregatedEvaluations } = iteration;
+    const aggregatedEvaluation = trainingAggregatedEvaluations.find(
       aggregatedEvaluation => {
         return aggregatedEvaluation.candidateRef.candidateId === candidateId;
       },
@@ -59,7 +59,7 @@ export function getCandidateDetailsData(
     iteration: RPEIteration,
     candidateId: string
   ): RPEAnalyzerOutput | undefined => {
-    const analysis = iteration.analyses.find(analysis => {
+    const analysis = iteration.trainingAnalyses.find(analysis => {
       return analysis.candidateRef.candidateId === candidateId;
     });
     return analysis;
@@ -85,7 +85,7 @@ export function getCandidateDetailsData(
   let data: CandidateDetailsData | undefined;
   // candidates from each iteration
   for (const iteration of iterations) {
-    const candidate = iteration.candidates.find(candidate => {
+    const candidate = iteration.generatedCandidates.find(candidate => {
       return candidate.candidateRef.candidateId === selectedCandidateId;
     });
     if (candidate !== undefined) {

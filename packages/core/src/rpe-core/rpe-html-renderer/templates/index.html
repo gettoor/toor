@@ -592,7 +592,7 @@ function resolveBoxes(candidates, iterations, onBoxClick) {
 	};
 	const findAggregatedEvaluation = (candidateId) => {
 		return iterations.flatMap((iteration) => {
-			return iteration.aggregatedEvaluations;
+			return iteration.trainingAggregatedEvaluations;
 		}).find((evaluation) => {
 			return evaluation.candidateRef.candidateId === candidateId;
 		});
@@ -629,7 +629,7 @@ function resolveBoxes(candidates, iterations, onBoxClick) {
 	y += 160;
 	for (const iteration of iterations) {
 		let x = 10;
-		for (const newCandidate of iteration.candidates) {
+		for (const newCandidate of iteration.generatedCandidates) {
 			const candidate = findCandidateById(newCandidate.candidateRef.candidateId);
 			const candidateAggregatedEvaluation = findCandidateAggregatedEvaluation(candidate.candidateId);
 			const isSelected = iteration.selectedCandidateRefs?.some((selectedPromptRef) => {
@@ -8186,8 +8186,8 @@ function getCandidateDetailsData(datasetEntries, candidates, iterations, selecte
 		return candidate;
 	};
 	const findAggregatedEvaluationByCandidateId = (iteration, candidateId) => {
-		const { aggregatedEvaluations } = iteration;
-		const aggregatedEvaluation = aggregatedEvaluations.find((aggregatedEvaluation) => {
+		const { trainingAggregatedEvaluations } = iteration;
+		const aggregatedEvaluation = trainingAggregatedEvaluations.find((aggregatedEvaluation) => {
 			return aggregatedEvaluation.candidateRef.candidateId === candidateId;
 		});
 		if (aggregatedEvaluation !== void 0) return aggregatedEvaluation;
@@ -8199,7 +8199,7 @@ function getCandidateDetailsData(datasetEntries, candidates, iterations, selecte
 		throw new Error(`Aggregated evaluations for candidate ${candidateId} not found`);
 	};
 	const findAnalysisByCandidateId = (iteration, candidateId) => {
-		return iteration.analyses.find((analysis) => {
+		return iteration.trainingAnalyses.find((analysis) => {
 			return analysis.candidateRef.candidateId === candidateId;
 		});
 	};
@@ -8215,7 +8215,7 @@ function getCandidateDetailsData(datasetEntries, candidates, iterations, selecte
 	};
 	let data;
 	for (const iteration of iterations) {
-		const candidate = iteration.candidates.find((candidate) => {
+		const candidate = iteration.generatedCandidates.find((candidate) => {
 			return candidate.candidateRef.candidateId === selectedCandidateId;
 		});
 		if (candidate !== void 0) {
@@ -12261,21 +12261,21 @@ function sumRPEInsightsUsage(insights) {
 		});
 	};
 	insights.iterationHistory.forEach((iteration) => {
-		iteration.responses.forEach((response) => {
+		iteration.trainingResponses.forEach((response) => {
 			pushLLMUsage(response.usage);
 		});
-		iteration.evaluations.forEach((evaluation) => {
+		iteration.trainingEvaluations.forEach((evaluation) => {
 			evaluation.evaluatorOutputs.forEach((output) => {
 				pushLLMUsage(output.usage);
 			});
 		});
-		iteration.aggregatedEvaluations.forEach((aggregatedEvaluation) => {
+		iteration.trainingAggregatedEvaluations.forEach((aggregatedEvaluation) => {
 			pushLLMUsage(aggregatedEvaluation.usage);
 		});
-		iteration.analyses.forEach((analysis) => {
+		iteration.trainingAnalyses.forEach((analysis) => {
 			pushLLMUsage(analysis.usage);
 		});
-		iteration.candidates.forEach((candidate) => {
+		iteration.generatedCandidates.forEach((candidate) => {
 			pushLLMUsage(candidate.usage);
 		});
 		iteration.candidateResponses.forEach((response) => {
@@ -12478,9 +12478,9 @@ function PromptView(props) {
 	const promptTreeIterations = iterationHistory.map((iteration) => {
 		return {
 			candidateRefs: iteration.candidateRefs,
-			candidates: iteration.candidates,
+			generatedCandidates: iteration.generatedCandidates,
 			selectedCandidateRefs: iteration.selectedCandidateRefs,
-			aggregatedEvaluations: iteration.aggregatedEvaluations,
+			trainingAggregatedEvaluations: iteration.trainingAggregatedEvaluations,
 			candidateAggregatedEvaluations: iteration.candidateAggregatedEvaluations
 		};
 	});
@@ -12522,7 +12522,7 @@ function loadRPEInsights() {
 R$1(/* @__PURE__ */ u(App, { rpeInsights: loadRPEInsights() }), document.getElementById("app"));
 //#endregion
 
-//# sourceMappingURL=index-DHDph9OF.js.map</script>
+//# sourceMappingURL=index-95D06RdS.js.map</script>
     <style rel="stylesheet" crossorigin>* {
   box-sizing: border-box;
 }

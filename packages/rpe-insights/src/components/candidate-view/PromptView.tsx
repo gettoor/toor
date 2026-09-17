@@ -63,9 +63,9 @@ export function PromptView(props: PromptViewProps) {
   const promptTreeIterations = iterationHistory.map(iteration => {
     return {
       candidateRefs: iteration.candidateRefs,
-      candidates: iteration.candidates,
+      generatedCandidates: iteration.generatedCandidates,
       selectedCandidateRefs: iteration.selectedCandidateRefs,
-      aggregatedEvaluations: iteration.aggregatedEvaluations,
+      trainingAggregatedEvaluations: iteration.trainingAggregatedEvaluations,
       candidateAggregatedEvaluations: iteration.candidateAggregatedEvaluations,
     };
   });

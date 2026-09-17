@@ -14,9 +14,9 @@ export interface CandidateTreeProps {
   candidates: RPECandidate[];
   iterations: Pick<RPEIteration, 
     | 'candidateRefs'
-    | 'candidates'
+    | 'generatedCandidates'
     | 'selectedCandidateRefs'
-    | 'aggregatedEvaluations'
+    | 'trainingAggregatedEvaluations'
     | 'candidateAggregatedEvaluations'
   >[];
   selectedCandidateId: string | null;

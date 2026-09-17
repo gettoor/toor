@@ -34,7 +34,7 @@ export function resolveBoxes(
 
   const findAggregatedEvaluation = (candidateId: string) => {
     const aggregatedEvaluations = iterations.flatMap((iteration) => {
-      return iteration.aggregatedEvaluations;
+      return iteration.trainingAggregatedEvaluations;
     });
     const aggregatedEvaluation = aggregatedEvaluations.find(
       (evaluation) => {
@@ -86,7 +86,7 @@ export function resolveBoxes(
   // candidates from each iteration
   for (const iteration of iterations) {
     let x = PADDING;
-    for (const newCandidate of iteration.candidates) {
+    for (const newCandidate of iteration.generatedCandidates) {
       const candidate = findCandidateById(
         newCandidate.candidateRef.candidateId,
       );
