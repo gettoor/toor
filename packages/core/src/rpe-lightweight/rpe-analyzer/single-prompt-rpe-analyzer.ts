@@ -13,16 +13,14 @@ import {
   requireSinglePromptCandidateModule,
   RPEEvaluatorOutput,
   findCandidateById,
+  findCandidateAncestorsById,
   RPEState,
   RPEAnalyzer,
   RPEAnalyzerInfo,
   RPEAnalyzerInput,
   RPEAnalyzerOutput,
+  findGeneratedCandidateById,
 } from '../../rpe-core/index.js';
-import {
-  SINGLE_PROMPT_RPE_ANALYZER_PASSED_EXPLANATIONS_COUNT,
-  SINGLE_PROMPT_RPE_ANALYZER_FAILED_EXAMPLES_COUNT,
-} from './single-prompt-rpe-analyzer-consts.js';
 import {
   SINGLE_PROMPT_RPE_ANALYZER_PROMPT,
 } from './single-prompt-rpe-analyzer-prompt.js';
@@ -43,8 +41,7 @@ export function singlePromptRPEAnalyzer(
   const { 
     modelName,
     modelParameters,
-    passedEvaluationsCount,
-    failedEvaluationsCount,
+    additionalInformation,
     prompt: analyzerPrompt,
   } = input;
   const modelProvider = input.modelProvider ?? new DefaultModelProvider();
@@ -64,23 +61,21 @@ export function singlePromptRPEAnalyzer(
           original_prompt: requireSinglePromptCandidateModule(
             candidate.modules,
           ),
+          additional_information:
+            additionalInformation ?? 'No additional information provided.',
           aggregated_score: input.aggregation.aggregatedScore,
           aggregated_metrics: aggregatedMetricsForPrompt(
             input.aggregation.aggregatedMetrics ?? {},
           ),
           passed_explanations: explanationsForPrompt(
             input.aggregation.passedEvaluations,
-            passedEvaluationsCount ??
-              SINGLE_PROMPT_RPE_ANALYZER_PASSED_EXPLANATIONS_COUNT,
           ),
           failed_examples: failedExamplesForPrompt(
             input.aggregation.failedEvaluations,
-            failedEvaluationsCount ??
-              SINGLE_PROMPT_RPE_ANALYZER_FAILED_EXAMPLES_COUNT,
           ),
         },
       );
-
+      
       // generate text response
       const model = await modelProvider.getModel(modelName);
       const { output, usage } = await generateText({
@@ -156,10 +151,8 @@ function aggregatedMetricsForPrompt(
 
 function explanationsForPrompt(
   evaluations: RPEEvaluatorOutput[],
-  count: number,
 ): string {
   return evaluations
-    .slice(0, count)
     .map(evaluation => {
       return `- ${evaluation.reasoning}`;
     })
@@ -168,10 +161,8 @@ function explanationsForPrompt(
 
 function failedExamplesForPrompt(
   evaluations: RPEEvaluatorOutput[],
-  count: number,
 ): string {
   return evaluations
-    .slice(0, count)
     .map(({ response, datasetEntry, reasoning }, index) => {
       const no = `${index + 1}.`;
 

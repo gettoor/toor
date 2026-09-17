@@ -2,16 +2,39 @@ import { RPEMetadata } from '../rpe-core/index.js';
 import { RPEDatasetEntry } from '../rpe-dataset/index.js';
 import { RPECandidate, RPECandidateRef } from '../rpe-candidate/index.js';
 import { RPEExecutorResponse } from '../rpe-executor/index.js';
-import { EvaluatorCandidateOutput } from '../evaluator-types.js';
 import { RPEAggregatorOutput } from '../rpe-aggregator/index.js';
 import { RPEAnalyzerOutput } from '../rpe-analyzer/index.js';
-import { PromptGeneratorCandidate } from '../candidate-generator-types.js';
+import {
+  EvaluatorCandidateOutput,
+  CandidateGeneratorCandidate,
+} from '../rpe-process/index.js';
+
+/**
+ * Represents a final candidate of the RPE process.
+ * @category Reflective Prompt Evolution
+ */
+export interface RPEFinalCandidate {
+  /**
+   * Reference to the candidate.
+   */
+  candidateRef: RPECandidateRef;
+
+  /**
+   * Aggregated evaluations of the candidate.
+   */
+  aggregatedEvaluation?: RPEAggregatorOutput;
+}
 
 /**
  * Represents a completed iteration of the RPE process.
  * @category Reflective Prompt Evolution
  */
 export interface RPEIteration {
+  /**
+   * Iteration number.
+   */
+  iterationNo: number;
+
   /**
    * References to the candidates evaluated in the current iteration.
    */
@@ -20,27 +43,27 @@ export interface RPEIteration {
   /**
    * The responses generated for the candidates in the current iteration.
    */
-  responses: RPEExecutorResponse[];
+  trainingResponses: RPEExecutorResponse[];
 
   /**
    * The evaluations of the responses in the current iteration.
    */
-  evaluations: EvaluatorCandidateOutput[];
+  trainingEvaluations: EvaluatorCandidateOutput[];
 
   /**
    * The aggregated evaluations of the responses in the current iteration.
    */
-  aggregatedEvaluations: RPEAggregatorOutput[];
+  trainingAggregatedEvaluations: RPEAggregatorOutput[];
 
   /**
    * The analyses of the aggregated evaluations in the current iteration.
    */
-  analyses: RPEAnalyzerOutput[];
+  trainingAnalyses: RPEAnalyzerOutput[];
 
   /**
    * The candidates generated for the candidates in the current iteration.
    */
-  candidates: PromptGeneratorCandidate[];
+  generatedCandidates: CandidateGeneratorCandidate[];
 
   /**
    * The responses generated for the candidates in the current iteration.
@@ -78,6 +101,12 @@ export type RPEIterationInProgress =
  */
 export interface RPEState {
   /**
+   * Evaluations of the seed and generated candidates for comparison.
+   * Evaluations are added as the RPE process progresses.
+   */
+  aggregatedEvaluations: RPEAggregatorOutput[];
+  
+  /**
    * All the candidates from an RPE process.
    */
   candidates: RPECandidate[];
@@ -106,4 +135,15 @@ export interface RPEState {
    * Metadata for the RPE process.
    */
   metadata: RPEMetadata;
+
+  /**
+   * Final candidates of the RPE process.
+   */
+  finalCandidates: RPEFinalCandidate[];
 }
+
+/**
+ * Function to update the RPE state.
+ * @category Reflective Prompt Evolution
+ */
+export type RPEUpdateStateFunc = (state: RPEState) => Promise<void>;

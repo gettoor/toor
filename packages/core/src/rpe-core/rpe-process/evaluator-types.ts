@@ -1,5 +1,5 @@
-import { RPEEvaluatorOutput } from './rpe-evaluator/index.js';
-import { RPECandidateRef } from './rpe-candidate/index.js';
+import { RPECandidateRef } from '../rpe-candidate/index.js';
+import { RPEEvaluatorOutput } from '../rpe-evaluator/index.js';
 
 /**
  * Output for the RPE evaluator for a single candidate.

@@ -1,8 +1,8 @@
-import { runParallelBatchesOrThrow } from '../concurrency/index.js';
-import { findCandidateById, RPEState } from './rpe-state/index.js';
-import { RPEAggregator, RPEAggregatorOutput } from './rpe-aggregator/index.js';
-import { DEFAULT_AGGREGATOR_PARALLELISM } from './aggregator-consts.js';
+import { runParallelBatchesOrThrow } from '../../concurrency/index.js';
+import { findCandidateById, RPEState } from '../rpe-state/index.js';
+import { RPEAggregator, RPEAggregatorOutput } from '../rpe-aggregator/index.js';
 import { EvaluatorCandidateOutput } from './evaluator-types.js';
+import { DEFAULT_AGGREGATOR_PARALLELISM } from './aggregator-consts.js';
 
 export async function aggregateEvaluations(
   state: RPEState,

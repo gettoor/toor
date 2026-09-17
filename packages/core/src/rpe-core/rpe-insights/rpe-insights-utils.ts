@@ -1,5 +1,6 @@
 import { LLMModelUsage, LLMUsage } from '../../llm/index.js';
-import { RPEInsights } from './rpe-insights-types.js';
+import { RPEInput } from '../rpe-process/rpe-types.js';
+import { RPEInsights, RPEInsightsInfo } from './rpe-insights-types.js';
 
 /**
  * Sum the usage of the insights.
@@ -34,25 +35,25 @@ export function sumRPEInsightsUsage(insights: RPEInsights): Required<LLMUsage> {
   };
 
   insights.iterationHistory.forEach(iteration => {
-    iteration.responses.forEach(response => {
+    iteration.trainingResponses.forEach(response => {
       pushLLMUsage(response.usage);
     });
 
-    iteration.evaluations.forEach(evaluation => {
+    iteration.trainingEvaluations.forEach(evaluation => {
       evaluation.evaluatorOutputs.forEach(output => {
         pushLLMUsage(output.usage);
       });
     });
 
-    iteration.aggregatedEvaluations.forEach(aggregatedEvaluation => {
+    iteration.trainingAggregatedEvaluations.forEach(aggregatedEvaluation => {
       pushLLMUsage(aggregatedEvaluation.usage);
     });
 
-    iteration.analyses.forEach(analysis => {
+    iteration.trainingAnalyses.forEach(analysis => {
       pushLLMUsage(analysis.usage);
     });
 
-    iteration.candidates.forEach(candidate => {
+    iteration.generatedCandidates.forEach(candidate => {
       pushLLMUsage(candidate.usage);
     });
 
@@ -72,4 +73,23 @@ export function sumRPEInsightsUsage(insights: RPEInsights): Required<LLMUsage> {
   });
 
   return usage;
+}
+
+/**
+ * Builds the insights info for the RPE process.
+ * @category Reflective Prompt Evolution
+ * @param input - Input for the RPE process.
+ * @returns Insights info for the RPE process.
+ */
+export async function buildRPEInsightsInfo(
+  input: RPEInput,
+): Promise<RPEInsightsInfo> {
+  return {
+    executorInfo: await input.trainingExecutor.getInfo(),
+    evaluatorInfo: await input.trainingEvaluator.getInfo(),
+    aggregatorInfo: await input.aggregator.getInfo(),
+    analyzerInfo: await input.analyzer.getInfo(),
+    candidateGeneratorInfo: await input.candidateGenerator.getInfo(),
+    candidateSelectorInfo: await input.candidateSelector.getInfo(),
+  };
 }

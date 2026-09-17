@@ -91,9 +91,17 @@ export interface SinglePromptRPECandidateGeneratorInput {
   modelParameters?: ModelParameters;
 
   /**
+   * Additional information to use for the candidate generator. For example,
+   * the complete set of possible or valid responses like positive, neutral,
+   * negative.
+   */
+  additionalInformation?: string;
+
+  /**
    * Prompt to use for the candidate generator. The following placeholders are
    * injected:
    * - `original_prompt` - original prompt,
+   * - `additional_information` - additional prompt information,
    * - `aggregated_score` - aggregated overall score (number),
    * - `aggregated_metrics` - aggregated metric scores
    *   (list of name-value pairs with optional reasoning),

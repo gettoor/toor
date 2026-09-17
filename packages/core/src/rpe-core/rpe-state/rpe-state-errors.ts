@@ -6,7 +6,19 @@ export class CandidateNotFoundError extends NotFoundToorError {
   public constructor(candidateId: string) {
     super(
       CandidateNotFoundError.CODE,
-      `Candidate with id ${ToorError.quote(candidateId)} not found`,
+      `Candidate with identifier ${ToorError.quote(candidateId)} not found`,
+    );
+  }
+}
+
+export class GeneratedCandidateNotFoundError extends NotFoundToorError {
+  public static readonly CODE = 'GeneratedCandidateNotFoundError';
+
+  public constructor(candidateId: string) {
+    super(
+      GeneratedCandidateNotFoundError.CODE,
+      `Generated candidate with identifier ` +
+      `${ ToorError.quote(candidateId) } not found`,
     );
   }
 }

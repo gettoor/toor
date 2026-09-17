@@ -29,18 +29,19 @@ export function improvedCandidateSelector(
       state: RPEState,
       input: RPECandidateSelectorInput,
     ): Promise<RPECandidateSelectorOutput> => {
-      const parentEvaluations = state.iteration.aggregatedEvaluations ?? [];
-      if (!parentEvaluations) {
-        throw new InternalToorError(
-          'No parent aggregated evaluations in improved candidate selector.'
-        );
-      }
-      const newEvaluations = state.iteration.candidateAggregatedEvaluations;
-      if (!newEvaluations) {
-        throw new InternalToorError(
-          'No new aggregated evaluations in improved candidate selector.'
-        );
-      }
+      // const parentEvaluations =
+      //   state.iteration.trainingAggregatedEvaluations ?? [];
+      // if (!parentEvaluations) {
+      //   throw new InternalToorError(
+      //     'No parent aggregated evaluations in improved candidate selector.'
+      //   );
+      // }
+      // const newEvaluations = state.iteration.candidateAggregatedEvaluations;
+      // if (!newEvaluations) {
+      //   throw new InternalToorError(
+      //     'No new aggregated evaluations in improved candidate selector.'
+      //   );
+      // }
       
       const findCandidateById = (candidateId: string) => {
         const candidate = state.candidates.find(candidate => {
@@ -55,37 +56,51 @@ export function improvedCandidateSelector(
         return candidate;
       };
 
+      const findAggregatedEvaluationById = (candidateId: string) => {
+        const aggregatedEvaluation = state.aggregatedEvaluations
+          .find(evaluation => {
+            return evaluation.candidateRef.candidateId === candidateId;
+          });
+        if (!aggregatedEvaluation) {
+          throw new InternalToorError(
+            `Evaluation for candidate ${ToorError.quote(candidateId)} ` +
+            `not found in improved candidate selector.`
+          );
+        }
+        return aggregatedEvaluation;
+      };
+
       const selectedCandidateRefs: RPECandidateRef[] = [];
       // check which candidates are improved
-      for (const newEvaluation of newEvaluations)
-      {
-        const newCandidate = findCandidateById(
-          newEvaluation.candidateRef.candidateId,
-        );
-
-        // find the parent evaluation for the candidate
-        const parentEvaluation = parentEvaluations.find(evaluation => {
-          const parentCandidate = findCandidateById(
-            evaluation.candidateRef.candidateId,
+      for (const { candidateRef } of state.iteration.generatedCandidates ?? []) {
+        const generatedCandidate = findCandidateById(candidateRef.candidateId);
+        if (!generatedCandidate.parentCandidateIds) {
+          throw new InternalToorError(
+            `Candidate ${ToorError.quote(candidateRef.candidateId)} ` +
+            `has no parent candidates in improved candidate selector.`
           );
-          return newCandidate.parentCandidateIds?.includes(
-            parentCandidate.candidateId,
-          );
-        });
-        if (!parentEvaluation) {
-          continue;
         }
+        // TODO: handle multiple parent candidates
+        const parentCandidateId = generatedCandidate.parentCandidateIds[0];
+
+        // find the aggregated evaluations
+        const generatedCandidateEvaluation = findAggregatedEvaluationById(
+          candidateRef.candidateId,
+        );
+        const parentCandidateEvaluation = findAggregatedEvaluationById(
+          parentCandidateId,
+        );
 
         // check if the candidate is improved
         const isImproved = isCandidateImproved(
-          newEvaluation,
-          parentEvaluation,
+          generatedCandidateEvaluation,
+          parentCandidateEvaluation,
         );
         if (isImproved) {
-          selectedCandidateRefs.push(newEvaluation.candidateRef);
+          selectedCandidateRefs.push(generatedCandidateEvaluation.candidateRef);
         }
         if (!isImproved && selectParentCandidatesIfBetter) {
-          selectedCandidateRefs.push(parentEvaluation.candidateRef);
+          selectedCandidateRefs.push(parentCandidateEvaluation.candidateRef);
         }
       }
 
@@ -100,8 +115,8 @@ export function improvedCandidateSelector(
             key: 'selectParentCandidatesIfBetter',
             value: selectParentCandidatesIfBetter,
             description:
-              'Indicates if to select parent candidates ' +
-              'if they perform better than the new candidates.',
+              'Compares the new candidates to the parent candidates ' +
+              'and selects the better ones.',
           }
         ],
       };

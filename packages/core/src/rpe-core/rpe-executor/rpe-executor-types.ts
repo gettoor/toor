@@ -2,6 +2,7 @@ import { LLMUsage } from '../../llm/index.js';
 import { RPEResponse } from '../rpe-core/index.js';
 import { RPEProperties } from '../rpe-info/index.js';
 import { RPEDatasetEntry } from '../rpe-dataset/index.js';
+import { RPEState } from '../rpe-state/index.js';
 import { RPECandidate, RPECandidateRef } from '../rpe-candidate/index.js';
 
 /**
@@ -75,10 +76,11 @@ export interface RPEExecutorInfo {
 export interface RPEExecutor {
   /**
    * Execute a candidate.
+   * @param state - State of the RPE process.
    * @param input - Input for the executor.
    * @returns Executor output.
    */
-  run(input: RPEExecutorInput): Promise<RPEExecutorOutput>;
+  run(state: RPEState, input: RPEExecutorInput): Promise<RPEExecutorOutput>;
 
   /**
    * Get the info of the executor.

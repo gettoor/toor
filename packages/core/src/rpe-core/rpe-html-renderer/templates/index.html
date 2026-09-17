@@ -12445,7 +12445,7 @@ function InfoPanel(props) {
 //#region src/components/candidate-view/PromptView.tsx
 function PromptView(props) {
 	const { rpeInsights } = props;
-	const { datasetEntries, candidates, iterationHistory } = rpeInsights;
+	const { dataset, candidates, iterationHistory } = rpeInsights;
 	const [selectedPromptId, setSelectedPromptId] = d$1(null);
 	const [detailsVisible, setDetailsVisible] = d$1(false);
 	const [infoVisible, setInfoVisible] = d$1(false);
@@ -12484,7 +12484,7 @@ function PromptView(props) {
 			candidateAggregatedEvaluations: iteration.candidateAggregatedEvaluations
 		};
 	});
-	const promptDetailsData = selectedPromptId !== null ? getCandidateDetailsData(datasetEntries, candidates, iterationHistory, selectedPromptId) : void 0;
+	const promptDetailsData = selectedPromptId !== null ? getCandidateDetailsData(dataset.entries, candidates, iterationHistory, selectedPromptId) : void 0;
 	return /* @__PURE__ */ u(S$1, { children: [
 		/* @__PURE__ */ u(CandidateTree, {
 			candidates,
@@ -12522,7 +12522,7 @@ function loadRPEInsights() {
 R$1(/* @__PURE__ */ u(App, { rpeInsights: loadRPEInsights() }), document.getElementById("app"));
 //#endregion
 
-//# sourceMappingURL=index-MuKJvdeT.js.map</script>
+//# sourceMappingURL=index-DHDph9OF.js.map</script>
     <style rel="stylesheet" crossorigin>* {
   box-sizing: border-box;
 }

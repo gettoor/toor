@@ -1,20 +1,14 @@
-import { RPEDatasetEntry } from './rpe-dataset/index.js';
-import { RPECandidate } from './rpe-candidate/index.js';
-import { RPEExecutor } from './rpe-executor/index.js';
-import { RPEEvaluator } from './rpe-evaluator/index.js';
-import { RPEAggregator } from './rpe-aggregator/index.js';
-import { RPEAnalyzer } from './rpe-analyzer/index.js';
-import { RPECandidateGenerator } from './rpe-candidate-generator/index.js';
-import { RPECandidateSelector } from './rpe-candidate-selector/index.js';
-import { RPEStopFunc } from './rpe-stop/index.js';
-import { RPEState } from './rpe-state/index.js';
-import { RPEInsights } from './rpe-insights/index.js';
-
-/**
- * Function to update the RPE state (typically metadata).
- * @category Reflective Prompt Evolution
- */
-export type RPEUpdateStateFunc = (state: RPEState) => Promise<void>;
+import { RPEDataset } from '../rpe-dataset/index.js';
+import { RPECandidate } from '../rpe-candidate/index.js';
+import { RPEExecutor } from '../rpe-executor/index.js';
+import { RPEEvaluator } from '../rpe-evaluator/index.js';
+import { RPEAggregator } from '../rpe-aggregator/index.js';
+import { RPEAnalyzer } from '../rpe-analyzer/index.js';
+import { RPECandidateGenerator } from '../rpe-candidate-generator/index.js';
+import { RPECandidateSelector } from '../rpe-candidate-selector/index.js';
+import { RPEStopFunc } from '../rpe-stop/index.js';
+import { RPEUpdateStateFunc } from '../rpe-state/index.js';
+import { RPEInsights } from '../rpe-insights/index.js';
 
 /**
  * Reflective Prompt Evolution (RPE) settings and configuration.
@@ -27,34 +21,27 @@ export interface RPEInput {
   seed: RPECandidate[];
 
   /**
-   * All the dataset entries used in the RPE process.
+   * Dataset with all the dataset entries used in the RPE process.
    */
-  datasetEntries: RPEDatasetEntry[];
+  dataset: RPEDataset;
 
   /**
    * Executor to use for the RPE. An executor is responsible for generating
    * responses to the candidates and dataset entries.
    */
-  executor: RPEExecutor;
+  trainingExecutor: RPEExecutor;
 
   /**
    * Evaluator to use for the RPE. An evaluator is responsible for evaluating
    * the responses.
    */
-  evaluator: RPEEvaluator;
+  trainingEvaluator: RPEEvaluator;
 
   /**
    * Number of concurrent evaluators to use. Defaults to 1 that means
    * that the evaluators are run sequentially.
    */
-  evaluatorParallelism?: number;
-
-  /**
-   * Function to determine if the optimization should stop after evaluating
-   * a set of responses.
-   * @see {@link RPEState}
-   */
-  stopAfterEvaluation?: RPEStopFunc;
+  trainingEvaluatorParallelism?: number;
 
   /**
    * Number of concurrent aggregators to use. Defaults to 1 that means
@@ -88,16 +75,16 @@ export interface RPEInput {
   candidateGenerator: RPECandidateGenerator;
 
   /**
-   * Executor to use for the generated candidates. Defaults to the same executor
-   * as the one used for the original candidates.
+   * Executor to use for the generated candidates. Candidate must
+   * never be evaluated against the training dataset not to overfit.
    */
-  candidateExecutor?: RPEExecutor;
+  candidateExecutor: RPEExecutor;
 
   /**
-   * Evaluator to use for the generated candidate responses. Defaults to
-   * the same evaluator as the one used for the original candidate responses.
+   * Evaluator to use for the generated candidate responses. Candidate must
+   * never be evaluated against the training dataset not to overfit.
    */
-  candidateEvaluator?: RPEEvaluator;
+  candidateEvaluator: RPEEvaluator;
 
   /**
    * Number of concurrent candidate evaluators to use. Defaults to the same
@@ -142,6 +129,12 @@ export interface RPEInput {
    * Function to update the metadata of the RPE state after an iteration.
    */
   updateStateAfterIteration?: RPEUpdateStateFunc;
+
+  /**
+   * Function to update the metadata of the RPE state after
+   * the RPE process finishes.
+   */
+  updateStateOnFinish?: RPEUpdateStateFunc;
 }
 
 /**

@@ -1,5 +1,5 @@
 {
-  "name": "@gettoor/examples-cli",
+  "name": "@gettoor/cli-examples",
   "version": "0.1.0",
   "description": "Evaluation and experiment examples",
   "type": "module",

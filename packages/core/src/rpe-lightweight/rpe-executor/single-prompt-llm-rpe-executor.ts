@@ -18,6 +18,7 @@ import {
   RPEExecutorInfo,
   RPEExecutorInput,
   RPEExecutorResponse,
+  RPEState,
 } from '../../rpe-core/index.js';
 import {
   SinglePromptLLMRPEExecutorInput,
@@ -40,14 +41,19 @@ export function singlePromptLLMRPEExecutor(
   const modelProvider = input.modelProvider ?? new DefaultModelProvider();
 
   return {
-    run: async (input: RPEExecutorInput) => {
+    run: async (state: RPEState, input: RPEExecutorInput) => {
       const model = await modelProvider.getModel(modelName);
+      const effectiveDataset = typeof dataset === 'function'
+        ? await dataset(state)
+        : dataset;
 
       // tasks
       const tasks: Promise<RPEExecutorResponse>[] = [];
       for (const candidate of input.candidates) {
-        for (const datasetEntry of dataset.entries) {
-          tasks.push(generateResponse(model, modelParameters, candidate, datasetEntry));
+        for (const datasetEntry of effectiveDataset.entries) {
+          tasks.push(
+            generateResponse(model, modelParameters, candidate, datasetEntry)
+          );
         }
       }
 

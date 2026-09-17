@@ -1,15 +1,18 @@
-import { candidateRefFromCandidate } from './rpe-candidate/index.js';
+import { candidateRefFromCandidate } from '../rpe-candidate/index.js';
 import { 
   findCandidateById,
   RPEIteration,
   RPEIterationInProgress,
   RPEState,
-} from './rpe-state/index.js';
-import { RPEInsightsInfo } from './rpe-insights/index.js';
+} from '../rpe-state/index.js';
+import { buildRPEInsightsInfo } from '../rpe-insights/index.js';
 import { RPEInput, RPEOutput } from './rpe-types.js';
-import { generateResponses } from './executor.js';
-import { evaluateCandidateResponses } from './evaluator.js';
-import { aggregateEvaluations } from './aggregator.js';
+import {
+  buildInputForDatasetEvaluation,
+  evaluateDataset,
+} from './dataset-evaluator.js';
+import { DEFAULT_EVALUATOR_PARALLELISM } from './evaluator-consts.js';
+import { DEFAULT_AGGREGATOR_PARALLELISM } from './aggregator-consts.js';
 import { analyzeAggregatedEvaluations } from './analyzer.js';
 import { generateCandidates } from './candidate-generator.js';
 
@@ -23,16 +26,19 @@ export async function optimize(
   input: RPEInput,
 ): Promise<RPEOutput> {
   const state: RPEState = {
+    aggregatedEvaluations: [],
     candidates: [...input.seed],
-    datasetEntries: [...input.datasetEntries],
+    datasetEntries: [...input.dataset.entries],
     iterationNo: 0,
     iteration: {
+      iterationNo: 0,
       candidateRefs: input.seed.map(candidate => {
         return candidateRefFromCandidate(candidate);
       }),
     },
     iterationHistory: [],
     metadata: {},
+    finalCandidates: [],
   };
   let stopReason = '';
 
@@ -41,6 +47,8 @@ export async function optimize(
   
   // run the RPE process
   while (true) {
+    console.log('iteration', state.iterationNo);
+
     const iteration: RPEIterationInProgress = state.iteration;
     const iterationCandidates = iteration.candidateRefs.map(candidateRef => {
       return findCandidateById(state, candidateRef.candidateId);
@@ -49,85 +57,67 @@ export async function optimize(
     // update state before iteration
     await input.updateStateBeforeIteration?.(state);
 
-    // generate responses
-    const { responses } = await generateResponses(
-      iterationCandidates,
-      input.executor,
-    );
-    iteration.responses = responses;
-
-    // evaluate responses
-    const { evaluations } = await evaluateCandidateResponses(
+    // evaluate training candidates on the training dataset
+    const {
+      responses: trainingResponses,
+      evaluations: trainingEvaluations,
+      aggregatedEvaluations: trainingAggregatedEvaluations,
+    } = await evaluateDataset(
       state,
-      responses,
-      input.evaluator,
-      input.evaluatorParallelism,
+      {
+        candidates: iterationCandidates,
+        executor: input.trainingExecutor,
+        evaluatorParallelism:
+          input.trainingEvaluatorParallelism ?? DEFAULT_EVALUATOR_PARALLELISM,
+        evaluator: input.trainingEvaluator,
+        aggregatorParallelism:
+          input.aggregatorParallelism ?? DEFAULT_AGGREGATOR_PARALLELISM,
+        aggregator: input.aggregator,
+      },
     );
-    iteration.evaluations = evaluations;
+    iteration.trainingResponses = trainingResponses;
+    iteration.trainingEvaluations = trainingEvaluations;
+    iteration.trainingAggregatedEvaluations = trainingAggregatedEvaluations;
 
-    // aggregate evaluations
-    const aggregatedEvaluations = await aggregateEvaluations(
+    // analyze training aggregated evaluations
+    const trainingAnalyses = await analyzeAggregatedEvaluations(
       state,
-      evaluations,
-      input.aggregator,
-      input.aggregatorParallelism,
-    );
-    iteration.aggregatedEvaluations = aggregatedEvaluations;
-
-    // should stop?
-    const shouldStopAfterEvaluation = await input.stopAfterEvaluation?.(state);
-    if (shouldStopAfterEvaluation?.stop) {
-      stopReason = shouldStopAfterEvaluation.stopReason;
-      break;
-    }
-
-    // analyze aggregated evaluations
-    const analyses = await analyzeAggregatedEvaluations(
-      state,
-      aggregatedEvaluations,
+      trainingAggregatedEvaluations,
       input.analyzer,
       input.analyzerParallelism,
     );
-    iteration.analyses = analyses;
+    iteration.trainingAnalyses = trainingAnalyses;
 
     // generate candidates
-    const { candidates } = await generateCandidates(
+    const { candidates: generatedCandidates } = await generateCandidates(
       state,
       input.candidateGenerator,
     );
-    iteration.candidates = candidates.map(candidate => ({
+    iteration.generatedCandidates = generatedCandidates.map(candidate => ({
       candidateRef: candidateRefFromCandidate(candidate.candidate),
       changes: candidate.changes,
       usage: candidate.usage,
     }));
-    state.candidates.push(...candidates.map(candidate => candidate.candidate));
+    state.candidates.push(
+      ...generatedCandidates.map(candidate => candidate.candidate),
+    );
 
-    // generate candidate responses
-    const { responses: candidateResponses } = await generateResponses(
-      candidates.map(candidate => candidate.candidate),
-      input.candidateExecutor ?? input.executor,
+    // evaluate candidates on the validation dataset
+    const {
+      responses: candidateResponses,
+      evaluations: candidateEvaluations,
+      aggregatedEvaluations: candidateAggregatedEvaluations
+    } = await evaluateDataset(
+      state,
+      {
+        candidates: generatedCandidates.map(candidate => candidate.candidate),
+        ...buildInputForDatasetEvaluation(input),
+      },
     );
     iteration.candidateResponses = candidateResponses;
-
-    // evaluate candidates
-    const {
-      evaluations: candidateEvaluations,
-    } = await evaluateCandidateResponses(
-      state,
-      candidateResponses,
-      input.candidateEvaluator ?? input.evaluator,
-      input.candidateEvaluatorParallelism ?? input.evaluatorParallelism,
-    );
     iteration.candidateEvaluations = candidateEvaluations;
-
-    // aggregate candidate evaluations
-    const candidateAggregatedEvaluations = await aggregateEvaluations(
-      state,
-      candidateEvaluations,
-      input.candidateAggregator ?? input.aggregator,
-      input.candidateAggregatorParallelism ?? input.aggregatorParallelism,
-    );
     iteration.candidateAggregatedEvaluations = candidateAggregatedEvaluations;
+    state.aggregatedEvaluations.push(...candidateAggregatedEvaluations);
 
     // select candidates
     const { 
@@ -157,33 +147,44 @@ export async function optimize(
     // update iteration
     state.iterationNo++;
     state.iteration = {
+      iterationNo: state.iterationNo,
       candidateRefs: selectedCandidateRefs,
     };
   }
+
+  // populate final candidates
+  populateFinalCandidates(state);
+
+  // update state on finish
+  await input.updateStateOnFinish?.(state);
 
   return {
     candidates: state.iteration.candidateRefs.map(candidateRef => {
       return findCandidateById(state, candidateRef.candidateId);
     }),
     insights: {
-      datasetEntries: state.datasetEntries,
+      dataset: input.dataset,
       candidates: state.candidates,
       stopReason,
       iterationHistory: state.iterationHistory,
+      finalCandidates: state.finalCandidates,
       info: await buildRPEInsightsInfo(input),
     },
   };
 }
 
-async function buildRPEInsightsInfo(
-  input: RPEInput,
-): Promise<RPEInsightsInfo> {
-  return {
-    executorInfo: await input.executor.getInfo(),
-    evaluatorInfo: await input.evaluator.getInfo(),
-    aggregatorInfo: await input.aggregator.getInfo(),
-    analyzerInfo: await input.analyzer.getInfo(),
-    candidateGeneratorInfo: await input.candidateGenerator.getInfo(),
-    candidateSelectorInfo: await input.candidateSelector.getInfo(),
-  };
+function populateFinalCandidates(state: RPEState): void {
+  const lastIteration = state.iterationHistory[
+    state.iterationHistory.length - 1
+  ];
+  if (!lastIteration) {
+    return;
+  }
+  const finalCandidates = lastIteration.selectedCandidateRefs.map(
+    candidateRef => {
+      return {
+        candidateRef,
+      };
+    });
+  state.finalCandidates.push(...finalCandidates);
 }

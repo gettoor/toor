@@ -14,7 +14,7 @@ async function run(): Promise<void> {
       ),
       candidateId: 'seed',
     }],
-    dataset: {
+    trainingDataset: {
       entries: [
         {
           datasetEntryId: 'e0',
@@ -29,6 +29,17 @@ async function run(): Promise<void> {
             input: 'The battery barely lasts an hour.',
           },
           expectedResponse: 'negative',
+        },
+      ],
+    },
+    validationDataset: {
+      entries: [
+        {
+          datasetEntryId: 'e2',
+          vars: {
+            input: 'The product is okay, but it could be better.',
+          },
+          expectedResponse: 'neutral',
         },
       ],
     },

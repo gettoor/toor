@@ -1,4 +1,4 @@
-import { RPEDatasetEntry } from '../rpe-dataset/index.js';
+import { RPEDataset } from '../rpe-dataset/index.js';
 import { RPEExecutorInfo } from '../rpe-executor/index.js';
 import { RPEEvaluatorInfo } from '../rpe-evaluator/index.js';
 import { RPECandidate } from '../rpe-candidate/index.js';
@@ -6,7 +6,7 @@ import { RPEAggregatorInfo } from '../rpe-aggregator/index.js';
 import { RPEAnalyzerInfo } from '../rpe-analyzer/index.js';
 import { RPECandidateGeneratorInfo } from '../rpe-candidate-generator/index.js';
 import { RPECandidateSelectorInfo } from '../rpe-candidate-selector/index.js';
-import { RPEIteration } from '../rpe-state/index.js';
+import { RPEFinalCandidate, RPEIteration } from '../rpe-state/index.js';
 
 /**
  * Information about the RPE process.
@@ -50,9 +50,9 @@ export interface RPEInsightsInfo {
  */
 export interface RPEInsights {
   /**
-   * All the dataset entries from an RPE process.
+   * Dataset with all the dataset entries used in the RPE process.
    */
-  datasetEntries: RPEDatasetEntry[];
+  dataset: RPEDataset;
 
   /**
    * All the candidates from an RPE process.
@@ -68,6 +68,11 @@ export interface RPEInsights {
    * The history of iterations of the RPE process.
    */
   iterationHistory: RPEIteration[];
+
+  /**
+   * Final candidates of the RPE process.
+   */
+  finalCandidates: RPEFinalCandidate[];
 
   /**
    * Information about the RPE process.

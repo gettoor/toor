@@ -1,6 +1,6 @@
 import { ModelParameters } from '../../llm/index.js';
 import { ModelProvider } from '../../model-provider/index.js';
-import { RPEDataset } from '../../rpe-core/index.js';
+import { RPEDataset, RPEDatasetProvider } from '../../rpe-core/index.js';
 
 /**
  * Input for the single-prompt LLM RPE executor.
@@ -25,7 +25,7 @@ export interface SinglePromptLLMRPEExecutorInput {
   /**
    * Dataset to use for the executor.
    */
-  dataset: RPEDataset;
+  dataset: RPEDataset | RPEDatasetProvider;
 
   /**
    * Number of concurrent executions to use.

@@ -1,11 +1,11 @@
-import { runParallelBatchesOrThrow } from '../concurrency/index.js';
-import { RPEState } from './rpe-state/index.js';
-import { DEFAULT_ANALYZER_PARALLELISM } from './analyzer-consts.js';
-import { RPEAggregatorOutput } from './rpe-aggregator/index.js';
+import { runParallelBatchesOrThrow } from '../../concurrency/index.js';
+import { RPEState } from '../rpe-state/index.js';
+import { RPEAggregatorOutput } from '../rpe-aggregator/index.js';
 import { 
   RPEAnalyzer,
   RPEAnalyzerOutput,
-} from './rpe-analyzer/rpe-analyzer-types.js';
+} from '../rpe-analyzer/rpe-analyzer-types.js';
+import { DEFAULT_ANALYZER_PARALLELISM } from './analyzer-consts.js';
 
 export async function analyzeAggregatedEvaluations(
   state: RPEState,

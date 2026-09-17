@@ -18,9 +18,15 @@ export interface RPELightweightInput {
   seed: RPECandidate[];
 
   /**
-   * Dataset to use for the RPE.
+   * Dataset used for candidate improvement.
    */
-  dataset: RPEDataset;
+  trainingDataset: RPEDataset;
+
+  /**
+   * Dataset used for validation of generated candidates. This dataset
+   * helps select candidates.
+   */
+  validationDataset: RPEDataset;
 
   /**
    * Metrics to use for the evaluation.

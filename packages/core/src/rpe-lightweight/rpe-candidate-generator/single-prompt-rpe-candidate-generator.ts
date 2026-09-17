@@ -29,6 +29,9 @@ import {
   RPECandidateGeneratorOutput,
   RPECandidateGeneratorCandidate,
   RPEAnalyzerFailedExampleAnalysis,
+  findGeneratedCandidateById,
+  findCandidateAncestorsById,
+  RPECandidateGeneratorChange,
 } from '../../rpe-core/index.js';
 import { 
   SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_PROMPT,
@@ -42,6 +45,7 @@ import {
   SinglePromptRPECandidateGeneratorInstruction,
   SinglePromptRPECandidateGeneratorOutputSchema,
 } from './single-prompt-rpe-candidate-generator-types.js';
+import { GeneratedCandidateNotFoundError } from '../../rpe-core/rpe-state/rpe-state-errors.js';
 
 /**
  * Creates a single-prompt RPE candidate generator. The generate expects
@@ -62,6 +66,7 @@ export function singlePromptRPECandidateGenerator(
     ],
     modelName,
     modelParameters,
+    additionalInformation,
     prompt: candidateGeneratorPrompt,
   } = input;
   const modelProvider = input.modelProvider ?? new DefaultModelProvider();
@@ -72,13 +77,13 @@ export function singlePromptRPECandidateGenerator(
       input: RPECandidateGeneratorInput,
     ): Promise<RPECandidateGeneratorOutput> => {
       const { iteration } = state;
-      const { aggregatedEvaluations, analyses } = iteration;
-      if (!aggregatedEvaluations) {
+      const { trainingAggregatedEvaluations, trainingAnalyses } = iteration;
+      if (!trainingAggregatedEvaluations) {
         throw new InternalToorError(
           `Aggregated evaluations not found during candidate generation`,
         );
       }
-      if (!analyses) {
+      if (!trainingAnalyses) {
         throw new InternalToorError(
           `Analyses not found during candidate generation`,
         );
@@ -94,9 +99,9 @@ export function singlePromptRPECandidateGenerator(
       const taskEntries: TaskEntry[] = [];
 
       // for each candidate analysis
-      aggregatedEvaluations.forEach(aggregation => {
+      trainingAggregatedEvaluations.forEach(aggregation => {
         const candidateId = aggregation.candidateRef.candidateId;
-        const analysis = analyses.find(analysis => {
+        const analysis = trainingAnalyses.find(analysis => {
           return analysis.candidateRef.candidateId === candidateId;
         });
         if (!analysis) {
@@ -126,8 +131,10 @@ export function singlePromptRPECandidateGenerator(
           modelProvider,
           modelName,
           modelParameters,
+          state,
           candidateGeneratorPrompt ??
             SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_PROMPT.prompt,
+          additionalInformation,
           findCandidateById(state, taskEntry.candidateId),
           taskEntry.candidateInstruction,
           newCandidateId,
@@ -167,7 +174,9 @@ async function generateCandidate(
   modelProvider: ModelProvider,
   modelName: string,
   modelParameters: ModelParameters | undefined,
+  state: RPEState,
   generatorPrompt: string,
+  additionalInformation: string | undefined,
   candidate: RPECandidate,
   candidateInstruction: SinglePromptRPECandidateGeneratorInstruction,
   newCandidateId: string,
@@ -176,17 +185,34 @@ async function generateCandidate(
   datasetEntries: RPEDatasetEntry[],
   includeExpectedResponse: boolean,
 ): Promise<RPECandidateGeneratorCandidate> {
+  // no need to generate candidate if all evaluations passed
+  if (aggregation.failedEvaluations.length === 0) {
+    return { candidate, changes: [] };
+  }
+
   const prompt = replacePlaceholders(
     generatorPrompt,
     {
       original_prompt: requireSinglePromptCandidateModule(
         candidate.modules,
       ),
+      additional_information:
+        additionalInformation ?? 'No additional information provided.',
+      previous_changes: previousChangesForPrompt(
+        state,
+        candidate.candidateId,
+      ),
       aggregated_metrics: aggregatedMetricsForPrompt(
         aggregation.aggregatedMetrics ?? {},
       ),
-      strengths: analysis.strengths.join('\n'),
-      recommendations: analysis.recommendations.join('\n'),
+      strengths: listForPrompt(
+        analysis.strengths,
+        'No strengths',
+      ),
+      recommendations: listForPrompt(
+        analysis.recommendations,
+        'No recommendations'
+      ),
       passed_evaluations: passedEvaluationsForPrompt(
         aggregation.passedEvaluations,
       ),
@@ -239,6 +265,45 @@ async function generateCandidate(
   return generatedCandidate;
 }
 
+function listForPrompt(
+  items: string[],
+  noItemsMessage: string,
+): string {
+  if (items.length === 0) {
+    return noItemsMessage;
+  }
+  return items.join('\n');
+}
+
+function previousChangesForPrompt(
+  state: RPEState,
+  candidateId: string,
+): string {
+  const ancestors = findCandidateAncestorsById(state, candidateId);
+  const previousChanges = ancestors.map(ancestor => {
+    let changes: RPECandidateGeneratorChange[] | undefined;
+    try {
+      const { changes: candidateChanges } = findGeneratedCandidateById(
+        state,
+        ancestor.candidateId,
+      );
+      changes = candidateChanges;
+    } catch (error) {
+      if (!(error instanceof GeneratedCandidateNotFoundError)) {
+        throw error;
+      }
+    }
+    return (changes ?? []).map(change => {
+      return `- ${change.description} (${change.reasoning})`;
+    }).join('\n');
+  }).join('\n');
+
+  if (previousChanges.length === 0) {
+    return 'No previous changes';
+  }
+  return previousChanges;
+}
+
 function aggregatedMetricsForPrompt(
   metrics: Record<string, MetricResult>,
 ): string {
@@ -257,6 +322,9 @@ function aggregatedMetricsForPrompt(
 function passedEvaluationsForPrompt(
   evaluations: RPEEvaluatorOutput[],
 ): string {
+  if (evaluations.length === 0) {
+    return 'No passed evaluations';
+  }
   return evaluations
     .map(evaluation => {
       return `- ${evaluation.reasoning}`;
@@ -320,7 +388,7 @@ function failedExampleAnalysisForPrompt(
       
       // missing conceptual distinction
       output += `Missing Conceptual Distinction:\n` +
-        `${ analysis.missingConceptualDistinction } \n\n`;
+        `${analysis.missingConceptualDistinction}\n\n`;
       
       // general rule
       output += `General Rule:\n` +
@@ -329,6 +397,7 @@ function failedExampleAnalysisForPrompt(
       // regression risks
       output += `Regression Risks:\n` +
         `${analysis.regressionRisks.join('\n')}\n`;
+      output += '\n';
     });
 
   return output;

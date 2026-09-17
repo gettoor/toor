@@ -4,6 +4,7 @@ import {
   defaultRPEAggregator,
   improvedCandidateSelector,
   isCandidateImprovedByScore,
+  mergeRPEDatasets,
   RPEInput,
   RPEState,
 } from '../rpe-core/index.js';
@@ -41,14 +42,17 @@ export function rpeLightweight(input: RPELightweightInput): RPEInput {
 
   return {
     seed: input.seed,
-    datasetEntries: input.dataset.entries,
-    executor: singlePromptLLMRPEExecutor({
+    dataset: mergeRPEDatasets(
+      input.trainingDataset,
+      input.validationDataset,
+    ),
+    trainingExecutor: singlePromptLLMRPEExecutor({
       ...model(input.executorModelName, input.executorModelParameters),
-      dataset: input.dataset,
+      dataset: input.trainingDataset,
       parallelism,
     }),
-    evaluatorParallelism: parallelism,
-    evaluator: singlePromptJudgeRPEEvaluator({
+    trainingEvaluatorParallelism: parallelism,
+    trainingEvaluator: singlePromptJudgeRPEEvaluator({
       ...model(input.evaluatorModelName, input.evaluatorModelParameters),
       metrics: input.metrics,
     }),
@@ -71,6 +75,15 @@ export function rpeLightweight(input: RPELightweightInput): RPEInput {
       candidateInstructions: input.candidateInstructions ??
         DEFAULT_RPE_LIGHTWEIGHT_CANDIDATE_GENERATOR_INSTRUCTIONS,
       parallelism,
+    }),
+    candidateExecutor: singlePromptLLMRPEExecutor({
+      ...model(input.executorModelName, input.executorModelParameters),
+      dataset: input.validationDataset,
+      parallelism,
+    }),
+    candidateEvaluator: singlePromptJudgeRPEEvaluator({
+      ...model(input.evaluatorModelName, input.evaluatorModelParameters),
+      metrics: input.metrics,
     }),
     candidateSelector: improvedCandidateSelector({
       isCandidateImproved: isCandidateImprovedByScore,
