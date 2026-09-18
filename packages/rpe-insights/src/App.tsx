@@ -1,5 +1,5 @@
 import { type RPEInsights } from '@gettoor/core';
-import { PromptView } from './components/index.js';
+import { ProcessView } from './components/index.js';
 
 export interface AppProps {
   rpeInsights: RPEInsights;
@@ -8,7 +8,7 @@ export interface AppProps {
 export function App(props: AppProps) {
   return (
     <main>
-      <PromptView rpeInsights={props.rpeInsights}/>
+      <ProcessView rpeInsights={props.rpeInsights}/>
     </main>
   );
 }

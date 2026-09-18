@@ -165,6 +165,7 @@ export async function optimize(
     insights: {
       dataset: input.dataset,
       candidates: state.candidates,
+      aggregatedEvaluations: state.aggregatedEvaluations,
       stopReason,
       iterationHistory: state.iterationHistory,
       finalCandidates: state.finalCandidates,

@@ -2,7 +2,10 @@ import { RPEDataset } from '../rpe-dataset/index.js';
 import { RPEExecutorInfo } from '../rpe-executor/index.js';
 import { RPEEvaluatorInfo } from '../rpe-evaluator/index.js';
 import { RPECandidate } from '../rpe-candidate/index.js';
-import { RPEAggregatorInfo } from '../rpe-aggregator/index.js';
+import {
+  RPEAggregatorInfo,
+  RPEAggregatorOutput,
+} from '../rpe-aggregator/index.js';
 import { RPEAnalyzerInfo } from '../rpe-analyzer/index.js';
 import { RPECandidateGeneratorInfo } from '../rpe-candidate-generator/index.js';
 import { RPECandidateSelectorInfo } from '../rpe-candidate-selector/index.js';
@@ -58,6 +61,12 @@ export interface RPEInsights {
    * All the candidates from an RPE process.
    */
   candidates: RPECandidate[];
+
+  /**
+   * Evaluations of the seed and generated candidates for comparison.
+   * Evaluations are added as the RPE process progresses.
+   */
+  aggregatedEvaluations: RPEAggregatorOutput[];  
 
   /**
    * The current iteration of the RPE process.

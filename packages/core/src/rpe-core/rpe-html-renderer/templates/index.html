@@ -580,7 +580,8 @@ function CandidateBoxConnection(props) {
 /**
 * Resolve the boxes for the prompt tree.
 */
-function resolveBoxes(candidates, iterations, onBoxClick) {
+function resolveBoxes(rpeInsights, onBoxClick) {
+	const { candidates, iterationHistory, aggregatedEvaluations } = rpeInsights;
 	const boxes = [];
 	let y = 10;
 	const findCandidateById = (candidateId) => {
@@ -590,25 +591,16 @@ function resolveBoxes(candidates, iterations, onBoxClick) {
 		if (candidate === void 0) throw new Error(`Candidate ${candidateId} not found`);
 		return candidate;
 	};
-	const findAggregatedEvaluation = (candidateId) => {
-		return iterations.flatMap((iteration) => {
-			return iteration.trainingAggregatedEvaluations;
-		}).find((evaluation) => {
-			return evaluation.candidateRef.candidateId === candidateId;
-		});
-	};
 	const findCandidateAggregatedEvaluation = (candidateId) => {
-		return iterations.flatMap((iteration) => {
-			return iteration.candidateAggregatedEvaluations;
-		}).find((evaluation) => {
+		return aggregatedEvaluations.find((evaluation) => {
 			return evaluation.candidateRef.candidateId === candidateId;
 		});
 	};
-	const firstIteration = iterations[0];
+	const firstIteration = iterationHistory[0];
 	let x = 10;
 	for (const candidateRef of firstIteration.candidateRefs) {
 		const prompt = findCandidateById(candidateRef.candidateId);
-		const aggregatedEvaluation = findAggregatedEvaluation(candidateRef.candidateId);
+		const aggregatedEvaluation = findCandidateAggregatedEvaluation(candidateRef.candidateId);
 		boxes.push({
 			data: {
 				candidateId: candidateRef.candidateId,
@@ -627,7 +619,7 @@ function resolveBoxes(candidates, iterations, onBoxClick) {
 		x += 140;
 	}
 	y += 160;
-	for (const iteration of iterations) {
+	for (const iteration of iterationHistory) {
 		let x = 10;
 		for (const newCandidate of iteration.generatedCandidates) {
 			const candidate = findCandidateById(newCandidate.candidateRef.candidateId);
@@ -715,14 +707,15 @@ function isHighlighted(boxes, promptId, selectedPromptId) {
 //#endregion
 //#region src/components/candidate-tree/CandidateTree.tsx
 function CandidateTree(props) {
-	const { selectedCandidateId: selectedPromptId, detailsVisible } = props;
+	const { rpeInsights, selectedCandidateId: selectedPromptId, detailsVisible } = props;
+	const { candidates, iterationHistory } = rpeInsights;
 	const onBoxClick = (promptId) => {
 		props.onSelectCandidateId(promptId);
 	};
 	const onBackgroundClick = () => {
 		props.onBackgroundClick();
 	};
-	const boxes = resolveBoxes(props.candidates, props.iterations, onBoxClick);
+	const boxes = resolveBoxes(rpeInsights, onBoxClick);
 	const connections = resolveConnections(boxes);
 	const renderBoxes = () => {
 		return boxes.map((box) => /* @__PURE__ */ u(CandidateBox, {
@@ -8175,7 +8168,7 @@ function CandidateDetails(props) {
 	});
 }
 //#endregion
-//#region src/components/candidate-view/candidate-view-utils.ts
+//#region src/components/process-view/process-view-utils.ts
 function getCandidateDetailsData(datasetEntries, candidates, iterations, selectedCandidateId) {
 	if (selectedCandidateId === null) return;
 	const findCandidateById = (candidateId) => {
@@ -12442,8 +12435,8 @@ function InfoPanel(props) {
 	});
 }
 //#endregion
-//#region src/components/candidate-view/PromptView.tsx
-function PromptView(props) {
+//#region src/components/process-view/ProcessView.tsx
+function ProcessView(props) {
 	const { rpeInsights } = props;
 	const { dataset, candidates, iterationHistory } = rpeInsights;
 	const [selectedPromptId, setSelectedPromptId] = d$1(null);
@@ -12475,7 +12468,7 @@ function PromptView(props) {
 		if (detailsVisible) hideDetails();
 		setInfoVisible(!infoVisible);
 	};
-	const promptTreeIterations = iterationHistory.map((iteration) => {
+	iterationHistory.map((iteration) => {
 		return {
 			candidateRefs: iteration.candidateRefs,
 			generatedCandidates: iteration.generatedCandidates,
@@ -12487,8 +12480,7 @@ function PromptView(props) {
 	const promptDetailsData = selectedPromptId !== null ? getCandidateDetailsData(dataset.entries, candidates, iterationHistory, selectedPromptId) : void 0;
 	return /* @__PURE__ */ u(S$1, { children: [
 		/* @__PURE__ */ u(CandidateTree, {
-			candidates,
-			iterations: promptTreeIterations,
+			rpeInsights,
 			selectedCandidateId: selectedPromptId,
 			detailsVisible,
 			onSelectCandidateId: selectPromptId,
@@ -12510,7 +12502,7 @@ function PromptView(props) {
 //#endregion
 //#region src/App.tsx
 function App(props) {
-	return /* @__PURE__ */ u("main", { children: /* @__PURE__ */ u(PromptView, { rpeInsights: props.rpeInsights }) });
+	return /* @__PURE__ */ u("main", { children: /* @__PURE__ */ u(ProcessView, { rpeInsights: props.rpeInsights }) });
 }
 //#endregion
 //#region src/rpe-insights.ts
@@ -12522,7 +12514,7 @@ function loadRPEInsights() {
 R$1(/* @__PURE__ */ u(App, { rpeInsights: loadRPEInsights() }), document.getElementById("app"));
 //#endregion
 
-//# sourceMappingURL=index-95D06RdS.js.map</script>
+//# sourceMappingURL=index-CMF-qT-d.js.map</script>
     <style rel="stylesheet" crossorigin>* {
   box-sizing: border-box;
 }

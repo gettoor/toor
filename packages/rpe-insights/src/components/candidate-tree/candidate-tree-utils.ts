@@ -1,4 +1,4 @@
-import { type RPECandidate } from '@gettoor/core';
+import { RPEInsights, type RPECandidate } from '@gettoor/core';
 
 import { 
   PADDING,
@@ -9,16 +9,15 @@ import {
 } from './candidate-tree-consts';
 import { CandidateBoxProps } from './CandidateBox';
 import { CandidateBoxConnectionProps } from './CandidateBoxConnection';
-import { CandidateTreeProps } from './CandidateTree';
 
 /**
  * Resolve the boxes for the prompt tree.
  */
 export function resolveBoxes(
-  candidates: RPECandidate[],
-  iterations: CandidateTreeProps['iterations'],
+  rpeInsights: RPEInsights,
   onBoxClick: (promptId: string) => void,
 ): CandidateBoxProps[] {
+  const { candidates, iterationHistory, aggregatedEvaluations } = rpeInsights;
   const boxes: CandidateBoxProps[] = [];
   let y = PADDING;
 
@@ -32,36 +31,18 @@ export function resolveBoxes(
     return candidate;
   };
 
-  const findAggregatedEvaluation = (candidateId: string) => {
-    const aggregatedEvaluations = iterations.flatMap((iteration) => {
-      return iteration.trainingAggregatedEvaluations;
-    });
-    const aggregatedEvaluation = aggregatedEvaluations.find(
-      (evaluation) => {
-        return evaluation.candidateRef.candidateId === candidateId;
-      },
-    );
-    return aggregatedEvaluation;
-  };
-
   const findCandidateAggregatedEvaluation = (candidateId: string) => {
-    const candidateAggregatedEvaluations = iterations.flatMap((iteration) => {
-      return iteration.candidateAggregatedEvaluations;
+    return aggregatedEvaluations.find((evaluation) => {
+      return evaluation.candidateRef.candidateId === candidateId;
     });
-    const candidateAggregatedEvaluation = candidateAggregatedEvaluations.find(
-      (evaluation) => {
-        return evaluation.candidateRef.candidateId === candidateId;
-      },
-    );
-    return candidateAggregatedEvaluation;
   };
 
   // seed prompts
-  const firstIteration = iterations[0];
+  const firstIteration = iterationHistory[0];
   let x = PADDING;
   for (const candidateRef of firstIteration.candidateRefs) {
     const prompt = findCandidateById(candidateRef.candidateId);
-    const aggregatedEvaluation = findAggregatedEvaluation(
+    const aggregatedEvaluation = findCandidateAggregatedEvaluation(
       candidateRef.candidateId,
     );
     boxes.push({
@@ -84,7 +65,7 @@ export function resolveBoxes(
   y += BOX_HEIGHT + BOX_Y_SPACING;
 
   // candidates from each iteration
-  for (const iteration of iterations) {
+  for (const iteration of iterationHistory) {
     let x = PADDING;
     for (const newCandidate of iteration.generatedCandidates) {
       const candidate = findCandidateById(

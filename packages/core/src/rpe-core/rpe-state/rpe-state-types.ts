@@ -101,12 +101,6 @@ export type RPEIterationInProgress =
  */
 export interface RPEState {
   /**
-   * Evaluations of the seed and generated candidates for comparison.
-   * Evaluations are added as the RPE process progresses.
-   */
-  aggregatedEvaluations: RPEAggregatorOutput[];
-  
-  /**
    * All the candidates from an RPE process.
    */
   candidates: RPECandidate[];
@@ -117,17 +111,23 @@ export interface RPEState {
   datasetEntries: RPEDatasetEntry[];
 
   /**
-   * The current iteration number of the RPE process (starting from 0).
+   * Evaluations of the seed and generated candidates for comparison.
+   * Evaluations are added as the RPE process progresses.
+   */
+  aggregatedEvaluations: RPEAggregatorOutput[];
+
+  /**
+   * Current iteration number of the RPE process (starting from 0).
    */
   iterationNo: number;
 
   /**
-   * The current iteration of the RPE process.
+   * Current iteration of the RPE process.
    */
   iteration: RPEIterationInProgress;
 
   /**
-   * The history of iterations of the RPE process.
+   * History of iterations of the RPE process.
    */
   iterationHistory: RPEIteration[];
 

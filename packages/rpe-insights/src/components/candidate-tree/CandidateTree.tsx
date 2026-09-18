@@ -1,4 +1,4 @@
-import { type RPEIteration, type RPECandidate } from '@gettoor/core';
+import { type RPEIteration, type RPECandidate, RPEInsights } from '@gettoor/core';
 
 import styles from './CandidateTree.module.scss';
 import { PADDING } from './candidate-tree-consts';
@@ -11,14 +11,7 @@ import {
 } from './candidate-tree-utils';
 
 export interface CandidateTreeProps {
-  candidates: RPECandidate[];
-  iterations: Pick<RPEIteration, 
-    | 'candidateRefs'
-    | 'generatedCandidates'
-    | 'selectedCandidateRefs'
-    | 'trainingAggregatedEvaluations'
-    | 'candidateAggregatedEvaluations'
-  >[];
+  rpeInsights: RPEInsights;
   selectedCandidateId: string | null;
   detailsVisible: boolean;
   onSelectCandidateId: (candidateId: string) => void;
@@ -26,7 +19,8 @@ export interface CandidateTreeProps {
 }
 
 export function CandidateTree(props: CandidateTreeProps) {
-  const { selectedCandidateId: selectedPromptId, detailsVisible } = props;
+  const { rpeInsights, selectedCandidateId: selectedPromptId, detailsVisible } = props;
+  const { candidates, iterationHistory } = rpeInsights;
 
   const onBoxClick = (promptId: string) => {
     props.onSelectCandidateId(promptId);
@@ -35,7 +29,7 @@ export function CandidateTree(props: CandidateTreeProps) {
     props.onBackgroundClick();
   };
 
-  const boxes = resolveBoxes(props.candidates, props.iterations, onBoxClick);
+  const boxes = resolveBoxes(rpeInsights, onBoxClick);
   const connections = resolveConnections(boxes);
   
   const renderBoxes = () => {

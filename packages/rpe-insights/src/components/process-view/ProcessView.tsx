@@ -3,14 +3,14 @@ import { type RPEInsights } from '@gettoor/core';
 
 import { CandidateTree } from '../candidate-tree';
 import { CandidateDetails } from '../candidate-details';
-import { getCandidateDetailsData } from './candidate-view-utils';
+import { getCandidateDetailsData } from './process-view-utils';
 import { InfoPanel, Toolbar } from '../tools';
 
-export interface PromptViewProps {
+export interface ProcessViewProps {
   rpeInsights: RPEInsights;
 }
 
-export function PromptView(props: PromptViewProps) {
+export function ProcessView(props: ProcessViewProps) {
   const { rpeInsights } = props;
   const { dataset, candidates, iterationHistory } = rpeInsights;
 
@@ -60,15 +60,6 @@ export function PromptView(props: PromptViewProps) {
     setInfoVisible(!infoVisible);
   };
 
-  const promptTreeIterations = iterationHistory.map(iteration => {
-    return {
-      candidateRefs: iteration.candidateRefs,
-      generatedCandidates: iteration.generatedCandidates,
-      selectedCandidateRefs: iteration.selectedCandidateRefs,
-      trainingAggregatedEvaluations: iteration.trainingAggregatedEvaluations,
-      candidateAggregatedEvaluations: iteration.candidateAggregatedEvaluations,
-    };
-  });
   const promptDetailsData = selectedPromptId !== null
     ? getCandidateDetailsData(
       dataset.entries,
@@ -81,8 +72,7 @@ export function PromptView(props: PromptViewProps) {
   return (
     <>
       <CandidateTree
-        candidates={candidates}
-        iterations={promptTreeIterations}
+        rpeInsights={rpeInsights}
         selectedCandidateId={selectedPromptId}
         detailsVisible={detailsVisible}
         onSelectCandidateId={selectPromptId}
