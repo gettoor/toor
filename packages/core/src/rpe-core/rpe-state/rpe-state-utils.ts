@@ -3,7 +3,7 @@ import {
   CandidateNotFoundError,
   GeneratedCandidateNotFoundError,
 } from './rpe-state-errors.js';
-import { CandidateGeneratorCandidate } from '../rpe-process/index.js';
+import { CandidateGeneratorOutputCandidate } from '../rpe-process/index.js';
 import { RPEState } from './rpe-state-types.js';
 
 /**
@@ -36,7 +36,7 @@ export function findCandidateById(
 export function findGeneratedCandidateById(
   state: RPEState,
   candidateId: string,
-): CandidateGeneratorCandidate {
+): CandidateGeneratorOutputCandidate {
   const allGeneratedCandidates = state.iterationHistory.flatMap(itr => {
     return itr.generatedCandidates;
   });

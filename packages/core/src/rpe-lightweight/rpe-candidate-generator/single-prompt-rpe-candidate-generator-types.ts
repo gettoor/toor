@@ -29,6 +29,9 @@ export interface SinglePromptRPECandidateGeneratorInstruction {
  */
 export const SinglePromptRPECandidateGeneratorOutputSchema = z.object({
   prompt: z.string().describe('Improved prompt.'),
+  changesSummary: z
+    .string()
+    .describe('Summary of the changes made to the prompt.'),
   changes: z
     .array(
       z.object({

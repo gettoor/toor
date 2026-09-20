@@ -6,7 +6,7 @@ import { RPEAggregatorOutput } from '../rpe-aggregator/index.js';
 import { RPEAnalyzerOutput } from '../rpe-analyzer/index.js';
 import {
   EvaluatorCandidateOutput,
-  CandidateGeneratorCandidate,
+  CandidateGeneratorOutputCandidate,
 } from '../rpe-process/index.js';
 
 /**
@@ -63,7 +63,7 @@ export interface RPEIteration {
   /**
    * The candidates generated for the candidates in the current iteration.
    */
-  generatedCandidates: CandidateGeneratorCandidate[];
+  generatedCandidates: CandidateGeneratorOutputCandidate[];
 
   /**
    * The responses generated for the candidates in the current iteration.

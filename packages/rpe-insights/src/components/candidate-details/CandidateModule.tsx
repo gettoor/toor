@@ -2,8 +2,8 @@ import clsx from 'clsx';
 import { useState } from 'preact/hooks';
 
 import { camelCaseToSentenceCase } from '../../string';
-import { IconButton } from '../basic';
-import { Header } from './Header';
+import { COLLAPSE_ICON, EXPAND_ICON } from '../consts';
+import { IconButton, Header } from '../basic';
 import styles from './CandidateModule.module.scss';
 
 export interface CandidateModuleProps {
@@ -19,7 +19,7 @@ export function CandidateModule(props: CandidateModuleProps) {
   const onCopyClick = () => {
     navigator.clipboard.writeText(module);
   };
-  const onExpandClick = () => {
+  const onToggle = () => {
     setExpanded(!expanded);
   };
 
@@ -29,7 +29,7 @@ export function CandidateModule(props: CandidateModuleProps) {
       [styles['module-expanded']]: expanded,
     },
   );
-  const expandIconName = expanded ? 'unfold_less' : 'unfold_more';
+  const expandIconName = expanded ? COLLAPSE_ICON : EXPAND_ICON;
 
   return (
     <div className={styles['candidate-module']}>
@@ -37,11 +37,12 @@ export function CandidateModule(props: CandidateModuleProps) {
         title={camelCaseToSentenceCase(name)}
         level={2}
         className={styles['header']}
+        onTitleClick={onToggle}
       >
         <IconButton
           name={expandIconName}
           title='Expand/collapse module'
-          onClick={onExpandClick}
+          onClick={onToggle}
         />        
       </Header>
       <pre className={moduleClassName}>

@@ -1,0 +1,10 @@
+.link-button {
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--link-color);
+}
+
+.link-button-disabled {
+  cursor: not-allowed;
+  color: var(--muted);
+}

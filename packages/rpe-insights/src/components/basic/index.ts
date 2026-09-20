@@ -1,3 +1,4 @@
+export * from './Center';
 export * from './Tag';
 export * from './Score';
 export * from './Markdown';
@@ -6,3 +7,8 @@ export * from './IconButton';
 export * from './Panel';
 export * from './Properties';
 export * from './Table';
+export * from './Header';
+export * from './Separator';
+export * from './ExpandableSection';
+export * from './LinkButton';
+export * from './MiddotSeparator';

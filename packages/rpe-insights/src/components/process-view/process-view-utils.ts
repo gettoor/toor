@@ -28,31 +28,15 @@ export function getCandidateDetailsData(
   };
 
   const findAggregatedEvaluationByCandidateId = (
-    iteration: RPEIteration,
-    candidateId: string
-  ): RPEAggregatorOutput => {
-    const { trainingAggregatedEvaluations } = iteration;
-    const aggregatedEvaluation = trainingAggregatedEvaluations.find(
+    aggregatedEvaluations: RPEAggregatorOutput[],
+    candidateId: string,
+  ): RPEAggregatorOutput | undefined => {
+    const aggregatedEvaluation = aggregatedEvaluations.find(
       aggregatedEvaluation => {
         return aggregatedEvaluation.candidateRef.candidateId === candidateId;
       },
     );
-    if (aggregatedEvaluation !== undefined) {
-      return aggregatedEvaluation;
-    }
-
-    const { candidateAggregatedEvaluations } = iteration;
-    const candidateAggregatedEvaluation = candidateAggregatedEvaluations.find(
-      valuation => {
-        return valuation.candidateRef.candidateId === candidateId;
-      },
-    );
-    if (candidateAggregatedEvaluation !== undefined) {
-      return candidateAggregatedEvaluation;
-    }
-    throw new Error(
-      `Aggregated evaluations for candidate ${candidateId} not found`,
-    );
+    return aggregatedEvaluation;
   };
 
   const findAnalysisByCandidateId = (
@@ -74,8 +58,8 @@ export function getCandidateDetailsData(
     return {
       datasetEntries,
       candidate: findCandidateById(seedCandidateRef.candidateId),
-      aggregatedEvaluation: findAggregatedEvaluationByCandidateId(
-        firstIteration,
+      trainingAggregatedEvaluation: findAggregatedEvaluationByCandidateId(
+        firstIteration.trainingAggregatedEvaluations,
         selectedCandidateId,
       ),
       analysis: findAnalysisByCandidateId(firstIteration, selectedCandidateId),
@@ -92,9 +76,10 @@ export function getCandidateDetailsData(
       data = {
         datasetEntries,
         candidate: findCandidateById(candidate.candidateRef.candidateId),
-        candidateChanges: candidate.changes,
-        aggregatedEvaluation: findAggregatedEvaluationByCandidateId(
-          iteration,
+        changesSummary: candidate.changesSummary,
+        changes: candidate.changes,
+        trainingAggregatedEvaluation: findAggregatedEvaluationByCandidateId(
+          iteration.trainingAggregatedEvaluations,
           selectedCandidateId,
         ),
         analysis: findAnalysisByCandidateId(iteration, selectedCandidateId),

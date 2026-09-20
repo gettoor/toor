@@ -1,6 +1,5 @@
 import { type RPECandidateGeneratorChange } from '@gettoor/core';
-import { Separator } from './Separator';
-import { Markdown } from '../basic';
+import { Markdown, Separator } from '../basic';
 
 export interface CandidateChangesProps {
   candidateId: string;

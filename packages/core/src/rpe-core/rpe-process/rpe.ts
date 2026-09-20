@@ -93,11 +93,15 @@ export async function optimize(
       state,
       input.candidateGenerator,
     );
-    iteration.generatedCandidates = generatedCandidates.map(candidate => ({
-      candidateRef: candidateRefFromCandidate(candidate.candidate),
-      changes: candidate.changes,
-      usage: candidate.usage,
-    }));
+    iteration.generatedCandidates = generatedCandidates.map(
+      generatedCandidate => {
+        const { candidate, ...description } = generatedCandidate;
+        return {
+          candidateRef: candidateRefFromCandidate(candidate),
+          ...description,
+        };
+      },
+    );
     state.candidates.push(
       ...generatedCandidates.map(candidate => candidate.candidate),
     );

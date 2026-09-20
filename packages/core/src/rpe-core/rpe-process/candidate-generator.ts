@@ -1,6 +1,11 @@
 import { RPEState } from '../rpe-state/index.js';
-import { RPECandidateGenerator } from '../rpe-candidate-generator/index.js';
+import {
+  RPECandidateGenerator,
+  RPECandidateGeneratorOutput,
+} from '../rpe-candidate-generator/index.js';
 import { CandidateGeneratorOutput } from './candidate-generator-types.js';
+import { candidateRefFromCandidate } from '../rpe-candidate/index.js';
+// import { CandidateGeneratorOutput } from './candidate-generator-types.js';
 
 /**
  * Generates prompt candidates based on the original prompts,
@@ -10,7 +15,7 @@ import { CandidateGeneratorOutput } from './candidate-generator-types.js';
 export async function generateCandidates(
   state: RPEState,
   generator: RPECandidateGenerator,
-): Promise<CandidateGeneratorOutput> {
+): Promise<RPECandidateGeneratorOutput> {
   const { candidates } = await generator.run(state, {});
   return { candidates };
 }

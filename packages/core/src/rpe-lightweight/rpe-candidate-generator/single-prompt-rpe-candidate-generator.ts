@@ -187,7 +187,7 @@ async function generateCandidate(
 ): Promise<RPECandidateGeneratorCandidate> {
   // no need to generate candidate if all evaluations passed
   if (aggregation.failedEvaluations.length === 0) {
-    return { candidate, changes: [] };
+    return { candidate, changesSummary: '', changes: [] };
   }
 
   const prompt = replacePlaceholders(
@@ -248,6 +248,7 @@ async function generateCandidate(
         candidateInstructionId: candidateInstruction.id,
       },
     },
+    changesSummary: output.changesSummary,
     changes: output.changes.map(change => ({
       description: change.description,
       reasoning: change.reasoning,

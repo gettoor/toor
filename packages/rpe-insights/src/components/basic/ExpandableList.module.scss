@@ -1,0 +1,16 @@
+.expandable-list-button-bar {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.expandable-list-button-bar-content {
+  border-top: 1px solid var(--muted);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 1rem;
+  padding-top: 0.25rem;
+  padding-left: 2.5rem;
+  padding-right: 2.5rem;
+}

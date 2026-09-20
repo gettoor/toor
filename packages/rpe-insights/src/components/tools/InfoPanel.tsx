@@ -6,7 +6,7 @@ import {
 } from '@gettoor/core';
 
 import { camelCaseToSentenceCase } from '../../string';
-import { Panel, Table } from '../basic';
+import { ExpandableSection, Panel, Table } from '../basic';
 import styles from './InfoPanel.module.scss';
 
 export interface InfoPanelProps {
@@ -71,6 +71,15 @@ export function InfoPanel(props: InfoPanelProps) {
       onCloseClick={onCloseClick}
       className={panelClassName}
     >
+      <ExpandableSection title='General'>
+        <ExpandableSection.Summary>
+          This is summary
+        </ExpandableSection.Summary>
+        <ExpandableSection.Details>
+          Here goes details
+        </ExpandableSection.Details>
+      </ExpandableSection>
+
       <h1>General</h1>
       <h2>Stop reason</h2>
       <p>{props.rpeInsights.stopReason}</p>

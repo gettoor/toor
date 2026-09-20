@@ -1,4 +1,5 @@
 import * as YAML from 'yaml';
+import { useState } from 'preact/hooks';
 import {
   type RPEResponse,
   type RPEAggregatorOutput,
@@ -6,11 +7,20 @@ import {
   type RPEEvaluatorOutput,
 } from '@gettoor/core';
 
+import { useLocalStorage } from '../../hooks';
 import { hasMetrics } from './metrics';
-import { Markdown, Score, Tag } from '../basic';
-import { Separator } from './Separator';
+import { 
+  Markdown,
+  Score,
+  Tag,
+  Separator,
+  ExpandableSection,
+  LinkButton,
+  MiddotSeparator,
+} from '../basic';
 import { Metrics } from './Metrics';
 import styles from './CandidateAggregatedEvaluation.module.scss';
+import { ExpandableList } from '../basic/ExpandableList';
 
 export interface CandidateAggregatedEvaluationProps {
   aggregatedEvaluation: RPEAggregatorOutput;
@@ -20,12 +30,44 @@ export function CandidateAggregatedEvaluation(
   props: CandidateAggregatedEvaluationProps,
 ) {
   const { aggregatedEvaluation } = props;
+  const { 
+    aggregatedScore,
+    passedEvaluations,
+    failedEvaluations,
+  } = aggregatedEvaluation;
+  const totalEvaluations = passedEvaluations.length + failedEvaluations.length;
+
+  // const [more, setMore] = useState(false);
+  const [
+    moreEvaluations,
+    setMoreEvaluations
+  ] = useLocalStorage(false, 'moreCandidateAggregatedEvaluations');
 
   const responseToString = (response: RPEResponse) => {
     if (typeof response === 'string') {
       return response;
     }
     return YAML.stringify(response);
+  };
+
+  const renderSummary = () => {
+    return (
+      <>
+      <span>
+        Aggregated score:&nbsp;
+        <Score score={aggregatedScore}/>
+        <MiddotSeparator/>
+      </span>
+      <span className='green'>
+        {passedEvaluations.length} passed
+        <MiddotSeparator/>
+      </span>
+      <span className='red'>
+        {failedEvaluations.length} failed
+        <MiddotSeparator/>
+      </span>
+    </>
+    )
   };
 
   const renderDatasetEntry = (datasetEntry: RPEDatasetEntry) => {
@@ -44,7 +86,11 @@ export function CandidateAggregatedEvaluation(
               : value.toString();
             return (
               <div key={key}>
-                <code className={styles['dataset-entry-key']}>{key}</code>
+                <code
+                  className={styles['candidate-aggregated-evaluation-key']}
+                >
+                  {key}
+                </code>
                 &nbsp;{valueString}
               </div>
             );
@@ -64,14 +110,17 @@ export function CandidateAggregatedEvaluation(
     return (
       <>
         <Separator/>
-        <div key={key}>
+        <div
+          key={key}
+          className={styles['candidate-aggregated-evaluation-evaluation']}
+        >
           <div>
             Score:&nbsp;
             <Score score={evaluation.score}/>
             <Tag 
               label={status}
               color={status === 'passed' ? 'green' : 'red'}
-              className={styles['status']}
+              className={styles['candidate-aggregated-evaluation-status']}
             />
           </div>
           {renderDatasetEntry(evaluation.datasetEntry)}
@@ -99,33 +148,52 @@ export function CandidateAggregatedEvaluation(
       </>
     );
   };
-  const renderEvaluations = () => {
-    const passedEvaluations = aggregatedEvaluation.passedEvaluations
-      .map((evaluation, index) => {
-        return renderEvaluation(index, 'passed', evaluation);
-      });
-    const failedEvaluations = aggregatedEvaluation.failedEvaluations
-      .map((evaluation, index) => {
-        return renderEvaluation(index, 'failed', evaluation);
-      });
-    return [...passedEvaluations, ...failedEvaluations];
+  const renderEvaluationItem = (index: number) => {
+    const allEvaluations = [...failedEvaluations, ...passedEvaluations];
+    const evaluation = allEvaluations[index];
+    return renderEvaluation(
+      index,
+      passedEvaluations.includes(evaluation) ? 'passed' : 'failed',
+      evaluation,
+    );
   };
 
   return (
-    <div className={styles['candidate-aggregated-evaluation']}>
-      <div className={styles['aggregated-score']}>
-        Aggregated score:&nbsp;
-        <Score score={aggregatedEvaluation.aggregatedScore}/>
-        { hasMetrics(aggregatedEvaluation.aggregatedMetrics) &&
-          <>
-            <h2>Aggregated metrics</h2>
-            <p>
-              <Metrics metrics={aggregatedEvaluation.aggregatedMetrics!}/>
-            </p>
-          </>
-        }
-      </div>
-      {renderEvaluations()}
-    </div>
+    <ExpandableSection
+      title='Training Evaluations'
+      expanded={moreEvaluations}
+      onToggle={() => { setMoreEvaluations(!moreEvaluations); }}
+    >
+      <ExpandableSection.Summary>
+        { renderSummary() }
+        <LinkButton
+          label='More...'
+          onClick={() => { setMoreEvaluations(true); }}
+        />
+      </ExpandableSection.Summary>
+      <ExpandableSection.Details>
+        <div className={styles['candidate-aggregated-evaluation']}>
+          <div className={styles['aggregated-score']}>
+            { renderSummary() }
+            <LinkButton
+              label='Less...'
+              onClick={() => { setMoreEvaluations(false); }}
+            />
+            { hasMetrics(aggregatedEvaluation.aggregatedMetrics) &&
+              <>
+                <h2>Aggregated metrics</h2>
+                <p>
+                  <Metrics metrics={aggregatedEvaluation.aggregatedMetrics!}/>
+                </p>
+              </>
+            }
+          </div>
+          <ExpandableList
+            totalItems={totalEvaluations}
+            itemRenderer={renderEvaluationItem}
+          />
+          </div>
+        </ExpandableSection.Details>
+    </ExpandableSection>
   );
 }

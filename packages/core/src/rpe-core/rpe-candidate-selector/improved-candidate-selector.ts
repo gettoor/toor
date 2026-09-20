@@ -29,20 +29,6 @@ export function improvedCandidateSelector(
       state: RPEState,
       input: RPECandidateSelectorInput,
     ): Promise<RPECandidateSelectorOutput> => {
-      // const parentEvaluations =
-      //   state.iteration.trainingAggregatedEvaluations ?? [];
-      // if (!parentEvaluations) {
-      //   throw new InternalToorError(
-      //     'No parent aggregated evaluations in improved candidate selector.'
-      //   );
-      // }
-      // const newEvaluations = state.iteration.candidateAggregatedEvaluations;
-      // if (!newEvaluations) {
-      //   throw new InternalToorError(
-      //     'No new aggregated evaluations in improved candidate selector.'
-      //   );
-      // }
-      
       const findCandidateById = (candidateId: string) => {
         const candidate = state.candidates.find(candidate => {
           return candidate.candidateId === candidateId;

@@ -7,8 +7,8 @@ import {
   RPEDatasetEntry,
 } from '@gettoor/core';
 
-import { Panel } from '../basic';
-import { Header } from './Header';
+import { useLocalStorage } from '../../hooks';
+import { Panel, Header, ExpandableSection, LinkButton } from '../basic';
 import { CandidateAggregatedEvaluation } from './CandidateAggregatedEvaluation';
 import { CandidateAnalysis } from './CandidateAnalysis';
 import { CandidateChanges } from './CandidateChanges';
@@ -18,8 +18,9 @@ import styles from './CandidateDetails.module.scss';
 export interface CandidateDetailsData {
   datasetEntries: RPEDatasetEntry[];
   candidate: RPECandidate;
-  candidateChanges?: RPECandidateGeneratorChange[];
-  aggregatedEvaluation: RPEAggregatorOutput;
+  changesSummary?: string;
+  changes?: RPECandidateGeneratorChange[];
+  trainingAggregatedEvaluation?: RPEAggregatorOutput;
   analysis?: RPEAnalyzerOutput;
 }
 
@@ -31,7 +32,11 @@ export interface CandidateDetailsProps {
 
 export function CandidateDetails(props: CandidateDetailsProps) {
   const { data, visible, onCloseClick } = props;
-  const hasData = !!data;
+
+  const [
+    moreCandidateChanges,
+    setMoreCandidateChanges,
+  ] = useLocalStorage(false, 'moreCandidateChanges');
 
   const renderModules = () => {
     const names = Object.keys(data?.candidate.modules || {}).sort();
@@ -61,25 +66,48 @@ export function CandidateDetails(props: CandidateDetailsProps) {
       title='Candidate details'
       onCloseClick={onCloseClick}
     >
-      { hasData &&
+      { !!data &&
         <>
-          <Header title='Modules'>
-          </Header>
+          <Header title='Modules'/>
           { renderModules() }
-          { data?.candidateChanges &&
-            <>
-              <Header title='Candidate Changes'/>
-              <CandidateChanges 
-                candidateId={data!.candidate.candidateId}
-                changes={data!.candidateChanges}
-              />
-            </>
+          { data?.changes && data?.changesSummary &&
+            <ExpandableSection
+              title='Candidate Changes'
+              expanded={moreCandidateChanges}
+              onToggle={
+                () => { setMoreCandidateChanges(!moreCandidateChanges); }
+              }
+            > 
+              <ExpandableSection.Summary>
+                <span>
+                  {data.changesSummary}&nbsp;
+                </span>
+                <LinkButton
+                  label='More...'
+                  onClick={() => { setMoreCandidateChanges(true); }}
+                />
+              </ExpandableSection.Summary>
+              <ExpandableSection.Details>
+                <span>
+                  {data.changesSummary}&nbsp;
+                </span>
+                <LinkButton
+                  label='Less...'
+                  onClick={() => { setMoreCandidateChanges(false); }}
+                />
+                <CandidateChanges 
+                  candidateId={data!.candidate.candidateId}
+                  changes={data!.changes}
+                />
+              </ExpandableSection.Details>
+            </ExpandableSection>
           }
-          <Header title='Evaluations'/>
-          <CandidateAggregatedEvaluation
-            aggregatedEvaluation={data!.aggregatedEvaluation}
-          />
-          { data!.analysis &&
+          { data!.trainingAggregatedEvaluation &&
+            <CandidateAggregatedEvaluation
+              aggregatedEvaluation={data!.trainingAggregatedEvaluation}
+            />
+          }
+          {/* { data!.analysis &&
             <>
               <Header title='Analysis'/>
               <CandidateAnalysis 
@@ -87,7 +115,7 @@ export function CandidateDetails(props: CandidateDetailsProps) {
                 analysis={data!.analysis}
               />
             </>
-          }
+          } */}
         </>
       }
     </Panel>

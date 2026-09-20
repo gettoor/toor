@@ -4,7 +4,7 @@ import {
   type RPEAnalyzerFailedExampleAnalysis,
 } from '@gettoor/core';
 
-import { Separator } from './Separator';
+import { Separator } from '../basic';
 import { DatasetEntry } from './DatasetEntry';
 import styles from './CandidateAnalysis.module.scss';
 

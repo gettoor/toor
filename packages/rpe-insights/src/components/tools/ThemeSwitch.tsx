@@ -1,30 +1,25 @@
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect } from 'preact/hooks';
 
 import { IconButton } from '../basic';
 import styles from './ThemeSwitch.module.scss';
+import { useLocalStorage } from '../../hooks';
 
-const THEME_STORAGE_KEY = 'toor_rpe_insights_theme';
+type Theme = 'light' | 'dark';
 
 export function ThemeSwitch() {
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [theme, setTheme] = useLocalStorage<Theme>('light', 'theme');
   const iconName = theme === 'dark' ? 'sunny' : 'bedtime';
 
   useEffect(
     () => {
-      const storedTheme = localStorage.getItem(THEME_STORAGE_KEY);
-      if (storedTheme === 'light' || storedTheme === 'dark') {
-        setTheme(storedTheme);
-        document.documentElement.setAttribute('data-theme', storedTheme);
-      }
+      document.documentElement.setAttribute('data-theme', theme);
     },
-    [],
+    [theme],
   );
 
   const toggleTheme = () => {
     const nextTheme = theme === 'light' ? 'dark' : 'light';
     setTheme(nextTheme);
-    document.documentElement.setAttribute('data-theme', nextTheme);
-    localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
   };
 
   return (

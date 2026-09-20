@@ -10,11 +10,15 @@
   margin-bottom: 1rem;
 }
 
-.status {
+.candidate-aggregated-evaluation-evaluation {
+  margin-top: 0.5rem;
+}
+
+.candidate-aggregated-evaluation-status {
   margin-left: 0.5rem;
 }
 
-.dataset-entry-key {
+.candidate-aggregated-evaluation-key {
   font-weight: bold;
   @include font-small;
 }

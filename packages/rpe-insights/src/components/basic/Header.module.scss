@@ -3,14 +3,19 @@
 .header {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: end;
   margin-bottom: 1rem;
+  user-select: none;
 }
 
 .header-title {
   font-family: 'Funnel Display', sans-serif;
   margin: 0;
   padding: 0;
+}
+
+.header-title-clickable {
+  cursor: pointer;
 }
 
 .header-title-level-1 {
