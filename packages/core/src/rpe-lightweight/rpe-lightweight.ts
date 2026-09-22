@@ -1,6 +1,7 @@
 import { average } from '../math/index.js';
 import { ModelParameters } from '../llm/index.js';
 import {
+  bestScoreFinalCandidateSelector,
   defaultRPEAggregator,
   improvedCandidateSelector,
   isCandidateImprovedByScore,
@@ -89,6 +90,7 @@ export function rpeLightweight(input: RPELightweightInput): RPEInput {
       isCandidateImproved: isCandidateImprovedByScore,
       selectParentCandidatesIfBetter: true,
     }),
+    finalCandidateSelector: bestScoreFinalCandidateSelector(),
     stopAfterIteration: async (state: RPEState) => {
       return {
         stop: state.iterationNo === 0,

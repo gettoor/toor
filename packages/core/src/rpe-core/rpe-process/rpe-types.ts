@@ -111,6 +111,11 @@ export interface RPEInput {
   candidateSelector: RPECandidateSelector;
 
   /**
+   * Candidate selector to pick the final candidates.
+   */
+  finalCandidateSelector: RPECandidateSelector;
+
+  /**
    * Function to determine if the optimization should stop after an iteration.
    */
   stopAfterIteration: RPEStopFunc;

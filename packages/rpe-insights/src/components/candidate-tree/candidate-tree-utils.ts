@@ -40,7 +40,7 @@ export function resolveBoxes(
   // seed prompts
   const firstIteration = iterationHistory[0];
   let x = PADDING;
-  for (const candidateRef of firstIteration.candidateRefs) {
+  for (const candidateRef of firstIteration.candidateRefs ?? []) {
     const prompt = findCandidateById(candidateRef.candidateId);
     const aggregatedEvaluation = findCandidateAggregatedEvaluation(
       candidateRef.candidateId,
@@ -67,14 +67,14 @@ export function resolveBoxes(
   // candidates from each iteration
   for (const iteration of iterationHistory) {
     let x = PADDING;
-    for (const newCandidate of iteration.generatedCandidates) {
+    for (const newCandidate of iteration.generatedCandidates ?? []) {
       const candidate = findCandidateById(
         newCandidate.candidateRef.candidateId,
       );
       const candidateAggregatedEvaluation = findCandidateAggregatedEvaluation(
         candidate.candidateId,
       );
-      const isSelected = iteration.selectedCandidateRefs?.some(
+      const isSelected = (iteration.selectedCandidateRefs ?? []).some(
         (selectedPromptRef) => {
           return selectedPromptRef.candidateId === candidate.candidateId;
         },

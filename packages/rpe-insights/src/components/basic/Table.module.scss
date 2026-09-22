@@ -1,11 +1,22 @@
 .table {
   display: grid;
-  grid-auto-columns: minmax(0, auto);
+
+  --padding-x: 0.875rem;
+  --padding-x-narrow: 0.25rem;
+  --padding-y: 0.125rem;
 
   .cell {
-    padding: 0.125rem 0.875rem;
+    padding: var(--padding-y) var(--padding-x);
     min-width: 0;
     overflow-wrap: anywhere;
+  }
+
+  .cell-narrow {
+    padding: var(--padding-y) var(--padding-x-narrow);
+  }
+
+  .cell-narrow-left {
+    padding-left: var(--padding-x-narrow);
   }
 
   .header-cell {

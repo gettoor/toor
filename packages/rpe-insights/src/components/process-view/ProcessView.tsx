@@ -12,11 +12,10 @@ export interface ProcessViewProps {
 
 export function ProcessView(props: ProcessViewProps) {
   const { rpeInsights } = props;
-  const { dataset, candidates, iterationHistory } = rpeInsights;
 
   const [
-    selectedPromptId,
-    setSelectedPromptId,
+    selectedCandidateId,
+    setSelectedCandidateId,
   ] = useState<string | null>(null);
   const [
     detailsVisible,
@@ -31,22 +30,22 @@ export function ProcessView(props: ProcessViewProps) {
     // let the details slide out first...
     setDetailsVisible(false);
 
-    // ...then clear the prompt identifier
+    // ...then clear the candidate identifier
     setTimeout(() => {
-      clearPromptId();
+      clearCandidateId();
     }, 340);
   };
 
-  const selectPromptId = (promptId: string) => {
-    setSelectedPromptId(promptId);
+  const selectCandidateId = (candidateId: string) => {
+    setSelectedCandidateId(candidateId);
     setDetailsVisible(true);
     setInfoVisible(false);
   };
-  const clearPromptId = () => {
-    setSelectedPromptId(null);
+  const clearCandidateId = () => {
+    setSelectedCandidateId(null);
   };
   const onBackgroundClick = () => {
-    clearPromptId();
+    clearCandidateId();
     setDetailsVisible(false);
     setInfoVisible(false);
   };
@@ -60,12 +59,10 @@ export function ProcessView(props: ProcessViewProps) {
     setInfoVisible(!infoVisible);
   };
 
-  const promptDetailsData = selectedPromptId !== null
+  const candidateDetailsData = selectedCandidateId !== null
     ? getCandidateDetailsData(
-      dataset.entries,
-      candidates,
-      iterationHistory,
-      selectedPromptId,
+      rpeInsights,
+      selectedCandidateId,
     )
     : undefined;
 
@@ -73,13 +70,13 @@ export function ProcessView(props: ProcessViewProps) {
     <>
       <CandidateTree
         rpeInsights={rpeInsights}
-        selectedCandidateId={selectedPromptId}
+        selectedCandidateId={selectedCandidateId}
         detailsVisible={detailsVisible}
-        onSelectCandidateId={selectPromptId}
+        onSelectCandidateId={selectCandidateId}
         onBackgroundClick={onBackgroundClick}
       />
       <CandidateDetails
-        data={promptDetailsData}
+        data={candidateDetailsData}
         visible={detailsVisible}
         onCloseClick={onCloseClick}
       />

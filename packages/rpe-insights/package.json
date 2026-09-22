@@ -13,6 +13,7 @@
     "clean-package": "rm -rf node_modules dist"
   },
   "dependencies": {
+    "@floating-ui/dom": "^1.8.0",
     "@gettoor/core": "workspace:^",
     "clsx": "^2.1.1",
     "dompurify": "^3.4.14",

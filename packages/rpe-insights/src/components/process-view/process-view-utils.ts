@@ -4,18 +4,23 @@ import {
   type RPEIteration,
   type RPECandidate,
   RPEDatasetEntry,
+  RPEInsights,
 } from '@gettoor/core';
 import { CandidateDetailsData } from '../candidate-details';
 
 export function getCandidateDetailsData(
-  datasetEntries: RPEDatasetEntry[],
-  candidates: RPECandidate[],
-  iterations: RPEIteration[],
+  rpeInsights: RPEInsights,
+  // datasetEntries: RPEDatasetEntry[],
+  // candidates: RPECandidate[],
+  // iterations: RPEIteration[],
   selectedCandidateId: string | null,
 ): CandidateDetailsData | undefined {
   if (selectedCandidateId === null) {
     return undefined;
   }
+
+  const { dataset, candidates, iterationHistory } = rpeInsights;
+  const datasetEntries = dataset.entries;
 
   const findCandidateById = (candidateId: string) => {
     const candidate = candidates.find((candidate) => {
@@ -40,36 +45,44 @@ export function getCandidateDetailsData(
   };
 
   const findAnalysisByCandidateId = (
-    iteration: RPEIteration,
+    analyses: RPEAnalyzerOutput[],
     candidateId: string
   ): RPEAnalyzerOutput | undefined => {
-    const analysis = iteration.trainingAnalyses.find(analysis => {
+    return analyses.find(analysis => {
       return analysis.candidateRef.candidateId === candidateId;
     });
-    return analysis;
   };
 
   // seed candidates
-  const firstIteration = iterations[0];
-  const seedCandidateRef = firstIteration.candidateRefs.find(candidateRef => {
-    return candidateRef.candidateId === selectedCandidateId;
-  })
+  const firstIteration = iterationHistory[0];
+  const seedCandidateRef = (firstIteration.candidateRefs ?? []).find(
+    candidateRef => {
+      return candidateRef.candidateId === selectedCandidateId;
+    },
+  );
   if (seedCandidateRef !== undefined) {
     return {
       datasetEntries,
       candidate: findCandidateById(seedCandidateRef.candidateId),
+      validationAggregatedEvaluation: findAggregatedEvaluationByCandidateId(
+        rpeInsights.aggregatedEvaluations,
+        selectedCandidateId,
+      ),
       trainingAggregatedEvaluation: findAggregatedEvaluationByCandidateId(
         firstIteration.trainingAggregatedEvaluations,
         selectedCandidateId,
       ),
-      analysis: findAnalysisByCandidateId(firstIteration, selectedCandidateId),
+      trainingAnalysis: findAnalysisByCandidateId(
+        firstIteration.trainingAnalyses,
+        selectedCandidateId,
+      ),
     };
   }
 
   let data: CandidateDetailsData | undefined;
   // candidates from each iteration
-  for (const iteration of iterations) {
-    const candidate = iteration.generatedCandidates.find(candidate => {
+  for (const iteration of iterationHistory) {
+    const candidate = iteration.generatedCandidates?.find(candidate => {
       return candidate.candidateRef.candidateId === selectedCandidateId;
     });
     if (candidate !== undefined) {
@@ -78,11 +91,18 @@ export function getCandidateDetailsData(
         candidate: findCandidateById(candidate.candidateRef.candidateId),
         changesSummary: candidate.changesSummary,
         changes: candidate.changes,
+        validationAggregatedEvaluation: findAggregatedEvaluationByCandidateId(
+          rpeInsights.aggregatedEvaluations,
+          selectedCandidateId,
+        ),
         trainingAggregatedEvaluation: findAggregatedEvaluationByCandidateId(
           iteration.trainingAggregatedEvaluations,
           selectedCandidateId,
         ),
-        analysis: findAnalysisByCandidateId(iteration, selectedCandidateId),
+        trainingAnalysis: findAnalysisByCandidateId(
+          iteration.trainingAnalyses,
+          selectedCandidateId,
+        ),
       };
       break;
     }

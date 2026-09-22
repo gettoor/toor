@@ -1,17 +1,26 @@
 import clsx from 'clsx';
+import { ComponentProps } from 'preact';
+import { forwardRef } from 'preact/compat';
+
 import styles from './Icon.module.scss';
 
-export interface IconProps {
+export interface IconProps extends ComponentProps<'span'> {
   name: string;
-  title?: string;
-  className?: string;
 }
 
-export function Icon(props: IconProps) {
-  const className = clsx(styles['material-symbols-outlined'], props.className);
-  return (
-    <span className={className} title={props.title}>
-      {props.name}
-    </span>
-  );
-}
+export const Icon = forwardRef<HTMLSpanElement, IconProps>(
+  ({ name, className, ...props }, ref) => {
+    return (
+      <span
+        {...props}
+        ref={ref}
+        className={clsx(
+          styles['material-symbols-outlined'],
+          className,
+        )}
+      >
+        {name}
+      </span>
+    );
+  },
+);

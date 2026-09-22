@@ -13,13 +13,12 @@ import {
   requireSinglePromptCandidateModule,
   RPEEvaluatorOutput,
   findCandidateById,
-  findCandidateAncestorsById,
   RPEState,
   RPEAnalyzer,
   RPEAnalyzerInfo,
   RPEAnalyzerInput,
   RPEAnalyzerOutput,
-  findGeneratedCandidateById,
+  rpePropertyIfDef,
 } from '../../rpe-core/index.js';
 import {
   SINGLE_PROMPT_RPE_ANALYZER_PROMPT,
@@ -129,6 +128,11 @@ export function singlePromptRPEAnalyzer(
             value: modelProvider.getProviderModelName(modelName),
             description: 'Model name used for the analysis.',
           },
+          ...rpePropertyIfDef(
+            additionalInformation,
+            'additionalInformation',
+            'Additional information used for the analysis.',
+          ),
           ...modelParametersToRPEInfo(modelParameters),
         ],
       };

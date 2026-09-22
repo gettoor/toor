@@ -15,21 +15,23 @@ import {
   Tag,
   Separator,
   ExpandableSection,
+  ExpandableList,
   LinkButton,
   MiddotSeparator,
 } from '../basic';
 import { Metrics } from './Metrics';
 import styles from './CandidateAggregatedEvaluation.module.scss';
-import { ExpandableList } from '../basic/ExpandableList';
 
 export interface CandidateAggregatedEvaluationProps {
+  title: string;
+  moreLocalStorageKey: string;
   aggregatedEvaluation: RPEAggregatorOutput;
 }
 
 export function CandidateAggregatedEvaluation(
   props: CandidateAggregatedEvaluationProps,
 ) {
-  const { aggregatedEvaluation } = props;
+  const { title, moreLocalStorageKey, aggregatedEvaluation } = props;
   const { 
     aggregatedScore,
     passedEvaluations,
@@ -37,11 +39,7 @@ export function CandidateAggregatedEvaluation(
   } = aggregatedEvaluation;
   const totalEvaluations = passedEvaluations.length + failedEvaluations.length;
 
-  // const [more, setMore] = useState(false);
-  const [
-    moreEvaluations,
-    setMoreEvaluations
-  ] = useLocalStorage(false, 'moreCandidateAggregatedEvaluations');
+  const [ more, setMore ] = useLocalStorage(false, moreLocalStorageKey);
 
   const responseToString = (response: RPEResponse) => {
     if (typeof response === 'string') {
@@ -52,21 +50,21 @@ export function CandidateAggregatedEvaluation(
 
   const renderSummary = () => {
     return (
-      <>
-      <span>
-        Aggregated score:&nbsp;
-        <Score score={aggregatedScore}/>
-        <MiddotSeparator/>
+      <span className={styles['candidate-aggregated-evaluation-summary']}>
+        <span>
+          Aggregated score:&nbsp;
+          <Score score={aggregatedScore}/>
+          <MiddotSeparator/>
+        </span>
+        <span className='green'>
+          {passedEvaluations.length} passed
+          <MiddotSeparator/>
+        </span>
+        <span className='red'>
+          {failedEvaluations.length} failed
+          <MiddotSeparator/>
+        </span>
       </span>
-      <span className='green'>
-        {passedEvaluations.length} passed
-        <MiddotSeparator/>
-      </span>
-      <span className='red'>
-        {failedEvaluations.length} failed
-        <MiddotSeparator/>
-      </span>
-    </>
     )
   };
 
@@ -160,24 +158,24 @@ export function CandidateAggregatedEvaluation(
 
   return (
     <ExpandableSection
-      title='Training Evaluations'
-      expanded={moreEvaluations}
-      onToggle={() => { setMoreEvaluations(!moreEvaluations); }}
+      title={title}
+      expanded={more}
+      onToggle={() => { setMore(!more); }}
     >
       <ExpandableSection.Summary>
         { renderSummary() }
         <LinkButton
-          label='More...'
-          onClick={() => { setMoreEvaluations(true); }}
+          label='More'
+          onClick={() => { setMore(true); }}
         />
       </ExpandableSection.Summary>
       <ExpandableSection.Details>
         <div className={styles['candidate-aggregated-evaluation']}>
-          <div className={styles['aggregated-score']}>
+          <div className={styles['candidate-aggregated-evaluation-score']}>
             { renderSummary() }
             <LinkButton
-              label='Less...'
-              onClick={() => { setMoreEvaluations(false); }}
+              label='Less'
+              onClick={() => { setMore(false); }}
             />
             { hasMetrics(aggregatedEvaluation.aggregatedMetrics) &&
               <>

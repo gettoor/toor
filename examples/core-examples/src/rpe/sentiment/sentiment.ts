@@ -24,6 +24,7 @@ import {
   SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_INSTRUCTIONS,
   evaluateSeedCandidatesRPEStateUpdate,
   testFinalCandidatesRPEStateUpdate,
+  bestScoreFinalCandidateSelector,
 } from '@gettoor/core';
 import { renderRPEInsightsToHTML } from '@gettoor/core/rpe-html-renderer';
 import {
@@ -63,6 +64,7 @@ async function run(): Promise<void> {
     candidateId: 'seed',
   };
 
+  const finalCandidateSelector = bestScoreFinalCandidateSelector();
   const input: RPEInput = {
     seed: [seedPrompt],
     dataset: mergeRPEDatasets(trainingDataset, validationDataset),
@@ -121,10 +123,11 @@ async function run(): Promise<void> {
       isCandidateImproved: isCandidateImprovedByScore,
       selectParentCandidatesIfBetter: true,
     }),
+    finalCandidateSelector: bestScoreFinalCandidateSelector(),
     stopAfterIteration: orRPEStop([
       maximumIterationsRPEStop({ maxIterations: 16 }),
       minimumScoreRPEStop({ score: 0.975 }),
-      patienceRPEStop({ noImprovementCount: 8, minScoreImprovement: 0.01 }),
+      patienceRPEStop({ noImprovementCount: 4, minScoreImprovement: 0.01 }),
     ]),
   };
 

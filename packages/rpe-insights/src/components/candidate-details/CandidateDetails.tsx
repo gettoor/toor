@@ -8,20 +8,29 @@ import {
 } from '@gettoor/core';
 
 import { useLocalStorage } from '../../hooks';
-import { Panel, Header, ExpandableSection, LinkButton } from '../basic';
+import { 
+  Panel,
+  Header,
+  ExpandableSection,
+  LinkButton,
+  Metadata,
+  MiddotSeparator,
+} from '../basic';
 import { CandidateAggregatedEvaluation } from './CandidateAggregatedEvaluation';
 import { CandidateAnalysis } from './CandidateAnalysis';
 import { CandidateChanges } from './CandidateChanges';
 import { CandidateModule } from './CandidateModule';
 import styles from './CandidateDetails.module.scss';
+import { countLabel } from '../../string';
 
 export interface CandidateDetailsData {
   datasetEntries: RPEDatasetEntry[];
   candidate: RPECandidate;
   changesSummary?: string;
   changes?: RPECandidateGeneratorChange[];
+  validationAggregatedEvaluation?: RPEAggregatorOutput;
   trainingAggregatedEvaluation?: RPEAggregatorOutput;
-  analysis?: RPEAnalyzerOutput;
+  trainingAnalysis?: RPEAnalyzerOutput;
 }
 
 export interface CandidateDetailsProps {
@@ -33,6 +42,10 @@ export interface CandidateDetailsProps {
 export function CandidateDetails(props: CandidateDetailsProps) {
   const { data, visible, onCloseClick } = props;
 
+  const [
+    moreMetadata,
+    setMoreMetadata,
+  ] = useLocalStorage(false, 'moreCandidateMetadata');
   const [
     moreCandidateChanges,
     setMoreCandidateChanges,
@@ -50,6 +63,24 @@ export function CandidateDetails(props: CandidateDetailsProps) {
         />
       );
     });
+  };
+
+  const renderMetadataSummary = () => {
+    const keys = Object.keys(data?.candidate.metadata ?? {});
+    return (
+      <span>
+        { countLabel(keys.length, 'metadata entry', 'metadata entries') }
+        <MiddotSeparator/>
+      </span>
+    );
+  };
+
+  const renderChangesSummary = () => {
+    return (
+      <span className='text-muted'>
+        {data?.changesSummary}&nbsp;
+      </span>
+    );
   };
 
   const boxClassName = clsx(
@@ -70,6 +101,31 @@ export function CandidateDetails(props: CandidateDetailsProps) {
         <>
           <Header title='Modules'/>
           { renderModules() }
+          { data?.candidate.metadata &&
+            <ExpandableSection
+              title='Metadata'
+              expanded={moreMetadata}
+              onToggle={
+                () => { setMoreMetadata(!moreMetadata); }
+              }
+            > 
+              <ExpandableSection.Summary>
+                { renderMetadataSummary() }
+                <LinkButton
+                  label='More'
+                  onClick={() => { setMoreMetadata(true); }}
+                />
+              </ExpandableSection.Summary>
+              <ExpandableSection.Details>
+                { renderMetadataSummary() }
+                <LinkButton
+                  label='Less'
+                  onClick={() => { setMoreMetadata(false); }}
+                />
+                <Metadata metadata={data.candidate.metadata}/>
+              </ExpandableSection.Details>
+            </ExpandableSection>
+          }
           { data?.changes && data?.changesSummary &&
             <ExpandableSection
               title='Candidate Changes'
@@ -79,20 +135,16 @@ export function CandidateDetails(props: CandidateDetailsProps) {
               }
             > 
               <ExpandableSection.Summary>
-                <span>
-                  {data.changesSummary}&nbsp;
-                </span>
+                { renderChangesSummary() }
                 <LinkButton
-                  label='More...'
+                  label='More'
                   onClick={() => { setMoreCandidateChanges(true); }}
                 />
               </ExpandableSection.Summary>
               <ExpandableSection.Details>
-                <span>
-                  {data.changesSummary}&nbsp;
-                </span>
+                { renderChangesSummary() }
                 <LinkButton
-                  label='Less...'
+                  label='Less'
                   onClick={() => { setMoreCandidateChanges(false); }}
                 />
                 <CandidateChanges 
@@ -102,20 +154,26 @@ export function CandidateDetails(props: CandidateDetailsProps) {
               </ExpandableSection.Details>
             </ExpandableSection>
           }
+          { data!.validationAggregatedEvaluation &&
+            <CandidateAggregatedEvaluation
+              title='Validation Evaluations'
+              moreLocalStorageKey='moreCandidateValidationEvaluations'
+              aggregatedEvaluation={data!.validationAggregatedEvaluation}
+            />
+          }
           { data!.trainingAggregatedEvaluation &&
             <CandidateAggregatedEvaluation
+              title='Training Evaluations'
+              moreLocalStorageKey='moreCandidateTrainingEvaluations'
               aggregatedEvaluation={data!.trainingAggregatedEvaluation}
             />
           }
-          {/* { data!.analysis &&
-            <>
-              <Header title='Analysis'/>
-              <CandidateAnalysis 
-                datasetEntries={data!.datasetEntries}
-                analysis={data!.analysis}
-              />
-            </>
-          } */}
+          { data!.trainingAnalysis &&
+            <CandidateAnalysis 
+              datasetEntries={data!.datasetEntries}
+              analysis={data!.trainingAnalysis}
+            />
+          }
         </>
       }
     </Panel>

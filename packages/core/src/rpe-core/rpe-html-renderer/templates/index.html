@@ -103,7 +103,7 @@ function $$1(n, l) {
 function I$1(n) {
 	if (n.__P && n.__d) {
 		var u = n.__v, t = u.__e, i = [], r = [], o = m$2({}, u);
-		o.__v = u.__v + 1, l$1.vnode && l$1.vnode(o), q$2(n.__P, o, u, n.__n, n.__P.namespaceURI, 32 & u.__u ? [t] : null, i, null == t ? $$1(u) : t, !!(32 & u.__u), r), o.__v = u.__v, o.__.__k[o.__i] = o, D$1(i, o, r), u.__e = u.__ = null, o.__e != t && P$2(o);
+		o.__v = u.__v + 1, l$1.vnode && l$1.vnode(o), q$2(n.__P, o, u, n.__n, n.__P.namespaceURI, 32 & u.__u ? [t] : null, i, null == t ? $$1(u) : t, !!(32 & u.__u), r), o.__v = u.__v, o.__.__k[o.__i] = o, D$2(i, o, r), u.__e = u.__ = null, o.__e != t && P$2(o);
 	}
 }
 function P$2(n) {
@@ -111,7 +111,7 @@ function P$2(n) {
 		if (null != l && null != l.__e) return n.__e = n.__c.base = l.__e;
 	}), P$2(n);
 }
-function A$2(n) {
+function A$3(n) {
 	(!n.__d && (n.__d = !0) && i$2.push(n) && !H$2.__r++ || r$2 != l$1.debounceRendering) && ((r$2 = l$1.debounceRendering) || o$1)(H$2);
 }
 function H$2() {
@@ -123,10 +123,10 @@ function H$2() {
 }
 function L$1(n, l, u, t, i, r, o, e, f, c, a) {
 	var s, h, p, v, y, _, g = t && t.__k || w$1, m = l.length;
-	for (f = T$1(u, l, g, f, m), s = 0; s < m; s++) null != (p = u.__k[s]) && (h = -1 != p.__i && g[p.__i] || d$2, p.__i = s, _ = q$2(n, p, h, i, r, o, e, f, c, a), v = p.__e, p.ref && h.ref != p.ref && (h.ref && J$2(h.ref, null, p), a.push(p.ref, p.__c || v, p)), null == y && null != v && (y = v), 4 & p.__u ? (f = j$3(p, f, n), h.__e && (h.__e = null)) : "function" == typeof p.type && void 0 !== _ ? f = _ : v && (f = v.nextSibling), p.__u &= -7);
+	for (f = T$2(u, l, g, f, m), s = 0; s < m; s++) null != (p = u.__k[s]) && (h = -1 != p.__i && g[p.__i] || d$2, p.__i = s, _ = q$2(n, p, h, i, r, o, e, f, c, a), v = p.__e, p.ref && h.ref != p.ref && (h.ref && J$2(h.ref, null, p), a.push(p.ref, p.__c || v, p)), null == y && null != v && (y = v), 4 & p.__u ? (f = j$3(p, f, n), h.__e && (h.__e = null)) : "function" == typeof p.type && void 0 !== _ ? f = _ : v && (f = v.nextSibling), p.__u &= -7);
 	return u.__e = y, f;
 }
-function T$1(n, l, u, t, i) {
+function T$2(n, l, u, t, i) {
 	var r, o, e, f, c, a = u.length, s = a, h = 0;
 	for (n.__k = new Array(i), r = 0; r < i; r++) null != (o = l[r]) && "boolean" != typeof o && "function" != typeof o ? ("string" == typeof o || "number" == typeof o || "bigint" == typeof o || o.constructor == String ? o = n.__k[r] = x$1(null, o, null, null, null) : g$1(o) ? o = n.__k[r] = x$1(S$1, { children: o }, null, null, null) : void 0 === o.constructor && o.__b > 0 ? o = n.__k[r] = x$1(o.type, o.props, o.key, o.ref ? o.ref : null, o.__v) : n.__k[r] = o, f = r + h, o.__ = n, o.__b = n.__b + 1, e = null, -1 != (c = o.__i = O$2(o, u, f, s)) && (s--, (e = u[c]) && (e.__u |= 2)), null == e || null == e.__v ? (-1 == c && (i > a ? h-- : i < a && h++), "function" != typeof o.type && (o.__u |= 4)) : c != f && (c == f - 1 ? h-- : c == f + 1 ? h++ : (c > f ? h-- : h++, o.__u |= 4))) : n.__k[r] = null;
 	if (s) for (r = 0; r < a; r++) null != (e = u[r]) && 0 == (2 & e.__u) && (e.__e == t && (t = $$1(e)), K$2(e, e));
@@ -226,7 +226,7 @@ function q$2(n, u, t, i, r, o, e, f, c, a) {
 function B$3(n) {
 	n && (n.__c && (n.__c.__e = !0), n.__k && n.__k.some(B$3));
 }
-function D$1(n, u, t) {
+function D$2(n, u, t) {
 	for (var i = 0; i < t.length; i++) J$2(t[i], t[++i], t[++i]);
 	l$1.__c && l$1.__c(u, n), n.some(function(u) {
 		try {
@@ -292,7 +292,7 @@ function Q$2(n, l, u) {
 }
 function R$1(u, t, i) {
 	var r, o, e, f;
-	t == document && (t = document.documentElement), l$1.__ && l$1.__(u, t), o = (r = "function" == typeof i) ? null : i && i.__k || t.__k, e = [], f = [], q$2(t, u = (!r && i || t).__k = k$1(S$1, null, [u]), o || d$2, d$2, t.namespaceURI, !r && i ? [i] : o ? null : t.firstChild ? n.call(t.childNodes) : null, e, !r && i ? i : o ? o.__e : t.firstChild, r, f), D$1(e, u, f), u.props.children = null;
+	t == document && (t = document.documentElement), l$1.__ && l$1.__(u, t), o = (r = "function" == typeof i) ? null : i && i.__k || t.__k, e = [], f = [], q$2(t, u = (!r && i || t).__k = k$1(S$1, null, [u]), o || d$2, d$2, t.namespaceURI, !r && i ? [i] : o ? null : t.firstChild ? n.call(t.childNodes) : null, e, !r && i ? i : o ? o.__e : t.firstChild, r, f), D$2(e, u, f), u.props.children = null;
 }
 n = w$1.slice, l$1 = { __e: function(n, l, u, t) {
 	for (var i, r, o; l = l.__;) if ((i = l.__c) && !i.__) try {
@@ -303,9 +303,9 @@ n = w$1.slice, l$1 = { __e: function(n, l, u, t) {
 	throw n;
 } }, u$2 = 0, C$2.prototype.setState = function(n, l) {
 	var u = null != this.__s && this.__s != this.state ? this.__s : this.__s = m$2({}, this.state);
-	"function" == typeof n && (n = n(m$2({}, u), this.props)), n && m$2(u, n), null != n && this.__v && (l && this._sb.push(l), A$2(this));
+	"function" == typeof n && (n = n(m$2({}, u), this.props)), n && m$2(u, n), null != n && this.__v && (l && this._sb.push(l), A$3(this));
 }, C$2.prototype.forceUpdate = function(n) {
-	this.__v && (this.__e = !0, n && this.__h.push(n), A$2(this));
+	this.__v && (this.__e = !0, n && this.__h.push(n), A$3(this));
 }, C$2.prototype.render = S$1, i$2 = [], o$1 = "function" == typeof Promise ? Promise.prototype.then.bind(Promise.resolve()) : setTimeout, e$1 = function(n, l) {
 	return n.__v.__b - l.__v.__b;
 }, H$2.__r = 0, f$3 = Math.random().toString(8), c$1 = "__d" + f$3, a$1 = "__a" + f$3, s$1 = /(PointerCapture)$|Capture$/i, h$1 = 0, p$1 = V$2(!1), v$2 = V$2(!0);
@@ -333,11 +333,11 @@ function s(n, t) {
 	return n >= u.__.length && u.__.push({}), u.__[n];
 }
 function d$1(n) {
-	return o = 1, y$1(D, n);
+	return o = 1, y$1(D$1, n);
 }
 function y$1(n, u, i) {
 	var o = s(t++, 2);
-	if (o.t = n, !o.__c && (o.__ = [i ? i(u) : D(void 0, u), function(n) {
+	if (o.t = n, !o.__c && (o.__ = [i ? i(u) : D$1(void 0, u), function(n) {
 		var t = o.__N ? o.__N[0] : o.__[0], r = o.t(t, n);
 		t !== r && (o.__N = [r, o.__[1]], o.__c.setState({}));
 	}], o.__c = r$1, !r$1.__f)) {
@@ -371,6 +371,15 @@ function y$1(n, u, i) {
 function h(n, u) {
 	var i = s(t++, 3);
 	!c.__s && C$1(i.__H, u) && (i.__ = n, i.u = u, r$1.__H.__h.push(i));
+}
+function A$2(n) {
+	return o = 5, T$1(function() {
+		return { current: n };
+	}, []);
+}
+function T$1(n, r) {
+	var u = s(t++, 7);
+	return C$1(u.__H, r) && (u.__ = n(), u.__H = r, u.__h = n), u.__;
 }
 function j$2() {
 	for (var n; n = f$2.shift();) {
@@ -441,7 +450,7 @@ function C$1(n, t) {
 		return t !== n[r];
 	});
 }
-function D(n, t) {
+function D$1(n, t) {
 	return "function" == typeof t ? t(n) : t;
 }
 //#endregion
@@ -463,15 +472,15 @@ function clsx() {
 	return n;
 }
 var CandidateBox_module_default = {
-	"candidate-box-foreign-object": "_candidate-box-foreign-object_1ico9_1",
-	muted: "_muted_1ico9_11",
-	"candidate-box-info-properties": "_candidate-box-info-properties_1ico9_14",
-	"candidate-box-score-name": "_candidate-box-score-name_1ico9_19",
-	"candidate-box-score-value": "_candidate-box-score-value_1ico9_22",
-	"candidate-box-info-name": "_candidate-box-info-name_1ico9_30",
-	"candidate-box-info-value": "_candidate-box-info-value_1ico9_34",
-	"candidate-box-info-value-red": "_candidate-box-info-value-red_1ico9_37",
-	"candidate-box-info-value-green": "_candidate-box-info-value-green_1ico9_40"
+	"candidate-box-foreign-object": "_candidate-box-foreign-object_n8r2y_1",
+	muted: "_muted_n8r2y_11",
+	"candidate-box-info-properties": "_candidate-box-info-properties_n8r2y_14",
+	"candidate-box-score-name": "_candidate-box-score-name_n8r2y_19",
+	"candidate-box-score-value": "_candidate-box-score-value_n8r2y_23",
+	"candidate-box-info-name": "_candidate-box-info-name_n8r2y_31",
+	"candidate-box-info-value": "_candidate-box-info-value_n8r2y_36",
+	"candidate-box-info-value-red": "_candidate-box-info-value-red_n8r2y_39",
+	"candidate-box-info-value-green": "_candidate-box-info-value-green_n8r2y_42"
 };
 //#endregion
 //#region ../../node_modules/.pnpm/preact@10.29.8/node_modules/preact/jsx-runtime/dist/jsxRuntime.module.js
@@ -603,7 +612,7 @@ function resolveBoxes(rpeInsights, onBoxClick) {
 	};
 	const firstIteration = iterationHistory[0];
 	let x = 10;
-	for (const candidateRef of firstIteration.candidateRefs) {
+	for (const candidateRef of firstIteration.candidateRefs ?? []) {
 		const prompt = findCandidateById(candidateRef.candidateId);
 		const aggregatedEvaluation = findCandidateAggregatedEvaluation(candidateRef.candidateId);
 		boxes.push({
@@ -626,10 +635,10 @@ function resolveBoxes(rpeInsights, onBoxClick) {
 	y += 160;
 	for (const iteration of iterationHistory) {
 		let x = 10;
-		for (const newCandidate of iteration.generatedCandidates) {
+		for (const newCandidate of iteration.generatedCandidates ?? []) {
 			const candidate = findCandidateById(newCandidate.candidateRef.candidateId);
 			const candidateAggregatedEvaluation = findCandidateAggregatedEvaluation(candidate.candidateId);
-			const isSelected = iteration.selectedCandidateRefs?.some((selectedPromptRef) => {
+			const isSelected = (iteration.selectedCandidateRefs ?? []).some((selectedPromptRef) => {
 				return selectedPromptRef.candidateId === candidate.candidateId;
 			});
 			boxes.push({
@@ -4806,144 +4815,6 @@ function Markdown({ content }) {
 	return /* @__PURE__ */ u("div", { dangerouslySetInnerHTML: { __html: purify.sanitize(parsed) } });
 }
 //#endregion
-//#region src/components/basic/Icon.module.scss
-var Icon_module_default = { "material-symbols-outlined": "_material-symbols-outlined_1epsk_1" };
-//#endregion
-//#region src/components/basic/Icon.tsx
-function Icon(props) {
-	return /* @__PURE__ */ u("span", {
-		className: clsx(Icon_module_default["material-symbols-outlined"], props.className),
-		title: props.title,
-		children: props.name
-	});
-}
-//#endregion
-//#region src/components/basic/IconButton.module.scss
-var IconButton_module_default = { "icon-button": "_icon-button_wzifj_1" };
-//#endregion
-//#region src/components/basic/IconButton.tsx
-function IconButton(props) {
-	const { name, title, className, onClick } = props;
-	return /* @__PURE__ */ u("div", {
-		className: clsx(IconButton_module_default["icon-button"], className),
-		onClick,
-		children: /* @__PURE__ */ u(Icon, {
-			className: "icon",
-			name,
-			title
-		})
-	});
-}
-var Panel_module_default = {
-	panel: "_panel_1qyyl_1",
-	"panel-header": "_panel-header_1qyyl_19",
-	"panel-header-title": "_panel-header-title_1qyyl_32",
-	"panel-content": "_panel-content_1qyyl_35"
-};
-//#endregion
-//#region src/components/basic/Panel.tsx
-function Panel(props) {
-	return /* @__PURE__ */ u("div", {
-		className: clsx(Panel_module_default["panel"], props.className),
-		children: [/* @__PURE__ */ u("div", {
-			className: Panel_module_default["panel-header"],
-			children: [/* @__PURE__ */ u("div", {
-				className: Panel_module_default["panel-header-title"],
-				children: props.title
-			}), /* @__PURE__ */ u(IconButton, {
-				name: "close",
-				title: "Close",
-				onClick: props.onCloseClick
-			})]
-		}), /* @__PURE__ */ u("div", {
-			className: Panel_module_default["panel-content"],
-			children: props.children
-		})]
-	});
-}
-var Table_module_default = {
-	table: "_table_1vxki_1",
-	cell: "_cell_1vxki_5",
-	"header-cell": "_header-cell_1vxki_10"
-};
-//#endregion
-//#region src/components/basic/Table.tsx
-function Table(props) {
-	const { header = [], rows } = props;
-	const renderHeaderCells = () => {
-		return header.map((cell, columnIndex) => {
-			return /* @__PURE__ */ u("div", {
-				className: clsx(Table_module_default["cell"], Table_module_default["header-cell"]),
-				style: {
-					gridColumn: columnIndex + 1,
-					gridRow: 1
-				},
-				children: cell
-			});
-		});
-	};
-	const renderRowCells = (row, rowIndex) => {
-		return row.map((cell, columnIndex) => {
-			const style = {
-				gridColumn: columnIndex + 1,
-				gridRow: rowIndex + 2
-			};
-			let value = "";
-			if (typeof cell === "string") value = cell;
-			else if (typeof cell === "number") value = cell.toString();
-			else if (typeof cell === "boolean") value = cell ? "Yes" : "No";
-			else if (cell === null) value = "";
-			else if (cell === void 0) value = "";
-			else if (typeof cell === "object" && "props" in cell) value = cell;
-			return /* @__PURE__ */ u("div", {
-				className: Table_module_default["cell"],
-				style,
-				children: value
-			});
-		});
-	};
-	const renderRows = () => {
-		return rows.map((row, rowIndex) => renderRowCells(row, rowIndex));
-	};
-	return /* @__PURE__ */ u("div", {
-		className: Table_module_default.table,
-		children: [renderHeaderCells(), renderRows()]
-	});
-}
-var Header_module_default = {
-	header: "_header_v3efg_1",
-	"header-title": "_header-title_v3efg_9",
-	"header-title-clickable": "_header-title-clickable_v3efg_15",
-	"header-title-level-1": "_header-title-level-1_v3efg_19",
-	"header-side-bar": "_header-side-bar_v3efg_30"
-};
-//#endregion
-//#region src/components/basic/Header.tsx
-function Header(props) {
-	const { title, level = 1, children, className, onTitleClick } = props;
-	return /* @__PURE__ */ u("div", {
-		className: clsx(Header_module_default["header"], className),
-		children: [/* @__PURE__ */ u("div", {
-			className: clsx(Header_module_default["header-title"], {
-				[Header_module_default["header-title-level-1"]]: level === 1,
-				[Header_module_default["header-title-level-2"]]: level === 2,
-				[Header_module_default["header-title-clickable"]]: !!onTitleClick
-			}),
-			onClick: onTitleClick,
-			children: title
-		}), children && /* @__PURE__ */ u("div", {
-			className: Header_module_default["header-side-bar"],
-			children
-		})]
-	});
-}
-var Separator_module_default = { separator: "_separator_6czns_1" };
-//#endregion
-//#region src/components/basic/Separator.tsx
-function Separator() {
-	return /* @__PURE__ */ u("div", { className: Separator_module_default["separator"] });
-}
-//#endregion
 //#region ../../node_modules/.pnpm/preact@10.29.8/node_modules/preact/compat/dist/compat.module.js
 function g(n, t) {
 	for (var e in t) n[e] = t[e];
@@ -4964,7 +4835,14 @@ var T = l$1.__b;
 l$1.__b = function(n) {
 	n.type && n.type.__f && n.ref && (n.props.ref = n.ref, n.ref = null), T && T(n);
 };
-"undefined" != typeof Symbol && Symbol.for;
+var A = "undefined" != typeof Symbol && Symbol.for && Symbol.for("react.forward_ref") || 3911;
+function D(n) {
+	function t(t) {
+		var e = g({}, t);
+		return delete e.ref, n(e, t.ref || null);
+	}
+	return t.$$typeof = A, t.render = n, t.prototype.isReactComponent = t.__f = !0, t.displayName = "ForwardRef(" + (n.displayName || n.name) + ")", t;
+}
 var O = l$1.__e;
 l$1.__e = function(n, t, e, r) {
 	if (n.then) {
@@ -5135,6 +5013,164 @@ function hn(n) {
 	return !!n && n.$$typeof === q;
 }
 //#endregion
+//#region src/components/basic/Icon.module.scss
+var Icon_module_default = { "material-symbols-outlined": "_material-symbols-outlined_1epsk_1" };
+//#endregion
+//#region src/components/basic/Icon.tsx
+var Icon = D(({ name, className, ...props }, ref) => {
+	return /* @__PURE__ */ u("span", {
+		...props,
+		ref,
+		className: clsx(Icon_module_default["material-symbols-outlined"], className),
+		children: name
+	});
+});
+//#endregion
+//#region src/components/basic/IconButton.module.scss
+var IconButton_module_default = { "icon-button": "_icon-button_wzifj_1" };
+//#endregion
+//#region src/components/basic/IconButton.tsx
+function IconButton(props) {
+	const { name, title, className, onClick } = props;
+	return /* @__PURE__ */ u("div", {
+		className: clsx(IconButton_module_default["icon-button"], className),
+		onClick,
+		children: /* @__PURE__ */ u(Icon, {
+			className: "icon",
+			name,
+			title
+		})
+	});
+}
+var Panel_module_default = {
+	panel: "_panel_1qyyl_1",
+	"panel-header": "_panel-header_1qyyl_19",
+	"panel-header-title": "_panel-header-title_1qyyl_32",
+	"panel-content": "_panel-content_1qyyl_35"
+};
+//#endregion
+//#region src/components/basic/Panel.tsx
+function Panel(props) {
+	return /* @__PURE__ */ u("div", {
+		className: clsx(Panel_module_default["panel"], props.className),
+		children: [/* @__PURE__ */ u("div", {
+			className: Panel_module_default["panel-header"],
+			children: [/* @__PURE__ */ u("div", {
+				className: Panel_module_default["panel-header-title"],
+				children: props.title
+			}), /* @__PURE__ */ u(IconButton, {
+				name: "close",
+				title: "Close",
+				onClick: props.onCloseClick
+			})]
+		}), /* @__PURE__ */ u("div", {
+			className: Panel_module_default["panel-content"],
+			children: props.children
+		})]
+	});
+}
+var Table_module_default = {
+	table: "_table_40r8k_1",
+	cell: "_cell_40r8k_7",
+	"cell-narrow": "_cell-narrow_40r8k_12",
+	"cell-narrow-left": "_cell-narrow-left_40r8k_15",
+	"header-cell": "_header-cell_40r8k_18"
+};
+//#endregion
+//#region src/components/basic/Table.tsx
+function Table(props) {
+	const { header = [], rows, columnStyles = [], templateColumns } = props;
+	const defaultTemplateColumns = `repeat(${header.length || rows?.[0]?.length || 0}, 1fr)`;
+	const getColumnClassName = (columnIndex) => {
+		const style = columnStyles?.[columnIndex] ?? "";
+		return style ? Table_module_default[`cell-${style}`] : void 0;
+	};
+	const renderHeaderCells = () => {
+		return header.map((cell, columnIndex) => {
+			return /* @__PURE__ */ u("div", {
+				className: clsx(Table_module_default["cell"], Table_module_default["header-cell"], getColumnClassName(columnIndex)),
+				style: {
+					gridColumn: columnIndex + 1,
+					gridRow: 1
+				},
+				children: cell
+			});
+		});
+	};
+	const basicCellToValue = (cell) => {
+		let value = "";
+		if (typeof cell === "string") value = cell;
+		else if (typeof cell === "number") value = cell.toString();
+		else if (typeof cell === "boolean") value = cell ? "Yes" : "No";
+		else if (cell === null) value = "";
+		else if (cell === void 0) value = "";
+		else if (typeof cell === "object" && "props" in cell) value = cell;
+		return value;
+	};
+	const renderRowCells = (row, rowIndex) => {
+		return row.map((cell, columnIndex) => {
+			const style = {
+				gridColumn: columnIndex + 1,
+				gridRow: rowIndex + 2
+			};
+			let value = "";
+			let cellClassNames = [getColumnClassName(columnIndex)];
+			if (!cell) value = "";
+			else if (typeof cell === "object" && "value" in cell) {
+				value = basicCellToValue(cell.value);
+				cellClassNames.push(cell.className);
+				console.log(cellClassNames);
+			} else value = basicCellToValue(cell);
+			return /* @__PURE__ */ u("div", {
+				className: clsx(Table_module_default["cell"], ...cellClassNames),
+				style,
+				children: value
+			});
+		});
+	};
+	const renderRows = () => {
+		return rows.map((row, rowIndex) => renderRowCells(row, rowIndex));
+	};
+	return /* @__PURE__ */ u("div", {
+		className: Table_module_default.table,
+		style: { gridTemplateColumns: templateColumns ?? defaultTemplateColumns },
+		children: [renderHeaderCells(), renderRows()]
+	});
+}
+var Header_module_default = {
+	header: "_header_v3efg_1",
+	"header-title": "_header-title_v3efg_9",
+	"header-title-clickable": "_header-title-clickable_v3efg_15",
+	"header-title-level-1": "_header-title-level-1_v3efg_19",
+	"header-side-bar": "_header-side-bar_v3efg_30"
+};
+//#endregion
+//#region src/components/basic/Header.tsx
+function Header(props) {
+	const { title, level = 1, children, className, onTitleClick } = props;
+	return /* @__PURE__ */ u("div", {
+		className: clsx(Header_module_default["header"], className),
+		children: [/* @__PURE__ */ u("div", {
+			className: clsx(Header_module_default["header-title"], {
+				[Header_module_default["header-title-level-1"]]: level === 1,
+				[Header_module_default["header-title-level-2"]]: level === 2,
+				[Header_module_default["header-title-clickable"]]: !!onTitleClick
+			}),
+			onClick: onTitleClick,
+			children: title
+		}), children && /* @__PURE__ */ u("div", {
+			className: Header_module_default["header-side-bar"],
+			children
+		})]
+	});
+}
+var Separator_module_default = { separator: "_separator_6czns_1" };
+//#endregion
+//#region src/components/basic/Separator.tsx
+function Separator() {
+	return /* @__PURE__ */ u("div", { className: Separator_module_default["separator"] });
+}
+//#endregion
 //#region src/preact/elements.ts
 function isVNode(element) {
 	if (!element || !hn(element)) return false;
@@ -5182,10 +5218,27 @@ function ExpandableSection(props) {
 ExpandableSection.Summary = Summary;
 ExpandableSection.Details = Details;
 //#endregion
+//#region src/components/basic/MiddotSeparator.module.scss
+var MiddotSeparator_module_default = { "middot-separator": "_middot-separator_1tzs0_1" };
+//#endregion
+//#region src/components/basic/MiddotSeparator.tsx
+function MiddotSeparator() {
+	return /* @__PURE__ */ u("span", {
+		className: MiddotSeparator_module_default["middot-separator"],
+		children: "\xA0·\xA0"
+	});
+}
+//#endregion
+//#region src/components/basic/ExpandableList.module.scss
+var ExpandableList_module_default = {
+	"expandable-list-button-bar": "_expandable-list-button-bar_t4bfe_1",
+	"expandable-list-button-bar-content": "_expandable-list-button-bar-content_t4bfe_7"
+};
+//#endregion
 //#region src/components/basic/LinkButton.module.scss
 var LinkButton_module_default = {
-	"link-button": "_link-button_bnc0s_1",
-	"link-button-disabled": "_link-button-disabled_bnc0s_7"
+	"link-button": "_link-button_14ox0_1",
+	"link-button-disabled": "_link-button-disabled_14ox0_7"
 };
 //#endregion
 //#region src/components/basic/LinkButton.tsx
@@ -5203,15 +5256,53 @@ function LinkButton(props) {
 	});
 }
 //#endregion
-//#region src/components/basic/MiddotSeparator.module.scss
-var MiddotSeparator_module_default = { "middot-separator": "_middot-separator_1tzs0_1" };
-//#endregion
-//#region src/components/basic/MiddotSeparator.tsx
-function MiddotSeparator() {
-	return /* @__PURE__ */ u("span", {
-		className: MiddotSeparator_module_default["middot-separator"],
-		children: "\xA0·\xA0"
-	});
+//#region src/components/basic/ExpandableList.tsx
+var INITIAL_VISIBLE_ITEM_COUNT = 4;
+var DEFAULT_VISIBLE_ITEM_COUNT_INCREMENT = 4;
+function ExpandableList(props) {
+	const { totalItems, initialVisibleItemCount = INITIAL_VISIBLE_ITEM_COUNT, visibleItemCountIncrement = DEFAULT_VISIBLE_ITEM_COUNT_INCREMENT, itemRenderer } = props;
+	const [visibleItemCount, setVisibleItemCount] = d$1(initialVisibleItemCount);
+	const onMoreClick = () => {
+		setVisibleItemCount(Math.min(visibleItemCount + visibleItemCountIncrement, totalItems));
+	};
+	const onLessClick = () => {
+		setVisibleItemCount(Math.max(visibleItemCount - visibleItemCountIncrement, initialVisibleItemCount));
+	};
+	const renderItems = () => {
+		return Array.from({ length: visibleItemCount }, (_, index) => {
+			return itemRenderer(index);
+		});
+	};
+	const renderCountLabel = () => {
+		return /* @__PURE__ */ u("span", { children: [
+			visibleItemCount,
+			" of ",
+			totalItems
+		] });
+	};
+	const hasMore = visibleItemCount < totalItems;
+	const hasLess = visibleItemCount > initialVisibleItemCount;
+	return /* @__PURE__ */ u("div", { children: [renderItems(), /* @__PURE__ */ u("div", {
+		className: ExpandableList_module_default["expandable-list-button-bar"],
+		children: /* @__PURE__ */ u("div", {
+			className: ExpandableList_module_default["expandable-list-button-bar-content"],
+			children: [
+				/* @__PURE__ */ u(LinkButton, {
+					label: "More",
+					disabled: !hasMore,
+					onClick: onMoreClick
+				}),
+				/* @__PURE__ */ u(MiddotSeparator, {}),
+				/* @__PURE__ */ u(LinkButton, {
+					label: "Less",
+					disabled: !hasLess,
+					onClick: onLessClick
+				}),
+				/* @__PURE__ */ u(MiddotSeparator, {}),
+				renderCountLabel()
+			]
+		})
+	})] });
 }
 //#endregion
 //#region ../../node_modules/.pnpm/yaml@2.9.0/node_modules/yaml/browser/dist/nodes/identity.js
@@ -5235,7 +5326,7 @@ function isCollection(node) {
 	}
 	return false;
 }
-function isNode(node) {
+function isNode$1(node) {
 	if (node && typeof node === "object") switch (node[NODE_TYPE]) {
 		case ALIAS:
 		case MAP:
@@ -5294,7 +5385,7 @@ visit$1.SKIP = SKIP$1;
 visit$1.REMOVE = REMOVE$1;
 function visit_(key, node, visitor, path) {
 	const ctrl = callVisitor(key, node, visitor, path);
-	if (isNode(ctrl) || isPair(ctrl)) {
+	if (isNode$1(ctrl) || isPair(ctrl)) {
 		replaceNode(key, path, ctrl);
 		return visit_(key, ctrl, visitor, path);
 	}
@@ -5367,7 +5458,7 @@ visitAsync.SKIP = SKIP$1;
 visitAsync.REMOVE = REMOVE$1;
 async function visitAsync_(key, node, visitor, path) {
 	const ctrl = await callVisitor(key, node, visitor, path);
-	if (isNode(ctrl) || isPair(ctrl)) {
+	if (isNode$1(ctrl) || isPair(ctrl)) {
 		replaceNode(key, path, ctrl);
 		return visitAsync_(key, ctrl, visitor, path);
 	}
@@ -5571,10 +5662,10 @@ var Directives = class Directives {
 		const lines = this.yaml.explicit ? [`%YAML ${this.yaml.version || "1.2"}`] : [];
 		const tagEntries = Object.entries(this.tags);
 		let tagNames;
-		if (doc && tagEntries.length > 0 && isNode(doc.contents)) {
+		if (doc && tagEntries.length > 0 && isNode$1(doc.contents)) {
 			const tags = {};
 			visit$1(doc.contents, (_key, node) => {
-				if (isNode(node) && node.tag) tags[node.tag] = true;
+				if (isNode$1(node) && node.tag) tags[node.tag] = true;
 			});
 			tagNames = Object.keys(tags);
 		} else tagNames = [];
@@ -5869,7 +5960,7 @@ function findTagObject(value, tagName, tags) {
 }
 function createNode(value, tagName, ctx) {
 	if (isDocument(value)) value = value.contents;
-	if (isNode(value)) return value;
+	if (isNode$1(value)) return value;
 	if (isPair(value)) {
 		const map = ctx.schema[MAP].createNode?.(ctx.schema, null, ctx);
 		map.items.push(value);
@@ -5953,7 +6044,7 @@ var Collection = class extends NodeBase {
 	clone(schema) {
 		const copy = Object.create(Object.getPrototypeOf(this), Object.getOwnPropertyDescriptors(this));
 		if (schema) copy.schema = schema;
-		copy.items = copy.items.map((it) => isNode(it) || isPair(it) ? it.clone(schema) : it);
+		copy.items = copy.items.map((it) => isNode$1(it) || isPair(it) ? it.clone(schema) : it);
 		if (this.range) copy.range = this.range.slice();
 		return copy;
 	}
@@ -6465,7 +6556,7 @@ function stringify$1(item, ctx, onComment, onChompKeep) {
 		}
 	}
 	let tagObj = void 0;
-	const node = isNode(item) ? item : ctx.doc.createNode(item, { onTagObj: (o) => tagObj = o });
+	const node = isNode$1(item) ? item : ctx.doc.createNode(item, { onTagObj: (o) => tagObj = o });
 	tagObj ?? (tagObj = getTagObject(ctx.doc.schema.tags, node));
 	const props = stringifyProps(node, tagObj, ctx);
 	if (props.length > 0) ctx.indentAtStart = (ctx.indentAtStart ?? 0) + props.length + 1;
@@ -6477,10 +6568,10 @@ function stringify$1(item, ctx, onComment, onChompKeep) {
 //#region ../../node_modules/.pnpm/yaml@2.9.0/node_modules/yaml/browser/dist/stringify/stringifyPair.js
 function stringifyPair({ key, value }, ctx, onComment, onChompKeep) {
 	const { allNullValues, doc, indent, indentStep, options: { commentString, indentSeq, simpleKeys } } = ctx;
-	let keyComment = isNode(key) && key.comment || null;
+	let keyComment = isNode$1(key) && key.comment || null;
 	if (simpleKeys) {
 		if (keyComment) throw new Error("With simple keys, key nodes cannot have comments");
-		if (isCollection(key) || !isNode(key) && typeof key === "object") throw new Error("With simple keys, collection cannot be used as a key value");
+		if (isCollection(key) || !isNode$1(key) && typeof key === "object") throw new Error("With simple keys, collection cannot be used as a key value");
 	}
 	let explicitKey = !simpleKeys && (!key || keyComment && value == null && !ctx.inFlow || isCollection(key) || (isScalar(key) ? key.type === Scalar.BLOCK_FOLDED || key.type === Scalar.BLOCK_LITERAL : typeof key === "object"));
 	ctx = Object.assign({}, ctx, {
@@ -6515,7 +6606,7 @@ function stringifyPair({ key, value }, ctx, onComment, onChompKeep) {
 		if (keyComment) str += lineComment(str, ctx.indent, commentString(keyComment));
 	}
 	let vsb, vcb, valueComment;
-	if (isNode(value)) {
+	if (isNode$1(value)) {
 		vsb = !!value.spaceBefore;
 		vcb = value.commentBefore;
 		valueComment = value.comment;
@@ -6607,7 +6698,7 @@ function resolveAliasValue(ctx, value) {
 //#endregion
 //#region ../../node_modules/.pnpm/yaml@2.9.0/node_modules/yaml/browser/dist/nodes/addPairToJSMap.js
 function addPairToJSMap(ctx, map, { key, value }) {
-	if (isNode(key) && key.addToJSMap) key.addToJSMap(ctx, map, value);
+	if (isNode$1(key) && key.addToJSMap) key.addToJSMap(ctx, map, value);
 	else if (isMergeKey(ctx, key)) addMergeToJSMap(ctx, map, value);
 	else {
 		const jsKey = toJS(key, "", ctx);
@@ -6630,7 +6721,7 @@ function addPairToJSMap(ctx, map, { key, value }) {
 function stringifyKey(key, jsKey, ctx) {
 	if (jsKey === null) return "";
 	if (typeof jsKey !== "object") return String(jsKey);
-	if (isNode(key) && ctx?.doc) {
+	if (isNode$1(key) && ctx?.doc) {
 		const strCtx = createStringifyContext(ctx.doc, {});
 		strCtx.anchors = /* @__PURE__ */ new Set();
 		for (const node of ctx.anchors.keys()) strCtx.anchors.add(node.anchor);
@@ -6660,8 +6751,8 @@ var Pair = class Pair {
 	}
 	clone(schema) {
 		let { key, value } = this;
-		if (isNode(key)) key = key.clone(schema);
-		if (isNode(value)) value = value.clone(schema);
+		if (isNode$1(key)) key = key.clone(schema);
+		if (isNode$1(value)) value = value.clone(schema);
 		return new Pair(key, value);
 	}
 	toJSON(_, ctx) {
@@ -6687,12 +6778,12 @@ function stringifyBlockCollection({ comment, items }, ctx, { blockItemPrefix, fl
 	for (let i = 0; i < items.length; ++i) {
 		const item = items[i];
 		let comment = null;
-		if (isNode(item)) {
+		if (isNode$1(item)) {
 			if (!chompKeep && item.spaceBefore) lines.push("");
 			addCommentBefore(ctx, lines, item.commentBefore, chompKeep);
 			if (item.comment) comment = item.comment;
 		} else if (isPair(item)) {
-			const ik = isNode(item.key) ? item.key : null;
+			const ik = isNode$1(item.key) ? item.key : null;
 			if (ik) {
 				if (!chompKeep && ik.spaceBefore) lines.push("");
 				addCommentBefore(ctx, lines, ik.commentBefore, chompKeep);
@@ -6733,18 +6824,18 @@ function stringifyFlowCollection({ items }, ctx, { flowChars, itemIndent }) {
 	for (let i = 0; i < items.length; ++i) {
 		const item = items[i];
 		let comment = null;
-		if (isNode(item)) {
+		if (isNode$1(item)) {
 			if (item.spaceBefore) lines.push("");
 			addCommentBefore(ctx, lines, item.commentBefore, false);
 			if (item.comment) comment = item.comment;
 		} else if (isPair(item)) {
-			const ik = isNode(item.key) ? item.key : null;
+			const ik = isNode$1(item.key) ? item.key : null;
 			if (ik) {
 				if (ik.spaceBefore) lines.push("");
 				addCommentBefore(ctx, lines, ik.commentBefore, false);
 				if (ik.comment) reqNewline = true;
 			}
-			const iv = isNode(item.value) ? item.value : null;
+			const iv = isNode$1(item.value) ? item.value : null;
 			if (iv) {
 				if (iv.comment) comment = iv.comment;
 				if (iv.commentBefore) reqNewline = true;
@@ -7760,7 +7851,7 @@ function stringifyDocument(doc, options) {
 	let chompKeep = false;
 	let contentComment = null;
 	if (doc.contents) {
-		if (isNode(doc.contents)) {
+		if (isNode$1(doc.contents)) {
 			if (doc.contents.spaceBefore && hasDirectives) lines.push("");
 			if (doc.contents.commentBefore) {
 				const cs = commentString(doc.contents.commentBefore);
@@ -7845,7 +7936,7 @@ var Document = class Document {
 		copy.options = Object.assign({}, this.options);
 		if (this.directives) copy.directives = this.directives.clone();
 		copy.schema = this.schema.clone();
-		copy.contents = isNode(this.contents) ? this.contents.clone(copy.schema) : this.contents;
+		copy.contents = isNode$1(this.contents) ? this.contents.clone(copy.schema) : this.contents;
 		if (this.range) copy.range = this.range.slice();
 		return copy;
 	}
@@ -8164,6 +8255,1148 @@ function stringify(value, replacer, options) {
 	if (isDocument(value) && !_replacer) return value.toString(options);
 	return new Document(value, _replacer, options).toString(options);
 }
+var Metadata_module_default = { metadata: "_metadata_1yk96_1" };
+//#endregion
+//#region src/components/basic/Metadata.tsx
+function Metadata(props) {
+	const { metadata } = props;
+	const metadataString = stringify(metadata);
+	return /* @__PURE__ */ u("pre", {
+		className: Metadata_module_default["metadata"],
+		children: metadataString
+	});
+}
+//#endregion
+//#region ../../node_modules/.pnpm/@floating-ui+utils@0.2.12/node_modules/@floating-ui/utils/dist/floating-ui.utils.mjs
+var min = Math.min;
+var max = Math.max;
+var round = Math.round;
+var floor = Math.floor;
+var createCoords = (v) => ({
+	x: v,
+	y: v
+});
+var oppositeSideMap = {
+	left: "right",
+	right: "left",
+	bottom: "top",
+	top: "bottom"
+};
+function clamp(start, value, end) {
+	return max(start, min(value, end));
+}
+function evaluate(value, param) {
+	return typeof value === "function" ? value(param) : value;
+}
+function getSide(placement) {
+	return placement.split("-")[0];
+}
+function getAlignment(placement) {
+	return placement.split("-")[1];
+}
+function getOppositeAxis(axis) {
+	return axis === "x" ? "y" : "x";
+}
+function getAxisLength(axis) {
+	return axis === "y" ? "height" : "width";
+}
+function getSideAxis(placement) {
+	const firstChar = placement[0];
+	return firstChar === "t" || firstChar === "b" ? "y" : "x";
+}
+function getAlignmentAxis(placement) {
+	return getOppositeAxis(getSideAxis(placement));
+}
+function getAlignmentSides(placement, rects, rtl) {
+	if (rtl === void 0) rtl = false;
+	const alignment = getAlignment(placement);
+	const alignmentAxis = getAlignmentAxis(placement);
+	const length = getAxisLength(alignmentAxis);
+	let mainAlignmentSide = alignmentAxis === "x" ? alignment === (rtl ? "end" : "start") ? "right" : "left" : alignment === "start" ? "bottom" : "top";
+	if (rects.reference[length] > rects.floating[length]) mainAlignmentSide = getOppositePlacement(mainAlignmentSide);
+	return [mainAlignmentSide, getOppositePlacement(mainAlignmentSide)];
+}
+function getExpandedPlacements(placement) {
+	const oppositePlacement = getOppositePlacement(placement);
+	return [
+		getOppositeAlignmentPlacement(placement),
+		oppositePlacement,
+		getOppositeAlignmentPlacement(oppositePlacement)
+	];
+}
+function getOppositeAlignmentPlacement(placement) {
+	return placement.includes("start") ? placement.replace("start", "end") : placement.replace("end", "start");
+}
+var lrPlacement = ["left", "right"];
+var rlPlacement = ["right", "left"];
+var tbPlacement = ["top", "bottom"];
+var btPlacement = ["bottom", "top"];
+function getSideList(side, isStart, rtl) {
+	switch (side) {
+		case "top":
+		case "bottom":
+			if (rtl) return isStart ? rlPlacement : lrPlacement;
+			return isStart ? lrPlacement : rlPlacement;
+		case "left":
+		case "right": return isStart ? tbPlacement : btPlacement;
+		default: return [];
+	}
+}
+function getOppositeAxisPlacements(placement, flipAlignment, direction, rtl) {
+	const alignment = getAlignment(placement);
+	let list = getSideList(getSide(placement), direction === "start", rtl);
+	if (alignment) {
+		list = list.map((side) => side + "-" + alignment);
+		if (flipAlignment) list = list.concat(list.map(getOppositeAlignmentPlacement));
+	}
+	return list;
+}
+function getOppositePlacement(placement) {
+	const side = getSide(placement);
+	return oppositeSideMap[side] + placement.slice(side.length);
+}
+function expandPaddingObject(padding) {
+	var _padding$top, _padding$right, _padding$bottom, _padding$left;
+	return {
+		top: (_padding$top = padding.top) != null ? _padding$top : 0,
+		right: (_padding$right = padding.right) != null ? _padding$right : 0,
+		bottom: (_padding$bottom = padding.bottom) != null ? _padding$bottom : 0,
+		left: (_padding$left = padding.left) != null ? _padding$left : 0
+	};
+}
+function getPaddingObject(padding) {
+	return typeof padding !== "number" ? expandPaddingObject(padding) : {
+		top: padding,
+		right: padding,
+		bottom: padding,
+		left: padding
+	};
+}
+function rectToClientRect(rect) {
+	const { x, y, width, height } = rect;
+	return {
+		width,
+		height,
+		top: y,
+		left: x,
+		right: x + width,
+		bottom: y + height,
+		x,
+		y
+	};
+}
+//#endregion
+//#region ../../node_modules/.pnpm/@floating-ui+core@1.8.0/node_modules/@floating-ui/core/dist/floating-ui.core.mjs
+function computeCoordsFromPlacement(_ref, placement, rtl) {
+	let { reference, floating } = _ref;
+	const sideAxis = getSideAxis(placement);
+	const alignmentAxis = getAlignmentAxis(placement);
+	const alignLength = getAxisLength(alignmentAxis);
+	const side = getSide(placement);
+	const isVertical = sideAxis === "y";
+	const commonX = reference.x + reference.width / 2 - floating.width / 2;
+	const commonY = reference.y + reference.height / 2 - floating.height / 2;
+	const commonAlign = reference[alignLength] / 2 - floating[alignLength] / 2;
+	let coords;
+	switch (side) {
+		case "top":
+			coords = {
+				x: commonX,
+				y: reference.y - floating.height
+			};
+			break;
+		case "bottom":
+			coords = {
+				x: commonX,
+				y: reference.y + reference.height
+			};
+			break;
+		case "right":
+			coords = {
+				x: reference.x + reference.width,
+				y: commonY
+			};
+			break;
+		case "left":
+			coords = {
+				x: reference.x - floating.width,
+				y: commonY
+			};
+			break;
+		default: coords = {
+			x: reference.x,
+			y: reference.y
+		};
+	}
+	const alignment = getAlignment(placement);
+	if (alignment) coords[alignmentAxis] += commonAlign * (alignment === "end" ? 1 : -1) * (rtl && isVertical ? -1 : 1);
+	return coords;
+}
+/**
+* Resolves with an object of overflow side offsets that determine how much the
+* element is overflowing a given clipping boundary on each side.
+* - positive = overflowing the boundary by that number of pixels
+* - negative = how many pixels left before it will overflow
+* - 0 = lies flush with the boundary
+* @see https://floating-ui.com/docs/detectOverflow
+*/
+async function detectOverflow(state, options) {
+	var _await$platform$isEle;
+	if (options === void 0) options = {};
+	const { x, y, platform, rects, elements, strategy } = state;
+	const { boundary = "clippingAncestors", rootBoundary = "viewport", elementContext = "floating", altBoundary = false, padding = 0 } = evaluate(options, state);
+	const paddingObject = getPaddingObject(padding);
+	const element = elements[altBoundary ? elementContext === "floating" ? "reference" : "floating" : elementContext];
+	const clippingClientRect = rectToClientRect(await platform.getClippingRect({
+		element: ((_await$platform$isEle = await (platform.isElement == null ? void 0 : platform.isElement(element))) != null ? _await$platform$isEle : true) ? element : element.contextElement || await (platform.getDocumentElement == null ? void 0 : platform.getDocumentElement(elements.floating)),
+		boundary,
+		rootBoundary,
+		strategy
+	}));
+	const rect = elementContext === "floating" ? {
+		x,
+		y,
+		width: rects.floating.width,
+		height: rects.floating.height
+	} : rects.reference;
+	const offsetParent = await (platform.getOffsetParent == null ? void 0 : platform.getOffsetParent(elements.floating));
+	const offsetScale = await (platform.isElement == null ? void 0 : platform.isElement(offsetParent)) && await (platform.getScale == null ? void 0 : platform.getScale(offsetParent)) || {
+		x: 1,
+		y: 1
+	};
+	const elementClientRect = rectToClientRect(platform.convertOffsetParentRelativeRectToViewportRelativeRect ? await platform.convertOffsetParentRelativeRectToViewportRelativeRect({
+		elements,
+		rect,
+		offsetParent,
+		strategy
+	}) : rect);
+	return {
+		top: (clippingClientRect.top - elementClientRect.top + paddingObject.top) / offsetScale.y,
+		bottom: (elementClientRect.bottom - clippingClientRect.bottom + paddingObject.bottom) / offsetScale.y,
+		left: (clippingClientRect.left - elementClientRect.left + paddingObject.left) / offsetScale.x,
+		right: (elementClientRect.right - clippingClientRect.right + paddingObject.right) / offsetScale.x
+	};
+}
+var MAX_RESET_COUNT = 50;
+/**
+* Computes the `x` and `y` coordinates that will place the floating element
+* next to a given reference element.
+*
+* This export does not have any `platform` interface logic. You will need to
+* write one for the platform you are using Floating UI with.
+*/
+var computePosition$1 = async (reference, floating, config) => {
+	const { placement = "bottom", strategy = "absolute", middleware = [], platform } = config;
+	const platformWithDetectOverflow = platform.detectOverflow ? platform : {
+		...platform,
+		detectOverflow
+	};
+	const rtl = await (platform.isRTL == null ? void 0 : platform.isRTL(floating));
+	let rects = await platform.getElementRects({
+		reference,
+		floating,
+		strategy
+	});
+	let { x, y } = computeCoordsFromPlacement(rects, placement, rtl);
+	let statefulPlacement = placement;
+	let resetCount = 0;
+	const middlewareData = {};
+	for (let i = 0; i < middleware.length; i++) {
+		const currentMiddleware = middleware[i];
+		if (!currentMiddleware) continue;
+		const { name, fn } = currentMiddleware;
+		const { x: nextX, y: nextY, data, reset } = await fn({
+			x,
+			y,
+			initialPlacement: placement,
+			placement: statefulPlacement,
+			strategy,
+			middlewareData,
+			rects,
+			platform: platformWithDetectOverflow,
+			elements: {
+				reference,
+				floating
+			}
+		});
+		x = nextX != null ? nextX : x;
+		y = nextY != null ? nextY : y;
+		middlewareData[name] = {
+			...middlewareData[name],
+			...data
+		};
+		if (reset && resetCount < MAX_RESET_COUNT) {
+			resetCount++;
+			if (typeof reset === "object") {
+				if (reset.placement) statefulPlacement = reset.placement;
+				if (reset.rects) rects = reset.rects === true ? await platform.getElementRects({
+					reference,
+					floating,
+					strategy
+				}) : reset.rects;
+				({x, y} = computeCoordsFromPlacement(rects, statefulPlacement, rtl));
+			}
+			i = -1;
+		}
+	}
+	return {
+		x,
+		y,
+		placement: statefulPlacement,
+		strategy,
+		middlewareData
+	};
+};
+/**
+* Optimizes the visibility of the floating element by flipping the `placement`
+* in order to keep it in view when the preferred placement(s) will overflow the
+* clipping boundary. Alternative to `autoPlacement`.
+* @see https://floating-ui.com/docs/flip
+*/
+var flip$1 = function(options) {
+	if (options === void 0) options = {};
+	return {
+		name: "flip",
+		options,
+		async fn(state) {
+			var _middlewareData$arrow, _middlewareData$flip;
+			const { placement, middlewareData, rects, initialPlacement, platform, elements } = state;
+			const { mainAxis: checkMainAxis = true, crossAxis: checkCrossAxis = true, fallbackPlacements: specifiedFallbackPlacements, fallbackStrategy = "bestFit", fallbackAxisSideDirection = "none", flipAlignment = true, ...detectOverflowOptions } = evaluate(options, state);
+			if ((_middlewareData$arrow = middlewareData.arrow) != null && _middlewareData$arrow.alignmentOffset) return {};
+			const side = getSide(placement);
+			const initialSideAxis = getSideAxis(initialPlacement);
+			const isBasePlacement = getSide(initialPlacement) === initialPlacement;
+			const rtl = await (platform.isRTL == null ? void 0 : platform.isRTL(elements.floating));
+			const fallbackPlacements = specifiedFallbackPlacements || (isBasePlacement || !flipAlignment ? [getOppositePlacement(initialPlacement)] : getExpandedPlacements(initialPlacement));
+			const hasFallbackAxisSideDirection = fallbackAxisSideDirection !== "none";
+			if (!specifiedFallbackPlacements && hasFallbackAxisSideDirection) fallbackPlacements.push(...getOppositeAxisPlacements(initialPlacement, flipAlignment, fallbackAxisSideDirection, rtl));
+			const placements = [initialPlacement, ...fallbackPlacements];
+			const overflow = await platform.detectOverflow(state, detectOverflowOptions);
+			const overflows = [];
+			let overflowsData = ((_middlewareData$flip = middlewareData.flip) == null ? void 0 : _middlewareData$flip.overflows) || [];
+			if (checkMainAxis) overflows.push(overflow[side]);
+			if (checkCrossAxis) {
+				const sides = getAlignmentSides(placement, rects, rtl);
+				overflows.push(overflow[sides[0]], overflow[sides[1]]);
+			}
+			overflowsData = [...overflowsData, {
+				placement,
+				overflows
+			}];
+			if (!overflows.every((side) => side <= 0)) {
+				var _middlewareData$flip2, _overflowsData$filter;
+				const nextIndex = (((_middlewareData$flip2 = middlewareData.flip) == null ? void 0 : _middlewareData$flip2.index) || 0) + 1;
+				const nextPlacement = placements[nextIndex];
+				if (nextPlacement) {
+					if (!(checkCrossAxis === "alignment" ? initialSideAxis !== getSideAxis(nextPlacement) : false) || overflowsData.every((d) => getSideAxis(d.placement) === initialSideAxis ? d.overflows[0] > 0 : true)) return {
+						data: {
+							index: nextIndex,
+							overflows: overflowsData
+						},
+						reset: { placement: nextPlacement }
+					};
+				}
+				let resetPlacement = (_overflowsData$filter = overflowsData.filter((d) => d.overflows[0] <= 0).sort((a, b) => a.overflows[1] - b.overflows[1])[0]) == null ? void 0 : _overflowsData$filter.placement;
+				if (!resetPlacement) switch (fallbackStrategy) {
+					case "bestFit": {
+						var _overflowsData$filter2;
+						const placement = (_overflowsData$filter2 = overflowsData.filter((d) => {
+							if (hasFallbackAxisSideDirection) {
+								const currentSideAxis = getSideAxis(d.placement);
+								return currentSideAxis === initialSideAxis || currentSideAxis === "y";
+							}
+							return true;
+						}).map((d) => [d.placement, d.overflows.filter((overflow) => overflow > 0).reduce((acc, overflow) => acc + overflow, 0)]).sort((a, b) => a[1] - b[1])[0]) == null ? void 0 : _overflowsData$filter2[0];
+						if (placement) resetPlacement = placement;
+						break;
+					}
+					case "initialPlacement": resetPlacement = initialPlacement;
+				}
+				if (placement !== resetPlacement) return { reset: { placement: resetPlacement } };
+			}
+			return {};
+		}
+	};
+};
+var originSides = /*#__PURE__*/ new Set(["left", "top"]);
+async function convertValueToCoords(state, options) {
+	const { placement, platform, elements } = state;
+	const rtl = await (platform.isRTL == null ? void 0 : platform.isRTL(elements.floating));
+	const side = getSide(placement);
+	const alignment = getAlignment(placement);
+	const isVertical = getSideAxis(placement) === "y";
+	const mainAxisMulti = originSides.has(side) ? -1 : 1;
+	const crossAxisMulti = rtl && isVertical ? -1 : 1;
+	const rawValue = evaluate(options, state);
+	let { mainAxis, crossAxis, alignmentAxis } = typeof rawValue === "number" ? {
+		mainAxis: rawValue,
+		crossAxis: 0,
+		alignmentAxis: null
+	} : {
+		mainAxis: rawValue.mainAxis || 0,
+		crossAxis: rawValue.crossAxis || 0,
+		alignmentAxis: rawValue.alignmentAxis
+	};
+	if (alignment && typeof alignmentAxis === "number") crossAxis = alignment === "end" ? alignmentAxis * -1 : alignmentAxis;
+	return isVertical ? {
+		x: crossAxis * crossAxisMulti,
+		y: mainAxis * mainAxisMulti
+	} : {
+		x: mainAxis * mainAxisMulti,
+		y: crossAxis * crossAxisMulti
+	};
+}
+/**
+* Modifies the placement by translating the floating element along the
+* specified axes.
+* A number (shorthand for `mainAxis` or distance), or an axes configuration
+* object may be passed.
+* @see https://floating-ui.com/docs/offset
+*/
+var offset$1 = function(options) {
+	if (options === void 0) options = 0;
+	return {
+		name: "offset",
+		options,
+		async fn(state) {
+			var _middlewareData$offse, _middlewareData$arrow;
+			const { x, y, placement, middlewareData } = state;
+			const diffCoords = await convertValueToCoords(state, options);
+			if (placement === ((_middlewareData$offse = middlewareData.offset) == null ? void 0 : _middlewareData$offse.placement) && (_middlewareData$arrow = middlewareData.arrow) != null && _middlewareData$arrow.alignmentOffset) return {};
+			return {
+				x: x + diffCoords.x,
+				y: y + diffCoords.y,
+				data: {
+					...diffCoords,
+					placement
+				}
+			};
+		}
+	};
+};
+/**
+* Optimizes the visibility of the floating element by shifting it in order to
+* keep it in view when it will overflow the clipping boundary.
+* @see https://floating-ui.com/docs/shift
+*/
+var shift$1 = function(options) {
+	if (options === void 0) options = {};
+	return {
+		name: "shift",
+		options,
+		async fn(state) {
+			const { x, y, placement, platform } = state;
+			const { mainAxis: checkMainAxis = true, crossAxis: checkCrossAxis = false, limiter = { fn: (_ref) => {
+				let { x, y } = _ref;
+				return {
+					x,
+					y
+				};
+			} }, ...detectOverflowOptions } = evaluate(options, state);
+			const coords = {
+				x,
+				y
+			};
+			const overflow = await platform.detectOverflow(state, detectOverflowOptions);
+			const crossAxis = getSideAxis(placement);
+			const mainAxis = getOppositeAxis(crossAxis);
+			let mainAxisCoord = coords[mainAxis];
+			let crossAxisCoord = coords[crossAxis];
+			const clampCoord = (axis, coord) => clamp(coord + overflow[axis === "y" ? "top" : "left"], coord, coord - overflow[axis === "y" ? "bottom" : "right"]);
+			if (checkMainAxis) mainAxisCoord = clampCoord(mainAxis, mainAxisCoord);
+			if (checkCrossAxis) crossAxisCoord = clampCoord(crossAxis, crossAxisCoord);
+			const limitedCoords = limiter.fn({
+				...state,
+				[mainAxis]: mainAxisCoord,
+				[crossAxis]: crossAxisCoord
+			});
+			return {
+				...limitedCoords,
+				data: {
+					x: limitedCoords.x - x,
+					y: limitedCoords.y - y,
+					enabled: {
+						[mainAxis]: checkMainAxis,
+						[crossAxis]: checkCrossAxis
+					}
+				}
+			};
+		}
+	};
+};
+//#endregion
+//#region ../../node_modules/.pnpm/@floating-ui+utils@0.2.12/node_modules/@floating-ui/utils/dist/floating-ui.utils.dom.mjs
+function hasWindow() {
+	return typeof window !== "undefined";
+}
+function getNodeName(node) {
+	if (isNode(node)) return (node.nodeName || "").toLowerCase();
+	return "#document";
+}
+function getWindow(node) {
+	var _node$ownerDocument;
+	return (node == null || (_node$ownerDocument = node.ownerDocument) == null ? void 0 : _node$ownerDocument.defaultView) || window;
+}
+function getDocumentElement(node) {
+	var _ref;
+	return (_ref = (isNode(node) ? node.ownerDocument : node.document) || window.document) == null ? void 0 : _ref.documentElement;
+}
+function isNode(value) {
+	if (!hasWindow()) return false;
+	return value instanceof Node || value instanceof getWindow(value).Node;
+}
+function isElement(value) {
+	if (!hasWindow()) return false;
+	return value instanceof Element || value instanceof getWindow(value).Element;
+}
+function isHTMLElement(value) {
+	if (!hasWindow()) return false;
+	return value instanceof HTMLElement || value instanceof getWindow(value).HTMLElement;
+}
+function isShadowRoot(value) {
+	if (!hasWindow() || typeof ShadowRoot === "undefined") return false;
+	return value instanceof ShadowRoot || value instanceof getWindow(value).ShadowRoot;
+}
+function isOverflowElement(element) {
+	const { overflow, overflowX, overflowY, display } = getComputedStyle$1(element);
+	return /auto|scroll|overlay|hidden|clip/.test(overflow + overflowY + overflowX) && display !== "inline" && display !== "contents";
+}
+function isTableElement(element) {
+	return /^(table|td|th)$/.test(getNodeName(element));
+}
+function isTopLayer(element) {
+	try {
+		if (element.matches(":popover-open")) return true;
+	} catch (_e) {}
+	try {
+		return element.matches(":modal");
+	} catch (_e) {
+		return false;
+	}
+}
+var willChangeRe = /transform|translate|scale|rotate|perspective|filter/;
+var containRe = /paint|layout|strict|content/;
+var isNotNone = (value) => !!value && value !== "none";
+var isWebKitValue;
+function isContainingBlock(elementOrCss) {
+	const css = isElement(elementOrCss) ? getComputedStyle$1(elementOrCss) : elementOrCss;
+	return isNotNone(css.transform) || isNotNone(css.translate) || isNotNone(css.scale) || isNotNone(css.rotate) || isNotNone(css.perspective) || !isWebKit() && (isNotNone(css.backdropFilter) || isNotNone(css.filter)) || willChangeRe.test(css.willChange || "") || containRe.test(css.contain || "");
+}
+function getContainingBlock(element) {
+	let currentNode = getParentNode(element);
+	while (isHTMLElement(currentNode) && !isLastTraversableNode(currentNode)) {
+		if (isContainingBlock(currentNode)) return currentNode;
+		else if (isTopLayer(currentNode)) return null;
+		currentNode = getParentNode(currentNode);
+	}
+	return null;
+}
+function isWebKit() {
+	if (isWebKitValue == null) isWebKitValue = typeof CSS !== "undefined" && CSS.supports && CSS.supports("-webkit-backdrop-filter", "none");
+	return isWebKitValue;
+}
+function isLastTraversableNode(node) {
+	return /^(html|body|#document)$/.test(getNodeName(node));
+}
+function getComputedStyle$1(element) {
+	return getWindow(element).getComputedStyle(element);
+}
+function getNodeScroll(element) {
+	if (isElement(element)) return {
+		scrollLeft: element.scrollLeft,
+		scrollTop: element.scrollTop
+	};
+	return {
+		scrollLeft: element.scrollX,
+		scrollTop: element.scrollY
+	};
+}
+function getParentNode(node) {
+	if (getNodeName(node) === "html") return node;
+	const result = node.assignedSlot || node.parentNode || isShadowRoot(node) && node.host || getDocumentElement(node);
+	return isShadowRoot(result) ? result.host : result;
+}
+function getNearestOverflowAncestor(node) {
+	const parentNode = getParentNode(node);
+	if (isLastTraversableNode(parentNode)) return (node.ownerDocument || node).body;
+	if (isHTMLElement(parentNode) && isOverflowElement(parentNode)) return parentNode;
+	return getNearestOverflowAncestor(parentNode);
+}
+function getOverflowAncestors(node, list, traverseIframes) {
+	var _node$ownerDocument2;
+	if (list === void 0) list = [];
+	if (traverseIframes === void 0) traverseIframes = true;
+	const scrollableAncestor = getNearestOverflowAncestor(node);
+	const isBody = scrollableAncestor === ((_node$ownerDocument2 = node.ownerDocument) == null ? void 0 : _node$ownerDocument2.body);
+	const win = getWindow(scrollableAncestor);
+	if (isBody) {
+		const frameElement = getFrameElement(win);
+		return list.concat(win, win.visualViewport || [], isOverflowElement(scrollableAncestor) ? scrollableAncestor : [], frameElement && traverseIframes ? getOverflowAncestors(frameElement) : []);
+	} else return list.concat(scrollableAncestor, getOverflowAncestors(scrollableAncestor, [], traverseIframes));
+}
+function getFrameElement(win) {
+	return win.parent && Object.getPrototypeOf(win.parent) ? win.frameElement : null;
+}
+//#endregion
+//#region ../../node_modules/.pnpm/@floating-ui+dom@1.8.0/node_modules/@floating-ui/dom/dist/floating-ui.dom.mjs
+function getCssDimensions(element) {
+	const css = getComputedStyle$1(element);
+	let width = parseFloat(css.width) || 0;
+	let height = parseFloat(css.height) || 0;
+	const hasOffset = isHTMLElement(element);
+	const offsetWidth = hasOffset ? element.offsetWidth : width;
+	const offsetHeight = hasOffset ? element.offsetHeight : height;
+	const shouldFallback = round(width) !== offsetWidth || round(height) !== offsetHeight;
+	if (shouldFallback) {
+		width = offsetWidth;
+		height = offsetHeight;
+	}
+	return {
+		width,
+		height,
+		$: shouldFallback
+	};
+}
+function unwrapElement(element) {
+	return !isElement(element) ? element.contextElement : element;
+}
+function getScale(element) {
+	const domElement = unwrapElement(element);
+	if (!isHTMLElement(domElement)) return createCoords(1);
+	const rect = domElement.getBoundingClientRect();
+	const { width, height, $ } = getCssDimensions(domElement);
+	let x = ($ ? round(rect.width) : rect.width) / width;
+	let y = ($ ? round(rect.height) : rect.height) / height;
+	if (!x || !Number.isFinite(x)) x = 1;
+	if (!y || !Number.isFinite(y)) y = 1;
+	return {
+		x,
+		y
+	};
+}
+var noOffsets = /*#__PURE__*/ createCoords(0);
+function getVisualOffsets(element) {
+	const win = getWindow(element);
+	if (!isWebKit() || !win.visualViewport) return noOffsets;
+	return {
+		x: win.visualViewport.offsetLeft,
+		y: win.visualViewport.offsetTop
+	};
+}
+function shouldAddVisualOffsets(element, isFixed, floatingOffsetParent) {
+	if (isFixed === void 0) isFixed = false;
+	return !!floatingOffsetParent && isFixed && floatingOffsetParent === getWindow(element);
+}
+function getBoundingClientRect(element, includeScale, isFixedStrategy, offsetParent) {
+	if (includeScale === void 0) includeScale = false;
+	if (isFixedStrategy === void 0) isFixedStrategy = false;
+	const clientRect = element.getBoundingClientRect();
+	const domElement = unwrapElement(element);
+	let scale = createCoords(1);
+	if (includeScale) {
+		if (offsetParent) {
+			if (isElement(offsetParent)) scale = getScale(offsetParent);
+		} else scale = getScale(element);
+	}
+	const visualOffsets = shouldAddVisualOffsets(domElement, isFixedStrategy, offsetParent) ? getVisualOffsets(domElement) : createCoords(0);
+	let x = (clientRect.left + visualOffsets.x) / scale.x;
+	let y = (clientRect.top + visualOffsets.y) / scale.y;
+	let width = clientRect.width / scale.x;
+	let height = clientRect.height / scale.y;
+	if (domElement && offsetParent) {
+		const win = getWindow(domElement);
+		const offsetWin = isElement(offsetParent) ? getWindow(offsetParent) : offsetParent;
+		let currentWin = win;
+		let currentIFrame = getFrameElement(currentWin);
+		while (currentIFrame && offsetWin !== currentWin) {
+			const iframeScale = getScale(currentIFrame);
+			const iframeRect = currentIFrame.getBoundingClientRect();
+			const css = getComputedStyle$1(currentIFrame);
+			const left = iframeRect.left + (currentIFrame.clientLeft + parseFloat(css.paddingLeft)) * iframeScale.x;
+			const top = iframeRect.top + (currentIFrame.clientTop + parseFloat(css.paddingTop)) * iframeScale.y;
+			x *= iframeScale.x;
+			y *= iframeScale.y;
+			width *= iframeScale.x;
+			height *= iframeScale.y;
+			x += left;
+			y += top;
+			currentWin = getWindow(currentIFrame);
+			currentIFrame = getFrameElement(currentWin);
+		}
+	}
+	return rectToClientRect({
+		width,
+		height,
+		x,
+		y
+	});
+}
+function getWindowScrollBarX(element, rect) {
+	const leftScroll = getNodeScroll(element).scrollLeft;
+	if (!rect) return getBoundingClientRect(getDocumentElement(element)).left + leftScroll;
+	return rect.left + leftScroll;
+}
+function getHTMLOffset(documentElement, scroll) {
+	const htmlRect = documentElement.getBoundingClientRect();
+	return {
+		x: htmlRect.left + scroll.scrollLeft - getWindowScrollBarX(documentElement, htmlRect),
+		y: htmlRect.top + scroll.scrollTop
+	};
+}
+function convertOffsetParentRelativeRectToViewportRelativeRect(_ref) {
+	let { elements, rect, offsetParent, strategy } = _ref;
+	const isFixed = strategy === "fixed";
+	const documentElement = getDocumentElement(offsetParent);
+	const topLayer = elements ? isTopLayer(elements.floating) : false;
+	if (offsetParent === documentElement || topLayer && isFixed) return rect;
+	let scroll = {
+		scrollLeft: 0,
+		scrollTop: 0
+	};
+	let scale = createCoords(1);
+	const offsets = createCoords(0);
+	const isOffsetParentAnElement = isHTMLElement(offsetParent);
+	if (isOffsetParentAnElement || !isFixed) {
+		if (getNodeName(offsetParent) !== "body" || isOverflowElement(documentElement)) scroll = getNodeScroll(offsetParent);
+		if (isOffsetParentAnElement) {
+			const offsetRect = getBoundingClientRect(offsetParent);
+			scale = getScale(offsetParent);
+			offsets.x = offsetRect.x + offsetParent.clientLeft;
+			offsets.y = offsetRect.y + offsetParent.clientTop;
+		}
+	}
+	const htmlOffset = documentElement && !isOffsetParentAnElement && !isFixed ? getHTMLOffset(documentElement, scroll) : createCoords(0);
+	return {
+		width: rect.width * scale.x,
+		height: rect.height * scale.y,
+		x: rect.x * scale.x - scroll.scrollLeft * scale.x + offsets.x + htmlOffset.x,
+		y: rect.y * scale.y - scroll.scrollTop * scale.y + offsets.y + htmlOffset.y
+	};
+}
+function getClientRects(element) {
+	return element.getClientRects ? Array.from(element.getClientRects()) : [];
+}
+function getDocumentRect(html) {
+	const scroll = getNodeScroll(html);
+	const body = html.ownerDocument.body;
+	const width = max(html.scrollWidth, html.clientWidth, body.scrollWidth, body.clientWidth);
+	const height = max(html.scrollHeight, html.clientHeight, body.scrollHeight, body.clientHeight);
+	let x = -scroll.scrollLeft + getWindowScrollBarX(html);
+	const y = -scroll.scrollTop;
+	if (getComputedStyle$1(body).direction === "rtl") x += max(html.clientWidth, body.clientWidth) - width;
+	return {
+		width,
+		height,
+		x,
+		y
+	};
+}
+var SCROLLBAR_MAX = 25;
+function getViewportRect(element, strategy, rootBoundary) {
+	if (rootBoundary === void 0) rootBoundary = "viewport";
+	const isLayoutViewport = rootBoundary === "layoutViewport";
+	const win = getWindow(element);
+	const html = getDocumentElement(element);
+	const visualViewport = win.visualViewport;
+	let width = html.clientWidth;
+	let height = html.clientHeight;
+	let x = 0;
+	let y = 0;
+	if (visualViewport) {
+		const layoutRelativeClientCoords = !isWebKit() || strategy === "fixed";
+		if (isLayoutViewport) {
+			if (!layoutRelativeClientCoords) {
+				x = -visualViewport.offsetLeft;
+				y = -visualViewport.offsetTop;
+			}
+		} else {
+			width = visualViewport.width;
+			height = visualViewport.height;
+			if (layoutRelativeClientCoords) {
+				x = visualViewport.offsetLeft;
+				y = visualViewport.offsetTop;
+			}
+		}
+	}
+	if (getWindowScrollBarX(html) <= 0) {
+		const doc = html.ownerDocument;
+		const body = doc.body;
+		const bodyStyles = getComputedStyle(body);
+		const bodyMarginInline = doc.compatMode === "CSS1Compat" ? parseFloat(bodyStyles.marginLeft) + parseFloat(bodyStyles.marginRight) || 0 : 0;
+		const reservedWidth = Math.abs(html.clientWidth - body.clientWidth - bodyMarginInline);
+		const gutter = getComputedStyle(html).scrollbarGutter === "stable both-edges" ? reservedWidth / 2 : reservedWidth;
+		if (gutter <= SCROLLBAR_MAX) width -= gutter;
+	}
+	return {
+		width,
+		height,
+		x,
+		y
+	};
+}
+function getInnerBoundingClientRect(element, strategy) {
+	const clientRect = getBoundingClientRect(element, true, strategy === "fixed");
+	const top = clientRect.top + element.clientTop;
+	const left = clientRect.left + element.clientLeft;
+	const scale = getScale(element);
+	return {
+		width: element.clientWidth * scale.x,
+		height: element.clientHeight * scale.y,
+		x: left * scale.x,
+		y: top * scale.y
+	};
+}
+function getClientRectFromClippingAncestor(element, clippingAncestor, strategy) {
+	let rect;
+	if (clippingAncestor === "viewport" || clippingAncestor === "layoutViewport") rect = getViewportRect(element, strategy, clippingAncestor);
+	else if (clippingAncestor === "document") rect = getDocumentRect(getDocumentElement(element));
+	else if (isElement(clippingAncestor)) rect = getInnerBoundingClientRect(clippingAncestor, strategy);
+	else {
+		const visualOffsets = getVisualOffsets(element);
+		rect = {
+			x: clippingAncestor.x - visualOffsets.x,
+			y: clippingAncestor.y - visualOffsets.y,
+			width: clippingAncestor.width,
+			height: clippingAncestor.height
+		};
+	}
+	return rectToClientRect(rect);
+}
+function getClippingElementAncestors(element, cache) {
+	const cachedResult = cache.get(element);
+	if (cachedResult) return cachedResult;
+	let result = getOverflowAncestors(element, [], false).filter((el) => isElement(el) && getNodeName(el) !== "body");
+	let lastKeptComputedStyle = null;
+	const elementIsFixed = getComputedStyle$1(element).position === "fixed";
+	let currentNode = elementIsFixed ? getParentNode(element) : element;
+	while (isElement(currentNode) && !isLastTraversableNode(currentNode)) {
+		const computedStyle = getComputedStyle$1(currentNode);
+		const currentNodeIsContaining = isContainingBlock(currentNode);
+		const lastPosition = lastKeptComputedStyle ? lastKeptComputedStyle.position : elementIsFixed ? "fixed" : "";
+		if (!currentNodeIsContaining && (lastPosition === "fixed" || lastPosition === "absolute" && computedStyle.position === "static")) result = result.filter((ancestor) => ancestor !== currentNode);
+		else lastKeptComputedStyle = computedStyle;
+		currentNode = getParentNode(currentNode);
+	}
+	cache.set(element, result);
+	return result;
+}
+function getClippingRect(_ref) {
+	let { element, boundary, rootBoundary, strategy } = _ref;
+	const clippingAncestors = [...boundary === "clippingAncestors" ? isTopLayer(element) ? [] : getClippingElementAncestors(element, this._c) : [].concat(boundary), rootBoundary];
+	const firstRect = getClientRectFromClippingAncestor(element, clippingAncestors[0], strategy);
+	let top = firstRect.top;
+	let right = firstRect.right;
+	let bottom = firstRect.bottom;
+	let left = firstRect.left;
+	for (let i = 1; i < clippingAncestors.length; i++) {
+		const rect = getClientRectFromClippingAncestor(element, clippingAncestors[i], strategy);
+		top = max(rect.top, top);
+		right = min(rect.right, right);
+		bottom = min(rect.bottom, bottom);
+		left = max(rect.left, left);
+	}
+	return {
+		width: right - left,
+		height: bottom - top,
+		x: left,
+		y: top
+	};
+}
+function getDimensions(element) {
+	const { width, height } = getCssDimensions(element);
+	return {
+		width,
+		height
+	};
+}
+function getRectRelativeToOffsetParent(element, offsetParent, strategy) {
+	const isOffsetParentAnElement = isHTMLElement(offsetParent);
+	const documentElement = getDocumentElement(offsetParent);
+	const isFixed = strategy === "fixed";
+	const rect = getBoundingClientRect(element, true, isFixed, offsetParent);
+	let scroll = {
+		scrollLeft: 0,
+		scrollTop: 0
+	};
+	const offsets = createCoords(0);
+	if (isOffsetParentAnElement || !isFixed) {
+		if (getNodeName(offsetParent) !== "body" || isOverflowElement(documentElement)) scroll = getNodeScroll(offsetParent);
+		if (isOffsetParentAnElement) {
+			const offsetRect = getBoundingClientRect(offsetParent, true, isFixed, offsetParent);
+			offsets.x = offsetRect.x + offsetParent.clientLeft;
+			offsets.y = offsetRect.y + offsetParent.clientTop;
+		}
+	}
+	if (!isOffsetParentAnElement && documentElement) offsets.x = getWindowScrollBarX(documentElement);
+	const htmlOffset = documentElement && !isOffsetParentAnElement && !isFixed ? getHTMLOffset(documentElement, scroll) : createCoords(0);
+	return {
+		x: rect.left + scroll.scrollLeft - offsets.x - htmlOffset.x,
+		y: rect.top + scroll.scrollTop - offsets.y - htmlOffset.y,
+		width: rect.width,
+		height: rect.height
+	};
+}
+function isStaticPositioned(element) {
+	return getComputedStyle$1(element).position === "static";
+}
+function getTrueOffsetParent(element, polyfill) {
+	if (!isHTMLElement(element) || getComputedStyle$1(element).position === "fixed") return null;
+	if (polyfill) return polyfill(element);
+	let rawOffsetParent = element.offsetParent;
+	if (getDocumentElement(element) === rawOffsetParent) rawOffsetParent = rawOffsetParent.ownerDocument.body;
+	return rawOffsetParent;
+}
+function getOffsetParent(element, polyfill) {
+	const win = getWindow(element);
+	if (isTopLayer(element)) return win;
+	if (!isHTMLElement(element)) {
+		let svgOffsetParent = getParentNode(element);
+		while (svgOffsetParent && !isLastTraversableNode(svgOffsetParent)) {
+			if (isElement(svgOffsetParent) && !isStaticPositioned(svgOffsetParent)) return svgOffsetParent;
+			svgOffsetParent = getParentNode(svgOffsetParent);
+		}
+		return win;
+	}
+	let offsetParent = getTrueOffsetParent(element, polyfill);
+	while (offsetParent && isTableElement(offsetParent) && isStaticPositioned(offsetParent)) offsetParent = getTrueOffsetParent(offsetParent, polyfill);
+	if (offsetParent && isLastTraversableNode(offsetParent) && isStaticPositioned(offsetParent) && !isContainingBlock(offsetParent)) return win;
+	return offsetParent || getContainingBlock(element) || win;
+}
+var getElementRects = async function(data) {
+	const getOffsetParentFn = this.getOffsetParent || getOffsetParent;
+	const getDimensionsFn = this.getDimensions;
+	const floatingDimensions = await getDimensionsFn(data.floating);
+	return {
+		reference: getRectRelativeToOffsetParent(data.reference, await getOffsetParentFn(data.floating), data.strategy),
+		floating: {
+			x: 0,
+			y: 0,
+			width: floatingDimensions.width,
+			height: floatingDimensions.height
+		}
+	};
+};
+function isRTL(element) {
+	return getComputedStyle$1(element).direction === "rtl";
+}
+var platform = {
+	convertOffsetParentRelativeRectToViewportRelativeRect,
+	getDocumentElement,
+	getClippingRect,
+	getOffsetParent,
+	getElementRects,
+	getClientRects,
+	getDimensions,
+	getScale,
+	isElement,
+	isRTL
+};
+function rectsAreEqual(a, b) {
+	return a.x === b.x && a.y === b.y && a.width === b.width && a.height === b.height;
+}
+function observeMove(element, onMove, ancestorResize) {
+	let io = null;
+	let timeoutId;
+	const root = getDocumentElement(element);
+	function cleanup() {
+		var _io;
+		clearTimeout(timeoutId);
+		(_io = io) == null || _io.disconnect();
+		io = null;
+	}
+	function refresh(skip, threshold) {
+		if (skip === void 0) skip = false;
+		if (threshold === void 0) threshold = 1;
+		cleanup();
+		const elementRectForRootMargin = element.getBoundingClientRect();
+		const { left, top, width, height } = elementRectForRootMargin;
+		if (!skip) onMove();
+		if (!width || !height) return;
+		const insetTop = floor(top);
+		const insetRight = floor(root.clientWidth - (left + width));
+		const insetBottom = floor(root.clientHeight - (top + height));
+		const insetLeft = floor(left);
+		const options = {
+			rootMargin: -insetTop + "px " + -insetRight + "px " + -insetBottom + "px " + -insetLeft + "px",
+			threshold: max(0, min(1, threshold)) || 1
+		};
+		let isFirstUpdate = true;
+		function handleObserve(entries) {
+			const ratio = entries[0].intersectionRatio;
+			if (!rectsAreEqual(elementRectForRootMargin, element.getBoundingClientRect())) return refresh();
+			if (ratio !== threshold) {
+				if (!isFirstUpdate) return refresh();
+				if (!ratio) timeoutId = setTimeout(() => {
+					refresh(false, 1e-7);
+				}, 1e3);
+				else refresh(false, ratio);
+			}
+			isFirstUpdate = false;
+		}
+		try {
+			io = new IntersectionObserver(handleObserve, {
+				...options,
+				root: root.ownerDocument
+			});
+		} catch (_e) {
+			io = new IntersectionObserver(handleObserve, options);
+		}
+		io.observe(element);
+	}
+	const win = getWindow(element);
+	const handleResize = () => refresh(ancestorResize);
+	win.addEventListener("resize", handleResize);
+	refresh(true);
+	return () => {
+		win.removeEventListener("resize", handleResize);
+		cleanup();
+	};
+}
+/**
+* Automatically updates the position of the floating element when necessary.
+* Should only be called when the floating element is mounted on the DOM or
+* visible on the screen.
+* @returns cleanup function that should be invoked when the floating element is
+* removed from the DOM or hidden from the screen.
+* @see https://floating-ui.com/docs/autoUpdate
+*/
+function autoUpdate(reference, floating, update, options) {
+	if (options === void 0) options = {};
+	const { ancestorScroll = true, ancestorResize = true, elementResize = typeof ResizeObserver === "function", layoutShift = typeof IntersectionObserver === "function", animationFrame = false } = options;
+	const referenceEl = unwrapElement(reference);
+	const ancestors = ancestorScroll || ancestorResize ? [...referenceEl ? getOverflowAncestors(referenceEl) : [], ...floating ? getOverflowAncestors(floating) : []] : [];
+	ancestors.forEach((ancestor) => {
+		ancestorScroll && ancestor.addEventListener("scroll", update);
+		ancestorResize && ancestor.addEventListener("resize", update);
+	});
+	const cleanupIo = referenceEl && layoutShift ? observeMove(referenceEl, update, ancestorResize) : null;
+	let reobserveFrame = -1;
+	let resizeObserver = null;
+	if (elementResize) {
+		resizeObserver = new ResizeObserver((_ref) => {
+			let [firstEntry] = _ref;
+			if (firstEntry && firstEntry.target === referenceEl && resizeObserver && floating) {
+				resizeObserver.unobserve(floating);
+				cancelAnimationFrame(reobserveFrame);
+				reobserveFrame = requestAnimationFrame(() => {
+					var _resizeObserver;
+					(_resizeObserver = resizeObserver) == null || _resizeObserver.observe(floating);
+				});
+			}
+			update();
+		});
+		if (referenceEl && !animationFrame) resizeObserver.observe(referenceEl);
+		if (floating) resizeObserver.observe(floating);
+	}
+	let frameId;
+	let prevRefRect = animationFrame ? getBoundingClientRect(reference) : null;
+	if (animationFrame) frameLoop();
+	function frameLoop() {
+		const nextRefRect = getBoundingClientRect(reference);
+		if (prevRefRect && !rectsAreEqual(prevRefRect, nextRefRect)) update();
+		prevRefRect = nextRefRect;
+		frameId = requestAnimationFrame(frameLoop);
+	}
+	update();
+	return () => {
+		var _resizeObserver2;
+		ancestors.forEach((ancestor) => {
+			ancestorScroll && ancestor.removeEventListener("scroll", update);
+			ancestorResize && ancestor.removeEventListener("resize", update);
+		});
+		cleanupIo?.();
+		(_resizeObserver2 = resizeObserver) == null || _resizeObserver2.disconnect();
+		resizeObserver = null;
+		if (animationFrame) cancelAnimationFrame(frameId);
+	};
+}
+/**
+* Modifies the placement by translating the floating element along the
+* specified axes.
+* A number (shorthand for `mainAxis` or distance), or an axes configuration
+* object may be passed.
+* @see https://floating-ui.com/docs/offset
+*/
+var offset = offset$1;
+/**
+* Optimizes the visibility of the floating element by shifting it in order to
+* keep it in view when it will overflow the clipping boundary.
+* @see https://floating-ui.com/docs/shift
+*/
+var shift = shift$1;
+/**
+* Optimizes the visibility of the floating element by flipping the `placement`
+* in order to keep it in view when the preferred placement(s) will overflow the
+* clipping boundary. Alternative to `autoPlacement`.
+* @see https://floating-ui.com/docs/flip
+*/
+var flip = flip$1;
+/**
+* Computes the `x` and `y` coordinates that will place the floating element
+* next to a given reference element.
+*/
+var computePosition = (reference, floating, options) => {
+	const cache = /* @__PURE__ */ new Map();
+	const mergedOptions = options != null ? options : {};
+	const platformWithCache = {
+		...platform,
+		...mergedOptions.platform,
+		_c: cache
+	};
+	return computePosition$1(reference, floating, {
+		...mergedOptions,
+		platform: platformWithCache
+	});
+};
+var Tooltip_module_default = { tooltip: "_tooltip_mujji_1" };
+var Info_module_default = { info: "_info_1ol76_1" };
+//#endregion
+//#region src/components/basic/Info.tsx
+function Info$1({ text, className }) {
+	const referenceRef = A$2(null);
+	const floatingRef = A$2(null);
+	const [hovered, setHovered] = d$1(false);
+	const [focused, setFocused] = d$1(false);
+	const open = hovered || focused;
+	h(() => {
+		if (!open) return;
+		const reference = referenceRef.current;
+		const floating = floatingRef.current;
+		if (!reference || !floating) return;
+		const update = async () => {
+			const { x, y } = await computePosition(reference, floating, {
+				placement: "top",
+				middleware: [
+					offset(6),
+					flip(),
+					shift({ padding: 8 })
+				]
+			});
+			Object.assign(floating.style, {
+				left: `${x}px`,
+				top: `${y}px`,
+				visibility: "visible"
+			});
+		};
+		return autoUpdate(reference, floating, update);
+	}, [open]);
+	return /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u(Icon, {
+		ref: referenceRef,
+		name: "info",
+		tabIndex: 0,
+		onMouseEnter: () => setHovered(true),
+		onMouseLeave: () => setHovered(false),
+		onFocus: () => setFocused(true),
+		onBlur: () => setFocused(false),
+		className: clsx(Info_module_default["info"], className)
+	}), open && /* @__PURE__ */ u("span", {
+		ref: floatingRef,
+		role: "tooltip",
+		className: Tooltip_module_default["tooltip"],
+		style: { visibility: "hidden" },
+		children: text
+	})] });
+}
 //#endregion
 //#region src/components/candidate-details/metrics.ts
 function hasMetrics(metrics) {
@@ -8192,6 +9425,12 @@ function capitalize(value) {
 	return value.charAt(0).toUpperCase() + value.slice(1);
 }
 //#endregion
+//#region src/string/label.ts
+function countLabel(count, singular, plural) {
+	plural = plural ?? `${singular}s`;
+	return `${count} ${count === 1 ? singular : plural}`;
+}
+//#endregion
 //#region src/components/candidate-details/Metrics.tsx
 function Metrics(props) {
 	return /* @__PURE__ */ u(Table, {
@@ -8204,102 +9443,51 @@ function Metrics(props) {
 //#endregion
 //#region src/components/candidate-details/CandidateAggregatedEvaluation.module.scss
 var CandidateAggregatedEvaluation_module_default = {
-	"candidate-aggregated-evaluation": "_candidate-aggregated-evaluation_vc5t0_1",
-	"aggregated-score": "_aggregated-score_vc5t0_7",
-	"candidate-aggregated-evaluation-evaluation": "_candidate-aggregated-evaluation-evaluation_vc5t0_11",
-	"candidate-aggregated-evaluation-status": "_candidate-aggregated-evaluation-status_vc5t0_15",
-	"candidate-aggregated-evaluation-key": "_candidate-aggregated-evaluation-key_vc5t0_19"
+	"candidate-aggregated-evaluation": "_candidate-aggregated-evaluation_11vcn_1",
+	"candidate-aggregated-evaluation-summary": "_candidate-aggregated-evaluation-summary_11vcn_7",
+	"candidate-aggregated-evaluation-score": "_candidate-aggregated-evaluation-score_11vcn_11",
+	"candidate-aggregated-evaluation-evaluation": "_candidate-aggregated-evaluation-evaluation_11vcn_15",
+	"candidate-aggregated-evaluation-status": "_candidate-aggregated-evaluation-status_11vcn_19",
+	"candidate-aggregated-evaluation-key": "_candidate-aggregated-evaluation-key_11vcn_23"
 };
-//#endregion
-//#region src/components/basic/ExpandableList.module.scss
-var ExpandableList_module_default = {
-	"expandable-list-button-bar": "_expandable-list-button-bar_t4bfe_1",
-	"expandable-list-button-bar-content": "_expandable-list-button-bar-content_t4bfe_7"
-};
-//#endregion
-//#region src/components/basic/ExpandableList.tsx
-var INITIAL_VISIBLE_ITEM_COUNT = 4;
-var DEFAULT_VISIBLE_ITEM_COUNT_INCREMENT = 4;
-function ExpandableList(props) {
-	const { totalItems, initialVisibleItemCount = INITIAL_VISIBLE_ITEM_COUNT, visibleItemCountIncrement = DEFAULT_VISIBLE_ITEM_COUNT_INCREMENT, itemRenderer } = props;
-	const [visibleItemCount, setVisibleItemCount] = d$1(initialVisibleItemCount);
-	const onMoreClick = () => {
-		setVisibleItemCount(Math.min(visibleItemCount + visibleItemCountIncrement, totalItems));
-	};
-	const onLessClick = () => {
-		setVisibleItemCount(Math.max(visibleItemCount - visibleItemCountIncrement, initialVisibleItemCount));
-	};
-	const renderItems = () => {
-		return Array.from({ length: visibleItemCount }, (_, index) => {
-			return itemRenderer(index);
-		});
-	};
-	const renderCountLabel = () => {
-		return /* @__PURE__ */ u("span", { children: [
-			visibleItemCount,
-			" of ",
-			totalItems
-		] });
-	};
-	const hasMore = visibleItemCount < totalItems;
-	const hasLess = visibleItemCount > initialVisibleItemCount;
-	return /* @__PURE__ */ u("div", { children: [renderItems(), /* @__PURE__ */ u("div", {
-		className: ExpandableList_module_default["expandable-list-button-bar"],
-		children: /* @__PURE__ */ u("div", {
-			className: ExpandableList_module_default["expandable-list-button-bar-content"],
-			children: [
-				/* @__PURE__ */ u(LinkButton, {
-					label: "More",
-					disabled: !hasMore,
-					onClick: onMoreClick
-				}),
-				/* @__PURE__ */ u(MiddotSeparator, {}),
-				/* @__PURE__ */ u(LinkButton, {
-					label: "Less",
-					disabled: !hasLess,
-					onClick: onLessClick
-				}),
-				/* @__PURE__ */ u(MiddotSeparator, {}),
-				renderCountLabel()
-			]
-		})
-	})] });
-}
 //#endregion
 //#region src/components/candidate-details/CandidateAggregatedEvaluation.tsx
 function CandidateAggregatedEvaluation(props) {
-	const { aggregatedEvaluation } = props;
+	const { title, moreLocalStorageKey, aggregatedEvaluation } = props;
 	const { aggregatedScore, passedEvaluations, failedEvaluations } = aggregatedEvaluation;
 	const totalEvaluations = passedEvaluations.length + failedEvaluations.length;
-	const [moreEvaluations, setMoreEvaluations] = useLocalStorage(false, "moreCandidateAggregatedEvaluations");
+	const [more, setMore] = useLocalStorage(false, moreLocalStorageKey);
 	const responseToString = (response) => {
 		if (typeof response === "string") return response;
 		return stringify(response);
 	};
 	const renderSummary = () => {
-		return /* @__PURE__ */ u(S$1, { children: [
-			/* @__PURE__ */ u("span", { children: [
-				"Aggregated score:\xA0",
-				/* @__PURE__ */ u(Score, { score: aggregatedScore }),
-				/* @__PURE__ */ u(MiddotSeparator, {})
-			] }),
-			/* @__PURE__ */ u("span", {
-				className: "green",
-				children: [
-					passedEvaluations.length,
-					" passed",
+		return /* @__PURE__ */ u("span", {
+			className: CandidateAggregatedEvaluation_module_default["candidate-aggregated-evaluation-summary"],
+			children: [
+				/* @__PURE__ */ u("span", { children: [
+					"Aggregated score:\xA0",
+					/* @__PURE__ */ u(Score, { score: aggregatedScore }),
 					/* @__PURE__ */ u(MiddotSeparator, {})
-				]
-			}),
-			/* @__PURE__ */ u("span", {
-				className: "red",
-				children: [
-					failedEvaluations.length,
-					" failed",
-					/* @__PURE__ */ u(MiddotSeparator, {})
-				]
-			})
-		] });
+				] }),
+				/* @__PURE__ */ u("span", {
+					className: "green",
+					children: [
+						passedEvaluations.length,
+						" passed",
+						/* @__PURE__ */ u(MiddotSeparator, {})
+					]
+				}),
+				/* @__PURE__ */ u("span", {
+					className: "red",
+					children: [
+						failedEvaluations.length,
+						" failed",
+						/* @__PURE__ */ u(MiddotSeparator, {})
+					]
+				})
+			]
+		});
 	};
 	const renderDatasetEntry = (datasetEntry) => {
 		if (datasetEntry.vars == void 0) return;
@@ -8351,26 +9539,26 @@ function CandidateAggregatedEvaluation(props) {
 		return renderEvaluation(index, passedEvaluations.includes(evaluation) ? "passed" : "failed", evaluation);
 	};
 	return /* @__PURE__ */ u(ExpandableSection, {
-		title: "Training Evaluations",
-		expanded: moreEvaluations,
+		title,
+		expanded: more,
 		onToggle: () => {
-			setMoreEvaluations(!moreEvaluations);
+			setMore(!more);
 		},
 		children: [/* @__PURE__ */ u(ExpandableSection.Summary, { children: [renderSummary(), /* @__PURE__ */ u(LinkButton, {
-			label: "More...",
+			label: "More",
 			onClick: () => {
-				setMoreEvaluations(true);
+				setMore(true);
 			}
 		})] }), /* @__PURE__ */ u(ExpandableSection.Details, { children: /* @__PURE__ */ u("div", {
 			className: CandidateAggregatedEvaluation_module_default["candidate-aggregated-evaluation"],
 			children: [/* @__PURE__ */ u("div", {
-				className: CandidateAggregatedEvaluation_module_default["aggregated-score"],
+				className: CandidateAggregatedEvaluation_module_default["candidate-aggregated-evaluation-score"],
 				children: [
 					renderSummary(),
 					/* @__PURE__ */ u(LinkButton, {
-						label: "Less...",
+						label: "Less",
 						onClick: () => {
-							setMoreEvaluations(false);
+							setMore(false);
 						}
 					}),
 					hasMetrics(aggregatedEvaluation.aggregatedMetrics) && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("h2", { children: "Aggregated metrics" }), /* @__PURE__ */ u("p", { children: /* @__PURE__ */ u(Metrics, { metrics: aggregatedEvaluation.aggregatedMetrics }) })] })
@@ -8379,6 +9567,134 @@ function CandidateAggregatedEvaluation(props) {
 				totalItems: totalEvaluations,
 				itemRenderer: renderEvaluationItem
 			})]
+		}) })]
+	});
+}
+//#endregion
+//#region src/components/candidate-details/DatasetEntry.module.scss
+var DatasetEntry_module_default = { "dataset-entry-key": "_dataset-entry-key_1436g_1" };
+//#endregion
+//#region src/components/candidate-details/DatasetEntry.tsx
+function DatasetEntry(props) {
+	const { datasetEntry } = props;
+	const responseToString = (response) => {
+		if (typeof response === "string") return response;
+		return stringify(response);
+	};
+	const renderVariables = () => {
+		if (datasetEntry.vars == void 0) return;
+		return /* @__PURE__ */ u("p", { children: Object.keys(datasetEntry.vars).sort().map((key) => {
+			const value = datasetEntry.vars[key];
+			const valueString = typeof value === "object" ? JSON.stringify(value) : value.toString();
+			return /* @__PURE__ */ u("div", { children: [
+				/* @__PURE__ */ u("code", {
+					className: DatasetEntry_module_default["dataset-entry-key"],
+					children: key
+				}),
+				"\xA0",
+				valueString
+			] }, key);
+		}) });
+	};
+	return /* @__PURE__ */ u(S$1, { children: [
+		/* @__PURE__ */ u("h2", { children: [
+			"Dataset entry (",
+			datasetEntry.datasetEntryId,
+			")"
+		] }),
+		renderVariables(),
+		datasetEntry.expectedResponse && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("h2", { children: "Expected response" }), /* @__PURE__ */ u("p", { children: /* @__PURE__ */ u(Markdown, { content: responseToString(datasetEntry.expectedResponse) }) })] }),
+		datasetEntry.expectedResponseReasoning && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("h2", { children: "Expected response reasoning" }), /* @__PURE__ */ u("p", { children: datasetEntry.expectedResponseReasoning })] })
+	] });
+}
+//#endregion
+//#region src/components/candidate-details/CandidateAnalysis.module.scss
+var CandidateAnalysis_module_default = {
+	"candidate-analysis": "_candidate-analysis_1xahz_1",
+	"candidate-analysis-summary": "_candidate-analysis-summary_1xahz_5"
+};
+//#endregion
+//#region src/components/candidate-details/CandidateAnalysis.tsx
+function CandidateAnalysis(props) {
+	const { datasetEntries, analysis } = props;
+	const [more, setMore] = useLocalStorage(false, "moreCandidateAnalysis");
+	const renderList = (list) => {
+		return /* @__PURE__ */ u("p", { children: /* @__PURE__ */ u("ul", { children: list.map((item, index) => /* @__PURE__ */ u("li", { children: item }, index)) }) });
+	};
+	const renderSummary = () => {
+		return /* @__PURE__ */ u("span", {
+			className: CandidateAnalysis_module_default["candidate-analysis-summary"],
+			children: [
+				/* @__PURE__ */ u("span", { children: [countLabel(analysis.strengths.length, "strength"), /* @__PURE__ */ u(MiddotSeparator, {})] }),
+				/* @__PURE__ */ u("span", { children: [countLabel(analysis.recommendations.length, "recommendation"), /* @__PURE__ */ u(MiddotSeparator, {})] }),
+				/* @__PURE__ */ u("span", {
+					className: "red",
+					children: [countLabel(analysis.failedExampleAnalysis.length, "failed example"), /* @__PURE__ */ u(MiddotSeparator, {})]
+				})
+			]
+		});
+	};
+	const renderFailedExampleAnalysis = (failedExampleAnalysis) => {
+		const datasetEntry = props.datasetEntries.find((itr) => {
+			return itr.datasetEntryId === failedExampleAnalysis.datasetEntryId;
+		});
+		const regressionRisks = failedExampleAnalysis.regressionRisks;
+		return /* @__PURE__ */ u(S$1, { children: [
+			/* @__PURE__ */ u(Separator, {}),
+			/* @__PURE__ */ u(DatasetEntry, { datasetEntry }),
+			/* @__PURE__ */ u("h2", { children: "Response" }),
+			/* @__PURE__ */ u("p", { children: failedExampleAnalysis.response }),
+			/* @__PURE__ */ u("h2", { children: "Failure reason" }),
+			/* @__PURE__ */ u("p", { children: failedExampleAnalysis.failureReason }),
+			/* @__PURE__ */ u("h2", { children: "Plausible cause" }),
+			/* @__PURE__ */ u("p", { children: failedExampleAnalysis.plausibleCause }),
+			/* @__PURE__ */ u("h2", { children: "Missing conceptual distinction" }),
+			/* @__PURE__ */ u("p", { children: failedExampleAnalysis.missingConceptualDistinction }),
+			/* @__PURE__ */ u("h2", { children: "General rule" }),
+			/* @__PURE__ */ u("p", { children: failedExampleAnalysis.generalRule }),
+			regressionRisks.length > 0 && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("h2", { children: "Regression risks" }), renderList(regressionRisks)] })
+		] });
+	};
+	const failedExampleAnalysis = analysis.failedExampleAnalysis.filter((itr) => {
+		return datasetEntries.some((entry) => {
+			return entry.datasetEntryId === itr.datasetEntryId;
+		});
+	});
+	const renderFailedExampleAnalysisItem = (index) => {
+		const failedExampleAnalysis = analysis.failedExampleAnalysis[index];
+		return renderFailedExampleAnalysis(failedExampleAnalysis);
+	};
+	return /* @__PURE__ */ u(ExpandableSection, {
+		title: "Training Analysis",
+		expanded: more,
+		onToggle: () => {
+			setMore(!more);
+		},
+		children: [/* @__PURE__ */ u(ExpandableSection.Summary, { children: [renderSummary(), /* @__PURE__ */ u(LinkButton, {
+			label: "More",
+			onClick: () => {
+				setMore(true);
+			}
+		})] }), /* @__PURE__ */ u(ExpandableSection.Details, { children: /* @__PURE__ */ u("div", {
+			className: CandidateAnalysis_module_default["candidate-analysis"],
+			children: [
+				renderSummary(),
+				/* @__PURE__ */ u(LinkButton, {
+					label: "Less",
+					onClick: () => {
+						setMore(false);
+					}
+				}),
+				/* @__PURE__ */ u("h2", { children: "Strengths" }),
+				renderList(analysis.strengths),
+				/* @__PURE__ */ u("h2", { children: "Recommendations" }),
+				renderList(analysis.recommendations),
+				/* @__PURE__ */ u("h1", { children: "Failed example analysis" }),
+				/* @__PURE__ */ u(ExpandableList, {
+					totalItems: failedExampleAnalysis.length,
+					itemRenderer: renderFailedExampleAnalysisItem
+				})
+			]
 		}) })]
 	});
 }
@@ -8445,6 +9761,7 @@ var CandidateDetails_module_default = {
 //#region src/components/candidate-details/CandidateDetails.tsx
 function CandidateDetails(props) {
 	const { data, visible, onCloseClick } = props;
+	const [moreMetadata, setMoreMetadata] = useLocalStorage(false, "moreCandidateMetadata");
 	const [moreCandidateChanges, setMoreCandidateChanges] = useLocalStorage(false, "moreCandidateChanges");
 	const renderModules = () => {
 		return Object.keys(data?.candidate.modules || {}).sort().map((name) => {
@@ -8453,6 +9770,15 @@ function CandidateDetails(props) {
 				name,
 				module: module.content
 			}, name);
+		});
+	};
+	const renderMetadataSummary = () => {
+		return /* @__PURE__ */ u("span", { children: [countLabel(Object.keys(data?.candidate.metadata ?? {}).length, "metadata entry", "metadata entries"), /* @__PURE__ */ u(MiddotSeparator, {})] });
+	};
+	const renderChangesSummary = () => {
+		return /* @__PURE__ */ u("span", {
+			className: "text-muted",
+			children: [data?.changesSummary, "\xA0"]
 		});
 	};
 	return /* @__PURE__ */ u(Panel, {
@@ -8465,21 +9791,43 @@ function CandidateDetails(props) {
 		children: !!data && /* @__PURE__ */ u(S$1, { children: [
 			/* @__PURE__ */ u(Header, { title: "Modules" }),
 			renderModules(),
+			data?.candidate.metadata && /* @__PURE__ */ u(ExpandableSection, {
+				title: "Metadata",
+				expanded: moreMetadata,
+				onToggle: () => {
+					setMoreMetadata(!moreMetadata);
+				},
+				children: [/* @__PURE__ */ u(ExpandableSection.Summary, { children: [renderMetadataSummary(), /* @__PURE__ */ u(LinkButton, {
+					label: "More",
+					onClick: () => {
+						setMoreMetadata(true);
+					}
+				})] }), /* @__PURE__ */ u(ExpandableSection.Details, { children: [
+					renderMetadataSummary(),
+					/* @__PURE__ */ u(LinkButton, {
+						label: "Less",
+						onClick: () => {
+							setMoreMetadata(false);
+						}
+					}),
+					/* @__PURE__ */ u(Metadata, { metadata: data.candidate.metadata })
+				] })]
+			}),
 			data?.changes && data?.changesSummary && /* @__PURE__ */ u(ExpandableSection, {
 				title: "Candidate Changes",
 				expanded: moreCandidateChanges,
 				onToggle: () => {
 					setMoreCandidateChanges(!moreCandidateChanges);
 				},
-				children: [/* @__PURE__ */ u(ExpandableSection.Summary, { children: [/* @__PURE__ */ u("span", { children: [data.changesSummary, "\xA0"] }), /* @__PURE__ */ u(LinkButton, {
-					label: "More...",
+				children: [/* @__PURE__ */ u(ExpandableSection.Summary, { children: [renderChangesSummary(), /* @__PURE__ */ u(LinkButton, {
+					label: "More",
 					onClick: () => {
 						setMoreCandidateChanges(true);
 					}
 				})] }), /* @__PURE__ */ u(ExpandableSection.Details, { children: [
-					/* @__PURE__ */ u("span", { children: [data.changesSummary, "\xA0"] }),
+					renderChangesSummary(),
 					/* @__PURE__ */ u(LinkButton, {
-						label: "Less...",
+						label: "Less",
 						onClick: () => {
 							setMoreCandidateChanges(false);
 						}
@@ -8490,14 +9838,29 @@ function CandidateDetails(props) {
 					})
 				] })]
 			}),
-			data.trainingAggregatedEvaluation && /* @__PURE__ */ u(CandidateAggregatedEvaluation, { aggregatedEvaluation: data.trainingAggregatedEvaluation })
+			data.validationAggregatedEvaluation && /* @__PURE__ */ u(CandidateAggregatedEvaluation, {
+				title: "Validation Evaluations",
+				moreLocalStorageKey: "moreCandidateValidationEvaluations",
+				aggregatedEvaluation: data.validationAggregatedEvaluation
+			}),
+			data.trainingAggregatedEvaluation && /* @__PURE__ */ u(CandidateAggregatedEvaluation, {
+				title: "Training Evaluations",
+				moreLocalStorageKey: "moreCandidateTrainingEvaluations",
+				aggregatedEvaluation: data.trainingAggregatedEvaluation
+			}),
+			data.trainingAnalysis && /* @__PURE__ */ u(CandidateAnalysis, {
+				datasetEntries: data.datasetEntries,
+				analysis: data.trainingAnalysis
+			})
 		] })
 	});
 }
 //#endregion
 //#region src/components/process-view/process-view-utils.ts
-function getCandidateDetailsData(datasetEntries, candidates, iterations, selectedCandidateId) {
+function getCandidateDetailsData(rpeInsights, selectedCandidateId) {
 	if (selectedCandidateId === null) return;
+	const { dataset, candidates, iterationHistory } = rpeInsights;
+	const datasetEntries = dataset.entries;
 	const findCandidateById = (candidateId) => {
 		const candidate = candidates.find((candidate) => {
 			return candidate.candidateId === candidateId;
@@ -8510,24 +9873,25 @@ function getCandidateDetailsData(datasetEntries, candidates, iterations, selecte
 			return aggregatedEvaluation.candidateRef.candidateId === candidateId;
 		});
 	};
-	const findAnalysisByCandidateId = (iteration, candidateId) => {
-		return iteration.trainingAnalyses.find((analysis) => {
+	const findAnalysisByCandidateId = (analyses, candidateId) => {
+		return analyses.find((analysis) => {
 			return analysis.candidateRef.candidateId === candidateId;
 		});
 	};
-	const firstIteration = iterations[0];
-	const seedCandidateRef = firstIteration.candidateRefs.find((candidateRef) => {
+	const firstIteration = iterationHistory[0];
+	const seedCandidateRef = (firstIteration.candidateRefs ?? []).find((candidateRef) => {
 		return candidateRef.candidateId === selectedCandidateId;
 	});
 	if (seedCandidateRef !== void 0) return {
 		datasetEntries,
 		candidate: findCandidateById(seedCandidateRef.candidateId),
+		validationAggregatedEvaluation: findAggregatedEvaluationByCandidateId(rpeInsights.aggregatedEvaluations, selectedCandidateId),
 		trainingAggregatedEvaluation: findAggregatedEvaluationByCandidateId(firstIteration.trainingAggregatedEvaluations, selectedCandidateId),
-		analysis: findAnalysisByCandidateId(firstIteration, selectedCandidateId)
+		trainingAnalysis: findAnalysisByCandidateId(firstIteration.trainingAnalyses, selectedCandidateId)
 	};
 	let data;
-	for (const iteration of iterations) {
-		const candidate = iteration.generatedCandidates.find((candidate) => {
+	for (const iteration of iterationHistory) {
+		const candidate = iteration.generatedCandidates?.find((candidate) => {
 			return candidate.candidateRef.candidateId === selectedCandidateId;
 		});
 		if (candidate !== void 0) {
@@ -8536,8 +9900,9 @@ function getCandidateDetailsData(datasetEntries, candidates, iterations, selecte
 				candidate: findCandidateById(candidate.candidateRef.candidateId),
 				changesSummary: candidate.changesSummary,
 				changes: candidate.changes,
+				validationAggregatedEvaluation: findAggregatedEvaluationByCandidateId(rpeInsights.aggregatedEvaluations, selectedCandidateId),
 				trainingAggregatedEvaluation: findAggregatedEvaluationByCandidateId(iteration.trainingAggregatedEvaluations, selectedCandidateId),
-				analysis: findAnalysisByCandidateId(iteration, selectedCandidateId)
+				trainingAnalysis: findAnalysisByCandidateId(iteration.trainingAnalyses, selectedCandidateId)
 			};
 			break;
 		}
@@ -12580,18 +13945,18 @@ function sumRPEInsightsUsage(insights) {
 		iteration.trainingAnalyses.forEach((analysis) => {
 			pushLLMUsage(analysis.usage);
 		});
-		iteration.generatedCandidates.forEach((candidate) => {
+		iteration.generatedCandidates?.forEach((candidate) => {
 			pushLLMUsage(candidate.usage);
 		});
-		iteration.candidateResponses.forEach((response) => {
+		iteration.candidateResponses?.forEach((response) => {
 			pushLLMUsage(response.usage);
 		});
-		iteration.candidateEvaluations.forEach((evaluation) => {
+		iteration.candidateEvaluations?.forEach((evaluation) => {
 			evaluation.evaluatorOutputs.forEach((output) => {
 				pushLLMUsage(output.usage);
 			});
 		});
-		iteration.candidateAggregatedEvaluations.forEach((aggregatedEvaluation) => {
+		iteration.candidateAggregatedEvaluations?.forEach((aggregatedEvaluation) => {
 			pushLLMUsage(aggregatedEvaluation.usage);
 		});
 	});
@@ -12680,9 +14045,10 @@ object({
 });
 SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_INSTRUCTIONS.minimalFix, SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_INSTRUCTIONS.structuralRedesign, SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_INSTRUCTIONS.explicitDecisionRules, SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_INSTRUCTIONS.conceptualDistinctions;
 var InfoPanel_module_default = {
-	"info-panel": "_info-panel_1rave_1",
-	visible: "_visible_1rave_5",
-	hidden: "_hidden_1rave_11"
+	info: "_info_h9woi_1",
+	"info-panel": "_info-panel_h9woi_7",
+	visible: "_visible_h9woi_11",
+	hidden: "_hidden_h9woi_17"
 };
 //#endregion
 //#region src/components/tools/InfoPanel.tsx
@@ -12702,22 +14068,29 @@ function InfoPanel(props) {
 		[InfoPanel_module_default["hidden"]]: !visible
 	});
 	const renderRPEProperties = (title, name, rpeProperties) => {
-		const propertiesRows = (rpeProperties ?? []).map((property) => [
-			camelCaseToSentenceCase(property.key),
-			property.value,
-			property.description
-		]);
+		const propertiesRows = (rpeProperties ?? []).map((property) => {
+			return [
+				property.description ? /* @__PURE__ */ u(Info$1, {
+					text: property.description,
+					className: InfoPanel_module_default["info"]
+				}) : "-",
+				camelCaseToSentenceCase(property.key),
+				property.value
+			];
+		});
 		return /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("h2", { children: title }), /* @__PURE__ */ u("p", { children: /* @__PURE__ */ u(Table, {
 			header: [
+				"",
 				"Key",
-				"Value",
-				"Description"
+				"Value"
 			],
 			rows: [[
+				"",
 				"Name",
-				name,
-				"Name of the component."
-			], ...propertiesRows]
+				name
+			], ...propertiesRows],
+			templateColumns: "max-content max-content 1fr",
+			columnStyles: ["narrow", "narrow-left"]
 		}) })] });
 	};
 	return /* @__PURE__ */ u(Panel, {
@@ -12725,10 +14098,6 @@ function InfoPanel(props) {
 		onCloseClick,
 		className: panelClassName,
 		children: [
-			/* @__PURE__ */ u(ExpandableSection, {
-				title: "General",
-				children: [/* @__PURE__ */ u(ExpandableSection.Summary, { children: "This is summary" }), /* @__PURE__ */ u(ExpandableSection.Details, { children: "Here goes details" })]
-			}),
 			/* @__PURE__ */ u("h1", { children: "General" }),
 			/* @__PURE__ */ u("h2", { children: "Stop reason" }),
 			/* @__PURE__ */ u("p", { children: props.rpeInsights.stopReason }),
@@ -12739,7 +14108,8 @@ function InfoPanel(props) {
 					"Input tokens",
 					"Output tokens"
 				],
-				rows: usageRows
+				rows: usageRows,
+				templateColumns: "max-content max-content max-content"
 			}) }),
 			/* @__PURE__ */ u("h1", { children: "Components info" }),
 			renderRPEProperties("Executor", props.rpeInsights.info.executorInfo.name, props.rpeInsights.info.executorInfo.properties),
@@ -12755,26 +14125,25 @@ function InfoPanel(props) {
 //#region src/components/process-view/ProcessView.tsx
 function ProcessView(props) {
 	const { rpeInsights } = props;
-	const { dataset, candidates, iterationHistory } = rpeInsights;
-	const [selectedPromptId, setSelectedPromptId] = d$1(null);
+	const [selectedCandidateId, setSelectedCandidateId] = d$1(null);
 	const [detailsVisible, setDetailsVisible] = d$1(false);
 	const [infoVisible, setInfoVisible] = d$1(false);
 	const hideDetails = () => {
 		setDetailsVisible(false);
 		setTimeout(() => {
-			clearPromptId();
+			clearCandidateId();
 		}, 340);
 	};
-	const selectPromptId = (promptId) => {
-		setSelectedPromptId(promptId);
+	const selectCandidateId = (candidateId) => {
+		setSelectedCandidateId(candidateId);
 		setDetailsVisible(true);
 		setInfoVisible(false);
 	};
-	const clearPromptId = () => {
-		setSelectedPromptId(null);
+	const clearCandidateId = () => {
+		setSelectedCandidateId(null);
 	};
 	const onBackgroundClick = () => {
-		clearPromptId();
+		clearCandidateId();
 		setDetailsVisible(false);
 		setInfoVisible(false);
 	};
@@ -12785,17 +14154,17 @@ function ProcessView(props) {
 		if (detailsVisible) hideDetails();
 		setInfoVisible(!infoVisible);
 	};
-	const promptDetailsData = selectedPromptId !== null ? getCandidateDetailsData(dataset.entries, candidates, iterationHistory, selectedPromptId) : void 0;
+	const candidateDetailsData = selectedCandidateId !== null ? getCandidateDetailsData(rpeInsights, selectedCandidateId) : void 0;
 	return /* @__PURE__ */ u(S$1, { children: [
 		/* @__PURE__ */ u(CandidateTree, {
 			rpeInsights,
-			selectedCandidateId: selectedPromptId,
+			selectedCandidateId,
 			detailsVisible,
-			onSelectCandidateId: selectPromptId,
+			onSelectCandidateId: selectCandidateId,
 			onBackgroundClick
 		}),
 		/* @__PURE__ */ u(CandidateDetails, {
-			data: promptDetailsData,
+			data: candidateDetailsData,
 			visible: detailsVisible,
 			onCloseClick
 		}),
@@ -12822,7 +14191,7 @@ function loadRPEInsights() {
 R$1(/* @__PURE__ */ u(App, { rpeInsights: loadRPEInsights() }), document.getElementById("app"));
 //#endregion
 
-//# sourceMappingURL=index-h7ruNhRj.js.map</script>
+//# sourceMappingURL=index-6BHoY1-l.js.map</script>
     <style rel="stylesheet" crossorigin>* {
   box-sizing: border-box;
 }
@@ -12830,6 +14199,7 @@ R$1(/* @__PURE__ */ u(App, { rpeInsights: loadRPEInsights() }), document.getElem
 body {
   margin: 0;
   font-family: "Funnel Sans", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-size: 16px;
   line-height: 1.5;
   background-color: var(--bg);
   color: var(--text);
@@ -12837,6 +14207,7 @@ body {
 
 pre {
   overflow: auto;
+  color: var(--text-muted);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
   font-size: 0.86rem;
   line-height: 1.62;
@@ -12863,19 +14234,20 @@ pre {
 ::-webkit-scrollbar-thumb:window-inactive {
   background: var(--muted);
 }:root {
-  --bg: #111317;
-  --bg-muted: #181a20;
+  --bg: #18181b;
+  --bg-muted: #212124;
   --muted: #353130;
-  --text: #d2d4d9;
+  --text: #f4f4f5;
+  --text-muted: #a1a1aa;
   --shadow: none;
   --border-radius: 8px;
   --border-highlighted: #b3b3b2;
-  --link-color: #0094ff;
-  --red: #D2042D;
-  --green: #009E60;
+  --link-color: #6686e1;
+  --red: #fb7185;
+  --green: #10b981;
 }
 :root p {
-  color: #a0a2a7;
+  color: var(--text-muted);
 }
 
 html[data-theme=light] {
@@ -12883,26 +14255,31 @@ html[data-theme=light] {
   --bg-muted: #eef0f5;
   --muted: #b2b4b8;
   --text: #1b263d;
+  --text-muted: #454c5b;
   --shadow: 0 20px 55px rgba(24, 39, 75, 0.14);
   --border-radius: 8px;
   --border-highlighted: #29395c;
-  --link-color: #0055cc;
+  --link-color: #001aae;
   --red: #D2042D;
   --green: #009E60;
 }
 html[data-theme=light] p {
-  color: #454c5b;
+  color: var(--text-muted);
 }.red {
   color: var(--red);
 }
 
 .green {
   color: var(--green);
+}
+
+.text-muted {
+  color: var(--text-muted);
 }._candidate-tree_njqup_1 {
   --fill: var(--bg-muted);
   --stroke: var(--muted);
   --stroke-selected: var(--border-highlighted);
-}._candidate-box-foreign-object_1ico9_1 {
+}._candidate-box-foreign-object_n8r2y_1 {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -12912,36 +14289,38 @@ html[data-theme=light] p {
   cursor: pointer;
   font-size: 0.84rem;
 }
-._candidate-box-foreign-object_1ico9_1._muted_1ico9_11 {
+._candidate-box-foreign-object_n8r2y_1._muted_n8r2y_11 {
   opacity: 0.25;
 }
-._candidate-box-foreign-object_1ico9_1 ._candidate-box-info-properties_1ico9_14 {
+._candidate-box-foreign-object_n8r2y_1 ._candidate-box-info-properties_n8r2y_14 {
   display: grid;
   grid-template-columns: auto 2rem;
   font-size: 0.72rem;
 }
-._candidate-box-foreign-object_1ico9_1 ._candidate-box-score-name_1ico9_19 {
+._candidate-box-foreign-object_n8r2y_1 ._candidate-box-score-name_n8r2y_19 {
   font-size: 0.72rem;
+  color: var(--text-muted);
 }
-._candidate-box-foreign-object_1ico9_1 ._candidate-box-score-value_1ico9_22 {
+._candidate-box-foreign-object_n8r2y_1 ._candidate-box-score-value_n8r2y_23 {
   font-size: 1rem;
 }
-._candidate-box-foreign-object_1ico9_1 ._candidate-box-score-value_1ico9_22 {
+._candidate-box-foreign-object_n8r2y_1 ._candidate-box-score-value_n8r2y_23 {
   font-weight: bold;
   margin-top: -0.25rem;
   margin-bottom: 0.25rem;
 }
-._candidate-box-foreign-object_1ico9_1 ._candidate-box-info-name_1ico9_30 {
+._candidate-box-foreign-object_n8r2y_1 ._candidate-box-info-name_n8r2y_31 {
   text-align: right;
   padding-right: 0.25rem;
+  color: var(--text-muted);
 }
-._candidate-box-foreign-object_1ico9_1 ._candidate-box-info-value_1ico9_34 {
+._candidate-box-foreign-object_n8r2y_1 ._candidate-box-info-value_n8r2y_36 {
   font-weight: bold;
 }
-._candidate-box-foreign-object_1ico9_1 ._candidate-box-info-value-red_1ico9_37 {
+._candidate-box-foreign-object_n8r2y_1 ._candidate-box-info-value-red_n8r2y_39 {
   color: var(--red);
 }
-._candidate-box-foreign-object_1ico9_1 ._candidate-box-info-value-green_1ico9_40 {
+._candidate-box-foreign-object_n8r2y_1 ._candidate-box-info-value-green_n8r2y_42 {
   color: var(--green);
 }._tag_u8n2g_1 {
   padding: 0.125rem 0.377rem;
@@ -13032,16 +14411,24 @@ html[data-theme=light] p {
   margin-top: 1rem;
   margin-bottom: 0rem;
   padding: 0;
-}._table_1vxki_1 {
+}._table_40r8k_1 {
   display: grid;
-  grid-auto-columns: minmax(0, auto);
+  --padding-x: 0.875rem;
+  --padding-x-narrow: 0.25rem;
+  --padding-y: 0.125rem;
 }
-._table_1vxki_1 ._cell_1vxki_5 {
-  padding: 0.125rem 0.875rem;
+._table_40r8k_1 ._cell_40r8k_7 {
+  padding: var(--padding-y) var(--padding-x);
   min-width: 0;
   overflow-wrap: anywhere;
 }
-._table_1vxki_1 ._header-cell_1vxki_10 {
+._table_40r8k_1 ._cell-narrow_40r8k_12 {
+  padding: var(--padding-y) var(--padding-x-narrow);
+}
+._table_40r8k_1 ._cell-narrow-left_40r8k_15 {
+  padding-left: var(--padding-x-narrow);
+}
+._table_40r8k_1 ._header-cell_40r8k_18 {
   font-weight: bold;
   border-bottom: 1px solid var(--muted);
 }._header_v3efg_1 {
@@ -13082,39 +14469,9 @@ html[data-theme=light] p {
   background-color: var(--muted);
   padding: 0;
   margin: 0;
-}._link-button_bnc0s_1 {
-  cursor: pointer;
-  text-decoration: none;
-  color: var(--link-color);
-}
-
-._link-button-disabled_bnc0s_7 {
-  cursor: not-allowed;
-  color: var(--muted);
 }._middot-separator_1tzs0_1 {
   padding-left: 0.25rem;
   padding-right: 0.25rem;
-}._candidate-aggregated-evaluation_vc5t0_1 {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-._aggregated-score_vc5t0_7 {
-  margin-bottom: 1rem;
-}
-
-._candidate-aggregated-evaluation-evaluation_vc5t0_11 {
-  margin-top: 0.5rem;
-}
-
-._candidate-aggregated-evaluation-status_vc5t0_15 {
-  margin-left: 0.5rem;
-}
-
-._candidate-aggregated-evaluation-key_vc5t0_19 {
-  font-weight: bold;
-  font-size: 0.72rem;
 }._expandable-list-button-bar_t4bfe_1 {
   display: flex;
   flex-direction: row;
@@ -13130,6 +14487,66 @@ html[data-theme=light] p {
   padding-top: 0.25rem;
   padding-left: 2.5rem;
   padding-right: 2.5rem;
+}._link-button_14ox0_1 {
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--link-color);
+}
+
+._link-button-disabled_14ox0_7 {
+  cursor: default;
+  color: var(--muted);
+}._metadata_1yk96_1 {
+  font-size: 0.72rem;
+  border: 1px solid var(--muted);
+  border-radius: var(--border-radius);
+  padding: var(--border-radius);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}._tooltip_mujji_1 {
+  position: absolute;
+  width: max-content;
+  max-width: 20rem;
+  background-color: var(--bg-muted);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-highlighted);
+  padding: 0.125em 0.5rem;
+}._info_1ol76_1 {
+  cursor: pointer;
+}._candidate-aggregated-evaluation_11vcn_1 {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+._candidate-aggregated-evaluation-summary_11vcn_7 {
+  color: var(--text-muted);
+}
+
+._candidate-aggregated-evaluation-score_11vcn_11 {
+  margin-bottom: 1rem;
+}
+
+._candidate-aggregated-evaluation-evaluation_11vcn_15 {
+  margin-top: 0.5rem;
+}
+
+._candidate-aggregated-evaluation-status_11vcn_19 {
+  margin-left: 0.5rem;
+}
+
+._candidate-aggregated-evaluation-key_11vcn_23 {
+  font-weight: bold;
+  font-size: 0.72rem;
+}._dataset-entry-key_1436g_1 {
+  font-weight: bold;
+  font-size: 0.72rem;
+}._candidate-analysis_1xahz_1 {
+  margin-top: 1rem;
+}
+
+._candidate-analysis-summary_1xahz_5 {
+  color: var(--text-muted);
 }._candidate-module_1vddl_1 ._header_1vddl_1 {
   margin-left: var(--border-radius);
   margin-bottom: 0;
@@ -13188,36 +14605,42 @@ html[data-theme=light] p {
   background-color: var(--bg-muted);
   border-radius: 9999px;
   border: 1px solid var(--muted);
-}._info-panel_1rave_1 {
+}._info_h9woi_1 {
+  font-size: 0.84rem;
+  color: var(--text-muted);
+  transform: translateY(0.125em);
+}
+
+._info-panel_h9woi_7 {
   height: 64rem;
   max-height: 90vh;
 }
-._info-panel_1rave_1._visible_1rave_5 {
+._info-panel_h9woi_7._visible_h9woi_11 {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
   transition: transform 340ms ease-out;
 }
-._info-panel_1rave_1._hidden_1rave_11 {
+._info-panel_h9woi_7._hidden_h9woi_17 {
   left: 50%;
   top: 50%;
   transition: transform 280ms ease-in;
   transform: translate(-50%, 100vh);
 }
-._info-panel_1rave_1 p {
+._info-panel_h9woi_7 p {
   margin-left: 1rem;
 }
-._info-panel_1rave_1 h1 {
+._info-panel_h9woi_7 h1 {
   font-family: "Funnel Display", sans-serif;
   font-size: 1.25rem;
   font-weight: 500;
   line-height: 1;
 }
-._info-panel_1rave_1 h1:not(:first-child) {
+._info-panel_h9woi_7 h1:not(:first-child) {
   margin-top: 1rem;
   padding-top: 1rem;
 }
-._info-panel_1rave_1 h2 {
+._info-panel_h9woi_7 h2 {
   font-family: "Funnel Display", sans-serif;
   font-size: 0.84rem;
 }/*$vite$:1*/</style>

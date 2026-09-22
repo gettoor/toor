@@ -4,7 +4,15 @@ import {
   type RPEAnalyzerFailedExampleAnalysis,
 } from '@gettoor/core';
 
-import { Separator } from '../basic';
+import { countLabel } from '../../string';
+import { useLocalStorage } from '../../hooks';
+import {
+  ExpandableSection,
+  ExpandableList,
+  LinkButton,
+  MiddotSeparator,
+  Separator,
+} from '../basic';
 import { DatasetEntry } from './DatasetEntry';
 import styles from './CandidateAnalysis.module.scss';
 
@@ -15,6 +23,11 @@ export interface CandidateAnalysisProps {
 
 export function CandidateAnalysis(props: CandidateAnalysisProps) {
   const { datasetEntries, analysis } = props;
+
+  const [
+    more,
+    setMore,
+  ] = useLocalStorage(false, 'moreCandidateAnalysis');
 
   const renderList = (list: string[]) => {
     return (
@@ -28,6 +41,24 @@ export function CandidateAnalysis(props: CandidateAnalysisProps) {
     );
   };
 
+  const renderSummary = () => {
+    return (
+      <span className={styles['candidate-analysis-summary']}>
+        <span>
+          {countLabel(analysis.strengths.length, 'strength')}
+          <MiddotSeparator/>
+        </span>
+        <span>
+          {countLabel(analysis.recommendations.length, 'recommendation')}
+          <MiddotSeparator/>
+        </span>
+        <span className='red'>
+          {countLabel(analysis.failedExampleAnalysis.length, 'failed example')}
+          <MiddotSeparator/>
+        </span>
+      </span>
+    );
+  };
 
   const renderFailedExampleAnalysis = (
     failedExampleAnalysis: RPEAnalyzerFailedExampleAnalysis
@@ -67,15 +98,45 @@ export function CandidateAnalysis(props: CandidateAnalysisProps) {
       });
     });
 
+  const renderFailedExampleAnalysisItem = (index: number) => {
+    const failedExampleAnalysis = analysis.failedExampleAnalysis[index];
+    return renderFailedExampleAnalysis(failedExampleAnalysis);
+  };
+
 
   return (
-    <div className={styles['candidate-analysis']}>
-      <h2>Strengths</h2>
-      {renderList(analysis.strengths)}
-      <h2>Recommendations</h2>
-      {renderList(analysis.recommendations)}
-      <h1>Failed example analysis</h1>
-      {failedExampleAnalysis.map(item => renderFailedExampleAnalysis(item))}
-    </div>
+    <ExpandableSection
+      title='Training Analysis'
+      expanded={more}
+      onToggle={() => { setMore(!more); }}
+    >
+      <ExpandableSection.Summary>
+        { renderSummary() }
+        <LinkButton
+          label='More'
+          onClick={() => { setMore(true); }}
+        />
+      </ExpandableSection.Summary>
+      <ExpandableSection.Details>
+        <div className={styles['candidate-analysis']}>
+          { renderSummary() }
+          <LinkButton
+            label='Less'
+            onClick={() => { setMore(false); }}
+          />          
+          <h2>Strengths</h2>
+          {renderList(analysis.strengths)}
+          <h2>Recommendations</h2>
+          {renderList(analysis.recommendations)}
+          <h1>Failed example analysis</h1>
+          {/* {failedExampleAnalysis.map(item => renderFailedExampleAnalysis(item))} */}
+          <ExpandableList
+            totalItems={failedExampleAnalysis.length}
+            itemRenderer={renderFailedExampleAnalysisItem}
+          />
+        </div>
+      </ExpandableSection.Details>
+    </ExpandableSection>
+
   );
 }

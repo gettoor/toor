@@ -1,0 +1,10 @@
+@use '../../styles/_includes.scss' as *;
+
+.metadata {
+  @include font-small;
+  border: 1px solid var(--muted);
+  border-radius: var(--border-radius);
+  padding: var(--border-radius);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}

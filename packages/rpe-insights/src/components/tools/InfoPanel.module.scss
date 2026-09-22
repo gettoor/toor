@@ -1,5 +1,11 @@
 @use '../../styles/_includes.scss' as *;
 
+.info {
+  @include font-medium;
+  color: var(--text-muted);
+  transform: translateY(0.125em); // to align with the text
+}
+
 .info-panel {
   height: 64rem;
   max-height: 90vh;

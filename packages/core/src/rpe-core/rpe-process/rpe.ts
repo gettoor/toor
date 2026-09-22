@@ -1,4 +1,7 @@
-import { candidateRefFromCandidate } from '../rpe-candidate/index.js';
+import {
+  RPECandidateRef,
+  candidateRefFromCandidate,
+} from '../rpe-candidate/index.js';
 import { 
   findCandidateById,
   RPEIteration,
@@ -7,6 +10,7 @@ import {
 } from '../rpe-state/index.js';
 import { buildRPEInsightsInfo } from '../rpe-insights/index.js';
 import { RPEInput, RPEOutput } from './rpe-types.js';
+import { RPECandidateSelector } from '../rpe-candidate-selector/index.js';
 import {
   buildInputForDatasetEvaluation,
   evaluateDataset,
@@ -40,6 +44,12 @@ export async function optimize(
     metadata: {},
     finalCandidates: [],
   };
+
+  // An iteration might generate and select new candidates. Therefore, we need
+  // to keep track of the last selected candidates.
+  let lastSelectedCandidateRefs: RPECandidateRef[] = state.candidates.map(
+    candidate => candidateRefFromCandidate(candidate)
+  );
   let stopReason = '';
 
   // initialize state
@@ -50,7 +60,7 @@ export async function optimize(
     console.log('iteration', state.iterationNo);
 
     const iteration: RPEIterationInProgress = state.iteration;
-    const iterationCandidates = iteration.candidateRefs.map(candidateRef => {
+    const iterationCandidates = lastSelectedCandidateRefs.map(candidateRef => {
       return findCandidateById(state, candidateRef.candidateId);
     });
 
@@ -93,46 +103,46 @@ export async function optimize(
       state,
       input.candidateGenerator,
     );
-    iteration.generatedCandidates = generatedCandidates.map(
-      generatedCandidate => {
-        const { candidate, ...description } = generatedCandidate;
-        return {
-          candidateRef: candidateRefFromCandidate(candidate),
-          ...description,
-        };
-      },
-    );
-    state.candidates.push(
-      ...generatedCandidates.map(candidate => candidate.candidate),
-    );
 
-    // evaluate candidates on the validation dataset
-    const {
-      responses: candidateResponses,
-      evaluations: candidateEvaluations,
-      aggregatedEvaluations: candidateAggregatedEvaluations
-    } = await evaluateDataset(
-      state,
-      {
-        candidates: generatedCandidates.map(candidate => candidate.candidate),
-        ...buildInputForDatasetEvaluation(input),
-      },
-    );
-    iteration.candidateResponses = candidateResponses;
-    iteration.candidateEvaluations = candidateEvaluations;
-    iteration.candidateAggregatedEvaluations = candidateAggregatedEvaluations;
-    state.aggregatedEvaluations.push(...candidateAggregatedEvaluations);
+    // evaluate candidates if there are any
+    if (generatedCandidates.length > 0) {
+      // keep generated candidates
+      iteration.generatedCandidates = generatedCandidates.map(
+        generatedCandidate => {
+          const { candidate, ...description } = generatedCandidate;
+          return {
+            candidateRef: candidateRefFromCandidate(candidate),
+            ...description,
+          };
+        },
+      );
+      state.candidates.push(
+        ...generatedCandidates.map(candidate => candidate.candidate),
+      );
 
-    // select candidates
-    const { 
-      candidateRefs: selectedCandidateRefs,
-    } = await input.candidateSelector.run(state, {});
-    iteration.selectedCandidateRefs = selectedCandidateRefs;
+      // evaluate candidates on the validation dataset
+      const {
+        responses: candidateResponses,
+        evaluations: candidateEvaluations,
+        aggregatedEvaluations: candidateAggregatedEvaluations
+      } = await evaluateDataset(
+        state,
+        {
+          candidates: generatedCandidates.map(candidate => candidate.candidate),
+          ...buildInputForDatasetEvaluation(input),
+        },
+      );
+      iteration.candidateResponses = candidateResponses;
+      iteration.candidateEvaluations = candidateEvaluations;
+      iteration.candidateAggregatedEvaluations = candidateAggregatedEvaluations;
+      state.aggregatedEvaluations.push(...candidateAggregatedEvaluations);
 
-    // there always should be at least one selected candidate
-    if (selectedCandidateRefs.length === 0) {
-      stopReason = 'No candidates selected';
-      break;
+      // select candidates
+      const {
+        candidateRefs: selectedCandidateRefs,
+      } = await input.candidateSelector.run(state, {});
+      iteration.selectedCandidateRefs = selectedCandidateRefs;
+      lastSelectedCandidateRefs = selectedCandidateRefs;
     }
 
     // update history
@@ -152,18 +162,18 @@ export async function optimize(
     state.iterationNo++;
     state.iteration = {
       iterationNo: state.iterationNo,
-      candidateRefs: selectedCandidateRefs,
+      candidateRefs: iteration.selectedCandidateRefs,
     };
   }
 
   // populate final candidates
-  populateFinalCandidates(state);
+  await populateFinalCandidates(state, input.finalCandidateSelector);
 
   // update state on finish
   await input.updateStateOnFinish?.(state);
 
   return {
-    candidates: state.iteration.candidateRefs.map(candidateRef => {
+    candidates: lastSelectedCandidateRefs.map(candidateRef => {
       return findCandidateById(state, candidateRef.candidateId);
     }),
     insights: {
@@ -178,18 +188,18 @@ export async function optimize(
   };
 }
 
-function populateFinalCandidates(state: RPEState): void {
-  const lastIteration = state.iterationHistory[
-    state.iterationHistory.length - 1
-  ];
-  if (!lastIteration) {
-    return;
-  }
-  const finalCandidates = lastIteration.selectedCandidateRefs.map(
-    candidateRef => {
-      return {
-        candidateRef,
-      };
-    });
+async function populateFinalCandidates(
+  state: RPEState,
+  candidateSelector: RPECandidateSelector,
+): Promise<void> {
+  // select
+  const { candidateRefs } = await candidateSelector.run(state, {});
+  const finalCandidates = candidateRefs.map(candidateRef => {
+    return {
+      candidateRef,
+    };
+  });
+
+  // populate
   state.finalCandidates.push(...finalCandidates);
 }

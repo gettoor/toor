@@ -38,7 +38,7 @@ export function findGeneratedCandidateById(
   candidateId: string,
 ): CandidateGeneratorOutputCandidate {
   const allGeneratedCandidates = state.iterationHistory.flatMap(itr => {
-    return itr.generatedCandidates;
+    return itr.generatedCandidates ?? [];
   });
   const candidate = allGeneratedCandidates.find(itr => {
     return itr.candidateRef.candidateId === candidateId;

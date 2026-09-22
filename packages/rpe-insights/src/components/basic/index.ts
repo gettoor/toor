@@ -10,5 +10,8 @@ export * from './Table';
 export * from './Header';
 export * from './Separator';
 export * from './ExpandableSection';
+export * from './ExpandableList';
 export * from './LinkButton';
 export * from './MiddotSeparator';
+export * from './Metadata';
+export * from './Info';

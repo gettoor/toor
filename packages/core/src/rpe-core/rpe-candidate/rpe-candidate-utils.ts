@@ -59,3 +59,42 @@ export function requireSinglePromptCandidateModule(
   }
   return modules[PROMPT_MODULE_NAME].content;
 }
+
+/**
+ * Checks if two candidates have the same modules contents.
+ * @category Reflective Prompt Evolution
+ * @param a - First candidate to compare.
+ * @param b - Second candidate to compare.
+ * @returns True if the candidates have the same modules, false otherwise.
+ */
+export function haveSameModules(a: RPECandidate, b: RPECandidate): boolean {
+  const aNames = Object.keys(a.modules);
+  const bNames = Object.keys(b.modules);
+  if (aNames.length !== bNames.length) {
+    return false;
+  }
+  if (!aNames.every(module => bNames.includes(module))) {
+    return false;
+  }
+  const allEqual = aNames.every(aName => {
+    return a.modules[aName].content === b.modules[aName].content;
+  });
+  return allEqual;
+}
+
+/**
+ * Deduplicates candidates by modules contents.
+ * @param candidates - Candidates to deduplicate.
+ * @returns Deduplicated candidates.
+ */
+export function deduplicateCandidates(
+  candidates: RPECandidate[],
+): RPECandidate[] {
+  const deduplicated = candidates.filter((aCandidate, aIndex, self) => {
+    const bIndex = self.findIndex(bCandidate => {
+      return haveSameModules(aCandidate, bCandidate);
+    });
+    return aIndex === bIndex;
+  });
+  return deduplicated;
+}

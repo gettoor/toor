@@ -15,6 +15,7 @@ import {
 import {
   RPEDatasetEntry,
   RPEState,
+  GeneratedCandidateNotFoundError,
   modelParametersToRPEInfo,
   findCandidateById,
   buildSinglePromptCandidateModules,
@@ -32,6 +33,7 @@ import {
   findGeneratedCandidateById,
   findCandidateAncestorsById,
   RPECandidateGeneratorChange,
+  rpePropertyIfDef,
 } from '../../rpe-core/index.js';
 import { 
   SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_PROMPT,
@@ -45,7 +47,6 @@ import {
   SinglePromptRPECandidateGeneratorInstruction,
   SinglePromptRPECandidateGeneratorOutputSchema,
 } from './single-prompt-rpe-candidate-generator-types.js';
-import { GeneratedCandidateNotFoundError } from '../../rpe-core/rpe-state/rpe-state-errors.js';
 
 /**
  * Creates a single-prompt RPE candidate generator. The generate expects
@@ -151,7 +152,9 @@ export function singlePromptRPECandidateGenerator(
         tasks,
         parallelism ?? SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_PARALLELISM,
       );
-      return { candidates: outputs.flat() };
+      return {
+        candidates: outputs.flat().filter(output => output !== undefined)
+      };
     },
 
     getInfo: async (): Promise<RPECandidateGeneratorInfo> => {
@@ -163,6 +166,11 @@ export function singlePromptRPECandidateGenerator(
             value: modelProvider.getProviderModelName(modelName),
             description: 'Model name used for the prompt generation.',
           },
+          ...rpePropertyIfDef(
+            additionalInformation,
+            'additionalInformation',
+            'Additional information used for the prompt generation.',
+          ),
           ...modelParametersToRPEInfo(modelParameters),
         ],
       };
@@ -184,10 +192,10 @@ async function generateCandidate(
   analysis: RPEAnalyzerOutput,
   datasetEntries: RPEDatasetEntry[],
   includeExpectedResponse: boolean,
-): Promise<RPECandidateGeneratorCandidate> {
-  // no need to generate candidate if all evaluations passed
+): Promise<RPECandidateGeneratorCandidate | undefined> {
+  // don't generate candidate if no evaluations failed
   if (aggregation.failedEvaluations.length === 0) {
-    return { candidate, changesSummary: '', changes: [] };
+    return undefined;
   }
 
   const prompt = replacePlaceholders(

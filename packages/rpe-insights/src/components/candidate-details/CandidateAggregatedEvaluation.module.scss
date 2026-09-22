@@ -6,7 +6,11 @@
   gap: 0.5rem;
 }
 
-.aggregated-score {
+.candidate-aggregated-evaluation-summary {
+  color: var(--text-muted);
+}
+
+.candidate-aggregated-evaluation-score {
   margin-bottom: 1rem;
 }
 

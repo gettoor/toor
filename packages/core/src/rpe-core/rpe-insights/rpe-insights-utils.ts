@@ -53,21 +53,21 @@ export function sumRPEInsightsUsage(insights: RPEInsights): Required<LLMUsage> {
       pushLLMUsage(analysis.usage);
     });
 
-    iteration.generatedCandidates.forEach(candidate => {
+    iteration.generatedCandidates?.forEach(candidate => {
       pushLLMUsage(candidate.usage);
     });
 
-    iteration.candidateResponses.forEach(response => {
+    iteration.candidateResponses?.forEach(response => {
       pushLLMUsage(response.usage);
     });
 
-    iteration.candidateEvaluations.forEach(evaluation => {
+    iteration.candidateEvaluations?.forEach(evaluation => {
       evaluation.evaluatorOutputs.forEach(output => {
         pushLLMUsage(output.usage);
       });
     });
 
-    iteration.candidateAggregatedEvaluations.forEach(aggregatedEvaluation => {
+    iteration.candidateAggregatedEvaluations?.forEach(aggregatedEvaluation => {
       pushLLMUsage(aggregatedEvaluation.usage);
     });
   });

@@ -6,7 +6,7 @@ import {
 } from '@gettoor/core';
 
 import { camelCaseToSentenceCase } from '../../string';
-import { ExpandableSection, Panel, Table } from '../basic';
+import { Info, Panel, Table } from '../basic';
 import styles from './InfoPanel.module.scss';
 
 export interface InfoPanelProps {
@@ -44,21 +44,30 @@ export function InfoPanel(props: InfoPanelProps) {
     name: string,
     rpeProperties?: RPEProperties,
   ) => {
-    const propertiesRows = (rpeProperties ?? []).map(property => [
-      camelCaseToSentenceCase(property.key),
-      property.value,
-      property.description,
-    ]);
+    const propertiesRows = (rpeProperties ?? []).map(property => {
+      return [
+        property.description
+          ? <Info
+              text={property.description}
+              className={styles['info']}
+            />
+          : '-',
+        camelCaseToSentenceCase(property.key),
+        property.value,
+      ];
+    });
     return (
       <>
         <h2>{title}</h2>
         <p>
           <Table
-            header={['Key', 'Value', 'Description']}
+            header={['', 'Key', 'Value']}
             rows={[
-              ['Name', name, 'Name of the component.'],
+              ['', 'Name', name],
               ...propertiesRows,
             ]}
+            templateColumns='max-content max-content 1fr'
+            columnStyles={['narrow', 'narrow-left']}
           />
         </p>
       </>
@@ -71,15 +80,6 @@ export function InfoPanel(props: InfoPanelProps) {
       onCloseClick={onCloseClick}
       className={panelClassName}
     >
-      <ExpandableSection title='General'>
-        <ExpandableSection.Summary>
-          This is summary
-        </ExpandableSection.Summary>
-        <ExpandableSection.Details>
-          Here goes details
-        </ExpandableSection.Details>
-      </ExpandableSection>
-
       <h1>General</h1>
       <h2>Stop reason</h2>
       <p>{props.rpeInsights.stopReason}</p>
@@ -89,6 +89,7 @@ export function InfoPanel(props: InfoPanelProps) {
         <Table
           header={['Model', 'Input tokens', 'Output tokens']}
           rows={usageRows}
+          templateColumns='max-content max-content max-content'
         />
       </p>
       <h1>Components info</h1>

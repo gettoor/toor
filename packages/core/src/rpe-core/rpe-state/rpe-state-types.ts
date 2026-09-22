@@ -38,7 +38,7 @@ export interface RPEIteration {
   /**
    * References to the candidates evaluated in the current iteration.
    */
-  candidateRefs: RPECandidateRef[];
+  candidateRefs?: RPECandidateRef[];
   
   /**
    * The responses generated for the candidates in the current iteration.
@@ -63,28 +63,28 @@ export interface RPEIteration {
   /**
    * The candidates generated for the candidates in the current iteration.
    */
-  generatedCandidates: CandidateGeneratorOutputCandidate[];
+  generatedCandidates?: CandidateGeneratorOutputCandidate[];
 
   /**
    * The responses generated for the candidates in the current iteration.
    */
-  candidateResponses: RPEExecutorResponse[];
+  candidateResponses?: RPEExecutorResponse[];
 
   /**
    * The evaluations of the candidate responses in the current iteration. 
    */
-  candidateEvaluations: EvaluatorCandidateOutput[];
+  candidateEvaluations?: EvaluatorCandidateOutput[];
 
   /**
    * The aggregated evaluations of the candidate responses
    * in the current iteration.
    */
-  candidateAggregatedEvaluations: RPEAggregatorOutput[];
+  candidateAggregatedEvaluations?: RPEAggregatorOutput[];
 
   /**
    * References to the candidates selected for the next iteration.
    */
-  selectedCandidateRefs: RPECandidateRef[];
+  selectedCandidateRefs?: RPECandidateRef[];
 }
 
 /**

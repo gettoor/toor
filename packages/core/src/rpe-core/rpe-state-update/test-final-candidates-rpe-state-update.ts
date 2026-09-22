@@ -27,8 +27,8 @@ export function testFinalCandidatesRPEStateUpdate(
     if (!lastIteration) {
       return;
     }
-    const finalCandidates = lastIteration.selectedCandidateRefs.map(
-      candidateRef => findCandidateById(state, candidateRef.candidateId),
+    const finalCandidates = state.finalCandidates.map(
+      candidate => findCandidateById(state, candidate.candidateRef.candidateId),
     );
 
     // evaluate
