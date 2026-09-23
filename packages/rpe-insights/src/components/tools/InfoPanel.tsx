@@ -123,6 +123,11 @@ export function InfoPanel(props: InfoPanelProps) {
         props.rpeInsights.info.candidateSelectorInfo.name,
         props.rpeInsights.info.candidateSelectorInfo.properties,
       )}
+      {renderRPEProperties(
+        'Final Candidate Selector',
+        props.rpeInsights.info.finalCandidateSelectorInfo.name,
+        props.rpeInsights.info.finalCandidateSelectorInfo.properties,
+      )}
     </Panel>
   );
 }

@@ -1,7 +1,9 @@
 import clsx from 'clsx';
+import { ComponentChildren, toChildArray } from 'preact';
 import type { PropsWithChildren } from 'preact/compat';
 
 import styles from './Header.module.scss';
+import { findChildrenByType } from '../../preact';
 
 export interface HeaderProps extends PropsWithChildren {
   title: string;
@@ -10,8 +12,18 @@ export interface HeaderProps extends PropsWithChildren {
   onTitleClick?: () => void;
 }
 
+function Actions({ children }: { children: ComponentChildren }) {
+  return <>{children}</>;
+}
+
+function Toolbar({ children }: { children: ComponentChildren }) {
+  return <>{children}</>;
+}
+
 export function Header(props: HeaderProps) {
   const { title, level = 1, children, className, onTitleClick } = props;
+
+  const [actions, toolbar] = findChildrenByType(children, [Actions, Toolbar]);
 
   const headerClassName = clsx(styles['header'], className);
   const headerTitleClassName = clsx(
@@ -31,11 +43,15 @@ export function Header(props: HeaderProps) {
       >
         {title}
       </div>
-      { children &&
-        <div className={styles['header-side-bar']}>
-          {children}
-        </div>
-      }
+      <div className={styles['header-actions']}>
+        {actions ?? null}
+      </div>
+      <div className={styles['header-toolbar']}>
+        {toolbar ?? null}
+      </div>
     </div>
   );
 }
+
+Header.Actions = Actions;
+Header.Toolbar = Toolbar;

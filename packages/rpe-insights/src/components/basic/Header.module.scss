@@ -12,6 +12,7 @@
   font-family: 'Funnel Display', sans-serif;
   margin: 0;
   padding: 0;
+  flex: 0 1 auto;
 }
 
 .header-title-clickable {
@@ -31,8 +32,17 @@
   }
 }
 
-.header-side-bar {
+.header-actions {
   margin-left: auto;
   display: flex;
   align-items: center;
+  flex: 0 1 auto;
+}
+
+.header-toolbar {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  flex: 1 0 auto;
+  justify-content: flex-end;
 }

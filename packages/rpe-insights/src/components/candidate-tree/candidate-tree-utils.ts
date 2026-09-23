@@ -37,6 +37,12 @@ export function resolveBoxes(
     });
   };
 
+  const findFinalAggregatedEvaluation = (candidateId: string) => {
+    return rpeInsights.finalCandidates.find((evaluation) => {
+      return evaluation.candidateRef.candidateId === candidateId;
+    });
+  };
+
   // seed prompts
   const firstIteration = iterationHistory[0];
   let x = PADDING;
@@ -45,11 +51,16 @@ export function resolveBoxes(
     const aggregatedEvaluation = findCandidateAggregatedEvaluation(
       candidateRef.candidateId,
     );
+    const finalAggregatedEvaluation = findFinalAggregatedEvaluation(
+      candidateRef.candidateId,
+    );
     boxes.push({
       data: {
         candidateId: candidateRef.candidateId,
         parentCandidateIds: prompt.parentCandidateIds,
         aggregatedScore: aggregatedEvaluation?.aggregatedScore,
+        finalAggregatedScore:
+          finalAggregatedEvaluation?.aggregatedEvaluation?.aggregatedScore,
         passedEvaluationsCount: aggregatedEvaluation?.passedEvaluations.length,
         failedEvaluationsCount: aggregatedEvaluation?.failedEvaluations.length,
       },
@@ -74,9 +85,12 @@ export function resolveBoxes(
       const candidateAggregatedEvaluation = findCandidateAggregatedEvaluation(
         candidate.candidateId,
       );
+      const finalAggregatedEvaluation = findFinalAggregatedEvaluation(
+        candidate.candidateId,
+      );
       const isSelected = (iteration.selectedCandidateRefs ?? []).some(
-        (selectedPromptRef) => {
-          return selectedPromptRef.candidateId === candidate.candidateId;
+        (selectedCandidateRef) => {
+          return selectedCandidateRef.candidateId === candidate.candidateId;
         },
       );
       boxes.push({
@@ -84,6 +98,8 @@ export function resolveBoxes(
           candidateId: candidate.candidateId,
           parentCandidateIds: candidate.parentCandidateIds,
           aggregatedScore: candidateAggregatedEvaluation?.aggregatedScore,
+          finalAggregatedScore:
+            finalAggregatedEvaluation?.aggregatedEvaluation?.aggregatedScore,
           passedEvaluationsCount:
             candidateAggregatedEvaluation?.passedEvaluations.length,
           failedEvaluationsCount:

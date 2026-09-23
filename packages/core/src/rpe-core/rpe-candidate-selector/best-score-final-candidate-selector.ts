@@ -11,6 +11,12 @@ import {
   RPECandidateSelectorInfo,
 } from './rpe-candidate-selector-types.js';
 
+/**
+ * Select the best-score final candidates. It gets the highest score and picks
+ * all the candidates with that score.
+ * @category Reflective Prompt Evolution
+ * @returns A function to select the best-score final candidates.
+ */
 export function bestScoreFinalCandidateSelector(): RPECandidateSelector {
   return {
     run: async (
@@ -18,18 +24,18 @@ export function bestScoreFinalCandidateSelector(): RPECandidateSelector {
       input: RPECandidateSelectorInput,
     ): Promise<RPECandidateSelectorOutput> => {
       // find the maximum aggregated score
-      let maxAggregatedScore = -Infinity;
-      state.finalCandidates.forEach(({ aggregatedEvaluation}) => {
+      let maxAggregatedScore = -1;
+      state.aggregatedEvaluations?.forEach((aggregatedEvaluation) => {
         const aggregatedScore = aggregatedEvaluation?.aggregatedScore ?? 0;
         if (aggregatedScore > maxAggregatedScore) {
           maxAggregatedScore = aggregatedScore;
         }
       });
+      console.log('maxAggregatedScore', maxAggregatedScore);
 
       // find the candidates with the maximum aggregated score
-      const candidateRefs = state.finalCandidates
-        .filter(({ aggregatedEvaluation }) => {
-          const aggregatedScore = aggregatedEvaluation?.aggregatedScore ?? 0;
+      const candidateRefs = (state.aggregatedEvaluations ?? [])
+        .filter(({ aggregatedScore }) => {
           return aggregatedScore === maxAggregatedScore;
         })
         .map(candidate => candidate.candidateRef);

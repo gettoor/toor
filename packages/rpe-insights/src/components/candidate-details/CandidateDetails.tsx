@@ -31,6 +31,7 @@ export interface CandidateDetailsData {
   validationAggregatedEvaluation?: RPEAggregatorOutput;
   trainingAggregatedEvaluation?: RPEAggregatorOutput;
   trainingAnalysis?: RPEAnalyzerOutput;
+  finalAggregatedEvaluation?: RPEAggregatorOutput;
 }
 
 export interface CandidateDetailsProps {
@@ -172,6 +173,13 @@ export function CandidateDetails(props: CandidateDetailsProps) {
             <CandidateAnalysis 
               datasetEntries={data!.datasetEntries}
               analysis={data!.trainingAnalysis}
+            />
+          }
+          { data!.finalAggregatedEvaluation &&
+            <CandidateAggregatedEvaluation
+              title='Final Candidate Evaluations'
+              moreLocalStorageKey='moreCandidateFinalEvaluations'
+              aggregatedEvaluation={data!.finalAggregatedEvaluation}
             />
           }
         </>

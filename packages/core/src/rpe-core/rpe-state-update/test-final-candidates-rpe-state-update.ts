@@ -21,12 +21,6 @@ export function testFinalCandidatesRPEStateUpdate(
 
   return async (state: RPEState) => {
     // get final candidates
-    const lastIteration = state.iterationHistory[
-      state.iterationHistory.length - 1
-    ];
-    if (!lastIteration) {
-      return;
-    }
     const finalCandidates = state.finalCandidates.map(
       candidate => findCandidateById(state, candidate.candidateRef.candidateId),
     );

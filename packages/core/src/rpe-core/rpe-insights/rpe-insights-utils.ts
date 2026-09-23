@@ -91,5 +91,6 @@ export async function buildRPEInsightsInfo(
     analyzerInfo: await input.analyzer.getInfo(),
     candidateGeneratorInfo: await input.candidateGenerator.getInfo(),
     candidateSelectorInfo: await input.candidateSelector.getInfo(),
+    finalCandidateSelectorInfo: await input.finalCandidateSelector.getInfo(),
   };
 }

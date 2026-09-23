@@ -39,11 +39,20 @@ export function CandidateModule(props: CandidateModuleProps) {
         className={styles['header']}
         onTitleClick={onToggle}
       >
-        <IconButton
-          name={expandIconName}
-          title='Expand/collapse module'
-          onClick={onToggle}
-        />        
+        <Header.Actions>
+          <IconButton
+            name={expandIconName}
+            title='Expand/collapse module'
+            onClick={onToggle}
+          />        
+        </Header.Actions>
+        <Header.Toolbar>
+          <IconButton
+            name='content_copy'
+            title='Copy module'
+            onClick={onCopyClick}
+          />        
+        </Header.Toolbar>
       </Header>
       <pre className={moduleClassName}>
         {module}

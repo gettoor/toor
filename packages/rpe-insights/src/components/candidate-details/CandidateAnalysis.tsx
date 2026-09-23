@@ -124,15 +124,27 @@ export function CandidateAnalysis(props: CandidateAnalysisProps) {
             label='Less'
             onClick={() => { setMore(false); }}
           />          
-          <h2>Strengths</h2>
-          {renderList(analysis.strengths)}
-          <h2>Recommendations</h2>
-          {renderList(analysis.recommendations)}
-          <h1>Failed example analysis</h1>
-          <ExpandableList
-            totalItems={failedExampleAnalysis.length}
-            itemRenderer={renderFailedExampleAnalysisItem}
-          />
+          { analysis.strengths.length > 0 &&
+            <>
+              <h2>Strengths</h2>
+              {renderList(analysis.strengths)}
+            </>
+          }
+          { analysis.recommendations.length > 0 &&
+            <>
+              <h2>Recommendations</h2>
+              {renderList(analysis.recommendations)}
+            </>
+          }
+          { failedExampleAnalysis.length > 0 &&
+            <>
+              <h1>Failed example analysis</h1>
+              <ExpandableList
+                totalItems={failedExampleAnalysis.length}
+                itemRenderer={renderFailedExampleAnalysisItem}
+              />
+            </>
+          }
         </div>
       </ExpandableSection.Details>
     </ExpandableSection>

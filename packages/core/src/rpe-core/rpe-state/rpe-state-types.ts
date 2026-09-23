@@ -20,7 +20,7 @@ export interface RPEFinalCandidate {
   candidateRef: RPECandidateRef;
 
   /**
-   * Aggregated evaluations of the candidate.
+   * Aggregated evaluations of the candidate. Typically against a test dataset.
    */
   aggregatedEvaluation?: RPEAggregatorOutput;
 }

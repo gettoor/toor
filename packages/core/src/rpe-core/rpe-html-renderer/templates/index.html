@@ -510,285 +510,6 @@ function u(e, t, n, o, i, u) {
 	if ("function" == typeof e && (a = e.defaultProps)) for (c in a) void 0 === p[c] && (p[c] = a[c]);
 	return l$1.vnode && l$1.vnode(l), l;
 }
-//#endregion
-//#region src/components/candidate-tree/CandidateBox.tsx
-function CandidateBox(props) {
-	const infoClassName = clsx(CandidateBox_module_default["candidate-box-foreign-object"], { [CandidateBox_module_default.muted]: props.isHighlighted == false });
-	const passedEvaluationsCountClassName = clsx(CandidateBox_module_default["candidate-box-info-value"], { [CandidateBox_module_default["candidate-box-info-value-green"]]: props.data.passedEvaluationsCount !== void 0 && props.data.passedEvaluationsCount > 0 });
-	const failedEvaluationsCountClassName = clsx(CandidateBox_module_default["candidate-box-info-value"], { [CandidateBox_module_default["candidate-box-info-value-red"]]: props.data.failedEvaluationsCount !== void 0 && props.data.failedEvaluationsCount > 0 });
-	const stroke = props.isSelected ? "var(--stroke-selected)" : "var(--stroke)";
-	return /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("rect", {
-		x: props.x + .5,
-		y: props.y + .5,
-		width: props.width,
-		height: props.height,
-		fill: "var(--fill)",
-		stroke,
-		strokeWidth: "1px",
-		vectorEffect: "non-scaling-stroke",
-		opacity: props.isHighlighted == false ? .25 : 1,
-		rx: `var(--border-radius)`,
-		ry: `var(--border-radius)`,
-		cursor: "pointer",
-		onClick: props.onClick
-	}), /* @__PURE__ */ u("foreignObject", {
-		x: props.x,
-		y: props.y,
-		width: props.width,
-		height: props.height,
-		onClick: props.onClick,
-		children: /* @__PURE__ */ u("div", {
-			className: infoClassName,
-			children: [props.data.aggregatedScore !== void 0 && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("div", {
-				className: CandidateBox_module_default["candidate-box-score-name"],
-				children: "Score"
-			}), /* @__PURE__ */ u("div", {
-				className: CandidateBox_module_default["candidate-box-score-value"],
-				children: props.data.aggregatedScore.toFixed(2)
-			})] }), /* @__PURE__ */ u("div", {
-				className: CandidateBox_module_default["candidate-box-info-properties"],
-				children: [
-					/* @__PURE__ */ u("div", {
-						className: CandidateBox_module_default["candidate-box-info-name"],
-						children: "Passed:"
-					}),
-					/* @__PURE__ */ u("div", {
-						className: passedEvaluationsCountClassName,
-						children: props.data.passedEvaluationsCount ?? "-"
-					}),
-					/* @__PURE__ */ u("div", {
-						className: CandidateBox_module_default["candidate-box-info-name"],
-						children: "Failed:"
-					}),
-					/* @__PURE__ */ u("div", {
-						className: failedEvaluationsCountClassName,
-						children: props.data.failedEvaluationsCount ?? "-"
-					}),
-					/* @__PURE__ */ u("div", {
-						className: CandidateBox_module_default["candidate-box-info-name"],
-						children: "Changes:"
-					}),
-					/* @__PURE__ */ u("div", {
-						className: CandidateBox_module_default["candidate-box-info-value"],
-						children: props.data.candidateChangesCount ?? "-"
-					})
-				]
-			})]
-		})
-	})] });
-}
-//#endregion
-//#region src/components/candidate-tree/CandidateBoxConnection.tsx
-function CandidateBoxConnection(props) {
-	const { fromX, fromY, toX, toY } = props;
-	return /* @__PURE__ */ u("path", {
-		d: `M ${fromX + .5} ${fromY + .5} C ${fromX + .5} ${toY + .5}, ${toX + .5} ${fromY + .5}, ${toX + .5} ${toY + .5}`,
-		stroke: "var(--stroke)",
-		strokeWidth: 1,
-		fill: "none",
-		opacity: props.isHighlighted == false ? .25 : 1
-	});
-}
-//#endregion
-//#region src/components/candidate-tree/candidate-tree-utils.ts
-/**
-* Resolve the boxes for the prompt tree.
-*/
-function resolveBoxes(rpeInsights, onBoxClick) {
-	const { candidates, iterationHistory, aggregatedEvaluations } = rpeInsights;
-	const boxes = [];
-	let y = 10;
-	const findCandidateById = (candidateId) => {
-		const candidate = candidates.find((itr) => {
-			return itr.candidateId === candidateId;
-		});
-		if (candidate === void 0) throw new Error(`Candidate ${candidateId} not found`);
-		return candidate;
-	};
-	const findCandidateAggregatedEvaluation = (candidateId) => {
-		return aggregatedEvaluations.find((evaluation) => {
-			return evaluation.candidateRef.candidateId === candidateId;
-		});
-	};
-	const firstIteration = iterationHistory[0];
-	let x = 10;
-	for (const candidateRef of firstIteration.candidateRefs ?? []) {
-		const prompt = findCandidateById(candidateRef.candidateId);
-		const aggregatedEvaluation = findCandidateAggregatedEvaluation(candidateRef.candidateId);
-		boxes.push({
-			data: {
-				candidateId: candidateRef.candidateId,
-				parentCandidateIds: prompt.parentCandidateIds,
-				aggregatedScore: aggregatedEvaluation?.aggregatedScore,
-				passedEvaluationsCount: aggregatedEvaluation?.passedEvaluations.length,
-				failedEvaluationsCount: aggregatedEvaluation?.failedEvaluations.length
-			},
-			x,
-			y,
-			width: 120,
-			height: 120,
-			isSelected: false,
-			onClick: () => onBoxClick(candidateRef.candidateId)
-		});
-		x += 140;
-	}
-	y += 160;
-	for (const iteration of iterationHistory) {
-		let x = 10;
-		for (const newCandidate of iteration.generatedCandidates ?? []) {
-			const candidate = findCandidateById(newCandidate.candidateRef.candidateId);
-			const candidateAggregatedEvaluation = findCandidateAggregatedEvaluation(candidate.candidateId);
-			const isSelected = (iteration.selectedCandidateRefs ?? []).some((selectedPromptRef) => {
-				return selectedPromptRef.candidateId === candidate.candidateId;
-			});
-			boxes.push({
-				data: {
-					candidateId: candidate.candidateId,
-					parentCandidateIds: candidate.parentCandidateIds,
-					aggregatedScore: candidateAggregatedEvaluation?.aggregatedScore,
-					passedEvaluationsCount: candidateAggregatedEvaluation?.passedEvaluations.length,
-					failedEvaluationsCount: candidateAggregatedEvaluation?.failedEvaluations.length,
-					candidateChangesCount: newCandidate.changes.length
-				},
-				x,
-				y,
-				width: 120,
-				height: 120,
-				isSelected,
-				onClick: () => onBoxClick(candidate.candidateId)
-			});
-			x += 140;
-		}
-		y += 160;
-	}
-	return boxes;
-}
-/**
-* Resolve the connections for the prompt tree.
-*/
-function resolveConnections(boxes) {
-	const connections = [];
-	for (const boxA of boxes) for (const boxB of boxes) {
-		if (boxA.data.candidateId === boxB.data.candidateId) continue;
-		if (boxB.data.parentCandidateIds?.includes(boxA.data.candidateId)) connections.push({
-			fromCandidateId: boxA.data.candidateId,
-			fromX: boxA.x + boxA.width / 2,
-			fromY: boxA.y + boxA.height,
-			toCandidateId: boxB.data.candidateId,
-			toX: boxB.x + boxB.width / 2,
-			toY: boxB.y
-		});
-	}
-	return connections;
-}
-function getAncestors(boxes, promptId) {
-	let box = boxes.find((box) => {
-		return box.data.candidateId === promptId;
-	});
-	if (box === void 0) return [];
-	const ancestors = [];
-	let currentBoxes = [box];
-	while (currentBoxes.length > 0) {
-		const box = currentBoxes.shift();
-		ancestors.push(box);
-		const parentBoxes = (box.data.parentCandidateIds ?? []).map((parentPromptId) => {
-			const parentBox = boxes.find((box) => {
-				return box.data.candidateId === parentPromptId;
-			});
-			if (parentBox === void 0) throw new Error(`Parent prompt ${parentPromptId} not found`);
-			return parentBox;
-		});
-		currentBoxes.push(...parentBoxes);
-	}
-	return ancestors.filter((ancestor) => {
-		return ancestor.data.candidateId !== promptId;
-	});
-}
-/**
-* Check if the prompt is highlighted.
-*/
-function isHighlighted(boxes, promptId, selectedPromptId) {
-	if (selectedPromptId === null) return;
-	if (promptId === selectedPromptId) return true;
-	if (getAncestors(boxes, selectedPromptId).some((ancestor) => {
-		return ancestor.data.candidateId === promptId;
-	})) return true;
-	if (getAncestors(boxes, promptId).some((ancestor) => {
-		return ancestor.data.candidateId === selectedPromptId;
-	})) return true;
-	return false;
-}
-//#endregion
-//#region src/components/candidate-tree/CandidateTree.tsx
-function CandidateTree(props) {
-	const { rpeInsights, selectedCandidateId: selectedPromptId, detailsVisible } = props;
-	const { candidates, iterationHistory } = rpeInsights;
-	const onBoxClick = (promptId) => {
-		props.onSelectCandidateId(promptId);
-	};
-	const onBackgroundClick = () => {
-		props.onBackgroundClick();
-	};
-	const boxes = resolveBoxes(rpeInsights, onBoxClick);
-	const connections = resolveConnections(boxes);
-	const renderBoxes = () => {
-		return boxes.map((box) => /* @__PURE__ */ u(CandidateBox, {
-			...box,
-			isSelected: box.data.candidateId === selectedPromptId && detailsVisible,
-			isHighlighted: isHighlighted(boxes, box.data.candidateId, selectedPromptId)
-		}, box.data.candidateId));
-	};
-	const renderConnections = () => {
-		return connections.map((connection) => {
-			const id = `${connection.fromCandidateId}-${connection.toCandidateId}`;
-			const isConnectionHighlighted = isHighlighted(boxes, connection.fromCandidateId, selectedPromptId) && isHighlighted(boxes, connection.toCandidateId, selectedPromptId);
-			return /* @__PURE__ */ u(CandidateBoxConnection, {
-				...connection,
-				isHighlighted: isConnectionHighlighted
-			}, id);
-		});
-	};
-	const width = 10 + boxes.reduce((max, box) => {
-		return Math.max(max, box.x + box.width);
-	}, 0);
-	const height = 10 + boxes.reduce((max, box) => {
-		return Math.max(max, box.y + box.height);
-	}, 0);
-	return /* @__PURE__ */ u("svg", {
-		className: CandidateTree_module_default["candidate-tree"],
-		width: `${width}px`,
-		height: `${height}px`,
-		viewBox: `0 0 ${width} ${height}`,
-		children: [
-			/* @__PURE__ */ u("rect", {
-				x: 0,
-				y: 0,
-				width,
-				height,
-				fill: "var(--bg)",
-				opacity: 0,
-				rx: `var(--border-radius)`,
-				ry: `var(--border-radius)`,
-				onClick: onBackgroundClick
-			}),
-			renderConnections(),
-			renderBoxes()
-		]
-	});
-}
-//#endregion
-//#region src/hooks/use-local-storage.ts
-function useLocalStorage(initialValue, key) {
-	const [value, setValue] = d$1(() => {
-		const stored = localStorage.getItem(key);
-		return stored ? JSON.parse(stored) : initialValue;
-	});
-	const setStoredValue = (value) => {
-		localStorage.setItem(key, JSON.stringify(value));
-		setValue(value);
-	};
-	return [value, setStoredValue];
-}
 var Tag_module_default = {
 	tag: "_tag_u8n2g_1",
 	"tag-red": "_tag-red_u8n2g_7",
@@ -5137,32 +4858,70 @@ function Table(props) {
 	});
 }
 var Header_module_default = {
-	header: "_header_v3efg_1",
-	"header-title": "_header-title_v3efg_9",
-	"header-title-clickable": "_header-title-clickable_v3efg_15",
-	"header-title-level-1": "_header-title-level-1_v3efg_19",
-	"header-side-bar": "_header-side-bar_v3efg_30"
+	header: "_header_qb4rk_1",
+	"header-title": "_header-title_qb4rk_9",
+	"header-title-clickable": "_header-title-clickable_qb4rk_16",
+	"header-title-level-1": "_header-title-level-1_qb4rk_20",
+	"header-actions": "_header-actions_qb4rk_31",
+	"header-toolbar": "_header-toolbar_qb4rk_38"
 };
 //#endregion
+//#region src/preact/elements.ts
+function isVNode(element) {
+	if (!element || !hn(element)) return false;
+	return element;
+}
+function findChildrenByType(children, types) {
+	const result = [];
+	types.forEach((type) => {
+		let childOfType = null;
+		for (const child of F$1(children)) {
+			if (!isVNode(child)) continue;
+			if (child.type === type) {
+				childOfType = child.props.children;
+				break;
+			}
+		}
+		result.push(childOfType);
+	});
+	return result;
+}
+//#endregion
 //#region src/components/basic/Header.tsx
+function Actions({ children }) {
+	return /* @__PURE__ */ u(S$1, { children });
+}
+function Toolbar$1({ children }) {
+	return /* @__PURE__ */ u(S$1, { children });
+}
 function Header(props) {
 	const { title, level = 1, children, className, onTitleClick } = props;
+	const [actions, toolbar] = findChildrenByType(children, [Actions, Toolbar$1]);
 	return /* @__PURE__ */ u("div", {
 		className: clsx(Header_module_default["header"], className),
-		children: [/* @__PURE__ */ u("div", {
-			className: clsx(Header_module_default["header-title"], {
-				[Header_module_default["header-title-level-1"]]: level === 1,
-				[Header_module_default["header-title-level-2"]]: level === 2,
-				[Header_module_default["header-title-clickable"]]: !!onTitleClick
+		children: [
+			/* @__PURE__ */ u("div", {
+				className: clsx(Header_module_default["header-title"], {
+					[Header_module_default["header-title-level-1"]]: level === 1,
+					[Header_module_default["header-title-level-2"]]: level === 2,
+					[Header_module_default["header-title-clickable"]]: !!onTitleClick
+				}),
+				onClick: onTitleClick,
+				children: title
 			}),
-			onClick: onTitleClick,
-			children: title
-		}), children && /* @__PURE__ */ u("div", {
-			className: Header_module_default["header-side-bar"],
-			children
-		})]
+			/* @__PURE__ */ u("div", {
+				className: Header_module_default["header-actions"],
+				children: actions ?? null
+			}),
+			/* @__PURE__ */ u("div", {
+				className: Header_module_default["header-toolbar"],
+				children: toolbar ?? null
+			})
+		]
 	});
 }
+Header.Actions = Actions;
+Header.Toolbar = Toolbar$1;
 var Separator_module_default = { separator: "_separator_6czns_1" };
 //#endregion
 //#region src/components/basic/Separator.tsx
@@ -5170,15 +4929,9 @@ function Separator() {
 	return /* @__PURE__ */ u("div", { className: Separator_module_default["separator"] });
 }
 //#endregion
-//#region src/preact/elements.ts
-function isVNode(element) {
-	if (!element || !hn(element)) return false;
-	return element;
-}
-//#endregion
 //#region src/components/consts/icons-consts.ts
-var EXPAND_ICON = "unfold_more";
-var COLLAPSE_ICON = "unfold_less";
+var EXPAND_ICON = "keyboard_arrow_right";
+var COLLAPSE_ICON = "keyboard_arrow_down";
 //#endregion
 //#region src/components/basic/ExpandableSection.tsx
 function Summary({ children }) {
@@ -5192,26 +4945,21 @@ function ExpandableSection(props) {
 	const isControlled = externalExpanded !== void 0;
 	const [internalExpanded, setInternalExpanded] = d$1(isControlled ? externalExpanded : false);
 	const isExpanded = isControlled ? externalExpanded : internalExpanded;
-	let summary = null;
-	let details = null;
-	for (const child of F$1(children)) {
-		if (!isVNode(child)) continue;
-		if (child.type === Summary) summary = child.props.children;
-		if (child.type === Details) details = child.props.children;
-	}
+	const [summary, details] = findChildrenByType(children, [Summary, Details]);
 	const onToggle = () => {
 		if (isControlled) externalOnToggle?.();
 		else setInternalExpanded(!internalExpanded);
 	};
+	const iconName = isExpanded ? COLLAPSE_ICON : EXPAND_ICON;
 	return /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u(Header, {
 		title,
 		level: headerLevel,
 		onTitleClick: onToggle,
-		children: /* @__PURE__ */ u(IconButton, {
-			name: isExpanded ? COLLAPSE_ICON : EXPAND_ICON,
+		children: /* @__PURE__ */ u(Header.Actions, { children: /* @__PURE__ */ u(IconButton, {
+			name: iconName,
 			title: "Collapse/expand",
 			onClick: onToggle
-		})
+		}) })
 	}), isExpanded ? details : summary] });
 }
 ExpandableSection.Summary = Summary;
@@ -9397,6 +9145,298 @@ function Info$1({ text, className }) {
 	})] });
 }
 //#endregion
+//#region src/components/candidate-tree/CandidateBox.tsx
+function CandidateBox(props) {
+	const { data } = props;
+	const infoClassName = clsx(CandidateBox_module_default["candidate-box-foreign-object"], { [CandidateBox_module_default.muted]: props.isHighlighted == false });
+	const passedEvaluationsCountClassName = clsx(CandidateBox_module_default["candidate-box-info-value"], { [CandidateBox_module_default["candidate-box-info-value-green"]]: data.passedEvaluationsCount !== void 0 && data.passedEvaluationsCount > 0 });
+	const failedEvaluationsCountClassName = clsx(CandidateBox_module_default["candidate-box-info-value"], { [CandidateBox_module_default["candidate-box-info-value-red"]]: data.failedEvaluationsCount !== void 0 && data.failedEvaluationsCount > 0 });
+	const stroke = props.isSelected ? "var(--stroke-selected)" : "var(--stroke)";
+	return /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("rect", {
+		x: props.x + .5,
+		y: props.y + .5,
+		width: props.width,
+		height: props.height,
+		fill: "var(--fill)",
+		stroke,
+		strokeWidth: "1px",
+		vectorEffect: "non-scaling-stroke",
+		opacity: props.isHighlighted == false ? .25 : 1,
+		rx: `var(--border-radius)`,
+		ry: `var(--border-radius)`,
+		cursor: "pointer",
+		onClick: props.onClick
+	}), /* @__PURE__ */ u("foreignObject", {
+		x: props.x,
+		y: props.y,
+		width: props.width,
+		height: props.height,
+		onClick: props.onClick,
+		children: /* @__PURE__ */ u("div", {
+			className: infoClassName,
+			children: [data.aggregatedScore !== void 0 && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("div", {
+				className: CandidateBox_module_default["candidate-box-score-name"],
+				children: "Score"
+			}), /* @__PURE__ */ u("div", {
+				className: CandidateBox_module_default["candidate-box-score-value"],
+				children: [data.aggregatedScore.toFixed(2), data.finalAggregatedScore !== void 0 && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u(MiddotSeparator, {}), /* @__PURE__ */ u("span", {
+					className: "green",
+					children: data.finalAggregatedScore.toFixed(2)
+				})] })]
+			})] }), /* @__PURE__ */ u("div", {
+				className: CandidateBox_module_default["candidate-box-info-properties"],
+				children: [
+					/* @__PURE__ */ u("div", {
+						className: CandidateBox_module_default["candidate-box-info-name"],
+						children: "Passed:"
+					}),
+					/* @__PURE__ */ u("div", {
+						className: passedEvaluationsCountClassName,
+						children: data.passedEvaluationsCount ?? "-"
+					}),
+					/* @__PURE__ */ u("div", {
+						className: CandidateBox_module_default["candidate-box-info-name"],
+						children: "Failed:"
+					}),
+					/* @__PURE__ */ u("div", {
+						className: failedEvaluationsCountClassName,
+						children: data.failedEvaluationsCount ?? "-"
+					}),
+					/* @__PURE__ */ u("div", {
+						className: CandidateBox_module_default["candidate-box-info-name"],
+						children: "Changes:"
+					}),
+					/* @__PURE__ */ u("div", {
+						className: CandidateBox_module_default["candidate-box-info-value"],
+						children: data.candidateChangesCount ?? "-"
+					})
+				]
+			})]
+		})
+	})] });
+}
+//#endregion
+//#region src/components/candidate-tree/CandidateBoxConnection.tsx
+function CandidateBoxConnection(props) {
+	const { fromX, fromY, toX, toY } = props;
+	return /* @__PURE__ */ u("path", {
+		d: `M ${fromX + .5} ${fromY + .5} C ${fromX + .5} ${toY + .5}, ${toX + .5} ${fromY + .5}, ${toX + .5} ${toY + .5}`,
+		stroke: "var(--stroke)",
+		strokeWidth: 1,
+		fill: "none",
+		opacity: props.isHighlighted == false ? .25 : 1
+	});
+}
+//#endregion
+//#region src/components/candidate-tree/candidate-tree-utils.ts
+/**
+* Resolve the boxes for the prompt tree.
+*/
+function resolveBoxes(rpeInsights, onBoxClick) {
+	const { candidates, iterationHistory, aggregatedEvaluations } = rpeInsights;
+	const boxes = [];
+	let y = 10;
+	const findCandidateById = (candidateId) => {
+		const candidate = candidates.find((itr) => {
+			return itr.candidateId === candidateId;
+		});
+		if (candidate === void 0) throw new Error(`Candidate ${candidateId} not found`);
+		return candidate;
+	};
+	const findCandidateAggregatedEvaluation = (candidateId) => {
+		return aggregatedEvaluations.find((evaluation) => {
+			return evaluation.candidateRef.candidateId === candidateId;
+		});
+	};
+	const findFinalAggregatedEvaluation = (candidateId) => {
+		return rpeInsights.finalCandidates.find((evaluation) => {
+			return evaluation.candidateRef.candidateId === candidateId;
+		});
+	};
+	const firstIteration = iterationHistory[0];
+	let x = 10;
+	for (const candidateRef of firstIteration.candidateRefs ?? []) {
+		const prompt = findCandidateById(candidateRef.candidateId);
+		const aggregatedEvaluation = findCandidateAggregatedEvaluation(candidateRef.candidateId);
+		const finalAggregatedEvaluation = findFinalAggregatedEvaluation(candidateRef.candidateId);
+		boxes.push({
+			data: {
+				candidateId: candidateRef.candidateId,
+				parentCandidateIds: prompt.parentCandidateIds,
+				aggregatedScore: aggregatedEvaluation?.aggregatedScore,
+				finalAggregatedScore: finalAggregatedEvaluation?.aggregatedEvaluation?.aggregatedScore,
+				passedEvaluationsCount: aggregatedEvaluation?.passedEvaluations.length,
+				failedEvaluationsCount: aggregatedEvaluation?.failedEvaluations.length
+			},
+			x,
+			y,
+			width: 120,
+			height: 120,
+			isSelected: false,
+			onClick: () => onBoxClick(candidateRef.candidateId)
+		});
+		x += 140;
+	}
+	y += 160;
+	for (const iteration of iterationHistory) {
+		let x = 10;
+		for (const newCandidate of iteration.generatedCandidates ?? []) {
+			const candidate = findCandidateById(newCandidate.candidateRef.candidateId);
+			const candidateAggregatedEvaluation = findCandidateAggregatedEvaluation(candidate.candidateId);
+			const finalAggregatedEvaluation = findFinalAggregatedEvaluation(candidate.candidateId);
+			const isSelected = (iteration.selectedCandidateRefs ?? []).some((selectedCandidateRef) => {
+				return selectedCandidateRef.candidateId === candidate.candidateId;
+			});
+			boxes.push({
+				data: {
+					candidateId: candidate.candidateId,
+					parentCandidateIds: candidate.parentCandidateIds,
+					aggregatedScore: candidateAggregatedEvaluation?.aggregatedScore,
+					finalAggregatedScore: finalAggregatedEvaluation?.aggregatedEvaluation?.aggregatedScore,
+					passedEvaluationsCount: candidateAggregatedEvaluation?.passedEvaluations.length,
+					failedEvaluationsCount: candidateAggregatedEvaluation?.failedEvaluations.length,
+					candidateChangesCount: newCandidate.changes.length
+				},
+				x,
+				y,
+				width: 120,
+				height: 120,
+				isSelected,
+				onClick: () => onBoxClick(candidate.candidateId)
+			});
+			x += 140;
+		}
+		y += 160;
+	}
+	return boxes;
+}
+/**
+* Resolve the connections for the prompt tree.
+*/
+function resolveConnections(boxes) {
+	const connections = [];
+	for (const boxA of boxes) for (const boxB of boxes) {
+		if (boxA.data.candidateId === boxB.data.candidateId) continue;
+		if (boxB.data.parentCandidateIds?.includes(boxA.data.candidateId)) connections.push({
+			fromCandidateId: boxA.data.candidateId,
+			fromX: boxA.x + boxA.width / 2,
+			fromY: boxA.y + boxA.height,
+			toCandidateId: boxB.data.candidateId,
+			toX: boxB.x + boxB.width / 2,
+			toY: boxB.y
+		});
+	}
+	return connections;
+}
+function getAncestors(boxes, promptId) {
+	let box = boxes.find((box) => {
+		return box.data.candidateId === promptId;
+	});
+	if (box === void 0) return [];
+	const ancestors = [];
+	let currentBoxes = [box];
+	while (currentBoxes.length > 0) {
+		const box = currentBoxes.shift();
+		ancestors.push(box);
+		const parentBoxes = (box.data.parentCandidateIds ?? []).map((parentPromptId) => {
+			const parentBox = boxes.find((box) => {
+				return box.data.candidateId === parentPromptId;
+			});
+			if (parentBox === void 0) throw new Error(`Parent prompt ${parentPromptId} not found`);
+			return parentBox;
+		});
+		currentBoxes.push(...parentBoxes);
+	}
+	return ancestors.filter((ancestor) => {
+		return ancestor.data.candidateId !== promptId;
+	});
+}
+/**
+* Check if the prompt is highlighted.
+*/
+function isHighlighted(boxes, promptId, selectedPromptId) {
+	if (selectedPromptId === null) return;
+	if (promptId === selectedPromptId) return true;
+	if (getAncestors(boxes, selectedPromptId).some((ancestor) => {
+		return ancestor.data.candidateId === promptId;
+	})) return true;
+	if (getAncestors(boxes, promptId).some((ancestor) => {
+		return ancestor.data.candidateId === selectedPromptId;
+	})) return true;
+	return false;
+}
+//#endregion
+//#region src/components/candidate-tree/CandidateTree.tsx
+function CandidateTree(props) {
+	const { rpeInsights, selectedCandidateId: selectedPromptId, detailsVisible } = props;
+	const { candidates, iterationHistory } = rpeInsights;
+	const onBoxClick = (promptId) => {
+		props.onSelectCandidateId(promptId);
+	};
+	const onBackgroundClick = () => {
+		props.onBackgroundClick();
+	};
+	const boxes = resolveBoxes(rpeInsights, onBoxClick);
+	const connections = resolveConnections(boxes);
+	const renderBoxes = () => {
+		return boxes.map((box) => /* @__PURE__ */ u(CandidateBox, {
+			...box,
+			isSelected: box.data.candidateId === selectedPromptId && detailsVisible,
+			isHighlighted: isHighlighted(boxes, box.data.candidateId, selectedPromptId)
+		}, box.data.candidateId));
+	};
+	const renderConnections = () => {
+		return connections.map((connection) => {
+			const id = `${connection.fromCandidateId}-${connection.toCandidateId}`;
+			const isConnectionHighlighted = isHighlighted(boxes, connection.fromCandidateId, selectedPromptId) && isHighlighted(boxes, connection.toCandidateId, selectedPromptId);
+			return /* @__PURE__ */ u(CandidateBoxConnection, {
+				...connection,
+				isHighlighted: isConnectionHighlighted
+			}, id);
+		});
+	};
+	const width = 10 + boxes.reduce((max, box) => {
+		return Math.max(max, box.x + box.width);
+	}, 0);
+	const height = 10 + boxes.reduce((max, box) => {
+		return Math.max(max, box.y + box.height);
+	}, 0);
+	return /* @__PURE__ */ u("svg", {
+		className: CandidateTree_module_default["candidate-tree"],
+		width: `${width}px`,
+		height: `${height}px`,
+		viewBox: `0 0 ${width} ${height}`,
+		children: [
+			/* @__PURE__ */ u("rect", {
+				x: 0,
+				y: 0,
+				width,
+				height,
+				fill: "var(--bg)",
+				opacity: 0,
+				rx: `var(--border-radius)`,
+				ry: `var(--border-radius)`,
+				onClick: onBackgroundClick
+			}),
+			renderConnections(),
+			renderBoxes()
+		]
+	});
+}
+//#endregion
+//#region src/hooks/use-local-storage.ts
+function useLocalStorage(initialValue, key) {
+	const [value, setValue] = d$1(() => {
+		const stored = localStorage.getItem(key);
+		return stored ? JSON.parse(stored) : initialValue;
+	});
+	const setStoredValue = (value) => {
+		localStorage.setItem(key, JSON.stringify(value));
+		setValue(value);
+	};
+	return [value, setStoredValue];
+}
+//#endregion
 //#region src/components/candidate-details/metrics.ts
 function hasMetrics(metrics) {
 	if (!metrics) return false;
@@ -9685,15 +9725,12 @@ function CandidateAnalysis(props) {
 						setMore(false);
 					}
 				}),
-				/* @__PURE__ */ u("h2", { children: "Strengths" }),
-				renderList(analysis.strengths),
-				/* @__PURE__ */ u("h2", { children: "Recommendations" }),
-				renderList(analysis.recommendations),
-				/* @__PURE__ */ u("h1", { children: "Failed example analysis" }),
-				/* @__PURE__ */ u(ExpandableList, {
+				analysis.strengths.length > 0 && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("h2", { children: "Strengths" }), renderList(analysis.strengths)] }),
+				analysis.recommendations.length > 0 && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("h2", { children: "Recommendations" }), renderList(analysis.recommendations)] }),
+				failedExampleAnalysis.length > 0 && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("h1", { children: "Failed example analysis" }), /* @__PURE__ */ u(ExpandableList, {
 					totalItems: failedExampleAnalysis.length,
 					itemRenderer: renderFailedExampleAnalysisItem
-				})
+				})] })
 			]
 		}) })]
 	});
@@ -9727,6 +9764,9 @@ var CandidateModule_module_default = {
 function CandidateModule(props) {
 	const { name, module } = props;
 	const [expanded, setExpanded] = d$1(false);
+	const onCopyClick = () => {
+		navigator.clipboard.writeText(module);
+	};
 	const onToggle = () => {
 		setExpanded(!expanded);
 	};
@@ -9739,11 +9779,15 @@ function CandidateModule(props) {
 			level: 2,
 			className: CandidateModule_module_default["header"],
 			onTitleClick: onToggle,
-			children: /* @__PURE__ */ u(IconButton, {
+			children: [/* @__PURE__ */ u(Header.Actions, { children: /* @__PURE__ */ u(IconButton, {
 				name: expandIconName,
 				title: "Expand/collapse module",
 				onClick: onToggle
-			})
+			}) }), /* @__PURE__ */ u(Header.Toolbar, { children: /* @__PURE__ */ u(IconButton, {
+				name: "content_copy",
+				title: "Copy module",
+				onClick: onCopyClick
+			}) })]
 		}), /* @__PURE__ */ u("pre", {
 			className: moduleClassName,
 			children: module
@@ -9851,6 +9895,11 @@ function CandidateDetails(props) {
 			data.trainingAnalysis && /* @__PURE__ */ u(CandidateAnalysis, {
 				datasetEntries: data.datasetEntries,
 				analysis: data.trainingAnalysis
+			}),
+			data.finalAggregatedEvaluation && /* @__PURE__ */ u(CandidateAggregatedEvaluation, {
+				title: "Final Candidate Evaluations",
+				moreLocalStorageKey: "moreCandidateFinalEvaluations",
+				aggregatedEvaluation: data.finalAggregatedEvaluation
 			})
 		] })
 	});
@@ -9858,7 +9907,6 @@ function CandidateDetails(props) {
 //#endregion
 //#region src/components/process-view/process-view-utils.ts
 function getCandidateDetailsData(rpeInsights, selectedCandidateId) {
-	console.log("----------- selectedCandidateId", selectedCandidateId);
 	if (selectedCandidateId === null) return;
 	const { dataset, candidates, iterationHistory } = rpeInsights;
 	const datasetEntries = dataset.entries;
@@ -9874,6 +9922,11 @@ function getCandidateDetailsData(rpeInsights, selectedCandidateId) {
 			return aggregatedEvaluation.candidateRef.candidateId === candidateId;
 		});
 	};
+	const findFinalAggregatedEvaluationByCandidateId = (candidateId) => {
+		return rpeInsights.finalCandidates.find((finalCandidate) => {
+			return finalCandidate.candidateRef.candidateId === candidateId;
+		})?.aggregatedEvaluation;
+	};
 	const findAnalysisByCandidateId = (analyses, candidateId) => {
 		return analyses?.find((analysis) => {
 			return analysis.candidateRef.candidateId === candidateId;
@@ -9888,7 +9941,8 @@ function getCandidateDetailsData(rpeInsights, selectedCandidateId) {
 		candidate: findCandidateById(seedCandidateRef.candidateId),
 		validationAggregatedEvaluation: findAggregatedEvaluationByCandidateId(rpeInsights.aggregatedEvaluations, selectedCandidateId),
 		trainingAggregatedEvaluation: findAggregatedEvaluationByCandidateId(firstIteration.trainingAggregatedEvaluations, selectedCandidateId),
-		trainingAnalysis: findAnalysisByCandidateId(firstIteration.trainingAnalyses, selectedCandidateId)
+		trainingAnalysis: findAnalysisByCandidateId(firstIteration.trainingAnalyses, selectedCandidateId),
+		finalAggregatedEvaluation: findFinalAggregatedEvaluationByCandidateId(selectedCandidateId)
 	};
 	let data;
 	for (let index = 0; index < iterationHistory.length; index++) {
@@ -9904,7 +9958,8 @@ function getCandidateDetailsData(rpeInsights, selectedCandidateId) {
 				changes: candidate.changes,
 				validationAggregatedEvaluation: findAggregatedEvaluationByCandidateId(rpeInsights.aggregatedEvaluations, selectedCandidateId),
 				trainingAggregatedEvaluation: findAggregatedEvaluationByCandidateId(nextIteration?.trainingAggregatedEvaluations, selectedCandidateId),
-				trainingAnalysis: findAnalysisByCandidateId(nextIteration?.trainingAnalyses, selectedCandidateId)
+				trainingAnalysis: findAnalysisByCandidateId(nextIteration?.trainingAnalyses, selectedCandidateId),
+				finalAggregatedEvaluation: findFinalAggregatedEvaluationByCandidateId(selectedCandidateId)
 			};
 			break;
 		}
@@ -14119,7 +14174,8 @@ function InfoPanel(props) {
 			renderRPEProperties("Aggregator", props.rpeInsights.info.aggregatorInfo.name, props.rpeInsights.info.aggregatorInfo.properties),
 			renderRPEProperties("Analyzer", props.rpeInsights.info.analyzerInfo.name, props.rpeInsights.info.analyzerInfo.properties),
 			renderRPEProperties("Candidate Generator", props.rpeInsights.info.candidateGeneratorInfo.name, props.rpeInsights.info.candidateGeneratorInfo.properties),
-			renderRPEProperties("Candidate Selector", props.rpeInsights.info.candidateSelectorInfo.name, props.rpeInsights.info.candidateSelectorInfo.properties)
+			renderRPEProperties("Candidate Selector", props.rpeInsights.info.candidateSelectorInfo.name, props.rpeInsights.info.candidateSelectorInfo.properties),
+			renderRPEProperties("Final Candidate Selector", props.rpeInsights.info.finalCandidateSelectorInfo.name, props.rpeInsights.info.finalCandidateSelectorInfo.properties)
 		]
 	});
 }
@@ -14193,7 +14249,7 @@ function loadRPEInsights() {
 R$1(/* @__PURE__ */ u(App, { rpeInsights: loadRPEInsights() }), document.getElementById("app"));
 //#endregion
 
-//# sourceMappingURL=index-TcmoJp65.js.map</script>
+//# sourceMappingURL=index-BhMmCNaI.js.map</script>
     <style rel="stylesheet" crossorigin>* {
   box-sizing: border-box;
 }
@@ -14433,7 +14489,7 @@ html[data-theme=light] p {
 ._table_40r8k_1 ._header-cell_40r8k_18 {
   font-weight: bold;
   border-bottom: 1px solid var(--muted);
-}._header_v3efg_1 {
+}._header_qb4rk_1 {
   display: flex;
   flex-direction: row;
   align-items: end;
@@ -14441,31 +14497,41 @@ html[data-theme=light] p {
   user-select: none;
 }
 
-._header-title_v3efg_9 {
+._header-title_qb4rk_9 {
   font-family: "Funnel Display", sans-serif;
   margin: 0;
   padding: 0;
+  flex: 0 1 auto;
 }
 
-._header-title-clickable_v3efg_15 {
+._header-title-clickable_qb4rk_16 {
   cursor: pointer;
 }
 
-._header-title-level-1_v3efg_19 {
+._header-title-level-1_qb4rk_20 {
   font-size: 1.25rem;
   font-weight: 500;
   line-height: 1;
 }
 
-._header_v3efg_1 ~ ._header_v3efg_1 ._header-title-level-1_v3efg_19 {
+._header_qb4rk_1 ~ ._header_qb4rk_1 ._header-title-level-1_qb4rk_20 {
   margin-top: 1rem;
   padding-top: 1rem;
 }
 
-._header-side-bar_v3efg_30 {
+._header-actions_qb4rk_31 {
   margin-left: auto;
   display: flex;
   align-items: center;
+  flex: 0 1 auto;
+}
+
+._header-toolbar_qb4rk_38 {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  flex: 1 0 auto;
+  justify-content: flex-end;
 }._separator_6czns_1 {
   height: 1px;
   background-color: var(--muted);

@@ -44,7 +44,6 @@ export function ExpandableList(props: ExpandableListProps) {
   };
 
   const renderItems = () => {
-    // const length = Math.min(visibleItemCount, totalItems);
     return Array.from({ length: visibleItemCount }, (_, index) => {
       return itemRenderer(index);
     });

@@ -1,9 +1,6 @@
 import { 
   type RPEAggregatorOutput,
   type RPEAnalyzerOutput,
-  type RPEIteration,
-  type RPECandidate,
-  RPEDatasetEntry,
   RPEInsights,
 } from '@gettoor/core';
 import { CandidateDetailsData } from '../candidate-details';
@@ -12,7 +9,6 @@ export function getCandidateDetailsData(
   rpeInsights: RPEInsights,
   selectedCandidateId: string | null,
 ): CandidateDetailsData | undefined {
-  console.log('----------- selectedCandidateId', selectedCandidateId);
   if (selectedCandidateId === null) {
     return undefined;
   }
@@ -41,6 +37,14 @@ export function getCandidateDetailsData(
     );
   };
 
+  const findFinalAggregatedEvaluationByCandidateId = (
+    candidateId: string,
+  ): RPEAggregatorOutput | undefined => {
+    const finalCandidate = rpeInsights.finalCandidates.find(finalCandidate => {
+      return finalCandidate.candidateRef.candidateId === candidateId;
+    });
+    return finalCandidate?.aggregatedEvaluation;
+  };
   const findAnalysisByCandidateId = (
     analyses: RPEAnalyzerOutput[] | undefined,
     candidateId: string
@@ -73,6 +77,9 @@ export function getCandidateDetailsData(
         firstIteration.trainingAnalyses,
         selectedCandidateId,
       ),
+      finalAggregatedEvaluation: findFinalAggregatedEvaluationByCandidateId(
+        selectedCandidateId,
+      ),
     };
   }
 
@@ -101,6 +108,9 @@ export function getCandidateDetailsData(
         ),
         trainingAnalysis: findAnalysisByCandidateId(
           nextIteration?.trainingAnalyses,
+          selectedCandidateId,
+        ),
+        finalAggregatedEvaluation: findFinalAggregatedEvaluationByCandidateId(
           selectedCandidateId,
         ),
       };

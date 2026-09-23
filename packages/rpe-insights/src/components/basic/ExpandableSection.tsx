@@ -1,8 +1,8 @@
-import { ComponentChildren, toChildArray } from 'preact';
+import { ComponentChildren } from 'preact';
 import { PropsWithChildren } from 'preact/compat';
 import { useState } from 'preact/hooks';
 
-import { isVNode } from '../../preact';
+import { findChildrenByType } from '../../preact';
 import { COLLAPSE_ICON, EXPAND_ICON } from '../consts';
 import { IconButton } from './IconButton';
 import { Header } from './Header';
@@ -37,20 +37,7 @@ export function ExpandableSection(props: ExpandableSectionProps) {
   );
   const isExpanded = isControlled ? externalExpanded : internalExpanded;
 
-  let summary: ComponentChildren = null;
-  let details: ComponentChildren = null;
-
-  for (const child of toChildArray(children)) {
-    if (!isVNode(child)) {
-      continue;
-    }
-    if (child.type === Summary) {
-      summary = child.props.children;
-    }
-    if (child.type === Details) {
-      details = child.props.children;
-    }
-  }
+  const [summary, details] = findChildrenByType(children, [Summary, Details]);
 
   const onToggle = () => {
     if (isControlled) {
@@ -68,11 +55,13 @@ export function ExpandableSection(props: ExpandableSectionProps) {
         level={headerLevel}
         onTitleClick={onToggle}
       >
-        <IconButton
-          name={iconName}
-          title='Collapse/expand'
-          onClick={onToggle}
-        />
+        <Header.Actions>
+          <IconButton
+            name={iconName}
+            title='Collapse/expand'
+            onClick={onToggle}
+          />
+        </Header.Actions>
       </Header>
       { isExpanded ? details : summary }
     </>

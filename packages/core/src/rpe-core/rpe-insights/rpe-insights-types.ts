@@ -45,6 +45,11 @@ export interface RPEInsightsInfo {
    * Information about the candidate selector used for the RPE process.
    */
   candidateSelectorInfo: RPECandidateSelectorInfo;
+
+  /**
+   * Information about the final candidate selector used for the RPE process.
+   */
+  finalCandidateSelectorInfo: RPECandidateSelectorInfo;
 }
 
 /**
