@@ -1,9 +1,8 @@
 import { useState } from 'preact/hooks';
 
-import { IconButton } from './IconButton';
 import { MiddotSeparator } from './MiddotSeparator';
-import styles from './ExpandableList.module.scss';
 import { LinkButton } from './LinkButton';
+import styles from './ExpandableList.module.scss';
 
 export interface ExpandableListProps {
   totalItems: number;
@@ -12,19 +11,19 @@ export interface ExpandableListProps {
   itemRenderer: (index: number) => React.ReactNode;
 }
 
-const INITIAL_VISIBLE_ITEM_COUNT = 4;
+const DEFAULT_INITIAL_VISIBLE_ITEM_COUNT = 4;
 const DEFAULT_VISIBLE_ITEM_COUNT_INCREMENT = 4;
 
 export function ExpandableList(props: ExpandableListProps) {
   const { 
     totalItems,
-    initialVisibleItemCount = INITIAL_VISIBLE_ITEM_COUNT,
+    initialVisibleItemCount = DEFAULT_INITIAL_VISIBLE_ITEM_COUNT,
     visibleItemCountIncrement = DEFAULT_VISIBLE_ITEM_COUNT_INCREMENT,
     itemRenderer,
   } = props;
 
   const [visibleItemCount, setVisibleItemCount] = useState(
-    initialVisibleItemCount,
+    Math.min(initialVisibleItemCount, totalItems),
   );
 
   const onMoreClick = () => {
@@ -45,6 +44,7 @@ export function ExpandableList(props: ExpandableListProps) {
   };
 
   const renderItems = () => {
+    // const length = Math.min(visibleItemCount, totalItems);
     return Array.from({ length: visibleItemCount }, (_, index) => {
       return itemRenderer(index);
     });

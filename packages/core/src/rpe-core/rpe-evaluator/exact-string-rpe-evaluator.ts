@@ -3,18 +3,19 @@ import { booleanToRPEInfoValue } from '../rpe-info/index.js';
 import { candidateRefFromCandidate } from '../rpe-candidate/index.js';
 import { RPEEvaluator, RPEEvaluatorInput } from './rpe-evaluator-types.js';
 import {
-  ExactMatchRPEEvaluatorInput,
-} from './exact-match-rpe-evaluator-types.js';
+  ExactStringRPEEvaluatorInput,
+} from './exact-string-rpe-evaluator-types.js';
 
 /**
- * Exact match RPE evaluator. It makes strict string comparison between
+ * Exact string RPE evaluator. It makes strict string comparison between
  * the response and the expected response. Returns score 1 if the response is
- * exactly the same as the expected response, 0 otherwise.
- * @param input - Input for the exact match RPE evaluator.
- * @returns Exact match RPE evaluator.
+ * exactly the same as the expected response, 0 otherwise. Uses LLM-as-a-judge
+ * to generate metrics.
+ * @param input - Input for the exact string RPE evaluator.
+ * @returns Exact string RPE evaluator.
  */
-export function exactMatchRPEEvaluator(
-  input?: ExactMatchRPEEvaluatorInput,
+export function exactStringRPEEvaluator(
+  input?: ExactStringRPEEvaluatorInput,
 ): RPEEvaluator {
   const {
     caseSensitive = true,
@@ -30,21 +31,21 @@ export function exactMatchRPEEvaluator(
       if (!datasetEntry.expectedResponse) {
         throw new InternalToorError(
           `No expected response in dataset entry ` +
-          `${ datasetEntry.datasetEntryId } for the exact match evaluator`
+          `${ datasetEntry.datasetEntryId } for the exact string evaluator`
         );
       }
 
       // must be strings
       if (typeof response !== 'string') {
         throw new InternalToorError(
-          `Response must be a string for the exact match evaluator`
+          `Response must be a string for the exact string evaluator`
         );
       }
       if (typeof datasetEntry.expectedResponse !== 'string') {
         throw new InternalToorError(
           `Expected response in dataset entry ` +
           `${datasetEntry.datasetEntryId} must be a string ` +
-          `for the exact match evaluator`
+          `for the exact string evaluator`
         );
       }
 
@@ -79,7 +80,7 @@ export function exactMatchRPEEvaluator(
 
     getInfo: async () => {
       return {
-        name: 'Exact-match Evaluator',
+        name: 'Exact-string Evaluator',
         properties: [
           {
             key: 'caseSensitive',

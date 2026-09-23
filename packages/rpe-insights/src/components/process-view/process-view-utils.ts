@@ -10,11 +10,9 @@ import { CandidateDetailsData } from '../candidate-details';
 
 export function getCandidateDetailsData(
   rpeInsights: RPEInsights,
-  // datasetEntries: RPEDatasetEntry[],
-  // candidates: RPECandidate[],
-  // iterations: RPEIteration[],
   selectedCandidateId: string | null,
 ): CandidateDetailsData | undefined {
+  console.log('----------- selectedCandidateId', selectedCandidateId);
   if (selectedCandidateId === null) {
     return undefined;
   }
@@ -33,22 +31,21 @@ export function getCandidateDetailsData(
   };
 
   const findAggregatedEvaluationByCandidateId = (
-    aggregatedEvaluations: RPEAggregatorOutput[],
+    aggregatedEvaluations: RPEAggregatorOutput[] | undefined,
     candidateId: string,
   ): RPEAggregatorOutput | undefined => {
-    const aggregatedEvaluation = aggregatedEvaluations.find(
+    return aggregatedEvaluations?.find(
       aggregatedEvaluation => {
         return aggregatedEvaluation.candidateRef.candidateId === candidateId;
       },
     );
-    return aggregatedEvaluation;
   };
 
   const findAnalysisByCandidateId = (
-    analyses: RPEAnalyzerOutput[],
+    analyses: RPEAnalyzerOutput[] | undefined,
     candidateId: string
   ): RPEAnalyzerOutput | undefined => {
-    return analyses.find(analysis => {
+    return analyses?.find(analysis => {
       return analysis.candidateRef.candidateId === candidateId;
     });
   };
@@ -81,11 +78,14 @@ export function getCandidateDetailsData(
 
   let data: CandidateDetailsData | undefined;
   // candidates from each iteration
-  for (const iteration of iterationHistory) {
+  for (let index = 0; index < iterationHistory.length; index++) {
+    const iteration = iterationHistory[index];
     const candidate = iteration.generatedCandidates?.find(candidate => {
       return candidate.candidateRef.candidateId === selectedCandidateId;
     });
     if (candidate !== undefined) {
+      // candidates are training-evaluated in the next iteration
+      const nextIteration = iterationHistory[index + 1];
       data = {
         datasetEntries,
         candidate: findCandidateById(candidate.candidateRef.candidateId),
@@ -96,11 +96,11 @@ export function getCandidateDetailsData(
           selectedCandidateId,
         ),
         trainingAggregatedEvaluation: findAggregatedEvaluationByCandidateId(
-          iteration.trainingAggregatedEvaluations,
+          nextIteration?.trainingAggregatedEvaluations,
           selectedCandidateId,
         ),
         trainingAnalysis: findAnalysisByCandidateId(
-          iteration.trainingAnalyses,
+          nextIteration?.trainingAnalyses,
           selectedCandidateId,
         ),
       };

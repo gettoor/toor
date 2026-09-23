@@ -75,7 +75,7 @@ export function Table(props: TableProps) {
         getColumnClassName(columnIndex)
       ];
 
-      if (!cell) {
+      if (cell == null) {
         value = '';
       } else if (typeof cell === 'object' && 'value' in cell) {
         value = basicCellToValue(cell.value);

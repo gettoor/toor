@@ -5115,11 +5115,10 @@ function Table(props) {
 			};
 			let value = "";
 			let cellClassNames = [getColumnClassName(columnIndex)];
-			if (!cell) value = "";
+			if (cell == null) value = "";
 			else if (typeof cell === "object" && "value" in cell) {
 				value = basicCellToValue(cell.value);
 				cellClassNames.push(cell.className);
-				console.log(cellClassNames);
 			} else value = basicCellToValue(cell);
 			return /* @__PURE__ */ u("div", {
 				className: clsx(Table_module_default["cell"], ...cellClassNames),
@@ -5229,12 +5228,6 @@ function MiddotSeparator() {
 	});
 }
 //#endregion
-//#region src/components/basic/ExpandableList.module.scss
-var ExpandableList_module_default = {
-	"expandable-list-button-bar": "_expandable-list-button-bar_t4bfe_1",
-	"expandable-list-button-bar-content": "_expandable-list-button-bar-content_t4bfe_7"
-};
-//#endregion
 //#region src/components/basic/LinkButton.module.scss
 var LinkButton_module_default = {
 	"link-button": "_link-button_14ox0_1",
@@ -5256,12 +5249,18 @@ function LinkButton(props) {
 	});
 }
 //#endregion
+//#region src/components/basic/ExpandableList.module.scss
+var ExpandableList_module_default = {
+	"expandable-list-button-bar": "_expandable-list-button-bar_t4bfe_1",
+	"expandable-list-button-bar-content": "_expandable-list-button-bar-content_t4bfe_7"
+};
+//#endregion
 //#region src/components/basic/ExpandableList.tsx
-var INITIAL_VISIBLE_ITEM_COUNT = 4;
+var DEFAULT_INITIAL_VISIBLE_ITEM_COUNT = 4;
 var DEFAULT_VISIBLE_ITEM_COUNT_INCREMENT = 4;
 function ExpandableList(props) {
-	const { totalItems, initialVisibleItemCount = INITIAL_VISIBLE_ITEM_COUNT, visibleItemCountIncrement = DEFAULT_VISIBLE_ITEM_COUNT_INCREMENT, itemRenderer } = props;
-	const [visibleItemCount, setVisibleItemCount] = d$1(initialVisibleItemCount);
+	const { totalItems, initialVisibleItemCount = DEFAULT_INITIAL_VISIBLE_ITEM_COUNT, visibleItemCountIncrement = DEFAULT_VISIBLE_ITEM_COUNT_INCREMENT, itemRenderer } = props;
+	const [visibleItemCount, setVisibleItemCount] = d$1(Math.min(initialVisibleItemCount, totalItems));
 	const onMoreClick = () => {
 		setVisibleItemCount(Math.min(visibleItemCount + visibleItemCountIncrement, totalItems));
 	};
@@ -9437,7 +9436,8 @@ function Metrics(props) {
 		header: ["Metric", "Score"],
 		rows: Object.keys(props.metrics).sort().map((name) => {
 			return [capitalize(name), props.metrics[name].normalizedScore];
-		})
+		}),
+		templateColumns: "max-content max-content"
 	});
 }
 //#endregion
@@ -9527,7 +9527,7 @@ function CandidateAggregatedEvaluation(props) {
 				renderDatasetEntry(evaluation.datasetEntry),
 				/* @__PURE__ */ u("h2", { children: "Response" }),
 				/* @__PURE__ */ u("p", { children: /* @__PURE__ */ u(Markdown, { content: responseToString(evaluation.response) }) }),
-				expectedResponse && /* @__PURE__ */ u("p", { children: [/* @__PURE__ */ u("h2", { children: "Expected response" }), /* @__PURE__ */ u(Markdown, { content: responseToString(expectedResponse) })] }),
+				expectedResponse && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("h2", { children: "Expected response" }), /* @__PURE__ */ u("p", { children: /* @__PURE__ */ u(Markdown, { content: responseToString(expectedResponse) }) })] }),
 				/* @__PURE__ */ u("h2", { children: "Reasoning" }),
 				/* @__PURE__ */ u("div", { children: /* @__PURE__ */ u(Markdown, { content: evaluation.reasoning }) }),
 				hasMetrics(evaluation.metrics) && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("h2", { children: "Metrics" }), /* @__PURE__ */ u("p", { children: /* @__PURE__ */ u(Metrics, { metrics: evaluation.metrics }) })] })
@@ -9858,6 +9858,7 @@ function CandidateDetails(props) {
 //#endregion
 //#region src/components/process-view/process-view-utils.ts
 function getCandidateDetailsData(rpeInsights, selectedCandidateId) {
+	console.log("----------- selectedCandidateId", selectedCandidateId);
 	if (selectedCandidateId === null) return;
 	const { dataset, candidates, iterationHistory } = rpeInsights;
 	const datasetEntries = dataset.entries;
@@ -9869,12 +9870,12 @@ function getCandidateDetailsData(rpeInsights, selectedCandidateId) {
 		return candidate;
 	};
 	const findAggregatedEvaluationByCandidateId = (aggregatedEvaluations, candidateId) => {
-		return aggregatedEvaluations.find((aggregatedEvaluation) => {
+		return aggregatedEvaluations?.find((aggregatedEvaluation) => {
 			return aggregatedEvaluation.candidateRef.candidateId === candidateId;
 		});
 	};
 	const findAnalysisByCandidateId = (analyses, candidateId) => {
-		return analyses.find((analysis) => {
+		return analyses?.find((analysis) => {
 			return analysis.candidateRef.candidateId === candidateId;
 		});
 	};
@@ -9890,19 +9891,20 @@ function getCandidateDetailsData(rpeInsights, selectedCandidateId) {
 		trainingAnalysis: findAnalysisByCandidateId(firstIteration.trainingAnalyses, selectedCandidateId)
 	};
 	let data;
-	for (const iteration of iterationHistory) {
-		const candidate = iteration.generatedCandidates?.find((candidate) => {
+	for (let index = 0; index < iterationHistory.length; index++) {
+		const candidate = iterationHistory[index].generatedCandidates?.find((candidate) => {
 			return candidate.candidateRef.candidateId === selectedCandidateId;
 		});
 		if (candidate !== void 0) {
+			const nextIteration = iterationHistory[index + 1];
 			data = {
 				datasetEntries,
 				candidate: findCandidateById(candidate.candidateRef.candidateId),
 				changesSummary: candidate.changesSummary,
 				changes: candidate.changes,
 				validationAggregatedEvaluation: findAggregatedEvaluationByCandidateId(rpeInsights.aggregatedEvaluations, selectedCandidateId),
-				trainingAggregatedEvaluation: findAggregatedEvaluationByCandidateId(iteration.trainingAggregatedEvaluations, selectedCandidateId),
-				trainingAnalysis: findAnalysisByCandidateId(iteration.trainingAnalyses, selectedCandidateId)
+				trainingAggregatedEvaluation: findAggregatedEvaluationByCandidateId(nextIteration?.trainingAggregatedEvaluations, selectedCandidateId),
+				trainingAnalysis: findAnalysisByCandidateId(nextIteration?.trainingAnalyses, selectedCandidateId)
 			};
 			break;
 		}
@@ -14191,7 +14193,7 @@ function loadRPEInsights() {
 R$1(/* @__PURE__ */ u(App, { rpeInsights: loadRPEInsights() }), document.getElementById("app"));
 //#endregion
 
-//# sourceMappingURL=index-6BHoY1-l.js.map</script>
+//# sourceMappingURL=index-TcmoJp65.js.map</script>
     <style rel="stylesheet" crossorigin>* {
   box-sizing: border-box;
 }
@@ -14472,6 +14474,15 @@ html[data-theme=light] p {
 }._middot-separator_1tzs0_1 {
   padding-left: 0.25rem;
   padding-right: 0.25rem;
+}._link-button_14ox0_1 {
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--link-color);
+}
+
+._link-button-disabled_14ox0_7 {
+  cursor: default;
+  color: var(--muted);
 }._expandable-list-button-bar_t4bfe_1 {
   display: flex;
   flex-direction: row;
@@ -14487,15 +14498,6 @@ html[data-theme=light] p {
   padding-top: 0.25rem;
   padding-left: 2.5rem;
   padding-right: 2.5rem;
-}._link-button_14ox0_1 {
-  cursor: pointer;
-  text-decoration: none;
-  color: var(--link-color);
-}
-
-._link-button-disabled_14ox0_7 {
-  cursor: default;
-  color: var(--muted);
 }._metadata_1yk96_1 {
   font-size: 0.72rem;
   border: 1px solid var(--muted);

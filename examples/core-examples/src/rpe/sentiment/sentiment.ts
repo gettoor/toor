@@ -9,7 +9,7 @@ import {
   singlePromptLLMRPEExecutor,
   epochBatchShuffledDatasetProvider,
   failurePrioritizedDatasetProvider,
-  exactMatchRPEEvaluator,
+  exactStringRPEEvaluator,
   defaultRPEAggregator,
   optimize,
   average,
@@ -25,6 +25,11 @@ import {
   evaluateSeedCandidatesRPEStateUpdate,
   testFinalCandidatesRPEStateUpdate,
   bestScoreFinalCandidateSelector,
+  singlePromptJudgeRPEEvaluator,
+  SCALAR_METRIC_RELEVANCE,
+  SCALAR_METRIC_COHERENCE,
+  SCALAR_METRIC_GRAMMAR,
+  SCALAR_METRIC_HELPFULNESS,
 } from '@gettoor/core';
 import { renderRPEInsightsToHTML } from '@gettoor/core/rpe-html-renderer';
 import {
@@ -64,7 +69,20 @@ async function run(): Promise<void> {
     candidateId: 'seed',
   };
 
-  const finalCandidateSelector = bestScoreFinalCandidateSelector();
+  // const evaluator = exactStringRPEEvaluator();
+  const evaluator = singlePromptJudgeRPEEvaluator({
+    modelName: 'gemini:gemini-3.5-flash',
+    modelParameters: {
+      temperature: 0.3,
+    },
+    metrics: [
+      SCALAR_METRIC_RELEVANCE,
+      SCALAR_METRIC_GRAMMAR,
+      SCALAR_METRIC_COHERENCE,
+      SCALAR_METRIC_HELPFULNESS,
+    ],
+  });
+
   const input: RPEInput = {
     seed: [seedPrompt],
     dataset: mergeRPEDatasets(trainingDataset, validationDataset),
@@ -84,7 +102,7 @@ async function run(): Promise<void> {
       parallelism: 8,
     }),
     trainingEvaluatorParallelism: 8,
-    trainingEvaluator: exactMatchRPEEvaluator(),
+    trainingEvaluator: evaluator,
     aggregatorParallelism: 8,
     aggregator: defaultRPEAggregator({
       aggregationFunc: average,
@@ -118,7 +136,7 @@ async function run(): Promise<void> {
       parallelism: 8,
     }),
     candidateEvaluatorParallelism: 8,
-    candidateEvaluator: exactMatchRPEEvaluator(),
+    candidateEvaluator: evaluator,
     candidateSelector: improvedCandidateSelector({
       isCandidateImproved: isCandidateImprovedByScore,
       selectParentCandidatesIfBetter: true,

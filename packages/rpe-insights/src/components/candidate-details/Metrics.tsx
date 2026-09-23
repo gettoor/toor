@@ -17,6 +17,7 @@ export function Metrics(props: MetricsProps) {
     <Table
       header={['Metric', 'Score']}
       rows={rows}
+      templateColumns='max-content max-content'
     />
   );
 }

@@ -127,10 +127,12 @@ export function CandidateAggregatedEvaluation(
             <Markdown content={responseToString(evaluation.response)}/>
           </p>
           { expectedResponse &&
-            <p>
+            <>  
               <h2>Expected response</h2>
-              <Markdown content={responseToString(expectedResponse)}/>
-            </p>
+              <p>
+                <Markdown content={responseToString(expectedResponse)}/>
+              </p>
+            </>
           }
           <h2>Reasoning</h2>
           <div><Markdown content={evaluation.reasoning}/></div>

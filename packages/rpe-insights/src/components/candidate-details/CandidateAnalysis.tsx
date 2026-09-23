@@ -129,7 +129,6 @@ export function CandidateAnalysis(props: CandidateAnalysisProps) {
           <h2>Recommendations</h2>
           {renderList(analysis.recommendations)}
           <h1>Failed example analysis</h1>
-          {/* {failedExampleAnalysis.map(item => renderFailedExampleAnalysis(item))} */}
           <ExpandableList
             totalItems={failedExampleAnalysis.length}
             itemRenderer={renderFailedExampleAnalysisItem}

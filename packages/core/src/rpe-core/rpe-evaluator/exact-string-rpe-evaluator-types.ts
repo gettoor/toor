@@ -2,7 +2,7 @@
  * Input for the exact match RPE evaluator.
  * @category Reflective Prompt Evolution
  */
-export interface ExactMatchRPEEvaluatorInput {
+export interface ExactStringRPEEvaluatorInput {
   /**
    * Whether to consider case sensitivity.
    * @default true
