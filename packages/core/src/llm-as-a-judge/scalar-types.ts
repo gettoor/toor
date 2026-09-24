@@ -47,9 +47,9 @@ export interface ScalarMetric {
   name: string;
 
   /**
-   * The description of the scheme in the structured output.
+   * The description of the score in the structured output.
    */
-  schemeDescription: string;
+  scoreDescription: string;
 
   /**
    * The description of the prompt. If not provided, then just name is passed.

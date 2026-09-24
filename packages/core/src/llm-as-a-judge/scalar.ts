@@ -88,7 +88,7 @@ export async function scalar(input: ScalarInput): Promise<ScalarOutput> {
   > = {};
   for (const metric of input.metrics ?? []) {
     metricsSchema[metric.name] = z.object({
-      score: z.number().describe(metric.schemeDescription),
+      score: z.number().describe(metric.scoreDescription),
       reasoning: z.string().describe('The reasoning for the metric score'),
     });
   }

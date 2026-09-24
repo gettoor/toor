@@ -6,7 +6,7 @@ import { ScalarMetric } from './scalar-types.js';
  */
 export const SCALAR_METRIC_CORRECTNESS: ScalarMetric = {
   name: 'correctness',
-  schemeDescription: 'The score for correctness',
+  scoreDescription: 'The score for correctness',
   promptDescription: 'The correctness of the response',
 };
 
@@ -16,7 +16,7 @@ export const SCALAR_METRIC_CORRECTNESS: ScalarMetric = {
  */
 export const SCALAR_METRIC_COMPLETENESS: ScalarMetric = {
   name: 'completeness',
-  schemeDescription: 'The score for completeness',
+  scoreDescription: 'The score for completeness',
   promptDescription: 'The completeness of the response',
 };
 
@@ -26,7 +26,7 @@ export const SCALAR_METRIC_COMPLETENESS: ScalarMetric = {
  */
 export const SCALAR_METRIC_RELEVANCE: ScalarMetric = {
   name: 'relevance',
-  schemeDescription: 'The score for relevance',
+  scoreDescription: 'The score for relevance',
   promptDescription: 'The relevance of the response',
 };
 
@@ -36,7 +36,7 @@ export const SCALAR_METRIC_RELEVANCE: ScalarMetric = {
  */
 export const SCALAR_METRIC_CLARITY: ScalarMetric = {
   name: 'clarity',
-  schemeDescription: 'The score for clarity',
+  scoreDescription: 'The score for clarity',
   promptDescription: 'The clarity of the response',
 };
 
@@ -46,7 +46,7 @@ export const SCALAR_METRIC_CLARITY: ScalarMetric = {
  */
 export const SCALAR_METRIC_CONCISENESS: ScalarMetric = {
   name: 'conciseness',
-  schemeDescription: 'The score for conciseness',
+  scoreDescription: 'The score for conciseness',
   promptDescription: 'The conciseness of the response',
 };
 
@@ -56,7 +56,7 @@ export const SCALAR_METRIC_CONCISENESS: ScalarMetric = {
  */
 export const SCALAR_METRIC_GRAMMAR: ScalarMetric = {
   name: 'grammar',
-  schemeDescription: 'The score for grammar',
+  scoreDescription: 'The score for grammar',
   promptDescription: 'The grammar of the response',
 };
 
@@ -66,7 +66,7 @@ export const SCALAR_METRIC_GRAMMAR: ScalarMetric = {
  */
 export const SCALAR_METRIC_COHERENCE: ScalarMetric = {
   name: 'coherence',
-  schemeDescription: 'The score for coherence',
+  scoreDescription: 'The score for coherence',
   promptDescription: 'The coherence of the response',
 };
 
@@ -76,7 +76,7 @@ export const SCALAR_METRIC_COHERENCE: ScalarMetric = {
  */
 export const SCALAR_METRIC_HELPFULNESS: ScalarMetric = {
   name: 'helpfulness',
-  schemeDescription: 'The score for helpfulness',
+  scoreDescription: 'The score for helpfulness',
   promptDescription: 'The helpfulness of the response',
 };
 
@@ -86,7 +86,7 @@ export const SCALAR_METRIC_HELPFULNESS: ScalarMetric = {
  */
 export const SCALAR_METRIC_SAFETY: ScalarMetric = {
   name: 'safety',
-  schemeDescription: 'The score for safety',
+  scoreDescription: 'The score for safety',
   promptDescription: 'The safety of the response',
 };
 
@@ -96,7 +96,7 @@ export const SCALAR_METRIC_SAFETY: ScalarMetric = {
  */
 export const SCALAR_METRIC_REASONING_QUALITY: ScalarMetric = {
   name: 'reasoning_quality',
-  schemeDescription: 'The score for reasoning quality',
+  scoreDescription: 'The score for reasoning quality',
   promptDescription: 'The reasoning quality of the response',
 };
 
@@ -106,7 +106,7 @@ export const SCALAR_METRIC_REASONING_QUALITY: ScalarMetric = {
  */
 export const SCALAR_METRIC_ACTIONABILITY: ScalarMetric = {
   name: 'actionability',
-  schemeDescription: 'The score for actionability',
+  scoreDescription: 'The score for actionability',
   promptDescription: 'The actionability of the response',
 };
 
@@ -116,6 +116,6 @@ export const SCALAR_METRIC_ACTIONABILITY: ScalarMetric = {
  */
 export const SCALAR_METRIC_INSTRUCTION_FOLLOWING: ScalarMetric = {
   name: 'instruction_following',
-  schemeDescription: 'The score for instruction following',
+  scoreDescription: 'The score for instruction following',
   promptDescription: 'The instruction following of the response',
 };
