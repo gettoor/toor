@@ -165,7 +165,7 @@ export interface ExperimentDatasetEntry {
   /**
    * Variables to replace in the prompt.
    */
-  vars?: Record<string, ExperimentDatasetVarValue>;
+  vars: Record<string, ExperimentDatasetVarValue>;
 }
 
 /**

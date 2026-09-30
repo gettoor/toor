@@ -69,7 +69,7 @@ export async function runExperiment(
           // create prompt
           const prompt = replacePlaceholders(
             evalPrompt.prompt,
-            evalDatasetEntry.vars ?? {},
+            evalDatasetEntry.vars,
           );
 
           // notify

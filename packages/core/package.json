@@ -24,10 +24,10 @@
     "@ai-sdk/anthropic": "^3.0.80",
     "@ai-sdk/google": "^3.0.71",
     "@ai-sdk/openai": "^3.0.64",
-    "ai": "^6.0.191",
+    "ai": "^7.0.111",
     "json-schema": "^0.4.0",
     "yaml": "^2.9.0",
-    "zod": "^4.4.3"
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@types/json-schema": "^7.0.15",

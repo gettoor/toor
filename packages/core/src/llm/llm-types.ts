@@ -1,4 +1,4 @@
-import { LanguageModel } from 'ai';
+import { LanguageModel, EmbeddingModel as AiEmbeddingModel } from 'ai';
 
 /**
  * Usage information for a specific model.
@@ -110,12 +110,28 @@ export interface ModelParameters {
  */
 export interface LLMModel {
   /**
-   * The model name.
+   * Model name.
    */
   name: string;
 
   /**
-   * The AI SDK language model.
+   * AI SDK language model.
    */
   model: LanguageModel;
+}
+
+/**
+ * An embedding model.
+ * @category LLM
+ */
+export interface EmbeddingModel {
+  /**
+   * Model name.
+   */
+  name: string;
+
+  /**
+   * AI SDK embedding model.
+   */
+  model: AiEmbeddingModel;
 }

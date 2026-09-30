@@ -1,4 +1,4 @@
-import { CallSettings } from 'ai';
+import { CallSettings, JSONSchema7, generateText, Output, jsonSchema } from 'ai';
 import { LLMModelUsage, LLMUsage, ModelParameters } from './llm-types.js';
 
 /**
@@ -44,6 +44,17 @@ export function buildModelCallSettings(
     ...ifDefined(modelParameters?.presencePenalty, 'presencePenalty'),
     ...ifDefined(modelParameters?.frequencyPenalty, 'frequencyPenalty'),
   }
+}
+
+export function buildModelCallStructuredOutput(
+  structuredOutputSchema?: JSONSchema7,
+): { output?: Parameters<typeof generateText>[0]['output'] } {
+  if (!structuredOutputSchema) {
+    return {};
+  }
+  return {
+    output: Output.object({ schema: jsonSchema(structuredOutputSchema) }),
+  };
 }
 
 export function removeNewlines(text: string): string {

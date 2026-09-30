@@ -1,7 +1,7 @@
 /**
  * A model provider abstraction.
  */
-import { LLMModel } from '../llm/index.js';
+import { EmbeddingModel, LLMModel } from '../llm/index.js';
 
 /**
  * A model provider. The returned `LLMModel` comes from
@@ -15,6 +15,13 @@ export interface ModelProvider {
    * @returns Language model.
    */
   getModel(name: string): Promise<LLMModel>;
+
+  /**
+   * Gets an embedding model by name.
+   * @param name - Name of the embedding model.
+   * @returns Embedding model.
+   */
+  getEmbeddingModel(name: string): Promise<EmbeddingModel>;
 
   /**
    * Gets the provider model name for a given model name.

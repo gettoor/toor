@@ -1,19 +1,18 @@
 /**
  * A default model provider implementation.
  */
-import { LanguageModel } from 'ai';
-import { createGoogleGenerativeAI } from '@ai-sdk/google';
-import { createOpenAI } from '@ai-sdk/openai';
-import { createAnthropic } from '@ai-sdk/anthropic';
+import { createGoogleGenerativeAI, google } from '@ai-sdk/google';
+import { createOpenAI, openai } from '@ai-sdk/openai';
+import { createAnthropic, anthropic } from '@ai-sdk/anthropic';
 
 import { MissingApiKeyError } from '../errors/index.js';
-import { LLMModel } from '../llm/index.js';
+import { EmbeddingModel, LLMModel } from '../llm/index.js';
 import { ModelNotFoundError } from './model-provider-errors.js';
 import { ModelProvider } from './model-provider.js';
 
 /**
  * A default model provider implementation. Supports Gemini, OpenAI
- * and Anthropic.
+ * and Anthropic. There is no embedding model support for Anthropic.
  * 
  * Model names are prefixed with the provider name:
  * - `gemini:<model>`
@@ -37,51 +36,42 @@ export class DefaultModelProvider implements ModelProvider {
   private static readonly OPENAI_PREFIX = 'openai:';
   private static readonly ANTHROPIC_PREFIX = 'anthropic:';
 
-  /**
-   * Gets a model by name.
-   * @param name - The name of the model.
-   * @returns The model.
-   * @throws {@link MissingApiKeyError}
-   *   If the API key is not set in the environment variables.
-   * @throws {@link ModelNotFoundError}
-   *   If the model is not found.
-   */
   public async getModel(name: string): Promise<LLMModel> {
     // gemini
     if (name.startsWith(DefaultModelProvider.GEMINI_PREFIX)) {
-      const geminiModel = name.slice(DefaultModelProvider.GEMINI_PREFIX.length);
+      const modelId = name.slice(DefaultModelProvider.GEMINI_PREFIX.length);
       const geminiAPIKey = process.env.GEMINI_API_KEY;
       if (!geminiAPIKey) {
         throw new MissingApiKeyError('GEMINI_API_KEY');
       }
       const model = createGoogleGenerativeAI({
         apiKey: geminiAPIKey,
-      }).languageModel(geminiModel);
+      }).languageModel(modelId);
       return {
-        name: geminiModel,
+        name: modelId,
         model,
       };
     }
   
     // openai
     if (name.startsWith(DefaultModelProvider.OPENAI_PREFIX)) {
-      const openaiModel = name.slice(DefaultModelProvider.OPENAI_PREFIX.length);
+      const modelId = name.slice(DefaultModelProvider.OPENAI_PREFIX.length);
       const openaiAPIKey = process.env.OPENAI_API_KEY;
       if (!openaiAPIKey) {
         throw new MissingApiKeyError('OPENAI_API_KEY');
       }
       const model = createOpenAI({
         apiKey: openaiAPIKey,
-      }).languageModel(openaiModel);
+      }).languageModel(modelId);
       return {
-        name: openaiModel,
+        name: modelId,
         model,
       };
     }
 
     // anthropic
     if (name.startsWith(DefaultModelProvider.ANTHROPIC_PREFIX)) {
-      const anthropicModel = name.slice(
+      const modelId = name.slice(
         DefaultModelProvider.ANTHROPIC_PREFIX.length,
       );
       const anthropicAPIKey = process.env.ANTHROPIC_API_KEY;
@@ -90,13 +80,49 @@ export class DefaultModelProvider implements ModelProvider {
       }
       const model = createAnthropic({
         apiKey: anthropicAPIKey,
-      }).languageModel(anthropicModel);
+      }).languageModel(modelId);
       return {
-        name: anthropicModel,
+        name: modelId,
         model,
       };
     }
   
+    throw new ModelNotFoundError(name);
+  }
+
+  public async getEmbeddingModel(name: string): Promise<EmbeddingModel> {
+    // gemini
+    if (name.startsWith(DefaultModelProvider.GEMINI_PREFIX)) {
+      const modelId = name.slice(DefaultModelProvider.GEMINI_PREFIX.length);
+      const geminiAPIKey = process.env.GEMINI_API_KEY;
+      if (!geminiAPIKey) {
+        throw new MissingApiKeyError('GEMINI_API_KEY');
+      }
+      const model = createGoogleGenerativeAI({
+        apiKey: geminiAPIKey,
+      }).embeddingModel(modelId);
+      return {
+        name: modelId,
+        model,
+      };
+    }
+
+    // openai
+    if (name.startsWith(DefaultModelProvider.OPENAI_PREFIX)) {
+      const modelId = name.slice(DefaultModelProvider.OPENAI_PREFIX.length);
+      const openaiAPIKey = process.env.OPENAI_API_KEY;
+      if (!openaiAPIKey) {
+        throw new MissingApiKeyError('OPENAI_API_KEY');
+      }
+      const model = createOpenAI({
+        apiKey: openaiAPIKey,
+      }).embeddingModel(modelId);
+      return {
+        name: modelId,
+        model,
+      };
+    }
+
     throw new ModelNotFoundError(name);
   }
 

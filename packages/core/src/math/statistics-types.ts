@@ -4,4 +4,6 @@
  * @param values - Values to aggregate.
  * @returns Aggregated value.
  */
-export type AggregationFunc<T = number> = (values: T[]) => T;
+export type AggregationFunc<TInput = number, TOutput = number> = (
+  values: TInput[],
+) => TOutput;
