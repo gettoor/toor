@@ -13,6 +13,7 @@ import {
   MiddotSeparator,
   Separator,
 } from '../basic';
+import { Response } from '../common';
 import { DatasetEntry } from './DatasetEntry';
 import styles from './CandidateAnalysis.module.scss';
 
@@ -72,7 +73,9 @@ export function CandidateAnalysis(props: CandidateAnalysisProps) {
         <Separator/>
         <DatasetEntry datasetEntry={datasetEntry}/>
         <h2>Response</h2>
-        <p>{failedExampleAnalysis.response}</p>
+        <p>
+          <Response response={failedExampleAnalysis.response}/>
+        </p>
         <h2>Failure reason</h2>
         <p>{failedExampleAnalysis.failureReason}</p>
         <h2>Plausible cause</h2>

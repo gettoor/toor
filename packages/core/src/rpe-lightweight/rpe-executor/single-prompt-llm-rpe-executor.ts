@@ -1,9 +1,10 @@
-import { generateText } from 'ai';
+import { generateText, jsonSchema, JSONSchema7, Output } from 'ai';
 
 import { replacePlaceholders } from '../../string/index.js';
 import { runParallelBatchesOrThrow } from '../../concurrency/index.js';
 import {
   buildModelCallSettings,
+  buildModelCallStructuredOutput,
   LLMModel,
   ModelParameters,
 } from '../../llm/index.js';
@@ -37,7 +38,13 @@ import {
 export function singlePromptLLMRPEExecutor(
   input: SinglePromptLLMRPEExecutorInput,
 ): RPEExecutor {
-  const { modelName, modelParameters, parallelism, dataset} = input;
+  const {
+    modelName,
+    modelParameters,
+    parallelism,
+    dataset,
+    structuredOutputSchema,
+  } = input;
   const modelProvider = input.modelProvider ?? new DefaultModelProvider();
 
   return {
@@ -52,7 +59,13 @@ export function singlePromptLLMRPEExecutor(
       for (const candidate of input.candidates) {
         for (const datasetEntry of effectiveDataset.entries) {
           tasks.push(
-            generateResponse(model, modelParameters, candidate, datasetEntry)
+            generateResponse(
+              model,
+              modelParameters,
+              candidate,
+              datasetEntry,
+              structuredOutputSchema,
+            )
           );
         }
       }
@@ -86,11 +99,12 @@ async function generateResponse(
   modelParameters: ModelParameters | undefined,
   candidate: RPECandidate,
   datasetEntry: RPEDatasetEntry,
+  structuredOutputSchema?: JSONSchema7,
 ): Promise<RPEExecutorResponse> {
   // build prompt
   const prompt = replacePlaceholders(
     requireSinglePromptCandidateModule(candidate.modules),
-    datasetEntry.vars ?? {},
+    datasetEntry.vars,
   );
 
   // generate text response
@@ -98,12 +112,13 @@ async function generateResponse(
     model: model.model,
     prompt: prompt.text,
     ...buildModelCallSettings(modelParameters),
+    ...buildModelCallStructuredOutput(structuredOutputSchema),
   });
 
   return {
     candidateRef: candidateRefFromCandidate(candidate),
     datasetEntry: datasetEntry,
-    response: response.text,
+    response: !structuredOutputSchema ? response.text : response.output,
     usage: {
       modelUsage: [
         {

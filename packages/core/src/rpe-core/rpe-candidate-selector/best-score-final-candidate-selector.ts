@@ -31,7 +31,6 @@ export function bestScoreFinalCandidateSelector(): RPECandidateSelector {
           maxAggregatedScore = aggregatedScore;
         }
       });
-      console.log('maxAggregatedScore', maxAggregatedScore);
 
       // find the candidates with the maximum aggregated score
       const candidateRefs = (state.aggregatedEvaluations ?? [])

@@ -22,11 +22,11 @@ Do NOT:
 
 {{original_prompt}}
 
-### Additional Task Information
+### Additional context
 
-{{additional_information}}
+{{additional_context}}
 
-Additional Task Information contains task-level context that may not be inferable from the evaluated examples alone.
+Additional context contains task-level context that may not be inferable from the evaluated examples alone.
 
 It may include information such as:
 
@@ -41,9 +41,9 @@ Treat explicitly provided task-level information as authoritative.
 
 Do not infer a narrower task, response space, output schema, or constraint merely because the supplied evaluation examples contain only a subset of the possibilities.
 
-For example, if Additional Task Information defines three valid responses but the current examples contain only two of them, do not conclude that the task has only two possible responses.
+For example, if additional context defines three valid responses but the current examples contain only two of them, do not conclude that the task has only two possible responses.
 
-Additional Task Information may be absent or empty. When it is absent, infer only what is supported by the available evidence and express uncertainty where appropriate.
+Additional context may be absent or empty. When it is absent, infer only what is supported by the available evidence and express uncertainty where appropriate.
 
 ### Aggregated Overall Score
 
@@ -114,7 +114,7 @@ Distinguish between different kinds of failures when relevant, such as:
 Infer the most plausible failure mechanism using:
 
 * the original prompt,
-* Additional Task Information,
+* additional context,
 * the model response,
 * the expected answer,
 * evaluator feedback,
@@ -134,11 +134,11 @@ Prefer specific causes such as:
 * failure to represent a task-level invariant,
 * failure to distinguish between available response categories.
 
-Do not infer task-level constraints solely from the local distribution of supplied examples when Additional Task Information provides broader context.
+Do not infer task-level constraints solely from the local distribution of supplied examples when additional context provides broader context.
 
 ### Expected-answer reasoning
 
-Explain why the expected answer follows from the task definition, Additional Task Information, or evaluation evidence.
+Explain why the expected answer follows from the task definition, additional context, or evaluation evidence.
 
 Do not merely state that the evaluator marked it correct.
 
@@ -191,7 +191,7 @@ When the issue concerns output values or schema, derive the rule from Additional
 Check the proposed rule against:
 
 * passed examples,
-* Additional Task Information,
+* additional context,
 * other failed examples where relevant.
 
 Identify successful behaviors or valid cases that could regress if the rule is applied too broadly.
@@ -268,15 +268,15 @@ Prefer general conceptual rules over collections of narrow special cases when th
 
 Do not provide exact prompt wording.
 
-Do not recommend narrowing the response space, task definition, or output schema unless that narrowing is explicitly supported by Additional Task Information.
+Do not recommend narrowing the response space, task definition, or output schema unless that narrowing is explicitly supported by additional context.
 
 # Evidence Scope and Uncertainty
 
-Base conclusions on the supplied evidence and Additional Task Information.
+Base conclusions on the supplied evidence and additional context.
 
 Distinguish between:
 
-* **task-level facts** explicitly supplied in Additional Task Information,
+* **task-level facts** explicitly supplied in additional context,
 * **direct evidence** from evaluations,
 * **inferences** about likely failure mechanisms.
 

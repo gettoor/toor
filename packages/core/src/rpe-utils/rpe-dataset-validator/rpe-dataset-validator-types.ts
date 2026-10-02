@@ -1,6 +1,10 @@
 import { ModelParameters } from '../../llm/index.js';
 import { ModelProvider } from '../../model-provider/model-provider.js';
-import { RPEDataset, RPEDatasetEntry, RPEResponse } from '../../rpe-core/index.js';
+import {
+  RPEDataset,
+  RPEDatasetEntry,
+  RPEResponse,
+} from '../../rpe-core/index.js';
 
 /**
  * A dataset entry with a label.
@@ -198,6 +202,46 @@ export interface RPEDatasetValidatorInsufficientInformation {
 }
 
 /**
+ * A distribution of a field in a dataset.
+ * @category Reflective Prompt Evolution
+ * @see {@link RPEDatasetValidatorIssues}
+ */
+export interface RPEDatasetValidatorFieldDistribution {
+  /**
+   * Name of the field. Empty string for the expected response of type string.
+   */
+  fieldName: string;
+
+  /**
+   * Expected response distribution.
+   */
+  distribution: Record<string, number>;
+
+  /**
+   * Imbalance of the expected response distribution, between 0 and 1.
+   * 0 means perfect distribution, 1 means worst distribution.
+   */
+  distributionImbalance: number;
+}
+
+/**
+ * Expected response distribution for a dataset.
+ * @category Reflective Prompt Evolution
+ * @see {@link RPEDatasetValidatorIssues}
+ */
+export interface RPEDatasetValidatorExpectedResponseDistribution {
+  /**
+   * Name of the dataset.
+   */
+  datasetName: string;
+
+  /**
+   * Field distributions.
+   */
+  fieldDistributions: RPEDatasetValidatorFieldDistribution[];
+}
+
+/**
  * Input for the dataset validator.
  * @category Reflective Prompt Evolution
  * @see {@link validateRPEDataset}
@@ -242,6 +286,13 @@ export interface RPEDatasetValidatorInput {
    * @default 0.9
    */
   nearDuplicateThreshold?: number;
+
+  /**
+   * Threshold for expected response distribution imbalance, between 0 and 1.
+   * 0 means perfect distribution, 1 means worst distribution.
+   * @default 0.5
+   */
+  expectedResponseDistributionImbalanceThreshold?: number;
 }
 
 /**
@@ -295,6 +346,12 @@ export interface RPEDatasetValidatorIssues {
    * Insufficient information.
    */
   insufficientInformation: RPEDatasetValidatorInsufficientInformation[];
+
+  /**
+   * Expected response distributions.
+   */
+  expectedResponseDistributions:
+    RPEDatasetValidatorExpectedResponseDistribution[];
 }
 
 /**

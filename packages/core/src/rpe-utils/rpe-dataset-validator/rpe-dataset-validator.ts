@@ -34,6 +34,9 @@ import { findAmbiguities } from './validator-ambiguity.js';
 import {
   findInsufficientInformation,
 } from './validator-insufficient-information.js';
+import {
+  findExpectedResponseDistributions,
+} from './validator-expected-response-distribution.js';
 
 /*
 |    Group        |            Check            |        Primary method        |    LLM?     | Embeddings? |    Stage    |
@@ -67,6 +70,7 @@ export async function validateRPEDataset(
     embeddingsModelName,
     modelProvider = new DefaultModelProvider(),
     nearDuplicateThreshold = 0.9,
+    expectedResponseDistributionImbalanceThreshold = 0.5,
   } = input;
 
   // models
@@ -155,6 +159,10 @@ export async function validateRPEDataset(
     contradictions,
     ambiguities,
     insufficientInformation,
+    expectedResponseDistributions: findExpectedResponseDistributions(
+      allEntries,
+      expectedResponseDistributionImbalanceThreshold,
+    ),
   };
   return { issues };
 }

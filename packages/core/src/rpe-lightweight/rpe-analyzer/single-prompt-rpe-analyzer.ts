@@ -1,4 +1,5 @@
 import { generateText, Output } from 'ai';
+import * as YAML from 'yaml';
 
 import { replacePlaceholders } from '../../string/index.js';
 import { 
@@ -19,11 +20,13 @@ import {
   RPEAnalyzerInput,
   RPEAnalyzerOutput,
   rpePropertyIfDef,
+  RPEAnalyzerFailedExampleAnalysis,
 } from '../../rpe-core/index.js';
 import {
   SINGLE_PROMPT_RPE_ANALYZER_PROMPT,
 } from './single-prompt-rpe-analyzer-prompt.js';
 import { 
+  SinglePromptRPEAnalyzerFailedExampleAnalysis,
   SinglePromptRPEAnalyzerInput,
   SinglePromptRPEAnalyzerOutputSchema,
 } from './single-prompt-rpe-analyzer-types.js';
@@ -40,8 +43,9 @@ export function singlePromptRPEAnalyzer(
   const { 
     modelName,
     modelParameters,
-    additionalInformation,
+    additionalContext,
     prompt: analyzerPrompt,
+    parseResponseAsStructuredOutput = true
   } = input;
   const modelProvider = input.modelProvider ?? new DefaultModelProvider();
 
@@ -60,8 +64,8 @@ export function singlePromptRPEAnalyzer(
           original_prompt: requireSinglePromptCandidateModule(
             candidate.modules,
           ),
-          additional_information:
-            additionalInformation ?? 'No additional information provided.',
+          additional_context:
+            additionalContext ?? 'No additional context provided.',
           aggregated_score: input.aggregation.aggregatedScore,
           aggregated_metrics: aggregatedMetricsForPrompt(
             input.aggregation.aggregatedMetrics ?? {},
@@ -93,10 +97,11 @@ export function singlePromptRPEAnalyzer(
         })
         .map((analysis, index) => {
           const evaluation = input.aggregation.failedEvaluations[index];
-          return {
-            datasetEntryId: evaluation.datasetEntry.datasetEntryId,
-            ...analysis,
-          }
+          return mapFailedExampleAnalysis(
+            evaluation.datasetEntry.datasetEntryId,
+            analysis,
+            parseResponseAsStructuredOutput,
+          );
         },
       );
 
@@ -129,9 +134,9 @@ export function singlePromptRPEAnalyzer(
             description: 'Model name used for the analysis.',
           },
           ...rpePropertyIfDef(
-            additionalInformation,
-            'additionalInformation',
-            'Additional information used for the analysis.',
+            additionalContext,
+            'additionalContext',
+            'Additional context used for the analysis.',
           ),
           ...modelParametersToRPEInfo(modelParameters),
         ],
@@ -190,4 +195,37 @@ function failedExamplesForPrompt(
       .join('\n');
     })
     .join('\n');
+}
+
+function mapFailedExampleAnalysis(
+  datasetEntryId: string,
+  analysis: SinglePromptRPEAnalyzerFailedExampleAnalysis,
+  parseResponseAsStructuredOutput: boolean,
+): RPEAnalyzerFailedExampleAnalysis {
+  const response = parseResponseAsStructuredOutput
+    ? tryParseResponseAsStructuredOutput(analysis.response)
+    : analysis.response;
+  return {
+    datasetEntryId,
+    response,
+    failureReason: analysis.failureReason,
+    plausibleCause: analysis.plausibleCause,
+    missingConceptualDistinction: analysis.missingConceptualDistinction,
+    generalRule: analysis.generalRule,
+    regressionRisks: analysis.regressionRisks,
+  };
+}
+
+function tryParseResponseAsStructuredOutput(response: string): any {
+  try {
+    return JSON.parse(response);
+  } catch (error) {
+    // ignore & fallback
+  }
+  try {
+    return YAML.parse(response);
+  } catch (error) {
+    // ignore & fallback
+  }
+  return response;
 }

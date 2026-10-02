@@ -36,4 +36,4 @@ export type RPEMetadata = Record<string, RPEMetadataValue>;
  * Response type for the RPE basic.
  * @category Reflective Prompt Evolution
  */
-export type RPEResponse = string | object;
+export type RPEResponse = string | Record<string, any>;

@@ -19,6 +19,7 @@ import {
   LinkButton,
   MiddotSeparator,
 } from '../basic';
+import { Response } from '../common';
 import { Metrics } from './Metrics';
 import styles from './CandidateAggregatedEvaluation.module.scss';
 
@@ -124,13 +125,13 @@ export function CandidateAggregatedEvaluation(
           {renderDatasetEntry(evaluation.datasetEntry)}
           <h2>Response</h2>
           <p>
-            <Markdown content={responseToString(evaluation.response)}/>
+            <Response response={evaluation.response}/>
           </p>
           { expectedResponse &&
             <>  
               <h2>Expected response</h2>
               <p>
-                <Markdown content={responseToString(expectedResponse)}/>
+                <Response response={expectedResponse}/>
               </p>
             </>
           }

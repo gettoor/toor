@@ -1,4 +1,5 @@
 import { LLMUsage } from '../../llm/index.js';
+import { RPEResponse } from '../rpe-core/index.js';
 import { RPEProperties } from '../rpe-info/index.js';
 import { RPEAggregatorOutput } from '../rpe-aggregator/index.js';
 import { RPECandidateRef } from '../rpe-candidate/index.js';
@@ -28,7 +29,7 @@ export interface RPEAnalyzerFailedExampleAnalysis {
   /**
    * Response from the model.
    */
-  response: string;
+  response: RPEResponse;
 
   /**
    * What went wrong, not why.

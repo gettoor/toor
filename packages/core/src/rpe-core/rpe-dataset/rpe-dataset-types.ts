@@ -1,16 +1,13 @@
 import { RPEResponse } from '../rpe-core/index.js';
 
 /**
- * RPE dataset entry variable value.
- * @category Reflective Prompt Evolution
- */
-export type RPEDatasetEntryVarValue = any;
-
-/**
  * RPE dataset entry.
  * @category Reflective Prompt Evolution
  */
-export interface RPEDatasetEntry {
+export interface RPEDatasetEntry<
+  ExpectedResponse = RPEResponse,
+  VarValue = any
+> {
   /**
    * Unique identifier of the dataset entry.
    */
@@ -19,12 +16,12 @@ export interface RPEDatasetEntry {
   /**
    * Variables to replace in the candidate.
    */
-  vars?: Record<string, RPEDatasetEntryVarValue>;
+  vars: Record<string, VarValue>;
 
   /**
    * Expected response from a LLM model to the candidate.
    */
-  expectedResponse?: RPEResponse;
+  expectedResponse?: ExpectedResponse;
 
   /**
    * Reasoning for why the expected response is correct.

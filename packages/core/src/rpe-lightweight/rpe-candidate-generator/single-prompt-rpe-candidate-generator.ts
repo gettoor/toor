@@ -67,7 +67,7 @@ export function singlePromptRPECandidateGenerator(
     ],
     modelName,
     modelParameters,
-    additionalInformation,
+    additionalContext,
     prompt: candidateGeneratorPrompt,
   } = input;
   const modelProvider = input.modelProvider ?? new DefaultModelProvider();
@@ -135,7 +135,7 @@ export function singlePromptRPECandidateGenerator(
           state,
           candidateGeneratorPrompt ??
             SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_PROMPT.prompt,
-          additionalInformation,
+          additionalContext,
           findCandidateById(state, taskEntry.candidateId),
           taskEntry.candidateInstruction,
           newCandidateId,
@@ -167,9 +167,9 @@ export function singlePromptRPECandidateGenerator(
             description: 'Model name used for the prompt generation.',
           },
           ...rpePropertyIfDef(
-            additionalInformation,
-            'additionalInformation',
-            'Additional information used for the prompt generation.',
+            additionalContext,
+            'additionalContext',
+            'Additional context used for the prompt generation.',
           ),
           ...modelParametersToRPEInfo(modelParameters),
         ],
@@ -184,7 +184,7 @@ async function generateCandidate(
   modelParameters: ModelParameters | undefined,
   state: RPEState,
   generatorPrompt: string,
-  additionalInformation: string | undefined,
+  additionalContext: string | undefined,
   candidate: RPECandidate,
   candidateInstruction: SinglePromptRPECandidateGeneratorInstruction,
   newCandidateId: string,
@@ -204,8 +204,8 @@ async function generateCandidate(
       original_prompt: requireSinglePromptCandidateModule(
         candidate.modules,
       ),
-      additional_information:
-        additionalInformation ?? 'No additional information provided.',
+      additional_context:
+        additionalContext ?? 'No additional context provided.',
       previous_changes: previousChangesForPrompt(
         state,
         candidate.candidateId,
@@ -363,11 +363,11 @@ function failedExampleAnalysisForPrompt(
       })!;
 
       // input
-      const varNames = Object.keys(datasetEntry.vars ?? {});
+      const varNames = Object.keys(datasetEntry.vars);
       if (varNames.length > 0) {
         output += 'Input:\n';
         varNames.forEach(name => {
-          output += `${name}: ${datasetEntry.vars![name]}\n`;
+          output += `${name}: ${datasetEntry.vars[name]}\n`;
         });
         output += '\n';
       }

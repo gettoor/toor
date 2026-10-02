@@ -1,7 +1,7 @@
 import * as YAML from 'yaml';
 import { type RPEResponse, type RPEDatasetEntry } from '@gettoor/core';
 
-import { Markdown } from '../basic';
+import { Response } from '../common';
 import styles from './DatasetEntry.module.scss';
 
 export interface DatasetEntryProps {
@@ -44,14 +44,12 @@ export function DatasetEntry(props: DatasetEntryProps) {
   return (
     <>
       <h2>Dataset entry ({datasetEntry.datasetEntryId})</h2>
-      {renderVariables()}
+      { renderVariables() }
       { datasetEntry.expectedResponse &&
         <>
           <h2>Expected response</h2>
           <p>
-            <Markdown
-              content={responseToString(datasetEntry.expectedResponse)}
-            />
+            <Response response={datasetEntry.expectedResponse} />
           </p>      
         </>
       }
@@ -59,7 +57,7 @@ export function DatasetEntry(props: DatasetEntryProps) {
         <>
           <h2>Expected response reasoning</h2>
           <p>
-            {datasetEntry.expectedResponseReasoning}
+            { datasetEntry.expectedResponseReasoning }
           </p>
         </>
       }

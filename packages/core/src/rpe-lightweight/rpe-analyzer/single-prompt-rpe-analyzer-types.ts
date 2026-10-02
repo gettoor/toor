@@ -41,6 +41,14 @@ export const SinglePromptRPEAnalyzerFailedExampleAnalysisSchema = z.object({
 });
 
 /**
+ * Type for the analysis of a failed example (dataset entry).
+ * @category Reflective Prompt Evolution
+ */
+export type SinglePromptRPEAnalyzerFailedExampleAnalysis = z.infer<
+  typeof SinglePromptRPEAnalyzerFailedExampleAnalysisSchema
+>;
+
+/**
  * Schema for the analyzer JSON output used by the single-prompt RPE flow.
  * @category Reflective Prompt Evolution
  */
@@ -126,15 +134,15 @@ export interface SinglePromptRPEAnalyzerInput {
   modelParameters?: ModelParameters;
 
   /**
-   * Additional information to use for the analyzer. For example, the complete
+   * Additional context to use for the analyzer. For example, the complete
    * set of possible or valid responses like positive, neutral, negative.
    */
-  additionalInformation?: string;
+  additionalContext?: string;
 
   /**
    * Prompt to use for the analyzer. The following placeholders are injected:
    * - `original_prompt` - original prompt,
-   * - `additional_information` - additional prompt information,
+   * - `additional_context` - additional context,
    * - `aggregated_score` - aggregated overall score (number),
    * - `aggregated_metrics` - aggregated metric scores
    *   (list of name-value pairs with optional reasoning),
@@ -143,4 +151,12 @@ export interface SinglePromptRPEAnalyzerInput {
    * @default {@link SINGLE_PROMPT_RPE_ANALYZER_PROMPT}
    */
   prompt?: string;
+
+  /**
+   * Whether to try to parse the response as structured output (JSON, YAML).
+   * The response comes from the model and is expected to be a JSON string
+   * when it's as JSON to the analyzer prompt.
+   * @default true
+   */
+  parseResponseAsStructuredOutput?: boolean;
 }

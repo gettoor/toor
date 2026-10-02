@@ -1,3 +1,5 @@
+import { JSONSchema7 } from 'json-schema';
+
 import { ModelParameters } from '../../llm/index.js';
 import { ModelProvider } from '../../model-provider/index.js';
 import { RPEDataset, RPEDatasetProvider } from '../../rpe-core/index.js';
@@ -32,4 +34,9 @@ export interface SinglePromptLLMRPEExecutorInput {
    * @default {@link SINGLE_PROMPT_LLM_RPE_EXECUTOR_PARALLELISM}
    */
   parallelism?: number;
+
+  /**
+   * Schema of the structured output.
+   */
+  structuredOutputSchema?: JSONSchema7;
 }

@@ -15,7 +15,7 @@ const state = {} as RPEState;
 
 function createDataset(ids: string[]): RPEDataset {
   return {
-    entries: ids.map(datasetEntryId => ({ datasetEntryId })),
+    entries: ids.map(datasetEntryId => ({ datasetEntryId, vars: {} })),
   };
 }
 

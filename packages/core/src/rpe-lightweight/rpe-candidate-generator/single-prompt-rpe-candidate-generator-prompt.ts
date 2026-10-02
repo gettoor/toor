@@ -23,11 +23,11 @@ You are given the following information.
 
 {{original_prompt}}
 
-## Additional Task Information
+## Additional context
 
-{{additional_information}}
+{{additional_context}}
 
-Additional Task Information contains task-level context that may not be inferable from the evaluated examples alone.
+Additional context contains task-level context that may not be inferable from the evaluated examples alone.
 
 It may include information such as:
 
@@ -38,13 +38,13 @@ It may include information such as:
 * invariants that must hold across all examples,
 * other information required to interpret the task correctly.
 
-Treat explicitly provided Additional Task Information as authoritative.
+Treat explicitly provided additional context as authoritative.
 
 The evaluated examples may represent only a subset of the complete task. Do not infer a narrower task, response space, output schema, or set of constraints merely because only a subset appears in the current Passed Evaluations or Failed Examples.
 
-For example, if Additional Task Information defines three valid responses but the supplied evaluations happen to contain only two of them, the improved prompt must continue to support all three.
+For example, if additional context defines three valid responses but the supplied evaluations happen to contain only two of them, the improved prompt must continue to support all three.
 
-Additional Task Information may be absent or empty. When it is absent, introduce task-level assumptions only when they are clearly supported by the Original Prompt or broader evaluation evidence.
+Additional context may be absent or empty. When it is absent, introduce task-level assumptions only when they are clearly supported by the Original Prompt or broader evaluation evidence.
 
 ## Previous Changes
 
@@ -72,7 +72,7 @@ Previous changes can help you:
 
 Do not preserve, repeat, or revert a previous change solely because it appears in the history.
 
-When current evaluation evidence conflicts with the reasoning behind a previous change, prefer the current evidence unless doing so would violate authoritative Additional Task Information.
+When current evaluation evidence conflicts with the reasoning behind a previous change, prefer the current evidence unless doing so would violate authoritative additional context.
 
 ## Aggregated Metrics
 
@@ -94,13 +94,13 @@ Treat them as evidence-backed guidance, not unquestionable instructions.
 
 Before applying a recommendation, verify that it is consistent with:
 
-* Additional Task Information,
+* additional context,
 * the Original Prompt's required contract,
 * Passed Evaluations,
 * Failed Examples,
 * relevant Previous Changes.
 
-If a recommendation was derived from an incomplete evaluation subset and conflicts with authoritative task-level information, preserve the task-level requirement and adapt or reject the recommendation.
+If a recommendation was derived from an incomplete evaluation subset and conflicts with authoritative additional context, preserve the task-level requirement and adapt or reject the recommendation.
 
 ## Passed Evaluations
 
