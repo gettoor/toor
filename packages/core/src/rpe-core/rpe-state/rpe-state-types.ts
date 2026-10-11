@@ -31,7 +31,7 @@ export interface RPEFinalCandidate {
  */
 export interface RPEIteration {
   /**
-   * Iteration number.
+   * Iteration number. Starting from 1.
    */
   iterationNo: number;
 

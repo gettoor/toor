@@ -215,10 +215,3 @@ function buildDatasetEntrySnapshots(
 
   return snapshots;
 }
-
-/*
-50% persistent failures
-20% new failures
-20% representative passes
-10% exploration
-*/

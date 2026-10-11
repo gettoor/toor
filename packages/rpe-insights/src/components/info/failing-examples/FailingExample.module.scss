@@ -1,0 +1,11 @@
+.failing-example-summary {
+  color: var(--text-muted);
+}
+
+.failing-example-evaluation:not(:first-child) {
+  margin-top: 1.5rem;
+}
+
+.failing-example-evaluation-status {
+  margin-left: 0.5rem;
+}

@@ -4,11 +4,14 @@ import { type RPEInsights } from '@gettoor/core';
 import { CandidateTree } from '../candidate-tree';
 import { CandidateDetails } from '../candidate-details';
 import { getCandidateDetailsData } from './process-view-utils';
-import { InfoPanel, Toolbar } from '../tools';
+import { Toolbar } from '../tools';
+import { InfoPanel, FailingExamplesPanel } from '../info';
 
 export interface ProcessViewProps {
   rpeInsights: RPEInsights;
 }
+
+type VisiblePanel = 'details' | 'info' | 'failing-examples' | null;
 
 export function ProcessView(props: ProcessViewProps) {
   const { rpeInsights } = props;
@@ -18,45 +21,40 @@ export function ProcessView(props: ProcessViewProps) {
     setSelectedCandidateId,
   ] = useState<string | null>(null);
   const [
-    detailsVisible,
-    setDetailsVisible,
-  ] = useState<boolean>(false);
-  const [
-    infoVisible,
-    setInfoVisible,
-  ] = useState<boolean>(false);
-
-  const hideDetails = () => {
-    // let the details slide out first...
-    setDetailsVisible(false);
-
-    // ...then clear the candidate identifier
-    setTimeout(() => {
-      clearCandidateId();
-    }, 340);
-  };
+    visiblePanel,
+    setVisiblePanel,
+  ] = useState<VisiblePanel>(null);
 
   const selectCandidateId = (candidateId: string) => {
     setSelectedCandidateId(candidateId);
-    setDetailsVisible(true);
-    setInfoVisible(false);
+    showPanel('details');
   };
   const clearCandidateId = () => {
     setSelectedCandidateId(null);
   };
-  const onBackgroundClick = () => {
-    clearCandidateId();
-    setDetailsVisible(false);
-    setInfoVisible(false);
-  };
-  const onCloseClick = () => {
-    setDetailsVisible(false);
-  };
-  const onInfoClick = () => {
-    if (detailsVisible) {
-      hideDetails();
+
+  const hidePanel = () => {
+    if (visiblePanel === 'details') {
+      // let the details slide out first...
+      setTimeout(() => {
+        clearCandidateId();
+      }, 340);  
     }
-    setInfoVisible(!infoVisible);
+    setVisiblePanel(null);
+  };
+
+  const showPanel = (panel: VisiblePanel) => {
+    if (visiblePanel === panel) {
+      return;
+    }
+
+    if (visiblePanel === 'details') {
+      // let the details slide out first...
+      setTimeout(() => {
+        clearCandidateId();
+      }, 340);  
+    }
+    setVisiblePanel(panel);
   };
 
   const candidateDetailsData = selectedCandidateId !== null
@@ -71,20 +69,28 @@ export function ProcessView(props: ProcessViewProps) {
       <CandidateTree
         rpeInsights={rpeInsights}
         selectedCandidateId={selectedCandidateId}
-        detailsVisible={detailsVisible}
+        detailsVisible={visiblePanel === 'details'}
         onSelectCandidateId={selectCandidateId}
-        onBackgroundClick={onBackgroundClick}
+        onBackgroundClick={hidePanel}
       />
       <CandidateDetails
         data={candidateDetailsData}
-        visible={detailsVisible}
-        onCloseClick={onCloseClick}
+        visible={visiblePanel === 'details'}
+        onCloseClick={hidePanel}
       />
-      <Toolbar onInfoClick={onInfoClick}/>
+      <Toolbar 
+        onInfoClick={() => showPanel('info')}
+        onFailingExamplesClick={() => showPanel('failing-examples')}
+      />
       <InfoPanel
         rpeInsights={rpeInsights}
-        visible={infoVisible}
-        onCloseClick={onInfoClick}
+        visible={visiblePanel === 'info'}
+        onCloseClick={hidePanel}
+      />
+      <FailingExamplesPanel
+        rpeInsights={rpeInsights}
+        visible={visiblePanel === 'failing-examples'}
+        onCloseClick={hidePanel}
       />
     </>
   );

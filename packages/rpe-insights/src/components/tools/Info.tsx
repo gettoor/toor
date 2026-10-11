@@ -8,7 +8,7 @@ export function Info(props: InfoProps) {
   return (
     <IconButton
       name='info'
-      title='Info'
+      title='RPE process info'
       onClick={props.onClick}
     />
   );

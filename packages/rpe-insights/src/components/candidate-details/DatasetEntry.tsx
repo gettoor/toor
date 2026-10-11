@@ -6,17 +6,11 @@ import styles from './DatasetEntry.module.scss';
 
 export interface DatasetEntryProps {
   datasetEntry: RPEDatasetEntry;
+  diffResponse?: RPEResponse;
 }
 
 export function DatasetEntry(props: DatasetEntryProps) {
-  const { datasetEntry } = props;
-
-  const responseToString = (response: RPEResponse) => {
-    if (typeof response === 'string') {
-      return response;
-    }
-    return YAML.stringify(response);
-  };
+  const { datasetEntry, diffResponse } = props;
 
   const renderVariables = () => {
     if (datasetEntry.vars == undefined) {
@@ -49,7 +43,10 @@ export function DatasetEntry(props: DatasetEntryProps) {
         <>
           <h2>Expected response</h2>
           <p>
-            <Response response={datasetEntry.expectedResponse} />
+            <Response
+              response={datasetEntry.expectedResponse}
+              diffResponse={diffResponse}
+            />
           </p>      
         </>
       }

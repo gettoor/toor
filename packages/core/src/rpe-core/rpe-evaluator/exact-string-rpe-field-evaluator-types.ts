@@ -1,4 +1,13 @@
+import {
+  PerFieldRPEEvaluatorValueMapping,
+} from './per-field-rpe-evaluator-value-mapping-types.js';
+
 export interface ExactStringRPEFieldEvaluatorInput {
+  /**
+   * Mapping of response values.
+   */
+  valueMapping?: PerFieldRPEEvaluatorValueMapping<string>;
+
   /**
    * Whether to consider case sensitivity.
    * @default true

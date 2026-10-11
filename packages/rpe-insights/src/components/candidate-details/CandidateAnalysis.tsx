@@ -71,10 +71,16 @@ export function CandidateAnalysis(props: CandidateAnalysisProps) {
     return (
       <>
         <Separator/>
-        <DatasetEntry datasetEntry={datasetEntry}/>
+        <DatasetEntry 
+          datasetEntry={datasetEntry}
+          diffResponse={failedExampleAnalysis.response}
+        />
         <h2>Response</h2>
         <p>
-          <Response response={failedExampleAnalysis.response}/>
+          <Response
+            response={failedExampleAnalysis.response}
+            diffResponse={datasetEntry.expectedResponse}
+          />
         </p>
         <h2>Failure reason</h2>
         <p>{failedExampleAnalysis.failureReason}</p>

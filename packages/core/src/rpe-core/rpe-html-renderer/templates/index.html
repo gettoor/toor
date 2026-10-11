@@ -527,7 +527,10 @@ function Tag(props) {
 //#endregion
 //#region src/components/basic/Score.tsx
 function Score(props) {
-	return /* @__PURE__ */ u("span", { children: /* @__PURE__ */ u("b", { children: props.score.toFixed(2) }) });
+	return /* @__PURE__ */ u("span", {
+		className: props.className,
+		children: /* @__PURE__ */ u("b", { children: props.score.toFixed(2) })
+	});
 }
 //#endregion
 //#region ../../node_modules/.pnpm/marked@18.0.10/node_modules/marked/lib/marked.esm.js
@@ -4532,7 +4535,8 @@ var purify = createDOMPurify();
 //#endregion
 //#region src/components/basic/Markdown.tsx
 function Markdown({ content }) {
-	const parsed = f.parse(content, { async: false });
+	const preprocessed = content.replace(/\n/g, "<br/>");
+	const parsed = f.parse(preprocessed, { async: false });
 	return /* @__PURE__ */ u("div", { dangerouslySetInnerHTML: { __html: purify.sanitize(parsed) } });
 }
 //#endregion
@@ -4764,10 +4768,10 @@ function IconButton(props) {
 	});
 }
 var Panel_module_default = {
-	panel: "_panel_1qyyl_1",
-	"panel-header": "_panel-header_1qyyl_19",
-	"panel-header-title": "_panel-header-title_1qyyl_32",
-	"panel-content": "_panel-content_1qyyl_35"
+	panel: "_panel_1705s_1",
+	"panel-header": "_panel-header_1705s_21",
+	"panel-header-title": "_panel-header-title_1705s_34",
+	"panel-content": "_panel-content_1705s_37"
 };
 //#endregion
 //#region src/components/basic/Panel.tsx
@@ -4928,8 +4932,9 @@ Header.Toolbar = Toolbar$1;
 var Separator_module_default = { separator: "_separator_6czns_1" };
 //#endregion
 //#region src/components/basic/Separator.tsx
-function Separator() {
-	return /* @__PURE__ */ u("div", { className: Separator_module_default["separator"] });
+function Separator(props) {
+	const { className } = props;
+	return /* @__PURE__ */ u("div", { className: clsx(Separator_module_default["separator"], className) });
 }
 //#endregion
 //#region src/components/consts/icons-consts.ts
@@ -9102,7 +9107,7 @@ var Tooltip_module_default = { tooltip: "_tooltip_mujji_1" };
 var Info_module_default = { info: "_info_1ol76_1" };
 //#endregion
 //#region src/components/basic/Info.tsx
-function Info$1({ text, className }) {
+function Info({ text, className }) {
 	const referenceRef = A$2(null);
 	const floatingRef = A$2(null);
 	const [hovered, setHovered] = d$1(false);
@@ -9446,32 +9451,725 @@ function hasMetrics(metrics) {
 	return Object.keys(metrics).length > 0;
 }
 //#endregion
-//#region src/components/common/Response.module.scss
-var Response_module_default = { "response-structured-output": "_response-structured-output_w50ko_1" };
+//#region ../../node_modules/.pnpm/diff@9.0.0/node_modules/diff/libesm/diff/base.js
+var Diff = class {
+	diff(oldStr, newStr, options = {}) {
+		let callback;
+		if (typeof options === "function") {
+			callback = options;
+			options = {};
+		} else if ("callback" in options) callback = options.callback;
+		const oldString = this.castInput(oldStr, options);
+		const newString = this.castInput(newStr, options);
+		const oldTokens = this.removeEmpty(this.tokenize(oldString, options));
+		const newTokens = this.removeEmpty(this.tokenize(newString, options));
+		return this.diffWithOptionsObj(oldTokens, newTokens, options, callback);
+	}
+	diffWithOptionsObj(oldTokens, newTokens, options, callback) {
+		var _a;
+		const done = (value) => {
+			value = this.postProcess(value, options);
+			if (callback) {
+				setTimeout(function() {
+					callback(value);
+				}, 0);
+				return;
+			} else return value;
+		};
+		const newLen = newTokens.length, oldLen = oldTokens.length;
+		let editLength = 1;
+		let maxEditLength = newLen + oldLen;
+		if (options.maxEditLength != null) maxEditLength = Math.min(maxEditLength, options.maxEditLength);
+		const maxExecutionTime = (_a = options.timeout) !== null && _a !== void 0 ? _a : Infinity;
+		const abortAfterTimestamp = Date.now() + maxExecutionTime;
+		const bestPath = [{
+			oldPos: -1,
+			lastComponent: void 0
+		}];
+		let newPos = this.extractCommon(bestPath[0], newTokens, oldTokens, 0, options);
+		if (bestPath[0].oldPos + 1 >= oldLen && newPos + 1 >= newLen) return done(this.buildValues(bestPath[0].lastComponent, newTokens, oldTokens));
+		let minDiagonalToConsider = -Infinity, maxDiagonalToConsider = Infinity;
+		const execEditLength = () => {
+			for (let diagonalPath = Math.max(minDiagonalToConsider, -editLength); diagonalPath <= Math.min(maxDiagonalToConsider, editLength); diagonalPath += 2) {
+				let basePath;
+				const removePath = bestPath[diagonalPath - 1], addPath = bestPath[diagonalPath + 1];
+				if (removePath) bestPath[diagonalPath - 1] = void 0;
+				let canAdd = false;
+				if (addPath) {
+					const addPathNewPos = addPath.oldPos - diagonalPath;
+					canAdd = addPath && 0 <= addPathNewPos && addPathNewPos < newLen;
+				}
+				const canRemove = removePath && removePath.oldPos + 1 < oldLen;
+				if (!canAdd && !canRemove) {
+					bestPath[diagonalPath] = void 0;
+					continue;
+				}
+				if (!canRemove || canAdd && removePath.oldPos < addPath.oldPos) basePath = this.addToPath(addPath, true, false, 0, options);
+				else basePath = this.addToPath(removePath, false, true, 1, options);
+				newPos = this.extractCommon(basePath, newTokens, oldTokens, diagonalPath, options);
+				if (basePath.oldPos + 1 >= oldLen && newPos + 1 >= newLen) return done(this.buildValues(basePath.lastComponent, newTokens, oldTokens)) || true;
+				else {
+					bestPath[diagonalPath] = basePath;
+					if (basePath.oldPos + 1 >= oldLen) maxDiagonalToConsider = Math.min(maxDiagonalToConsider, diagonalPath - 1);
+					if (newPos + 1 >= newLen) minDiagonalToConsider = Math.max(minDiagonalToConsider, diagonalPath + 1);
+				}
+			}
+			editLength++;
+		};
+		if (callback) (function exec() {
+			setTimeout(function() {
+				if (editLength > maxEditLength || Date.now() > abortAfterTimestamp) return callback(void 0);
+				if (!execEditLength()) exec();
+			}, 0);
+		})();
+		else while (editLength <= maxEditLength && Date.now() <= abortAfterTimestamp) {
+			const ret = execEditLength();
+			if (ret) return ret;
+		}
+	}
+	addToPath(path, added, removed, oldPosInc, options) {
+		const last = path.lastComponent;
+		if (last && !options.oneChangePerToken && last.added === added && last.removed === removed) return {
+			oldPos: path.oldPos + oldPosInc,
+			lastComponent: {
+				count: last.count + 1,
+				added,
+				removed,
+				previousComponent: last.previousComponent
+			}
+		};
+		else return {
+			oldPos: path.oldPos + oldPosInc,
+			lastComponent: {
+				count: 1,
+				added,
+				removed,
+				previousComponent: last
+			}
+		};
+	}
+	extractCommon(basePath, newTokens, oldTokens, diagonalPath, options) {
+		const newLen = newTokens.length, oldLen = oldTokens.length;
+		let oldPos = basePath.oldPos, newPos = oldPos - diagonalPath, commonCount = 0;
+		while (newPos + 1 < newLen && oldPos + 1 < oldLen && this.equals(oldTokens[oldPos + 1], newTokens[newPos + 1], options)) {
+			newPos++;
+			oldPos++;
+			commonCount++;
+			if (options.oneChangePerToken) basePath.lastComponent = {
+				count: 1,
+				previousComponent: basePath.lastComponent,
+				added: false,
+				removed: false
+			};
+		}
+		if (commonCount && !options.oneChangePerToken) basePath.lastComponent = {
+			count: commonCount,
+			previousComponent: basePath.lastComponent,
+			added: false,
+			removed: false
+		};
+		basePath.oldPos = oldPos;
+		return newPos;
+	}
+	equals(left, right, options) {
+		if (options.comparator) return options.comparator(left, right);
+		else return left === right || !!options.ignoreCase && left.toLowerCase() === right.toLowerCase();
+	}
+	removeEmpty(array) {
+		const ret = [];
+		for (let i = 0; i < array.length; i++) if (array[i]) ret.push(array[i]);
+		return ret;
+	}
+	castInput(value, options) {
+		return value;
+	}
+	tokenize(value, options) {
+		return Array.from(value);
+	}
+	join(chars) {
+		return chars.join("");
+	}
+	postProcess(changeObjects, options) {
+		return changeObjects;
+	}
+	get useLongestToken() {
+		return false;
+	}
+	buildValues(lastComponent, newTokens, oldTokens) {
+		const components = [];
+		let nextComponent;
+		while (lastComponent) {
+			components.push(lastComponent);
+			nextComponent = lastComponent.previousComponent;
+			delete lastComponent.previousComponent;
+			lastComponent = nextComponent;
+		}
+		components.reverse();
+		const componentLen = components.length;
+		let componentPos = 0, newPos = 0, oldPos = 0;
+		for (; componentPos < componentLen; componentPos++) {
+			const component = components[componentPos];
+			if (!component.removed) {
+				if (!component.added && this.useLongestToken) {
+					let value = newTokens.slice(newPos, newPos + component.count);
+					value = value.map(function(value, i) {
+						const oldValue = oldTokens[oldPos + i];
+						return oldValue.length > value.length ? oldValue : value;
+					});
+					component.value = this.join(value);
+				} else component.value = this.join(newTokens.slice(newPos, newPos + component.count));
+				newPos += component.count;
+				if (!component.added) oldPos += component.count;
+			} else {
+				component.value = this.join(oldTokens.slice(oldPos, oldPos + component.count));
+				oldPos += component.count;
+			}
+		}
+		return components;
+	}
+};
+//#endregion
+//#region ../../node_modules/.pnpm/diff@9.0.0/node_modules/diff/libesm/diff/character.js
+var CharacterDiff = class extends Diff {};
+new CharacterDiff();
+//#endregion
+//#region ../../node_modules/.pnpm/diff@9.0.0/node_modules/diff/libesm/util/string.js
+function longestCommonPrefix(str1, str2) {
+	let i;
+	for (i = 0; i < str1.length && i < str2.length; i++) if (str1[i] != str2[i]) return str1.slice(0, i);
+	return str1.slice(0, i);
+}
+function longestCommonSuffix(str1, str2) {
+	let i;
+	if (!str1 || !str2 || str1[str1.length - 1] != str2[str2.length - 1]) return "";
+	for (i = 0; i < str1.length && i < str2.length; i++) if (str1[str1.length - (i + 1)] != str2[str2.length - (i + 1)]) return str1.slice(-i);
+	return str1.slice(-i);
+}
+function replacePrefix(string, oldPrefix, newPrefix) {
+	if (string.slice(0, oldPrefix.length) != oldPrefix) throw Error(`string ${JSON.stringify(string)} doesn't start with prefix ${JSON.stringify(oldPrefix)}; this is a bug`);
+	return newPrefix + string.slice(oldPrefix.length);
+}
+function replaceSuffix(string, oldSuffix, newSuffix) {
+	if (!oldSuffix) return string + newSuffix;
+	if (string.slice(-oldSuffix.length) != oldSuffix) throw Error(`string ${JSON.stringify(string)} doesn't end with suffix ${JSON.stringify(oldSuffix)}; this is a bug`);
+	return string.slice(0, -oldSuffix.length) + newSuffix;
+}
+function removePrefix(string, oldPrefix) {
+	return replacePrefix(string, oldPrefix, "");
+}
+function removeSuffix(string, oldSuffix) {
+	return replaceSuffix(string, oldSuffix, "");
+}
+function maximumOverlap(string1, string2) {
+	return string2.slice(0, overlapCount(string1, string2));
+}
+function overlapCount(a, b) {
+	let startA = 0;
+	if (a.length > b.length) startA = a.length - b.length;
+	let endB = b.length;
+	if (a.length < b.length) endB = a.length;
+	const map = Array(endB);
+	let k = 0;
+	map[0] = 0;
+	for (let j = 1; j < endB; j++) {
+		if (b[j] == b[k]) map[j] = map[k];
+		else map[j] = k;
+		while (k > 0 && b[j] != b[k]) k = map[k];
+		if (b[j] == b[k]) k++;
+	}
+	k = 0;
+	for (let i = startA; i < a.length; i++) {
+		while (k > 0 && a[i] != b[k]) k = map[k];
+		if (a[i] == b[k]) k++;
+	}
+	return k;
+}
+/**
+* Split a string into segments using a word segmenter, merging consecutive
+* segments if they are both whitespace segments. Whitespace segments can
+* appear adjacent to one another for two reasons:
+* - newlines always get their own segment
+* - where a diacritic is attached to a whitespace character in the text, the
+*   segment ends after the diacritic, so e.g. " \u0300 " becomes two segments.
+* This function therefore runs the segmenter's .segment() method and then
+* merges consecutive segments of whitespace into a single part.
+*/
+function segment(string, segmenter) {
+	const parts = [];
+	for (const segmentObj of Array.from(segmenter.segment(string))) {
+		const segment = segmentObj.segment;
+		if (parts.length && /\s/.test(parts[parts.length - 1]) && /\s/.test(segment)) parts[parts.length - 1] += segment;
+		else parts.push(segment);
+	}
+	return parts;
+}
+function trailingWs(string, segmenter) {
+	if (segmenter) return leadingAndTrailingWs(string, segmenter)[1];
+	let i;
+	for (i = string.length - 1; i >= 0; i--) if (!string[i].match(/\s/)) break;
+	return string.substring(i + 1);
+}
+function leadingWs(string, segmenter) {
+	if (segmenter) return leadingAndTrailingWs(string, segmenter)[0];
+	const match = string.match(/^\s*/);
+	return match ? match[0] : "";
+}
+function leadingAndTrailingWs(string, segmenter) {
+	if (!segmenter) return [leadingWs(string), trailingWs(string)];
+	if (segmenter.resolvedOptions().granularity != "word") throw new Error("The segmenter passed must have a granularity of \"word\"");
+	const segments = segment(string, segmenter);
+	const firstSeg = segments[0];
+	const lastSeg = segments[segments.length - 1];
+	return [/\s/.test(firstSeg) ? firstSeg : "", /\s/.test(lastSeg) ? lastSeg : ""];
+}
+//#endregion
+//#region ../../node_modules/.pnpm/diff@9.0.0/node_modules/diff/libesm/diff/word.js
+var extendedWordChars = "a-zA-Z0-9_\\u{AD}\\u{C0}-\\u{D6}\\u{D8}-\\u{F6}\\u{F8}-\\u{2C6}\\u{2C8}-\\u{2D7}\\u{2DE}-\\u{2FF}\\u{1E00}-\\u{1EFF}";
+var tokenizeIncludingWhitespace = new RegExp(`[${extendedWordChars}]+|\\s+|[^${extendedWordChars}]`, "ug");
+var WordDiff = class extends Diff {
+	equals(left, right, options) {
+		if (options.ignoreCase) {
+			left = left.toLowerCase();
+			right = right.toLowerCase();
+		}
+		return left.trim() === right.trim();
+	}
+	tokenize(value, options = {}) {
+		let parts;
+		if (options.intlSegmenter) {
+			const segmenter = options.intlSegmenter;
+			if (segmenter.resolvedOptions().granularity != "word") throw new Error("The segmenter passed must have a granularity of \"word\"");
+			parts = segment(value, segmenter);
+		} else parts = value.match(tokenizeIncludingWhitespace) || [];
+		const tokens = [];
+		let prevPart = null;
+		parts.forEach((part) => {
+			if (/\s/.test(part)) {
+				if (prevPart == null) tokens.push(part);
+				else tokens.push(tokens.pop() + part);
+			} else if (prevPart != null && /\s/.test(prevPart)) {
+				if (tokens[tokens.length - 1] == prevPart) tokens.push(tokens.pop() + part);
+				else tokens.push(prevPart + part);
+			} else tokens.push(part);
+			prevPart = part;
+		});
+		return tokens;
+	}
+	join(tokens) {
+		return tokens.map((token, i) => {
+			if (i == 0) return token;
+			else return token.replace(/^\s+/, "");
+		}).join("");
+	}
+	postProcess(changes, options) {
+		if (!changes || options.oneChangePerToken) return changes;
+		let lastKeep = null;
+		let insertion = null;
+		let deletion = null;
+		changes.forEach((change) => {
+			if (change.added) insertion = change;
+			else if (change.removed) deletion = change;
+			else {
+				if (insertion || deletion) dedupeWhitespaceInChangeObjects(lastKeep, deletion, insertion, change, options.intlSegmenter);
+				lastKeep = change;
+				insertion = null;
+				deletion = null;
+			}
+		});
+		if (insertion || deletion) dedupeWhitespaceInChangeObjects(lastKeep, deletion, insertion, null, options.intlSegmenter);
+		return changes;
+	}
+};
+new WordDiff();
+function dedupeWhitespaceInChangeObjects(startKeep, deletion, insertion, endKeep, segmenter) {
+	if (deletion && insertion) {
+		const [oldWsPrefix, oldWsSuffix] = leadingAndTrailingWs(deletion.value, segmenter);
+		const [newWsPrefix, newWsSuffix] = leadingAndTrailingWs(insertion.value, segmenter);
+		if (startKeep) {
+			const commonWsPrefix = longestCommonPrefix(oldWsPrefix, newWsPrefix);
+			startKeep.value = replaceSuffix(startKeep.value, newWsPrefix, commonWsPrefix);
+			deletion.value = removePrefix(deletion.value, commonWsPrefix);
+			insertion.value = removePrefix(insertion.value, commonWsPrefix);
+		}
+		if (endKeep) {
+			const commonWsSuffix = longestCommonSuffix(oldWsSuffix, newWsSuffix);
+			endKeep.value = replacePrefix(endKeep.value, newWsSuffix, commonWsSuffix);
+			deletion.value = removeSuffix(deletion.value, commonWsSuffix);
+			insertion.value = removeSuffix(insertion.value, commonWsSuffix);
+		}
+	} else if (insertion) {
+		if (startKeep) {
+			const ws = leadingWs(insertion.value, segmenter);
+			insertion.value = insertion.value.substring(ws.length);
+		}
+		if (endKeep) {
+			const ws = leadingWs(endKeep.value, segmenter);
+			endKeep.value = endKeep.value.substring(ws.length);
+		}
+	} else if (startKeep && endKeep) {
+		const newWsFull = leadingWs(endKeep.value, segmenter), [delWsStart, delWsEnd] = leadingAndTrailingWs(deletion.value, segmenter);
+		const newWsStart = longestCommonPrefix(newWsFull, delWsStart);
+		deletion.value = removePrefix(deletion.value, newWsStart);
+		const newWsEnd = longestCommonSuffix(removePrefix(newWsFull, newWsStart), delWsEnd);
+		deletion.value = removeSuffix(deletion.value, newWsEnd);
+		endKeep.value = replacePrefix(endKeep.value, newWsFull, newWsEnd);
+		startKeep.value = replaceSuffix(startKeep.value, newWsFull, newWsFull.slice(0, newWsFull.length - newWsEnd.length));
+	} else if (endKeep) {
+		const endKeepWsPrefix = leadingWs(endKeep.value, segmenter);
+		const overlap = maximumOverlap(trailingWs(deletion.value, segmenter), endKeepWsPrefix);
+		deletion.value = removeSuffix(deletion.value, overlap);
+	} else if (startKeep) {
+		const overlap = maximumOverlap(trailingWs(startKeep.value, segmenter), leadingWs(deletion.value, segmenter));
+		deletion.value = removePrefix(deletion.value, overlap);
+	}
+}
+var WordsWithSpaceDiff = class extends Diff {
+	tokenize(value) {
+		const regex = new RegExp(`(\\r?\\n)|[${extendedWordChars}]+|[^\\S\\n\\r]+|[^${extendedWordChars}]`, "ug");
+		return value.match(regex) || [];
+	}
+};
+var wordsWithSpaceDiff = new WordsWithSpaceDiff();
+function diffWordsWithSpace(oldStr, newStr, options) {
+	return wordsWithSpaceDiff.diff(oldStr, newStr, options);
+}
+//#endregion
+//#region ../../node_modules/.pnpm/diff@9.0.0/node_modules/diff/libesm/diff/line.js
+var LineDiff = class extends Diff {
+	constructor() {
+		super(...arguments);
+		this.tokenize = tokenize;
+	}
+	equals(left, right, options) {
+		if (options.ignoreWhitespace) {
+			if (!options.newlineIsToken || !left.includes("\n")) left = left.trim();
+			if (!options.newlineIsToken || !right.includes("\n")) right = right.trim();
+		} else if (options.ignoreNewlineAtEof && !options.newlineIsToken) {
+			if (left.endsWith("\n")) left = left.slice(0, -1);
+			if (right.endsWith("\n")) right = right.slice(0, -1);
+		}
+		return super.equals(left, right, options);
+	}
+};
+new LineDiff();
+function tokenize(value, options) {
+	if (options.stripTrailingCr) value = value.replace(/\r\n/g, "\n");
+	const retLines = [], linesAndNewlines = value.split(/(\n|\r\n)/);
+	if (!linesAndNewlines[linesAndNewlines.length - 1]) linesAndNewlines.pop();
+	for (let i = 0; i < linesAndNewlines.length; i++) {
+		const line = linesAndNewlines[i];
+		if (i % 2 && !options.newlineIsToken) retLines[retLines.length - 1] += line;
+		else retLines.push(line);
+	}
+	return retLines;
+}
+//#endregion
+//#region ../../node_modules/.pnpm/diff@9.0.0/node_modules/diff/libesm/diff/sentence.js
+function isSentenceEndPunct(char) {
+	return char == "." || char == "!" || char == "?";
+}
+var SentenceDiff = class extends Diff {
+	tokenize(value) {
+		var _a;
+		const result = [];
+		let tokenStartI = 0;
+		for (let i = 0; i < value.length; i++) {
+			if (i == value.length - 1) {
+				result.push(value.slice(tokenStartI));
+				break;
+			}
+			if (isSentenceEndPunct(value[i]) && value[i + 1].match(/\s/)) {
+				result.push(value.slice(tokenStartI, i + 1));
+				i = tokenStartI = i + 1;
+				while ((_a = value[i + 1]) === null || _a === void 0 ? void 0 : _a.match(/\s/)) i++;
+				result.push(value.slice(tokenStartI, i + 1));
+				tokenStartI = i + 1;
+			}
+		}
+		return result;
+	}
+};
+new SentenceDiff();
+//#endregion
+//#region ../../node_modules/.pnpm/diff@9.0.0/node_modules/diff/libesm/diff/css.js
+var CssDiff = class extends Diff {
+	tokenize(value) {
+		return value.split(/([{}:;,]|\s+)/);
+	}
+};
+new CssDiff();
+//#endregion
+//#region ../../node_modules/.pnpm/diff@9.0.0/node_modules/diff/libesm/diff/json.js
+var JsonDiff = class extends Diff {
+	constructor() {
+		super(...arguments);
+		this.tokenize = tokenize;
+	}
+	get useLongestToken() {
+		return true;
+	}
+	castInput(value, options) {
+		const { undefinedReplacement, stringifyReplacer = (k, v) => typeof v === "undefined" ? undefinedReplacement : v } = options;
+		return typeof value === "string" ? value : JSON.stringify(canonicalize(value, null, null, stringifyReplacer), null, "  ");
+	}
+	equals(left, right, options) {
+		return super.equals(left.replace(/,([\r\n])/g, "$1"), right.replace(/,([\r\n])/g, "$1"), options);
+	}
+};
+new JsonDiff();
+function canonicalize(obj, stack, replacementStack, replacer, key) {
+	stack = stack || [];
+	replacementStack = replacementStack || [];
+	if (replacer) obj = replacer(key === void 0 ? "" : key, obj);
+	let i;
+	for (i = 0; i < stack.length; i += 1) if (stack[i] === obj) return replacementStack[i];
+	let canonicalizedObj;
+	if ("[object Array]" === Object.prototype.toString.call(obj)) {
+		stack.push(obj);
+		canonicalizedObj = new Array(obj.length);
+		replacementStack.push(canonicalizedObj);
+		for (i = 0; i < obj.length; i += 1) canonicalizedObj[i] = canonicalize(obj[i], stack, replacementStack, replacer, String(i));
+		stack.pop();
+		replacementStack.pop();
+		return canonicalizedObj;
+	}
+	if (obj && obj.toJSON) obj = obj.toJSON();
+	if (typeof obj === "object" && obj !== null) {
+		stack.push(obj);
+		canonicalizedObj = {};
+		replacementStack.push(canonicalizedObj);
+		const sortedKeys = [];
+		let key;
+		for (key in obj)
+ /* istanbul ignore else */
+		if (Object.prototype.hasOwnProperty.call(obj, key)) sortedKeys.push(key);
+		sortedKeys.sort();
+		for (i = 0; i < sortedKeys.length; i += 1) {
+			key = sortedKeys[i];
+			canonicalizedObj[key] = canonicalize(obj[key], stack, replacementStack, replacer, key);
+		}
+		stack.pop();
+		replacementStack.pop();
+	} else canonicalizedObj = obj;
+	return canonicalizedObj;
+}
+//#endregion
+//#region ../../node_modules/.pnpm/diff@9.0.0/node_modules/diff/libesm/diff/array.js
+var ArrayDiff = class extends Diff {
+	tokenize(value) {
+		return value.slice();
+	}
+	join(value) {
+		return value;
+	}
+	removeEmpty(value) {
+		return value;
+	}
+};
+new ArrayDiff();
+var StringResponse_module_default = {
+	"string-response": "_string-response_1dw7n_1",
+	highlight: "_highlight_1dw7n_14",
+	reset: "_reset_1dw7n_17"
+};
+//#endregion
+//#region src/components/common/StringResponse.tsx
+function StringResponse(props) {
+	const { response, diffResponse } = props;
+	const differences = diffResponse ? diffWordsWithSpace(response, diffResponse) : [];
+	console.log("response", response);
+	console.log("diffResponse", diffResponse);
+	console.log("differences", differences.map((difference) => {
+		return {
+			...difference,
+			value: difference.value.replace(/\r?\n/g, "[n]")
+		};
+	}));
+	const renderNewlines = (text) => {
+		console.log("text", text.replace(/\r?\n/g, "[n]"));
+		return text.split(/\r?\n/).map((line, index) => /* @__PURE__ */ u(S$1, { children: [index > 0 && /* @__PURE__ */ u("br", {}), line] }, index));
+	};
+	const render = () => {
+		return differences.filter((difference) => {
+			return !difference.added;
+		}).map((difference, index) => {
+			const key = `${index}`;
+			return /* @__PURE__ */ u("span", {
+				className: difference.removed ? StringResponse_module_default["highlight"] : StringResponse_module_default["reset"],
+				children: renderNewlines(difference.value)
+			}, key);
+		});
+	};
+	return /* @__PURE__ */ u("div", {
+		className: StringResponse_module_default["string-response"],
+		children: render()
+	});
+}
+//#endregion
+//#region ../../node_modules/.pnpm/microdiff@1.6.0/node_modules/microdiff/dist/index.js
+var richTypes = [
+	"Date",
+	"RegExp",
+	"String",
+	"Number"
+];
+var temporalTypes = Object.getOwnPropertyNames(globalThis.Temporal || {});
+function diff(obj, newObj, options = { cyclesFix: true }, _stack = []) {
+	let diffs = [];
+	const isObjArray = Array.isArray(obj);
+	for (const key in obj) {
+		const value = obj[key];
+		const path = isObjArray ? +key : key;
+		if (!(key in newObj)) {
+			diffs.push({
+				type: "REMOVE",
+				path: [path],
+				oldValue: value
+			});
+			continue;
+		}
+		const newValue = newObj[key];
+		const areCompatibleObjects = typeof value === "object" && typeof newValue === "object" && Array.isArray(value) === Array.isArray(newValue);
+		const objConstructor = areCompatibleObjects && value ? Object.getPrototypeOf(value)?.constructor?.name : void 0;
+		if (value && newValue && areCompatibleObjects && !richTypes.includes(objConstructor) && !temporalTypes.includes(objConstructor) && (!options.cyclesFix || !_stack.includes(value))) {
+			if (options.cyclesFix) _stack.push(value);
+			const subDiffs = diff(value, newValue, options, _stack);
+			if (options.cyclesFix) _stack.pop();
+			for (const subDiff of subDiffs) {
+				subDiff.path.unshift(path);
+				diffs.push(subDiff);
+			}
+		} else if (!(Object.is(value, newValue) || temporalTypes.includes(objConstructor) && String(value) === String(newValue) || richTypes.includes(objConstructor) && (isNaN(value) ? value + "" === newValue + "" : +value === +newValue))) diffs.push({
+			path: [path],
+			type: "CHANGE",
+			value: newValue,
+			oldValue: value
+		});
+	}
+	const isNewObjArray = Array.isArray(newObj);
+	for (const key in newObj) if (!(key in obj)) diffs.push({
+		type: "CREATE",
+		path: [isNewObjArray ? +key : key],
+		value: newObj[key]
+	});
+	return diffs;
+}
+var StructureResponse_module_default = {
+	"structure-response": "_structure-response_1s1cs_1",
+	highlight: "_highlight_1s1cs_13",
+	reset: "_reset_1s1cs_16"
+};
+//#endregion
+//#region src/components/common/StructureResponse.tsx
+function StructureResponse(props) {
+	const { response, diffResponse } = props;
+	const differences = diffResponse ? diff(response, diffResponse) : [];
+	const checkHasDifference = (path) => {
+		return differences?.find((itr) => {
+			return itr.path.join(".") === path.join(".");
+		}) !== void 0;
+	};
+	const render = (value, indent = 0, parentPath = [], isArrayItem = false, parentHasDifference = false, output = []) => {
+		const indentString = " ".repeat(indent * 2);
+		const isPrimitive = (value) => {
+			return typeof value !== "object" || value === null;
+		};
+		const renderPrimitive = (value) => {
+			return `${value}`;
+		};
+		const highlight = (content, hasDifference) => {
+			return /* @__PURE__ */ u("span", {
+				className: hasDifference || parentHasDifference ? StructureResponse_module_default["highlight"] : StructureResponse_module_default["reset"],
+				children: content
+			});
+		};
+		const reset = (content) => {
+			return /* @__PURE__ */ u("span", {
+				className: "reset",
+				children: content
+			});
+		};
+		if (Array.isArray(value)) {
+			if (value.length === 0) {
+				const path = [...parentPath, 0];
+				const hasDifference = checkHasDifference(path);
+				output.push(reset(`${indentString}- `), highlight(`[]`, hasDifference), /* @__PURE__ */ u("br", {}));
+				return output;
+			}
+			for (let index = 0; index < value.length; index++) {
+				const path = [...parentPath, index];
+				const hasDifference = checkHasDifference(path) || parentHasDifference;
+				if (index === 0 && isArrayItem) output.push(reset(`- `));
+				else output.push(reset(`${indentString}- `));
+				if (isPrimitive(value[index])) output.push(highlight(`${renderPrimitive(value[index])}`, hasDifference), /* @__PURE__ */ u("br", {}));
+				else output.push(highlight(render(value[index], indent + 1, [...parentPath, index], true, hasDifference), hasDifference));
+			}
+			return output;
+		}
+		if (typeof value === "object" && value !== null) Object.keys(value).forEach((key, index) => {
+			const objectValue = value[key];
+			const path = [...parentPath, key];
+			const hasDifference = checkHasDifference(path);
+			if (isPrimitive(objectValue)) {
+				if (index === 0 && isArrayItem) output.push(highlight(`${key}: `, hasDifference));
+				else output.push(highlight(`${indentString}${key}: `, hasDifference));
+				output.push(highlight(`${renderPrimitive(objectValue)}`, hasDifference), /* @__PURE__ */ u("br", {}));
+			} else {
+				if (index === 0 && isArrayItem) output.push(highlight(`${key}:\n`, hasDifference));
+				else output.push(highlight(`${indentString}${key}:\n`, hasDifference));
+				output.push(highlight(render(objectValue, indent + 1, [...parentPath, key], false, hasDifference), hasDifference));
+			}
+		});
+		return output;
+	};
+	return /* @__PURE__ */ u("div", {
+		className: StructureResponse_module_default["structure-response"],
+		children: render(response)
+	});
+}
 //#endregion
 //#region src/components/common/Response.tsx
 function Response(props) {
-	const { response: rawResponse } = props;
+	const { response: rawResponse, diffResponse: rawDiffResponse } = props;
 	const response = transform$1(rawResponse);
 	const isStructuredOutput = typeof response === "object";
-	const renderString = () => {
-		return /* @__PURE__ */ u(Markdown, { content: response });
-	};
-	const renderStructuredOutput = () => {
-		const structuredOutput = stringify(response);
-		return /* @__PURE__ */ u("pre", {
-			className: Response_module_default["response-structured-output"],
-			children: structuredOutput
-		});
-	};
-	return /* @__PURE__ */ u(S$1, { children: isStructuredOutput ? renderStructuredOutput() : renderString() });
+	const diffResponse = transform$1(rawDiffResponse);
+	const isDiffStructuredOutput = typeof diffResponse === "object";
+	return /* @__PURE__ */ u(S$1, { children: isStructuredOutput ? /* @__PURE__ */ u(StructureResponse, {
+		response,
+		diffResponse: isDiffStructuredOutput ? diffResponse : void 0
+	}) : /* @__PURE__ */ u(StringResponse, {
+		response,
+		diffResponse: !isDiffStructuredOutput ? diffResponse : void 0
+	}) });
 }
 function transform$1(response) {
+	if (!response) return;
 	if (typeof response === "object") return response;
 	try {
 		return JSON.parse(response);
 	} catch (error) {}
 	return response;
+}
+//#endregion
+//#region src/components/common/DatasetEntry.module.scss
+var DatasetEntry_module_default$1 = { "dataset-entry-key": "_dataset-entry-key_1ekig_1" };
+//#endregion
+//#region src/components/common/DatasetEntry.tsx
+function DatasetEntry$1(props) {
+	const { datasetEntry } = props;
+	return /* @__PURE__ */ u(S$1, { children: Object.keys(datasetEntry.vars).sort().map((key) => {
+		const value = datasetEntry.vars[key];
+		const valueString = typeof value === "object" ? JSON.stringify(value) : value.toString();
+		return /* @__PURE__ */ u("div", { children: [
+			/* @__PURE__ */ u("code", {
+				className: DatasetEntry_module_default$1["dataset-entry-key"],
+				children: key
+			}),
+			"\xA0",
+			valueString
+		] }, key);
+	}) });
 }
 //#endregion
 //#region src/string/case.ts
@@ -9514,12 +10212,12 @@ function Metrics(props) {
 //#endregion
 //#region src/components/candidate-details/CandidateAggregatedEvaluation.module.scss
 var CandidateAggregatedEvaluation_module_default = {
-	"candidate-aggregated-evaluation": "_candidate-aggregated-evaluation_11vcn_1",
-	"candidate-aggregated-evaluation-summary": "_candidate-aggregated-evaluation-summary_11vcn_7",
-	"candidate-aggregated-evaluation-score": "_candidate-aggregated-evaluation-score_11vcn_11",
-	"candidate-aggregated-evaluation-evaluation": "_candidate-aggregated-evaluation-evaluation_11vcn_15",
-	"candidate-aggregated-evaluation-status": "_candidate-aggregated-evaluation-status_11vcn_19",
-	"candidate-aggregated-evaluation-key": "_candidate-aggregated-evaluation-key_11vcn_23"
+	"candidate-aggregated-evaluation": "_candidate-aggregated-evaluation_1ezbt_1",
+	"candidate-aggregated-evaluation-summary": "_candidate-aggregated-evaluation-summary_1ezbt_7",
+	"candidate-aggregated-evaluation-score": "_candidate-aggregated-evaluation-score_1ezbt_11",
+	"candidate-aggregated-evaluation-evaluation": "_candidate-aggregated-evaluation-evaluation_1ezbt_15",
+	"candidate-aggregated-evaluation-status": "_candidate-aggregated-evaluation-status_1ezbt_23",
+	"candidate-aggregated-evaluation-key": "_candidate-aggregated-evaluation-key_1ezbt_27"
 };
 //#endregion
 //#region src/components/candidate-details/CandidateAggregatedEvaluation.tsx
@@ -9534,7 +10232,10 @@ function CandidateAggregatedEvaluation(props) {
 			children: [
 				/* @__PURE__ */ u("span", { children: [
 					"Aggregated score:\xA0",
-					/* @__PURE__ */ u(Score, { score: aggregatedScore }),
+					/* @__PURE__ */ u(Score, {
+						score: aggregatedScore,
+						className: "text-normal"
+					}),
 					/* @__PURE__ */ u(MiddotSeparator, {})
 				] }),
 				/* @__PURE__ */ u("span", {
@@ -9558,23 +10259,11 @@ function CandidateAggregatedEvaluation(props) {
 	};
 	const renderDatasetEntry = (datasetEntry) => {
 		if (datasetEntry.vars == void 0) return;
-		const keys = Object.keys(datasetEntry.vars).sort();
 		return /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("h2", { children: [
 			"Dataset entry (",
 			datasetEntry.datasetEntryId,
 			")"
-		] }), /* @__PURE__ */ u("p", { children: keys.map((key) => {
-			const value = datasetEntry.vars[key];
-			const valueString = typeof value === "object" ? JSON.stringify(value) : value.toString();
-			return /* @__PURE__ */ u("div", { children: [
-				/* @__PURE__ */ u("code", {
-					className: CandidateAggregatedEvaluation_module_default["candidate-aggregated-evaluation-key"],
-					children: key
-				}),
-				"\xA0",
-				valueString
-			] }, key);
-		}) })] });
+		] }), /* @__PURE__ */ u("p", { children: /* @__PURE__ */ u(DatasetEntry$1, { datasetEntry }) })] });
 	};
 	const renderEvaluation = (index, status, evaluation) => {
 		const key = `${evaluation.candidateRef.candidateId}e${index}`;
@@ -9582,19 +10271,31 @@ function CandidateAggregatedEvaluation(props) {
 		return /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u(Separator, {}), /* @__PURE__ */ u("div", {
 			className: CandidateAggregatedEvaluation_module_default["candidate-aggregated-evaluation-evaluation"],
 			children: [
-				/* @__PURE__ */ u("div", { children: [
-					"Score:\xA0",
-					/* @__PURE__ */ u(Score, { score: evaluation.score }),
-					/* @__PURE__ */ u(Tag, {
-						label: status,
-						color: status === "passed" ? "green" : "red",
-						className: CandidateAggregatedEvaluation_module_default["candidate-aggregated-evaluation-status"]
-					})
-				] }),
+				/* @__PURE__ */ u("div", {
+					className: CandidateAggregatedEvaluation_module_default["candidate-aggregated-evaluation-summary"],
+					children: [
+						"Score:\xA0",
+						/* @__PURE__ */ u(Score, {
+							score: evaluation.score,
+							className: "text-normal"
+						}),
+						/* @__PURE__ */ u(Tag, {
+							label: status,
+							color: status === "passed" ? "green" : "red",
+							className: CandidateAggregatedEvaluation_module_default["candidate-aggregated-evaluation-status"]
+						})
+					]
+				}),
 				renderDatasetEntry(evaluation.datasetEntry),
 				/* @__PURE__ */ u("h2", { children: "Response" }),
-				/* @__PURE__ */ u("p", { children: /* @__PURE__ */ u(Response, { response: evaluation.response }) }),
-				expectedResponse && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("h2", { children: "Expected response" }), /* @__PURE__ */ u("p", { children: /* @__PURE__ */ u(Response, { response: expectedResponse }) })] }),
+				/* @__PURE__ */ u("p", { children: /* @__PURE__ */ u(Response, {
+					response: evaluation.response,
+					diffResponse: expectedResponse
+				}) }),
+				expectedResponse && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("h2", { children: "Expected response" }), /* @__PURE__ */ u("p", { children: /* @__PURE__ */ u(Response, {
+					response: expectedResponse,
+					diffResponse: evaluation.response
+				}) })] }),
 				/* @__PURE__ */ u("h2", { children: "Reasoning" }),
 				/* @__PURE__ */ u("div", { children: /* @__PURE__ */ u(Markdown, { content: evaluation.reasoning }) }),
 				hasMetrics(evaluation.metrics) && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("h2", { children: "Metrics" }), /* @__PURE__ */ u("p", { children: /* @__PURE__ */ u(Metrics, { metrics: evaluation.metrics }) })] })
@@ -9643,7 +10344,7 @@ var DatasetEntry_module_default = { "dataset-entry-key": "_dataset-entry-key_143
 //#endregion
 //#region src/components/candidate-details/DatasetEntry.tsx
 function DatasetEntry(props) {
-	const { datasetEntry } = props;
+	const { datasetEntry, diffResponse } = props;
 	const renderVariables = () => {
 		if (datasetEntry.vars == void 0) return;
 		return /* @__PURE__ */ u("p", { children: Object.keys(datasetEntry.vars).sort().map((key) => {
@@ -9666,7 +10367,10 @@ function DatasetEntry(props) {
 			")"
 		] }),
 		renderVariables(),
-		datasetEntry.expectedResponse && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("h2", { children: "Expected response" }), /* @__PURE__ */ u("p", { children: /* @__PURE__ */ u(Response, { response: datasetEntry.expectedResponse }) })] }),
+		datasetEntry.expectedResponse && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("h2", { children: "Expected response" }), /* @__PURE__ */ u("p", { children: /* @__PURE__ */ u(Response, {
+			response: datasetEntry.expectedResponse,
+			diffResponse
+		}) })] }),
 		datasetEntry.expectedResponseReasoning && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("h2", { children: "Expected response reasoning" }), /* @__PURE__ */ u("p", { children: datasetEntry.expectedResponseReasoning })] })
 	] });
 }
@@ -9704,9 +10408,15 @@ function CandidateAnalysis(props) {
 		const regressionRisks = failedExampleAnalysis.regressionRisks;
 		return /* @__PURE__ */ u(S$1, { children: [
 			/* @__PURE__ */ u(Separator, {}),
-			/* @__PURE__ */ u(DatasetEntry, { datasetEntry }),
+			/* @__PURE__ */ u(DatasetEntry, {
+				datasetEntry,
+				diffResponse: failedExampleAnalysis.response
+			}),
 			/* @__PURE__ */ u("h2", { children: "Response" }),
-			/* @__PURE__ */ u("p", { children: /* @__PURE__ */ u(Response, { response: failedExampleAnalysis.response }) }),
+			/* @__PURE__ */ u("p", { children: /* @__PURE__ */ u(Response, {
+				response: failedExampleAnalysis.response,
+				diffResponse: datasetEntry.expectedResponse
+			}) }),
 			/* @__PURE__ */ u("h2", { children: "Failure reason" }),
 			/* @__PURE__ */ u("p", { children: failedExampleAnalysis.failureReason }),
 			/* @__PURE__ */ u("h2", { children: "Plausible cause" }),
@@ -9777,10 +10487,10 @@ function CandidateChanges(props) {
 	return /* @__PURE__ */ u("div", { children: renderChanges() });
 }
 var CandidateModule_module_default = {
-	"candidate-module": "_candidate-module_1vddl_1",
-	header: "_header_1vddl_1",
-	module: "_module_1vddl_5",
-	"module-expanded": "_module-expanded_1vddl_14"
+	"candidate-module": "_candidate-module_1l5jx_1",
+	header: "_header_1l5jx_1",
+	module: "_module_1l5jx_5",
+	"module-expanded": "_module-expanded_1l5jx_14"
 };
 //#endregion
 //#region src/components/candidate-details/CandidateModule.tsx
@@ -10011,22 +10721,25 @@ function ThemeSwitch() {
 		onClick: toggleTheme
 	});
 }
-//#endregion
-//#region src/components/tools/Info.tsx
-function Info(props) {
-	return /* @__PURE__ */ u(IconButton, {
-		name: "info",
-		title: "Info",
-		onClick: props.onClick
-	});
-}
 var Toolbar_module_default = { toolbar: "_toolbar_17c56_1" };
 //#endregion
 //#region src/components/tools/Toolbar.tsx
 function Toolbar(props) {
 	return /* @__PURE__ */ u("div", {
 		className: Toolbar_module_default["toolbar"],
-		children: [/* @__PURE__ */ u(ThemeSwitch, {}), /* @__PURE__ */ u(Info, { onClick: props.onInfoClick })]
+		children: [
+			/* @__PURE__ */ u(IconButton, {
+				name: "info",
+				title: "RPE process info",
+				onClick: props.onInfoClick
+			}),
+			/* @__PURE__ */ u(IconButton, {
+				name: "playlist_remove",
+				title: "Failing examples",
+				onClick: props.onFailingExamplesClick
+			}),
+			/* @__PURE__ */ u(ThemeSwitch, {})
+		]
 	});
 }
 //#endregion
@@ -15366,10 +16079,10 @@ var InfoPanel_module_default = {
 	hidden: "_hidden_h9woi_17"
 };
 //#endregion
-//#region src/components/tools/InfoPanel.tsx
+//#region src/components/info/info/InfoPanel.tsx
 function InfoPanel(props) {
-	const { visible, onCloseClick } = props;
-	const usageRows = sumRPEInsightsUsage(props.rpeInsights).modelUsage.sort((a, b) => a.modelName.localeCompare(b.modelName)).map((modelUsage) => {
+	const { rpeInsights, visible, onCloseClick } = props;
+	const usageRows = sumRPEInsightsUsage(rpeInsights).modelUsage.sort((a, b) => a.modelName.localeCompare(b.modelName)).map((modelUsage) => {
 		const inputTokens = modelUsage.inputTokens ?? 0;
 		const outputTokens = modelUsage.outputTokens ?? 0;
 		return [
@@ -15385,7 +16098,7 @@ function InfoPanel(props) {
 	const renderRPEProperties = (title, name, rpeProperties) => {
 		const propertiesRows = (rpeProperties ?? []).map((property) => {
 			return [
-				property.description ? /* @__PURE__ */ u(Info$1, {
+				property.description ? /* @__PURE__ */ u(Info, {
 					text: property.description,
 					className: InfoPanel_module_default["info"]
 				}) : "-",
@@ -15415,7 +16128,7 @@ function InfoPanel(props) {
 		children: [
 			/* @__PURE__ */ u("h1", { children: "General" }),
 			/* @__PURE__ */ u("h2", { children: "Stop reason" }),
-			/* @__PURE__ */ u("p", { children: props.rpeInsights.stopReason }),
+			/* @__PURE__ */ u("p", { children: rpeInsights.stopReason }),
 			/* @__PURE__ */ u("h2", { children: "Token usage by model" }),
 			/* @__PURE__ */ u("p", { children: /* @__PURE__ */ u(Table, {
 				header: [
@@ -15427,14 +16140,256 @@ function InfoPanel(props) {
 				templateColumns: "max-content max-content max-content"
 			}) }),
 			/* @__PURE__ */ u("h1", { children: "Components info" }),
-			renderRPEProperties("Executor", props.rpeInsights.info.executorInfo.name, props.rpeInsights.info.executorInfo.properties),
-			renderRPEProperties("Evaluator", props.rpeInsights.info.evaluatorInfo.name, props.rpeInsights.info.evaluatorInfo.properties),
-			renderRPEProperties("Aggregator", props.rpeInsights.info.aggregatorInfo.name, props.rpeInsights.info.aggregatorInfo.properties),
-			renderRPEProperties("Analyzer", props.rpeInsights.info.analyzerInfo.name, props.rpeInsights.info.analyzerInfo.properties),
-			renderRPEProperties("Candidate Generator", props.rpeInsights.info.candidateGeneratorInfo.name, props.rpeInsights.info.candidateGeneratorInfo.properties),
-			renderRPEProperties("Candidate Selector", props.rpeInsights.info.candidateSelectorInfo.name, props.rpeInsights.info.candidateSelectorInfo.properties),
-			renderRPEProperties("Final Candidate Selector", props.rpeInsights.info.finalCandidateSelectorInfo.name, props.rpeInsights.info.finalCandidateSelectorInfo.properties)
+			renderRPEProperties("Executor", rpeInsights.info.executorInfo.name, rpeInsights.info.executorInfo.properties),
+			renderRPEProperties("Evaluator", rpeInsights.info.evaluatorInfo.name, rpeInsights.info.evaluatorInfo.properties),
+			renderRPEProperties("Aggregator", rpeInsights.info.aggregatorInfo.name, rpeInsights.info.aggregatorInfo.properties),
+			renderRPEProperties("Analyzer", rpeInsights.info.analyzerInfo.name, rpeInsights.info.analyzerInfo.properties),
+			renderRPEProperties("Candidate Generator", rpeInsights.info.candidateGeneratorInfo.name, rpeInsights.info.candidateGeneratorInfo.properties),
+			renderRPEProperties("Candidate Selector", rpeInsights.info.candidateSelectorInfo.name, rpeInsights.info.candidateSelectorInfo.properties),
+			renderRPEProperties("Final Candidate Selector", rpeInsights.info.finalCandidateSelectorInfo.name, rpeInsights.info.finalCandidateSelectorInfo.properties)
 		]
+	});
+}
+//#endregion
+//#region src/components/info/failing-examples/failing-examples-utils.ts
+function resolveFailingExamples(rpeInsights) {
+	const failingExamples = [];
+	const getFailingExample = (datasetEntry) => {
+		const { datasetEntryId } = datasetEntry;
+		const failingExample = failingExamples.find((example) => {
+			return example.datasetEntry.datasetEntryId === datasetEntryId;
+		});
+		if (failingExample) return failingExample;
+		const newFailingExample = {
+			datasetEntry,
+			passedEvaluationCount: 0,
+			failedEvaluations: [],
+			totalIterations: rpeInsights.iterationHistory.length
+		};
+		failingExamples.push(newFailingExample);
+		return newFailingExample;
+	};
+	rpeInsights.iterationHistory.forEach((iteration) => {
+		(iteration.candidateAggregatedEvaluations ?? []).forEach((aggregatedEvaluation) => {
+			aggregatedEvaluation.passedEvaluations.forEach((passedEvaluation) => {
+				const example = getFailingExample(passedEvaluation.datasetEntry);
+				example.passedEvaluationCount++;
+			});
+			aggregatedEvaluation.failedEvaluations.forEach((failedEvaluation) => {
+				getFailingExample(failedEvaluation.datasetEntry).failedEvaluations.push({
+					evaluation: failedEvaluation,
+					iterationNo: iteration.iterationNo
+				});
+			});
+		});
+	});
+	return failingExamples.filter((example) => {
+		return example.failedEvaluations.length > 0;
+	}).sort((a, b) => {
+		return failingExamplePassRate(a) - failingExamplePassRate(b);
+	});
+}
+function failingExamplePassRate(example) {
+	return example.passedEvaluationCount / (example.passedEvaluationCount + example.failedEvaluations.length);
+}
+//#endregion
+//#region src/components/info/failing-examples/FailingExample.module.scss
+var FailingExample_module_default = {
+	"failing-example-summary": "_failing-example-summary_xzrln_1",
+	"failing-example-evaluation": "_failing-example-evaluation_xzrln_5",
+	"failing-example-evaluation-status": "_failing-example-evaluation-status_xzrln_9"
+};
+//#endregion
+//#region src/components/info/failing-examples/FailedAtIterations.module.scss
+var FailedAtIterations_module_default = {
+	"failed-at-iterations-dot": "_failed-at-iterations-dot_nda69_1",
+	"failed-at-iterations-info": "_failed-at-iterations-info_nda69_6"
+};
+//#endregion
+//#region src/components/info/failing-examples/FailedAtIterations.tsx
+function FailedAtIterations(props) {
+	const { failedAtIterationNo, totalIterations } = props;
+	const failedAt = (iterationNo) => {
+		return failedAtIterationNo.includes(iterationNo);
+	};
+	const renderIterations = () => {
+		const components = [];
+		for (let iterationNo = 1; iterationNo <= totalIterations; iterationNo++) {
+			const failed = failedAt(iterationNo);
+			const className = clsx(FailedAtIterations_module_default["failed-at-iterations-dot"], failed ? "red" : "green");
+			components.push(/* @__PURE__ */ u("span", {
+				className,
+				title: `Iteration ${iterationNo}`,
+				children: "⏺"
+			}, iterationNo));
+		}
+		return components;
+	};
+	return /* @__PURE__ */ u("div", { children: [
+		/* @__PURE__ */ u(Info, {
+			text: "Iterations at which the example failed",
+			className: FailedAtIterations_module_default["failed-at-iterations-info"]
+		}),
+		"Iterations:",
+		renderIterations()
+	] });
+}
+//#endregion
+//#region src/components/info/failing-examples/FailingExample.tsx
+function FailingExample(props) {
+	const { example, className } = props;
+	const passRate = failingExamplePassRate(example);
+	const failedAtIterationNo = example.failedEvaluations.map((evaluation) => {
+		return evaluation.iterationNo;
+	});
+	const [more, setMore] = d$1(false);
+	const renderSummary = () => {
+		return /* @__PURE__ */ u("span", {
+			className: FailingExample_module_default["failing-example-summary"],
+			children: [
+				/* @__PURE__ */ u("span", { children: [
+					"Pass rate:\xA0",
+					/* @__PURE__ */ u(Score, {
+						score: passRate,
+						className: "text-normal"
+					}),
+					/* @__PURE__ */ u(MiddotSeparator, {})
+				] }),
+				/* @__PURE__ */ u("span", {
+					className: "green",
+					children: [
+						example.passedEvaluationCount,
+						" passed",
+						/* @__PURE__ */ u(MiddotSeparator, {})
+					]
+				}),
+				/* @__PURE__ */ u("span", {
+					className: "red",
+					children: [
+						example.failedEvaluations.length,
+						" failed",
+						/* @__PURE__ */ u(MiddotSeparator, {})
+					]
+				})
+			]
+		});
+	};
+	const renderEvaluation = (index, evaluation, iterationNo) => {
+		const key = `${evaluation.datasetEntry.datasetEntryId}e${index}`;
+		evaluation.datasetEntry.expectedResponse;
+		const r = "The user is a mid-level developer super\nJava Oracle";
+		const er = "The user is a senior developer super super\nJava Oracle";
+		return /* @__PURE__ */ u("div", {
+			className: FailingExample_module_default["failing-example-evaluation"],
+			children: [
+				index > 0 && /* @__PURE__ */ u(Separator, {}),
+				/* @__PURE__ */ u("p", { children: [
+					"Iteration:\xA0",
+					/* @__PURE__ */ u("span", {
+						className: "text-normal",
+						children: iterationNo
+					}),
+					/* @__PURE__ */ u(MiddotSeparator, {}),
+					"Score:\xA0",
+					/* @__PURE__ */ u(Score, {
+						score: evaluation.score,
+						className: "text-normal"
+					}),
+					/* @__PURE__ */ u(Tag, {
+						label: "failed",
+						color: "red",
+						className: FailingExample_module_default["failing-example-evaluation-status"]
+					})
+				] }),
+				/* @__PURE__ */ u("h2", { children: "Response" }),
+				/* @__PURE__ */ u("p", { children: /* @__PURE__ */ u(Response, {
+					response: r,
+					diffResponse: er
+				}) }),
+				/* @__PURE__ */ u("h2", { children: "Expected response" }),
+				/* @__PURE__ */ u("p", { children: /* @__PURE__ */ u(Response, {
+					response: er,
+					diffResponse: r
+				}) }),
+				/* @__PURE__ */ u("h2", { children: "Reasoning" }),
+				/* @__PURE__ */ u("div", { children: /* @__PURE__ */ u(Markdown, { content: evaluation.reasoning }) })
+			]
+		}, key);
+	};
+	const renderEvaluationItem = (index) => {
+		const evaluation = example.failedEvaluations[index];
+		return renderEvaluation(index, evaluation.evaluation, evaluation.iterationNo);
+	};
+	return /* @__PURE__ */ u("div", {
+		className,
+		children: /* @__PURE__ */ u(ExpandableSection, {
+			title: example.datasetEntry.datasetEntryId,
+			headerLevel: 2,
+			expanded: more,
+			onToggle: () => {
+				setMore(!more);
+			},
+			children: [/* @__PURE__ */ u(ExpandableSection.Summary, { children: /* @__PURE__ */ u("p", { children: [
+				renderSummary(),
+				/* @__PURE__ */ u(LinkButton, {
+					label: "More",
+					onClick: () => {
+						setMore(true);
+					}
+				}),
+				/* @__PURE__ */ u(FailedAtIterations, {
+					failedAtIterationNo,
+					totalIterations: example.totalIterations
+				})
+			] }) }), /* @__PURE__ */ u(ExpandableSection.Details, { children: [
+				/* @__PURE__ */ u("p", { children: [
+					renderSummary(),
+					/* @__PURE__ */ u(LinkButton, {
+						label: "Less",
+						onClick: () => {
+							setMore(false);
+						}
+					}),
+					/* @__PURE__ */ u(FailedAtIterations, {
+						failedAtIterationNo,
+						totalIterations: example.totalIterations
+					})
+				] }),
+				/* @__PURE__ */ u("h2", { children: "Dataset entry" }),
+				/* @__PURE__ */ u("p", { children: /* @__PURE__ */ u(DatasetEntry$1, { datasetEntry: example.datasetEntry }) }),
+				/* @__PURE__ */ u("h2", { children: "Evaluations" }),
+				/* @__PURE__ */ u(ExpandableList, {
+					totalItems: example.failedEvaluations.length,
+					itemRenderer: renderEvaluationItem
+				})
+			] })]
+		})
+	});
+}
+var FailingExamplesPanel_module_default = {
+	"failing-examples-panel": "_failing-examples-panel_950cl_1",
+	visible: "_visible_950cl_5",
+	hidden: "_hidden_950cl_11",
+	separator: "_separator_950cl_17"
+};
+//#endregion
+//#region src/components/info/failing-examples/FailingExamplesPanel.tsx
+function FailingExamplesPanel(props) {
+	const { rpeInsights, visible, onCloseClick } = props;
+	const failingExamples = T$1(() => resolveFailingExamples(rpeInsights), [rpeInsights]);
+	const renderFailingExamples = () => {
+		return failingExamples.map((example, index) => {
+			return /* @__PURE__ */ u(S$1, { children: [index > 0 && /* @__PURE__ */ u(Separator, { className: FailingExamplesPanel_module_default["separator"] }), /* @__PURE__ */ u(FailingExample, { example }, example.datasetEntry.datasetEntryId)] });
+		});
+	};
+	return /* @__PURE__ */ u(Panel, {
+		title: "Failing examples",
+		onCloseClick,
+		className: clsx(FailingExamplesPanel_module_default["failing-examples-panel"], {
+			[FailingExamplesPanel_module_default["visible"]]: visible,
+			[FailingExamplesPanel_module_default["hidden"]]: !visible
+		}),
+		children: renderFailingExamples()
 	});
 }
 //#endregion
@@ -15442,53 +16397,54 @@ function InfoPanel(props) {
 function ProcessView(props) {
 	const { rpeInsights } = props;
 	const [selectedCandidateId, setSelectedCandidateId] = d$1(null);
-	const [detailsVisible, setDetailsVisible] = d$1(false);
-	const [infoVisible, setInfoVisible] = d$1(false);
-	const hideDetails = () => {
-		setDetailsVisible(false);
-		setTimeout(() => {
-			clearCandidateId();
-		}, 340);
-	};
+	const [visiblePanel, setVisiblePanel] = d$1(null);
 	const selectCandidateId = (candidateId) => {
 		setSelectedCandidateId(candidateId);
-		setDetailsVisible(true);
-		setInfoVisible(false);
+		showPanel("details");
 	};
 	const clearCandidateId = () => {
 		setSelectedCandidateId(null);
 	};
-	const onBackgroundClick = () => {
-		clearCandidateId();
-		setDetailsVisible(false);
-		setInfoVisible(false);
+	const hidePanel = () => {
+		if (visiblePanel === "details") setTimeout(() => {
+			clearCandidateId();
+		}, 340);
+		setVisiblePanel(null);
 	};
-	const onCloseClick = () => {
-		setDetailsVisible(false);
-	};
-	const onInfoClick = () => {
-		if (detailsVisible) hideDetails();
-		setInfoVisible(!infoVisible);
+	const showPanel = (panel) => {
+		if (visiblePanel === panel) return;
+		if (visiblePanel === "details") setTimeout(() => {
+			clearCandidateId();
+		}, 340);
+		setVisiblePanel(panel);
 	};
 	const candidateDetailsData = selectedCandidateId !== null ? getCandidateDetailsData(rpeInsights, selectedCandidateId) : void 0;
 	return /* @__PURE__ */ u(S$1, { children: [
 		/* @__PURE__ */ u(CandidateTree, {
 			rpeInsights,
 			selectedCandidateId,
-			detailsVisible,
+			detailsVisible: visiblePanel === "details",
 			onSelectCandidateId: selectCandidateId,
-			onBackgroundClick
+			onBackgroundClick: hidePanel
 		}),
 		/* @__PURE__ */ u(CandidateDetails, {
 			data: candidateDetailsData,
-			visible: detailsVisible,
-			onCloseClick
+			visible: visiblePanel === "details",
+			onCloseClick: hidePanel
 		}),
-		/* @__PURE__ */ u(Toolbar, { onInfoClick }),
+		/* @__PURE__ */ u(Toolbar, {
+			onInfoClick: () => showPanel("info"),
+			onFailingExamplesClick: () => showPanel("failing-examples")
+		}),
 		/* @__PURE__ */ u(InfoPanel, {
 			rpeInsights,
-			visible: infoVisible,
-			onCloseClick: onInfoClick
+			visible: visiblePanel === "info",
+			onCloseClick: hidePanel
+		}),
+		/* @__PURE__ */ u(FailingExamplesPanel, {
+			rpeInsights,
+			visible: visiblePanel === "failing-examples",
+			onCloseClick: hidePanel
 		})
 	] });
 }
@@ -15507,7 +16463,7 @@ function loadRPEInsights() {
 R$1(/* @__PURE__ */ u(App, { rpeInsights: loadRPEInsights() }), document.getElementById("app"));
 //#endregion
 
-//# sourceMappingURL=index-BXwq4q23.js.map</script>
+//# sourceMappingURL=index-DpDkIUCn.js.map</script>
     <style rel="stylesheet" crossorigin>* {
   box-sizing: border-box;
 }
@@ -15522,11 +16478,11 @@ body {
 }
 
 pre {
+  font-size: 0.72rem;
   overflow: auto;
-  color: var(--text-muted);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-  font-size: 0.86rem;
   line-height: 1.62;
+  color: var(--text-muted);
 }
 
 /* Let's get this party started */
@@ -15587,6 +16543,10 @@ html[data-theme=light] p {
 
 .green {
   color: var(--green);
+}
+
+.text-normal {
+  color: var(--text);
 }
 
 .text-muted {
@@ -15673,7 +16633,7 @@ html[data-theme=light] p {
   align-items: center;
   justify-content: center;
   user-select: none;
-}._panel_1qyyl_1 {
+}._panel_1705s_1 {
   border: 1px solid var(--muted);
   border-radius: var(--border-radius);
   background-color: var(--bg-muted);
@@ -15690,8 +16650,10 @@ html[data-theme=light] p {
   padding: 0;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
-._panel_1qyyl_1 ._panel-header_1qyyl_19 {
+._panel_1705s_1 ._panel-header_1705s_21 {
   font-family: "Funnel Display", sans-serif;
   font-size: 1.25rem;
   font-weight: 500;
@@ -15704,15 +16666,15 @@ html[data-theme=light] p {
   flex-direction: row;
   align-items: center;
 }
-._panel_1qyyl_1 ._panel-header-title_1qyyl_32 {
+._panel_1705s_1 ._panel-header-title_1705s_34 {
   flex: 1;
 }
-._panel_1qyyl_1 ._panel-content_1qyyl_35 {
+._panel_1705s_1 ._panel-content_1705s_37 {
   padding: calc(var(--border-radius) * 1.5) calc(var(--border-radius) * 2);
   overflow-y: auto;
   flex: 1;
 }
-._panel_1qyyl_1 h1 {
+._panel_1705s_1 h1 {
   font-family: "Funnel Display", sans-serif;
   font-size: 1.25rem;
   margin-top: 1rem;
@@ -15721,7 +16683,7 @@ html[data-theme=light] p {
   font-weight: 500;
   line-height: 1;
 }
-._panel_1qyyl_1 h2 {
+._panel_1705s_1 h2 {
   font-family: "Funnel Display", sans-serif;
   font-size: 0.84rem;
   margin-top: 1rem;
@@ -15839,36 +16801,72 @@ html[data-theme=light] p {
   padding: 0.125em 0.5rem;
 }._info_1ol76_1 {
   cursor: pointer;
-}._response-structured-output_w50ko_1 {
+}._string-response_1dw7n_1 {
+  white-space: pre-wrap;
   font-size: 0.72rem;
+  overflow: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  line-height: 1.62;
+  color: var(--text-muted);
   border: 1px solid var(--muted);
   border-radius: var(--border-radius);
   padding: var(--border-radius);
   white-space: pre-wrap;
   overflow-wrap: anywhere;
-}._candidate-aggregated-evaluation_11vcn_1 {
+}
+._string-response_1dw7n_1 ._highlight_1dw7n_14 {
+  color: var(--red);
+}
+._string-response_1dw7n_1 ._reset_1dw7n_17 {
+  color: var(--text);
+}._structure-response_1s1cs_1 {
+  font-size: 0.72rem;
+  overflow: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  line-height: 1.62;
+  color: var(--text-muted);
+  border: 1px solid var(--muted);
+  border-radius: var(--border-radius);
+  padding: var(--border-radius);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+._structure-response_1s1cs_1 ._highlight_1s1cs_13 {
+  color: var(--red);
+}
+._structure-response_1s1cs_1 ._reset_1s1cs_16 {
+  color: var(--text);
+}._dataset-entry-key_1ekig_1 {
+  font-weight: bold;
+  font-size: 0.72rem;
+  color: var(--text);
+}._candidate-aggregated-evaluation_1ezbt_1 {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-._candidate-aggregated-evaluation-summary_11vcn_7 {
+._candidate-aggregated-evaluation-summary_1ezbt_7 {
   color: var(--text-muted);
 }
 
-._candidate-aggregated-evaluation-score_11vcn_11 {
+._candidate-aggregated-evaluation-score_1ezbt_11 {
   margin-bottom: 1rem;
 }
 
-._candidate-aggregated-evaluation-evaluation_11vcn_15 {
+._candidate-aggregated-evaluation-evaluation_1ezbt_15 {
   margin-top: 0.5rem;
 }
 
-._candidate-aggregated-evaluation-status_11vcn_19 {
+._candidate-aggregated-evaluation-summary_1ezbt_7 {
+  color: var(--text-muted);
+}
+
+._candidate-aggregated-evaluation-status_1ezbt_23 {
   margin-left: 0.5rem;
 }
 
-._candidate-aggregated-evaluation-key_11vcn_23 {
+._candidate-aggregated-evaluation-key_1ezbt_27 {
   font-weight: bold;
   font-size: 0.72rem;
 }._dataset-entry-key_1436g_1 {
@@ -15880,11 +16878,11 @@ html[data-theme=light] p {
 
 ._candidate-analysis-summary_1xahz_5 {
   color: var(--text-muted);
-}._candidate-module_1vddl_1 ._header_1vddl_1 {
+}._candidate-module_1l5jx_1 ._header_1l5jx_1 {
   margin-left: var(--border-radius);
-  margin-bottom: 0;
+  margin-bottom: 0.375rem;
 }
-._candidate-module_1vddl_1 ._module_1vddl_5 {
+._candidate-module_1l5jx_1 ._module_1l5jx_5 {
   max-height: 12rem;
   font-size: 0.72rem;
   border: 1px solid var(--muted);
@@ -15893,10 +16891,10 @@ html[data-theme=light] p {
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
-._candidate-module_1vddl_1 ._module-expanded_1vddl_14 {
+._candidate-module_1l5jx_1 ._module-expanded_1l5jx_14 {
   max-height: 36rem;
 }
-._candidate-module_1vddl_1 pre {
+._candidate-module_1l5jx_1 pre {
   margin-top: 0.25rem;
 }._candidate-details-panel_kt8uo_1 {
   left: 50%;
@@ -15976,6 +16974,44 @@ html[data-theme=light] p {
 ._info-panel_h9woi_7 h2 {
   font-family: "Funnel Display", sans-serif;
   font-size: 0.84rem;
+}._failing-example-summary_xzrln_1 {
+  color: var(--text-muted);
+}
+
+._failing-example-evaluation_xzrln_5:not(:first-child) {
+  margin-top: 1.5rem;
+}
+
+._failing-example-evaluation-status_xzrln_9 {
+  margin-left: 0.5rem;
+}._failed-at-iterations-dot_nda69_1 {
+  padding: 0.25rem;
+  cursor: pointer;
+}
+
+._failed-at-iterations-info_nda69_6 {
+  font-size: 0.84rem;
+  color: var(--text-muted);
+  padding-right: 0.125rem;
+  transform: translateY(0.125em);
+}._failing-examples-panel_950cl_1 {
+  height: 64rem;
+  max-height: 90vh;
+}
+._failing-examples-panel_950cl_1._visible_950cl_5 {
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  transition: transform 340ms ease-out;
+}
+._failing-examples-panel_950cl_1._hidden_950cl_11 {
+  left: 50%;
+  top: 50%;
+  transition: transform 280ms ease-in;
+  transform: translate(-50%, 100vh);
+}
+._failing-examples-panel_950cl_1 ._separator_950cl_17 {
+  margin: 1rem 0;
 }/*$vite$:1*/</style>
   </head>
   <body>

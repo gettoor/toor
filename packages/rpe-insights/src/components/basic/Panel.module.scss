@@ -19,6 +19,8 @@
   padding: 0;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
+  overscroll-behavior: contain;
 
   .panel-header {
     font-family: 'Funnel Display', sans-serif;

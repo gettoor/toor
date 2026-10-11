@@ -16,8 +16,10 @@
     "@floating-ui/dom": "^1.8.0",
     "@gettoor/core": "workspace:^",
     "clsx": "^2.1.1",
+    "diff": "^9.0.0",
     "dompurify": "^3.4.14",
     "marked": "^18.0.10",
+    "microdiff": "^1.6.0",
     "preact": "^10.29.8",
     "yaml": "^2.9.0"
   },

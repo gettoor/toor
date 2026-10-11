@@ -6,7 +6,7 @@ import {
 } from './per-field-rpe-evaluator-types.js';
 import {
   ExactStringRPEFieldEvaluatorInput,
-} from './per-field-rpe-field-evaluators-types.js';
+} from './exact-string-rpe-field-evaluator-types.js';
 
 export function exactStringRPEFieldEvaluator(
   input?: ExactStringRPEFieldEvaluatorInput,

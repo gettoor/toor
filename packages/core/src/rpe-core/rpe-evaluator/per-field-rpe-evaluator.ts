@@ -18,7 +18,7 @@ export function perFieldRPEEvaluator(
 ): RPEEvaluator {
   const {
     evaluators,
-    scoreAggregator = average,
+    scoreAggregator = defaultScoreAggregator,
     reasoningAggregator = defaultReasoningAggregator,
   } = input;
 
@@ -52,7 +52,7 @@ export function perFieldRPEEvaluator(
       );
 
       // aggregate the outputs
-      const score = scoreAggregator(outputs.map(output => output.score));
+      const score = scoreAggregator(outputs);
       const reasoning = reasoningAggregator(outputs);
 
       return {
@@ -119,8 +119,8 @@ async function traverse(
     for (let index = 0; index < response.length; index++) {
       const fieldIndex = `[${index}]`;
       const field = parentField.length > 0
-        ? `${parentField}${fieldIndex}`
-        : fieldIndex;
+        ? `${parentField}[${fieldIndex}]`
+        : `[${fieldIndex}]`;
       const value = response[index];
       const expectedValue = expectedResponse?.[index];
       const evaluator = evaluators[index];
@@ -142,6 +142,14 @@ async function traverse(
   }
 
   return outputs;
+}
+
+function defaultScoreAggregator(
+  outputs: PerFieldRPEEvaluatorFieldEvaluatorOutput[],
+): number {
+  const scores = outputs.map(output => output.score);
+  const allOne = scores.every(score => score === 1);
+  return allOne ? 1 : 0;
 }
 
 function defaultReasoningAggregator(

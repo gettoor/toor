@@ -33,9 +33,9 @@ export async function optimize(
     aggregatedEvaluations: [],
     candidates: [...input.seed],
     datasetEntries: [...input.dataset.entries],
-    iterationNo: 0,
+    iterationNo: 1,
     iteration: {
-      iterationNo: 0,
+      iterationNo: 1,
       candidateRefs: input.seed.map(candidate => {
         return candidateRefFromCandidate(candidate);
       }),

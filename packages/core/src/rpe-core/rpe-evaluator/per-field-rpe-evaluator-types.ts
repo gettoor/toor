@@ -45,7 +45,7 @@ export type PerFieldRPEEvaluatorEvaluators = {
   [field: string]:
     | PerFieldRPEEvaluatorFieldEvaluator
     | PerFieldRPEEvaluatorEvaluators;
-};
+}
 
 /**
  * Input for the per-field RPE evaluator.
@@ -60,9 +60,12 @@ export interface PerFieldRPEEvaluatorInput {
 
   /**
    * Function to aggregate the scores of the field evaluators.
-   * Defaults to the average of the scores.
+   * Defaults to 1 if all scores are 1, otherwise 0.
    */
-  scoreAggregator?: AggregationFunc;
+  scoreAggregator?: AggregationFunc<
+    PerFieldRPEEvaluatorFieldEvaluatorOutput,
+    number
+  >;
 
   /**
    * Function to aggregate the reasonings of the field evaluators.

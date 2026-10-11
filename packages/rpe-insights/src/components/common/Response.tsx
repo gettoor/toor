@@ -1,38 +1,46 @@
-import * as YAML from 'yaml';
 import { RPEResponse } from '@gettoor/core';
 
-import { Markdown } from '../basic';
-import styles from './Response.module.scss';
+import { StringResponse } from './StringResponse';
+import { StructureResponse } from './StructureResponse';
 
 export interface ResponseProps {
   response: RPEResponse;
+  diffResponse?: RPEResponse; // response to diff against
 }
 
 export function Response(props: ResponseProps) {
-  const { response: rawResponse } = props;
-  const response = transform(rawResponse);
+  const { 
+    response: rawResponse,
+    diffResponse: rawDiffResponse,
+  } = props;
+  
+  const response = transform(rawResponse)!;
   const isStructuredOutput = typeof response === 'object';
 
-  const renderString = () => {
-    return <Markdown content={response as string} />;
-  }
-  const renderStructuredOutput = () => {
-    const structuredOutput = YAML.stringify(response);
-    return (
-      <pre className={styles['response-structured-output']}>
-        { structuredOutput }
-      </pre>
-    );
-  }
+  const diffResponse = transform(rawDiffResponse);
+  const isDiffStructuredOutput = typeof diffResponse === 'object';
 
   return (
     <>
-      { isStructuredOutput ? renderStructuredOutput() : renderString() }
+      { isStructuredOutput
+        ? <StructureResponse
+            response={response}
+            diffResponse={isDiffStructuredOutput ? diffResponse : undefined}
+          />
+        : <StringResponse
+            response={response}
+            diffResponse={!isDiffStructuredOutput ? diffResponse : undefined}
+          />
+      }
     </>
   );
 }
 
-function transform(response: RPEResponse): RPEResponse {
+function transform(response?: RPEResponse): RPEResponse | undefined {
+  if (!response) {
+    return undefined;
+  }
+
   if (typeof response === 'object') {
     return response;
   }

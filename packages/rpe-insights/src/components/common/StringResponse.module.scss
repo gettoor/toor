@@ -1,0 +1,14 @@
+@use './_response.scss' as *;
+
+.string-response {
+  white-space: pre-wrap;
+  @include response-area;
+
+  .highlight {
+    color: var(--red);
+  }
+
+  .reset {
+    color: var(--text);
+  }
+}

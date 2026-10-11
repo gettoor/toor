@@ -13,3 +13,10 @@
 @mixin font-big {
   font-size: 1.25rem;
 }
+
+@mixin font-monospace {
+  @include font-small;
+  overflow: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  line-height: 1.62;
+}

@@ -1,3 +1,5 @@
+@use './_includes.scss' as *;
+
 * {
   box-sizing: border-box;
 }
@@ -12,11 +14,8 @@ body {
 }
 
 pre {
-  overflow: auto;
+  @include font-monospace;
   color: var(--text-muted);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-  font-size: 0.86rem;
-  line-height: 1.62;
 }
 
 /* Let's get this party started */

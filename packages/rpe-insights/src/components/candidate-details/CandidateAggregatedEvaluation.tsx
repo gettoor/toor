@@ -1,7 +1,4 @@
-import * as YAML from 'yaml';
-import { useState } from 'preact/hooks';
 import {
-  type RPEResponse,
   type RPEAggregatorOutput,
   type RPEDatasetEntry,
   type RPEEvaluatorOutput,
@@ -19,7 +16,7 @@ import {
   LinkButton,
   MiddotSeparator,
 } from '../basic';
-import { Response } from '../common';
+import { DatasetEntry, Response } from '../common';
 import { Metrics } from './Metrics';
 import styles from './CandidateAggregatedEvaluation.module.scss';
 
@@ -42,19 +39,15 @@ export function CandidateAggregatedEvaluation(
 
   const [ more, setMore ] = useLocalStorage(false, moreLocalStorageKey);
 
-  const responseToString = (response: RPEResponse) => {
-    if (typeof response === 'string') {
-      return response;
-    }
-    return YAML.stringify(response);
-  };
-
   const renderSummary = () => {
     return (
       <span className={styles['candidate-aggregated-evaluation-summary']}>
         <span>
           Aggregated score:&nbsp;
-          <Score score={aggregatedScore}/>
+          <Score
+            score={aggregatedScore}
+            className='text-normal'
+          />
           <MiddotSeparator/>
         </span>
         <span className='green'>
@@ -66,34 +59,18 @@ export function CandidateAggregatedEvaluation(
           <MiddotSeparator/>
         </span>
       </span>
-    )
+    );
   };
 
   const renderDatasetEntry = (datasetEntry: RPEDatasetEntry) => {
     if (datasetEntry.vars == undefined) {
       return;
     }
-    const keys = Object.keys(datasetEntry.vars).sort();
     return (
       <>
         <h2>Dataset entry ({datasetEntry.datasetEntryId})</h2>
         <p>
-          {keys.map(key => {
-            const value = datasetEntry.vars![key];
-            const valueString = typeof value === 'object'
-              ? JSON.stringify(value)
-              : value.toString();
-            return (
-              <div key={key}>
-                <code
-                  className={styles['candidate-aggregated-evaluation-key']}
-                >
-                  {key}
-                </code>
-                &nbsp;{valueString}
-              </div>
-            );
-          })}
+          <DatasetEntry datasetEntry={datasetEntry}/>
         </p>
       </>
     );
@@ -113,9 +90,12 @@ export function CandidateAggregatedEvaluation(
           key={key}
           className={styles['candidate-aggregated-evaluation-evaluation']}
         >
-          <div>
+          <div className={styles['candidate-aggregated-evaluation-summary']}>
             Score:&nbsp;
-            <Score score={evaluation.score}/>
+            <Score
+              score={evaluation.score}
+              className='text-normal'
+            />
             <Tag 
               label={status}
               color={status === 'passed' ? 'green' : 'red'}
@@ -125,13 +105,19 @@ export function CandidateAggregatedEvaluation(
           {renderDatasetEntry(evaluation.datasetEntry)}
           <h2>Response</h2>
           <p>
-            <Response response={evaluation.response}/>
+            <Response 
+              response={evaluation.response}
+              diffResponse={expectedResponse}
+            />
           </p>
           { expectedResponse &&
             <>  
               <h2>Expected response</h2>
               <p>
-                <Response response={expectedResponse}/>
+                <Response
+                  response={expectedResponse}
+                  diffResponse={evaluation.response}
+                />
               </p>
             </>
           }

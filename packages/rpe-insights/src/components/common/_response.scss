@@ -1,7 +1,8 @@
 @use '../../styles/_includes.scss' as *;
 
-.response-structured-output {
-  @include font-small;
+@mixin response-area {
+  @include font-monospace;
+  color: var(--text-muted);
   border: 1px solid var(--muted);
   border-radius: var(--border-radius);
   padding: var(--border-radius);

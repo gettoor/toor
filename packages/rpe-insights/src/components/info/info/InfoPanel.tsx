@@ -5,8 +5,8 @@ import {
   sumRPEInsightsUsage,
 } from '@gettoor/core';
 
-import { camelCaseToSentenceCase } from '../../string';
-import { Info, Panel, Table } from '../basic';
+import { camelCaseToSentenceCase } from '../../../string';
+import { Info, Panel, Table } from '../../basic';
 import styles from './InfoPanel.module.scss';
 
 export interface InfoPanelProps {
@@ -16,9 +16,9 @@ export interface InfoPanelProps {
 }
 
 export function InfoPanel(props: InfoPanelProps) {
-  const { visible, onCloseClick } = props;
+  const { rpeInsights, visible, onCloseClick } = props;
 
-  const usage = sumRPEInsightsUsage(props.rpeInsights);
+  const usage = sumRPEInsightsUsage(rpeInsights);
   const usageRows = usage.modelUsage
     .sort((a, b) => a.modelName.localeCompare(b.modelName))
     .map(modelUsage => {
@@ -82,7 +82,7 @@ export function InfoPanel(props: InfoPanelProps) {
     >
       <h1>General</h1>
       <h2>Stop reason</h2>
-      <p>{props.rpeInsights.stopReason}</p>
+      <p>{rpeInsights.stopReason}</p>
 
       <h2>Token usage by model</h2>
       <p>
@@ -95,38 +95,38 @@ export function InfoPanel(props: InfoPanelProps) {
       <h1>Components info</h1>
       {renderRPEProperties(
         'Executor',
-        props.rpeInsights.info.executorInfo.name,
-        props.rpeInsights.info.executorInfo.properties,
+        rpeInsights.info.executorInfo.name,
+        rpeInsights.info.executorInfo.properties,
       )}
       {renderRPEProperties(
         'Evaluator',
-        props.rpeInsights.info.evaluatorInfo.name,
-        props.rpeInsights.info.evaluatorInfo.properties,
+        rpeInsights.info.evaluatorInfo.name,
+        rpeInsights.info.evaluatorInfo.properties,
       )}
       {renderRPEProperties(
         'Aggregator',
-        props.rpeInsights.info.aggregatorInfo.name,
-        props.rpeInsights.info.aggregatorInfo.properties,
+        rpeInsights.info.aggregatorInfo.name,
+        rpeInsights.info.aggregatorInfo.properties,
       )}
       {renderRPEProperties(
         'Analyzer',
-        props.rpeInsights.info.analyzerInfo.name,
-        props.rpeInsights.info.analyzerInfo.properties,
+        rpeInsights.info.analyzerInfo.name,
+        rpeInsights.info.analyzerInfo.properties,
       )}
       {renderRPEProperties(
         'Candidate Generator',
-        props.rpeInsights.info.candidateGeneratorInfo.name,
-        props.rpeInsights.info.candidateGeneratorInfo.properties,
+        rpeInsights.info.candidateGeneratorInfo.name,
+        rpeInsights.info.candidateGeneratorInfo.properties,
       )}
       {renderRPEProperties(
         'Candidate Selector',
-        props.rpeInsights.info.candidateSelectorInfo.name,
-        props.rpeInsights.info.candidateSelectorInfo.properties,
+        rpeInsights.info.candidateSelectorInfo.name,
+        rpeInsights.info.candidateSelectorInfo.properties,
       )}
       {renderRPEProperties(
         'Final Candidate Selector',
-        props.rpeInsights.info.finalCandidateSelectorInfo.name,
-        props.rpeInsights.info.finalCandidateSelectorInfo.properties,
+        rpeInsights.info.finalCandidateSelectorInfo.name,
+        rpeInsights.info.finalCandidateSelectorInfo.properties,
       )}
     </Panel>
   );

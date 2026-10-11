@@ -1,0 +1,13 @@
+@use './_response.scss' as *;
+
+.structure-response {
+  @include response-area;
+
+  .highlight {
+    color: var(--red);
+  }
+
+  .reset {
+    color: var(--text);
+  }
+}

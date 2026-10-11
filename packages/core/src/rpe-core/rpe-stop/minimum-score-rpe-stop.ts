@@ -15,7 +15,7 @@ export function minimumScoreRPEStop(
   input: MinimumScoreRPEStopInput,
 ): RPEStopFunc {
   const defaultStopReason =
-    `Minimum score of ${input.score.toFixed(2)} reached`;
+    `Minimum aggregated evaluation score of ${input.score.toFixed(2)} reached`;
   const { stopReason = defaultStopReason } = input;
 
   return async (state: RPEState) => {
