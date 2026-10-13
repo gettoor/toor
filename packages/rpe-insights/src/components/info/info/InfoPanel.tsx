@@ -94,14 +94,19 @@ export function InfoPanel(props: InfoPanelProps) {
       </p>
       <h1>Components info</h1>
       {renderRPEProperties(
-        'Executor',
-        rpeInsights.info.executorInfo.name,
-        rpeInsights.info.executorInfo.properties,
+        'Executor Output Processor',
+        rpeInsights.info.executorOutputProcessorInfo.name,
+        rpeInsights.info.executorOutputProcessorInfo.properties,
       )}
       {renderRPEProperties(
-        'Evaluator',
-        rpeInsights.info.evaluatorInfo.name,
-        rpeInsights.info.evaluatorInfo.properties,
+        'Training Executor',
+        rpeInsights.info.trainingExecutorInfo.name,
+        rpeInsights.info.trainingExecutorInfo.properties,
+      )}
+      {renderRPEProperties(
+        'Training Evaluator',
+        rpeInsights.info.trainingEvaluatorInfo.name,
+        rpeInsights.info.trainingEvaluatorInfo.properties,
       )}
       {renderRPEProperties(
         'Aggregator',
@@ -117,6 +122,16 @@ export function InfoPanel(props: InfoPanelProps) {
         'Candidate Generator',
         rpeInsights.info.candidateGeneratorInfo.name,
         rpeInsights.info.candidateGeneratorInfo.properties,
+      )}
+      {renderRPEProperties(
+        'Candidate Executor',
+        rpeInsights.info.candidateExecutorInfo.name,
+        rpeInsights.info.candidateExecutorInfo.properties,
+      )}
+      {renderRPEProperties(
+        'Candidate Evaluator',
+        rpeInsights.info.candidateEvaluatorInfo.name,
+        rpeInsights.info.candidateEvaluatorInfo.properties,
       )}
       {renderRPEProperties(
         'Candidate Selector',

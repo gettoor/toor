@@ -85,11 +85,14 @@ export async function buildRPEInsightsInfo(
   input: RPEInput,
 ): Promise<RPEInsightsInfo> {
   return {
-    executorInfo: await input.trainingExecutor.getInfo(),
-    evaluatorInfo: await input.trainingEvaluator.getInfo(),
+    executorOutputProcessorInfo: await input.executorOutputProcessor.getInfo(),
+    trainingExecutorInfo: await input.trainingExecutor.getInfo(),
+    trainingEvaluatorInfo: await input.trainingEvaluator.getInfo(),
     aggregatorInfo: await input.aggregator.getInfo(),
     analyzerInfo: await input.analyzer.getInfo(),
     candidateGeneratorInfo: await input.candidateGenerator.getInfo(),
+    candidateExecutorInfo: await input.candidateExecutor.getInfo(),
+    candidateEvaluatorInfo: await input.candidateEvaluator.getInfo(),
     candidateSelectorInfo: await input.candidateSelector.getInfo(),
     finalCandidateSelectorInfo: await input.finalCandidateSelector.getInfo(),
   };

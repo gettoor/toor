@@ -16151,11 +16151,14 @@ function InfoPanel(props) {
 				templateColumns: "max-content max-content max-content"
 			}) }),
 			/* @__PURE__ */ u("h1", { children: "Components info" }),
-			renderRPEProperties("Executor", rpeInsights.info.executorInfo.name, rpeInsights.info.executorInfo.properties),
-			renderRPEProperties("Evaluator", rpeInsights.info.evaluatorInfo.name, rpeInsights.info.evaluatorInfo.properties),
+			renderRPEProperties("Executor Output Processor", rpeInsights.info.executorOutputProcessorInfo.name, rpeInsights.info.executorOutputProcessorInfo.properties),
+			renderRPEProperties("Training Executor", rpeInsights.info.trainingExecutorInfo.name, rpeInsights.info.trainingExecutorInfo.properties),
+			renderRPEProperties("Training Evaluator", rpeInsights.info.trainingEvaluatorInfo.name, rpeInsights.info.trainingEvaluatorInfo.properties),
 			renderRPEProperties("Aggregator", rpeInsights.info.aggregatorInfo.name, rpeInsights.info.aggregatorInfo.properties),
 			renderRPEProperties("Analyzer", rpeInsights.info.analyzerInfo.name, rpeInsights.info.analyzerInfo.properties),
 			renderRPEProperties("Candidate Generator", rpeInsights.info.candidateGeneratorInfo.name, rpeInsights.info.candidateGeneratorInfo.properties),
+			renderRPEProperties("Candidate Executor", rpeInsights.info.candidateExecutorInfo.name, rpeInsights.info.candidateExecutorInfo.properties),
+			renderRPEProperties("Candidate Evaluator", rpeInsights.info.candidateEvaluatorInfo.name, rpeInsights.info.candidateEvaluatorInfo.properties),
 			renderRPEProperties("Candidate Selector", rpeInsights.info.candidateSelectorInfo.name, rpeInsights.info.candidateSelectorInfo.properties),
 			renderRPEProperties("Final Candidate Selector", rpeInsights.info.finalCandidateSelectorInfo.name, rpeInsights.info.finalCandidateSelectorInfo.properties)
 		]
@@ -16653,7 +16656,7 @@ function loadRPEInsights() {
 R$1(/* @__PURE__ */ u(App, { rpeInsights: loadRPEInsights() }), document.getElementById("app"));
 //#endregion
 
-//# sourceMappingURL=index-KNA5MYA5.js.map</script>
+//# sourceMappingURL=index-BeEQ9RWp.js.map</script>
     <style rel="stylesheet" crossorigin>* {
   box-sizing: border-box;
 }

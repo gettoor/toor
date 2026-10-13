@@ -1,5 +1,8 @@
 import { RPEDataset } from '../rpe-dataset/index.js';
-import { RPEExecutorInfo } from '../rpe-executor/index.js';
+import {
+  RPEExecutorInfo,
+  RPEExecutorOutputProcessorInfo,
+} from '../rpe-executor/index.js';
 import { RPEEvaluatorInfo } from '../rpe-evaluator/index.js';
 import { RPECandidate } from '../rpe-candidate/index.js';
 import {
@@ -17,14 +20,19 @@ import { RPEFinalCandidate, RPEIteration } from '../rpe-state/index.js';
  */
 export interface RPEInsightsInfo {
   /**
-   * Information about the executor used for the RPE process.
+   * Information about the RPE process.
    */
-  executorInfo: RPEExecutorInfo;
+  executorOutputProcessorInfo: RPEExecutorOutputProcessorInfo;
 
   /**
-   * Information about the evaluator used for the RPE process.
+   * Information about the training executor used for the RPE process.
    */
-  evaluatorInfo: RPEEvaluatorInfo;
+  trainingExecutorInfo: RPEExecutorInfo;
+
+  /**
+   * Information about the training evaluator used for the RPE process.
+   */
+  trainingEvaluatorInfo: RPEEvaluatorInfo;
 
   /**
    * Information about the aggregator used for the RPE process.
@@ -40,6 +48,16 @@ export interface RPEInsightsInfo {
    * Information about the candidate generator used for the RPE process.
    */
   candidateGeneratorInfo: RPECandidateGeneratorInfo;
+
+  /**
+   * Information about the candidate executor used for the RPE process.
+   */
+  candidateExecutorInfo: RPEExecutorInfo;
+
+  /**
+   * Information about the candidate evaluator used for the RPE process.
+   */
+  candidateEvaluatorInfo: RPEEvaluatorInfo;
 
   /**
    * Information about the candidate selector used for the RPE process.
