@@ -3,6 +3,7 @@ import { RPEState } from '../rpe-state/index.js';
 import { 
   RPEExecutor,
   RPEExecutorOutput,
+  RPEExecutorOutputProcessor,
 } from '../rpe-executor/index.js';
 
 /**
@@ -16,7 +17,9 @@ export async function generateResponses(
   state: RPEState,
   candidates: RPECandidate[],
   executor: RPEExecutor,
+  executorOutputProcessor: RPEExecutorOutputProcessor,
 ): Promise<RPEExecutorOutput> {
   const output = await executor.run(state, { candidates });
-  return output;
+  const processed = await executorOutputProcessor.process(output);
+  return processed;
 }

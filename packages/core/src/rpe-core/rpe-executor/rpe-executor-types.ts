@@ -88,3 +88,38 @@ export interface RPEExecutor {
    */
   getInfo(): Promise<RPEExecutorInfo>;
 }
+
+/**
+ * Info of the RPE executor output processor.
+ * @category Reflective Prompt Evolution
+ */
+export interface RPEExecutorOutputProcessorInfo {
+  /**
+   * Name of the output processor.
+   */
+  name: string;
+
+  /**
+   * Properties of the output processor.
+   */
+  properties?: RPEProperties;
+}
+
+/**
+ * An output processor which processes the output of the executor.
+ * @category Reflective Prompt Evolution
+ */
+export interface RPEExecutorOutputProcessor {
+  /**
+   * Process the output of the executor.
+   * @param output - Output of the executor.
+   * @returns Processed output.
+   */
+  process(output: RPEExecutorOutput): Promise<RPEExecutorOutput>;
+
+  /**
+   * Get the info of the output processor.
+   * @returns Info of the output processor.
+   */
+  getInfo(): Promise<RPEExecutorOutputProcessorInfo>;
+}

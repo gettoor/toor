@@ -27,6 +27,7 @@ export async function evaluateDataset(
     state,
     input.candidates,
     input.executor,
+    input.executorOutputProcessor,
   );
 
   // evaluate responses
@@ -62,6 +63,7 @@ export function buildInputForDatasetEvaluation(
   input: RPEInput,
 ): Omit<EvaluateDatasetInput, 'candidates'> {
   return {
+    executorOutputProcessor: input.executorOutputProcessor,
     executor: input.candidateExecutor,
     evaluatorParallelism:
       input.candidateEvaluatorParallelism ??

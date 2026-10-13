@@ -1,6 +1,9 @@
 import { RPEDataset } from '../rpe-dataset/index.js';
 import { RPECandidate } from '../rpe-candidate/index.js';
-import { RPEExecutor } from '../rpe-executor/index.js';
+import {
+  RPEExecutor,
+  RPEExecutorOutputProcessor,
+} from '../rpe-executor/index.js';
 import { RPEEvaluator } from '../rpe-evaluator/index.js';
 import { RPEAggregator } from '../rpe-aggregator/index.js';
 import { RPEAnalyzer } from '../rpe-analyzer/index.js';
@@ -24,6 +27,13 @@ export interface RPEInput {
    * Dataset with all the dataset entries used in the RPE process.
    */
   dataset: RPEDataset;
+
+  /**
+   * Output processor to process the outputs of the training and
+   * evaluation executor.
+   * @see {@link identityRPEExecutorOutputProcessor}
+   */
+  executorOutputProcessor: RPEExecutorOutputProcessor;
 
   /**
    * Executor to use for the RPE. An executor is responsible for generating

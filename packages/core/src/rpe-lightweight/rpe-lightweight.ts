@@ -3,6 +3,7 @@ import { ModelParameters } from '../llm/index.js';
 import {
   bestScoreFinalCandidateSelector,
   defaultRPEAggregator,
+  identityRPEExecutorOutputProcessor,
   improvedCandidateSelector,
   isCandidateImprovedByScore,
   mergeRPEDatasets,
@@ -47,6 +48,7 @@ export function rpeLightweight(input: RPELightweightInput): RPEInput {
       input.trainingDataset,
       input.validationDataset,
     ),
+    executorOutputProcessor: identityRPEExecutorOutputProcessor(),
     trainingExecutor: singlePromptLLMRPEExecutor({
       ...model(input.executorModelName, input.executorModelParameters),
       dataset: input.trainingDataset,

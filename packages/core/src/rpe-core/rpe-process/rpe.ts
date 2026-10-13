@@ -10,6 +10,7 @@ import {
 } from '../rpe-state/index.js';
 import { buildRPEInsightsInfo } from '../rpe-insights/index.js';
 import { RPEInput, RPEOutput } from './rpe-types.js';
+import { identityRPEExecutorOutputProcessor } from '../rpe-executor/index.js';
 import { RPECandidateSelector } from '../rpe-candidate-selector/index.js';
 import {
   buildInputForDatasetEvaluation,
@@ -76,6 +77,7 @@ export async function optimize(
       state,
       {
         candidates: iterationCandidates,
+        executorOutputProcessor: input.executorOutputProcessor,
         executor: input.trainingExecutor,
         evaluatorParallelism:
           input.trainingEvaluatorParallelism ?? DEFAULT_EVALUATOR_PARALLELISM,

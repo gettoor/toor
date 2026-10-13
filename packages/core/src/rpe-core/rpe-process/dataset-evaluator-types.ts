@@ -1,5 +1,9 @@
 import { RPECandidate } from '../rpe-candidate/index.js';
-import { RPEExecutor, RPEExecutorResponse } from '../rpe-executor/index.js';
+import {
+  RPEExecutor,
+  RPEExecutorOutputProcessor,
+  RPEExecutorResponse,
+} from '../rpe-executor/index.js';
 import { RPEEvaluator } from '../rpe-evaluator/index.js';
 import { RPEAggregatorOutput } from '../rpe-aggregator/index.js';
 import { RPEAggregator } from '../rpe-aggregator/index.js';
@@ -16,6 +20,11 @@ export interface EvaluateDatasetInput {
    * Candidates to evaluate.
    */
   candidates: RPECandidate[];
+
+  /**
+   * Output processor to process the outputs of the executor.
+   */
+  executorOutputProcessor: RPEExecutorOutputProcessor;
 
   /**
    * Executor to use for generating responses.

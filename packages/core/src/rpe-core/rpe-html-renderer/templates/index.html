@@ -9445,10 +9445,48 @@ function useLocalStorage(initialValue, key) {
 	return [value, setStoredValue];
 }
 //#endregion
-//#region src/components/candidate-details/metrics.ts
+//#region src/components/common/metrics.ts
 function hasMetrics(metrics) {
 	if (!metrics) return false;
 	return Object.keys(metrics).length > 0;
+}
+//#endregion
+//#region src/string/case.ts
+/**
+* Convert a camel case string to a sentence case string.
+* @param value - String to convert.
+* @returns Converted string.
+*/
+function camelCaseToSentenceCase(value) {
+	if (!value) return value;
+	const result = value.replace(/([a-z0-9])([A-Z])/g, "$1 $2").replace(/([A-Z])([A-Z][a-z])/g, "$1 $2").toLowerCase();
+	return result.charAt(0).toUpperCase() + result.slice(1);
+}
+/**
+* Capitalize the first letter of a string.
+* @param value - String to capitalize.
+* @returns Capitalized string.
+*/
+function capitalize(value) {
+	if (!value) return value;
+	return value.charAt(0).toUpperCase() + value.slice(1);
+}
+//#endregion
+//#region src/string/label.ts
+function countLabel(count, singular, plural) {
+	plural = plural ?? `${singular}s`;
+	return `${count} ${count === 1 ? singular : plural}`;
+}
+//#endregion
+//#region src/components/common/Metrics.tsx
+function Metrics(props) {
+	return /* @__PURE__ */ u(Table, {
+		header: ["Metric", "Score"],
+		rows: Object.keys(props.metrics).sort().map((name) => {
+			return [capitalize(name), props.metrics[name].normalizedScore];
+		}),
+		templateColumns: "max-content max-content"
+	});
 }
 //#endregion
 //#region ../../node_modules/.pnpm/diff@9.0.0/node_modules/diff/libesm/diff/base.js
@@ -9977,16 +10015,7 @@ var StringResponse_module_default = {
 function StringResponse(props) {
 	const { response, diffResponse } = props;
 	const differences = diffResponse ? diffWordsWithSpace(response, diffResponse) : [];
-	console.log("response", response);
-	console.log("diffResponse", diffResponse);
-	console.log("differences", differences.map((difference) => {
-		return {
-			...difference,
-			value: difference.value.replace(/\r?\n/g, "[n]")
-		};
-	}));
 	const renderNewlines = (text) => {
-		console.log("text", text.replace(/\r?\n/g, "[n]"));
 		return text.split(/\r?\n/).map((line, index) => /* @__PURE__ */ u(S$1, { children: [index > 0 && /* @__PURE__ */ u("br", {}), line] }, index));
 	};
 	const render = () => {
@@ -10171,53 +10200,124 @@ function DatasetEntry$1(props) {
 		] }, key);
 	}) });
 }
+var CandidateModule_module_default = {
+	"candidate-module": "_candidate-module_1l5jx_1",
+	header: "_header_1l5jx_1",
+	module: "_module_1l5jx_5",
+	"module-expanded": "_module-expanded_1l5jx_14"
+};
 //#endregion
-//#region src/string/case.ts
-/**
-* Convert a camel case string to a sentence case string.
-* @param value - String to convert.
-* @returns Converted string.
-*/
-function camelCaseToSentenceCase(value) {
-	if (!value) return value;
-	const result = value.replace(/([a-z0-9])([A-Z])/g, "$1 $2").replace(/([A-Z])([A-Z][a-z])/g, "$1 $2").toLowerCase();
-	return result.charAt(0).toUpperCase() + result.slice(1);
-}
-/**
-* Capitalize the first letter of a string.
-* @param value - String to capitalize.
-* @returns Capitalized string.
-*/
-function capitalize(value) {
-	if (!value) return value;
-	return value.charAt(0).toUpperCase() + value.slice(1);
+//#region src/components/common/CandidateModule.tsx
+function CandidateModule(props) {
+	const { name, module } = props;
+	const [expanded, setExpanded] = d$1(false);
+	const onCopyClick = () => {
+		navigator.clipboard.writeText(module);
+	};
+	const onToggle = () => {
+		setExpanded(!expanded);
+	};
+	const moduleClassName = clsx(CandidateModule_module_default["module"], { [CandidateModule_module_default["module-expanded"]]: expanded });
+	const expandIconName = expanded ? COLLAPSE_ICON : EXPAND_ICON;
+	return /* @__PURE__ */ u("div", {
+		className: CandidateModule_module_default["candidate-module"],
+		children: [/* @__PURE__ */ u(Header, {
+			title: camelCaseToSentenceCase(name),
+			level: 2,
+			className: CandidateModule_module_default["header"],
+			onTitleClick: onToggle,
+			children: [/* @__PURE__ */ u(Header.Actions, { children: /* @__PURE__ */ u(IconButton, {
+				name: expandIconName,
+				title: "Expand/collapse module",
+				onClick: onToggle
+			}) }), /* @__PURE__ */ u(Header.Toolbar, { children: /* @__PURE__ */ u(IconButton, {
+				name: "content_copy",
+				title: "Copy module",
+				onClick: onCopyClick
+			}) })]
+		}), /* @__PURE__ */ u("pre", {
+			className: moduleClassName,
+			children: module
+		})]
+	});
 }
 //#endregion
-//#region src/string/label.ts
-function countLabel(count, singular, plural) {
-	plural = plural ?? `${singular}s`;
-	return `${count} ${count === 1 ? singular : plural}`;
+//#region src/components/common/CandidateModules.tsx
+function CandidateModules(props) {
+	const { candidate, className } = props;
+	const renderModules = () => {
+		return Object.keys(candidate.modules || {}).sort().map((name) => {
+			const module = candidate.modules[name];
+			return /* @__PURE__ */ u(CandidateModule, {
+				name,
+				module: module.content
+			}, name);
+		});
+	};
+	return /* @__PURE__ */ u("div", {
+		className,
+		children: renderModules()
+	});
 }
 //#endregion
-//#region src/components/candidate-details/Metrics.tsx
-function Metrics(props) {
-	return /* @__PURE__ */ u(Table, {
-		header: ["Metric", "Score"],
-		rows: Object.keys(props.metrics).sort().map((name) => {
-			return [capitalize(name), props.metrics[name].normalizedScore];
-		}),
-		templateColumns: "max-content max-content"
+//#region src/components/common/Evaluation.module.scss
+var Evaluation_module_default = {
+	"evaluation-evaluation": "_evaluation-evaluation_1dgbw_1",
+	"evaluation-summary": "_evaluation-summary_1dgbw_5",
+	"evaluation-status": "_evaluation-status_1dgbw_9"
+};
+//#endregion
+//#region src/components/common/Evaluation.tsx
+function Evaluation(props) {
+	const { evaluation, status } = props;
+	const expectedResponse = evaluation.datasetEntry.expectedResponse;
+	const renderDatasetEntry = (datasetEntry) => {
+		if (datasetEntry.vars == void 0) return;
+		return /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("h2", { children: [
+			"Dataset entry (",
+			datasetEntry.datasetEntryId,
+			")"
+		] }), /* @__PURE__ */ u("p", { children: /* @__PURE__ */ u(DatasetEntry$1, { datasetEntry }) })] });
+	};
+	return /* @__PURE__ */ u("div", {
+		className: Evaluation_module_default["evaluation-evaluation"],
+		children: [
+			/* @__PURE__ */ u("div", {
+				className: Evaluation_module_default["evaluation-summary"],
+				children: [
+					"Score:\xA0",
+					/* @__PURE__ */ u(Score, {
+						score: evaluation.score,
+						className: "text-normal"
+					}),
+					/* @__PURE__ */ u(Tag, {
+						label: status,
+						color: status === "passed" ? "green" : "red",
+						className: Evaluation_module_default["evaluation-status"]
+					})
+				]
+			}),
+			renderDatasetEntry(evaluation.datasetEntry),
+			/* @__PURE__ */ u("h2", { children: "Response" }),
+			/* @__PURE__ */ u("p", { children: /* @__PURE__ */ u(Response, {
+				response: evaluation.response,
+				diffResponse: expectedResponse
+			}) }),
+			expectedResponse && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("h2", { children: "Expected response" }), /* @__PURE__ */ u("p", { children: /* @__PURE__ */ u(Response, {
+				response: expectedResponse,
+				diffResponse: evaluation.response
+			}) })] }),
+			/* @__PURE__ */ u("h2", { children: "Reasoning" }),
+			/* @__PURE__ */ u("div", { children: /* @__PURE__ */ u(Markdown, { content: evaluation.reasoning }) }),
+			hasMetrics(evaluation.metrics) && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("h2", { children: "Metrics" }), /* @__PURE__ */ u("p", { children: /* @__PURE__ */ u(Metrics, { metrics: evaluation.metrics }) })] })
+		]
 	});
 }
 //#endregion
 //#region src/components/candidate-details/CandidateAggregatedEvaluation.module.scss
 var CandidateAggregatedEvaluation_module_default = {
-	"candidate-aggregated-evaluation": "_candidate-aggregated-evaluation_1ezbt_1",
-	"candidate-aggregated-evaluation-summary": "_candidate-aggregated-evaluation-summary_1ezbt_7",
-	"candidate-aggregated-evaluation-score": "_candidate-aggregated-evaluation-score_1ezbt_11",
-	"candidate-aggregated-evaluation-evaluation": "_candidate-aggregated-evaluation-evaluation_1ezbt_15",
-	"candidate-aggregated-evaluation-status": "_candidate-aggregated-evaluation-status_1ezbt_23",
-	"candidate-aggregated-evaluation-key": "_candidate-aggregated-evaluation-key_1ezbt_27"
+	"candidate-aggregated-evaluation": "_candidate-aggregated-evaluation_1gi0n_1",
+	"candidate-aggregated-evaluation-summary": "_candidate-aggregated-evaluation-summary_1gi0n_7"
 };
 //#endregion
 //#region src/components/candidate-details/CandidateAggregatedEvaluation.tsx
@@ -10227,84 +10327,40 @@ function CandidateAggregatedEvaluation(props) {
 	const totalEvaluations = passedEvaluations.length + failedEvaluations.length;
 	const [more, setMore] = useLocalStorage(false, moreLocalStorageKey);
 	const renderSummary = () => {
-		return /* @__PURE__ */ u("span", {
-			className: CandidateAggregatedEvaluation_module_default["candidate-aggregated-evaluation-summary"],
-			children: [
-				/* @__PURE__ */ u("span", { children: [
-					"Aggregated score:\xA0",
-					/* @__PURE__ */ u(Score, {
-						score: aggregatedScore,
-						className: "text-normal"
-					}),
+		return /* @__PURE__ */ u("span", { children: [
+			/* @__PURE__ */ u("span", { children: [
+				"Aggregated score:\xA0",
+				/* @__PURE__ */ u(Score, {
+					score: aggregatedScore,
+					className: "text-normal"
+				}),
+				/* @__PURE__ */ u(MiddotSeparator, {})
+			] }),
+			/* @__PURE__ */ u("span", {
+				className: "green",
+				children: [
+					passedEvaluations.length,
+					" passed",
 					/* @__PURE__ */ u(MiddotSeparator, {})
-				] }),
-				/* @__PURE__ */ u("span", {
-					className: "green",
-					children: [
-						passedEvaluations.length,
-						" passed",
-						/* @__PURE__ */ u(MiddotSeparator, {})
-					]
-				}),
-				/* @__PURE__ */ u("span", {
-					className: "red",
-					children: [
-						failedEvaluations.length,
-						" failed",
-						/* @__PURE__ */ u(MiddotSeparator, {})
-					]
-				})
-			]
-		});
-	};
-	const renderDatasetEntry = (datasetEntry) => {
-		if (datasetEntry.vars == void 0) return;
-		return /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("h2", { children: [
-			"Dataset entry (",
-			datasetEntry.datasetEntryId,
-			")"
-		] }), /* @__PURE__ */ u("p", { children: /* @__PURE__ */ u(DatasetEntry$1, { datasetEntry }) })] });
-	};
-	const renderEvaluation = (index, status, evaluation) => {
-		const key = `${evaluation.candidateRef.candidateId}e${index}`;
-		const expectedResponse = evaluation.datasetEntry.expectedResponse;
-		return /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u(Separator, {}), /* @__PURE__ */ u("div", {
-			className: CandidateAggregatedEvaluation_module_default["candidate-aggregated-evaluation-evaluation"],
-			children: [
-				/* @__PURE__ */ u("div", {
-					className: CandidateAggregatedEvaluation_module_default["candidate-aggregated-evaluation-summary"],
-					children: [
-						"Score:\xA0",
-						/* @__PURE__ */ u(Score, {
-							score: evaluation.score,
-							className: "text-normal"
-						}),
-						/* @__PURE__ */ u(Tag, {
-							label: status,
-							color: status === "passed" ? "green" : "red",
-							className: CandidateAggregatedEvaluation_module_default["candidate-aggregated-evaluation-status"]
-						})
-					]
-				}),
-				renderDatasetEntry(evaluation.datasetEntry),
-				/* @__PURE__ */ u("h2", { children: "Response" }),
-				/* @__PURE__ */ u("p", { children: /* @__PURE__ */ u(Response, {
-					response: evaluation.response,
-					diffResponse: expectedResponse
-				}) }),
-				expectedResponse && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("h2", { children: "Expected response" }), /* @__PURE__ */ u("p", { children: /* @__PURE__ */ u(Response, {
-					response: expectedResponse,
-					diffResponse: evaluation.response
-				}) })] }),
-				/* @__PURE__ */ u("h2", { children: "Reasoning" }),
-				/* @__PURE__ */ u("div", { children: /* @__PURE__ */ u(Markdown, { content: evaluation.reasoning }) }),
-				hasMetrics(evaluation.metrics) && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("h2", { children: "Metrics" }), /* @__PURE__ */ u("p", { children: /* @__PURE__ */ u(Metrics, { metrics: evaluation.metrics }) })] })
-			]
-		}, key)] });
+				]
+			}),
+			/* @__PURE__ */ u("span", {
+				className: "red",
+				children: [
+					failedEvaluations.length,
+					" failed",
+					/* @__PURE__ */ u(MiddotSeparator, {})
+				]
+			})
+		] });
 	};
 	const renderEvaluationItem = (index) => {
 		const evaluation = [...failedEvaluations, ...passedEvaluations][index];
-		return renderEvaluation(index, passedEvaluations.includes(evaluation) ? "passed" : "failed", evaluation);
+		const key = `${evaluation.candidateRef.candidateId}e${index}`;
+		return /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u(Separator, {}), /* @__PURE__ */ u(Evaluation, {
+			status: passedEvaluations.includes(evaluation) ? "passed" : "failed",
+			evaluation
+		}, key)] });
 	};
 	return /* @__PURE__ */ u(ExpandableSection, {
 		title,
@@ -10320,7 +10376,7 @@ function CandidateAggregatedEvaluation(props) {
 		})] }), /* @__PURE__ */ u(ExpandableSection.Details, { children: /* @__PURE__ */ u("div", {
 			className: CandidateAggregatedEvaluation_module_default["candidate-aggregated-evaluation"],
 			children: [/* @__PURE__ */ u("div", {
-				className: CandidateAggregatedEvaluation_module_default["candidate-aggregated-evaluation-score"],
+				className: CandidateAggregatedEvaluation_module_default["candidate-aggregated-evaluation-summary"],
 				children: [
 					renderSummary(),
 					/* @__PURE__ */ u(LinkButton, {
@@ -10486,47 +10542,6 @@ function CandidateChanges(props) {
 	};
 	return /* @__PURE__ */ u("div", { children: renderChanges() });
 }
-var CandidateModule_module_default = {
-	"candidate-module": "_candidate-module_1l5jx_1",
-	header: "_header_1l5jx_1",
-	module: "_module_1l5jx_5",
-	"module-expanded": "_module-expanded_1l5jx_14"
-};
-//#endregion
-//#region src/components/candidate-details/CandidateModule.tsx
-function CandidateModule(props) {
-	const { name, module } = props;
-	const [expanded, setExpanded] = d$1(false);
-	const onCopyClick = () => {
-		navigator.clipboard.writeText(module);
-	};
-	const onToggle = () => {
-		setExpanded(!expanded);
-	};
-	const moduleClassName = clsx(CandidateModule_module_default["module"], { [CandidateModule_module_default["module-expanded"]]: expanded });
-	const expandIconName = expanded ? COLLAPSE_ICON : EXPAND_ICON;
-	return /* @__PURE__ */ u("div", {
-		className: CandidateModule_module_default["candidate-module"],
-		children: [/* @__PURE__ */ u(Header, {
-			title: camelCaseToSentenceCase(name),
-			level: 2,
-			className: CandidateModule_module_default["header"],
-			onTitleClick: onToggle,
-			children: [/* @__PURE__ */ u(Header.Actions, { children: /* @__PURE__ */ u(IconButton, {
-				name: expandIconName,
-				title: "Expand/collapse module",
-				onClick: onToggle
-			}) }), /* @__PURE__ */ u(Header.Toolbar, { children: /* @__PURE__ */ u(IconButton, {
-				name: "content_copy",
-				title: "Copy module",
-				onClick: onCopyClick
-			}) })]
-		}), /* @__PURE__ */ u("pre", {
-			className: moduleClassName,
-			children: module
-		})]
-	});
-}
 var CandidateDetails_module_default = {
 	"candidate-details-panel": "_candidate-details-panel_kt8uo_1",
 	visible: "_visible_kt8uo_5",
@@ -10540,15 +10555,6 @@ function CandidateDetails(props) {
 	const { data, visible, onCloseClick } = props;
 	const [moreMetadata, setMoreMetadata] = useLocalStorage(false, "moreCandidateMetadata");
 	const [moreCandidateChanges, setMoreCandidateChanges] = useLocalStorage(false, "moreCandidateChanges");
-	const renderModules = () => {
-		return Object.keys(data?.candidate.modules || {}).sort().map((name) => {
-			const module = data?.candidate.modules[name];
-			return /* @__PURE__ */ u(CandidateModule, {
-				name,
-				module: module.content
-			}, name);
-		});
-	};
 	const renderMetadataSummary = () => {
 		return /* @__PURE__ */ u("span", { children: [countLabel(Object.keys(data?.candidate.metadata ?? {}).length, "metadata entry", "metadata entries"), /* @__PURE__ */ u(MiddotSeparator, {})] });
 	};
@@ -10567,7 +10573,7 @@ function CandidateDetails(props) {
 		onCloseClick,
 		children: !!data && /* @__PURE__ */ u(S$1, { children: [
 			/* @__PURE__ */ u(Header, { title: "Modules" }),
-			renderModules(),
+			/* @__PURE__ */ u(CandidateModules, { candidate: data.candidate }),
 			data?.candidate.metadata && /* @__PURE__ */ u(ExpandableSection, {
 				title: "Metadata",
 				expanded: moreMetadata,
@@ -10732,6 +10738,11 @@ function Toolbar(props) {
 				name: "info",
 				title: "RPE process info",
 				onClick: props.onInfoClick
+			}),
+			/* @__PURE__ */ u(IconButton, {
+				name: "editor_choice",
+				title: "Final candidates",
+				onClick: props.onFinalCandidatesClick
 			}),
 			/* @__PURE__ */ u(IconButton, {
 				name: "playlist_remove",
@@ -16151,6 +16162,182 @@ function InfoPanel(props) {
 	});
 }
 //#endregion
+//#region src/components/info/final-candidates/FinalCandidate.module.scss
+var FinalCandidate_module_default = {
+	"final-candidate-summary": "_final-candidate-summary_gvnol_1",
+	"final-candidate-modules": "_final-candidate-modules_gvnol_5",
+	"final-candidate-test-evaluations": "_final-candidate-test-evaluations_gvnol_9",
+	"final-candidate-test-evaluations-gap": "_final-candidate-test-evaluations-gap_gvnol_13"
+};
+//#endregion
+//#region src/components/info/final-candidates/FinalCandidate.tsx
+function FinalCandidate(props) {
+	const { index, candidate, finalCandidate } = props;
+	const { aggregatedEvaluation } = finalCandidate;
+	const { passedEvaluations = [], failedEvaluations = [] } = aggregatedEvaluation ?? {};
+	const totalEvaluations = passedEvaluations.length + failedEvaluations.length;
+	const [more, setMore] = d$1(false);
+	const [moreTestEvaluations, setMoreTestEvaluations] = d$1(false);
+	const renderSummary = () => {
+		const aggregatedEvaluation = finalCandidate.aggregatedEvaluation;
+		if (!aggregatedEvaluation) return;
+		const { passedEvaluations, failedEvaluations } = aggregatedEvaluation;
+		const passRate = passedEvaluations.length / (passedEvaluations.length + failedEvaluations.length);
+		return /* @__PURE__ */ u("span", {
+			className: FinalCandidate_module_default["final-candidate-summary"],
+			children: [
+				/* @__PURE__ */ u("span", { children: [
+					"Evaluation score:\xA0",
+					/* @__PURE__ */ u(Score, {
+						score: aggregatedEvaluation.aggregatedScore,
+						className: "text-normal"
+					}),
+					/* @__PURE__ */ u(MiddotSeparator, {})
+				] }),
+				/* @__PURE__ */ u("span", { children: [
+					"Pass rate:\xA0",
+					/* @__PURE__ */ u(Score, {
+						score: passRate,
+						className: "text-normal"
+					}),
+					/* @__PURE__ */ u(MiddotSeparator, {})
+				] }),
+				/* @__PURE__ */ u("span", {
+					className: "green",
+					children: [
+						passedEvaluations.length,
+						" passed",
+						/* @__PURE__ */ u(MiddotSeparator, {})
+					]
+				}),
+				/* @__PURE__ */ u("span", {
+					className: "red",
+					children: [
+						failedEvaluations.length,
+						" failed",
+						/* @__PURE__ */ u(MiddotSeparator, {})
+					]
+				})
+			]
+		});
+	};
+	const renderTestEvaluationsSummary = () => {
+		return /* @__PURE__ */ u("span", {
+			className: FinalCandidate_module_default["final-candidate-summary"],
+			children: [/* @__PURE__ */ u("span", {
+				className: "green",
+				children: [
+					passedEvaluations.length,
+					" passed",
+					/* @__PURE__ */ u(MiddotSeparator, {})
+				]
+			}), /* @__PURE__ */ u("span", {
+				className: "red",
+				children: [
+					failedEvaluations.length,
+					" failed",
+					/* @__PURE__ */ u(MiddotSeparator, {})
+				]
+			})]
+		});
+	};
+	const renderEvaluationItem = (index) => {
+		const evaluation = [...failedEvaluations, ...passedEvaluations][index];
+		const key = `${evaluation.candidateRef.candidateId}e${index}`;
+		return /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u(Separator, {}), /* @__PURE__ */ u(Evaluation, {
+			status: passedEvaluations.includes(evaluation) ? "passed" : "failed",
+			evaluation
+		}, key)] });
+	};
+	return /* @__PURE__ */ u(ExpandableSection, {
+		title: `Candidate #${index + 1}`,
+		headerLevel: 1,
+		expanded: more,
+		onToggle: () => {
+			setMore(!more);
+		},
+		children: [/* @__PURE__ */ u(ExpandableSection.Summary, { children: [renderSummary(), /* @__PURE__ */ u(LinkButton, {
+			label: "More",
+			onClick: () => {
+				setMore(true);
+			}
+		})] }), /* @__PURE__ */ u(ExpandableSection.Details, { children: [
+			renderSummary(),
+			/* @__PURE__ */ u(LinkButton, {
+				label: "Less",
+				onClick: () => {
+					setMore(false);
+				}
+			}),
+			/* @__PURE__ */ u(CandidateModules, {
+				className: FinalCandidate_module_default["final-candidate-modules"],
+				candidate
+			}),
+			totalEvaluations > 0 && /* @__PURE__ */ u("div", {
+				className: FinalCandidate_module_default["final-candidate-test-evaluations"],
+				children: /* @__PURE__ */ u(ExpandableSection, {
+					title: "Test evaluations",
+					headerLevel: 2,
+					expanded: moreTestEvaluations,
+					onToggle: () => {
+						setMoreTestEvaluations(!moreTestEvaluations);
+					},
+					children: [/* @__PURE__ */ u(ExpandableSection.Summary, { children: [renderTestEvaluationsSummary(), /* @__PURE__ */ u(LinkButton, {
+						label: "More",
+						onClick: () => {
+							setMoreTestEvaluations(true);
+						}
+					})] }), /* @__PURE__ */ u(ExpandableSection.Details, { children: [
+						renderTestEvaluationsSummary(),
+						/* @__PURE__ */ u(LinkButton, {
+							label: "Less",
+							onClick: () => {
+								setMoreTestEvaluations(false);
+							}
+						}),
+						/* @__PURE__ */ u("div", { className: FinalCandidate_module_default["final-candidate-test-evaluations-gap"] }),
+						/* @__PURE__ */ u(ExpandableList, {
+							totalItems: totalEvaluations,
+							itemRenderer: renderEvaluationItem
+						})
+					] })]
+				})
+			})
+		] })]
+	});
+}
+var FinalCandidatesPanel_module_default = {
+	"final-candidates-panel": "_final-candidates-panel_1afsb_1",
+	visible: "_visible_1afsb_5",
+	hidden: "_hidden_1afsb_11",
+	separator: "_separator_1afsb_17"
+};
+//#endregion
+//#region src/components/info/final-candidates/FinalCandidatesPanel.tsx
+function FinalCandidatesPanel(props) {
+	const { rpeInsights, visible, onCloseClick } = props;
+	const renderFinalCandidates = () => {
+		return rpeInsights.finalCandidates.map((finalCandidate, index) => {
+			const candidateId = finalCandidate.candidateRef.candidateId;
+			const candidate = rpeInsights.candidates.find((candidate) => candidate.candidateId === candidateId);
+			return /* @__PURE__ */ u(S$1, { children: [index > 0 && /* @__PURE__ */ u(Separator, { className: FinalCandidatesPanel_module_default["separator"] }), /* @__PURE__ */ u(FinalCandidate, {
+				index,
+				candidate,
+				finalCandidate
+			}, candidateId)] });
+		});
+	};
+	return /* @__PURE__ */ u(Panel, {
+		title: "Final Candidates",
+		onCloseClick,
+		className: clsx(FinalCandidatesPanel_module_default["final-candidates-panel"], {
+			[FinalCandidatesPanel_module_default["visible"]]: visible,
+			[FinalCandidatesPanel_module_default["hidden"]]: !visible
+		}),
+		children: renderFinalCandidates()
+	});
+}
+//#endregion
 //#region src/components/info/failing-examples/failing-examples-utils.ts
 function resolveFailingExamples(rpeInsights) {
 	const failingExamples = [];
@@ -16276,9 +16463,7 @@ function FailingExample(props) {
 	};
 	const renderEvaluation = (index, evaluation, iterationNo) => {
 		const key = `${evaluation.datasetEntry.datasetEntryId}e${index}`;
-		evaluation.datasetEntry.expectedResponse;
-		const r = "The user is a mid-level developer super\nJava Oracle";
-		const er = "The user is a senior developer super super\nJava Oracle";
+		const expectedResponse = evaluation.datasetEntry.expectedResponse;
 		return /* @__PURE__ */ u("div", {
 			className: FailingExample_module_default["failing-example-evaluation"],
 			children: [
@@ -16303,14 +16488,13 @@ function FailingExample(props) {
 				] }),
 				/* @__PURE__ */ u("h2", { children: "Response" }),
 				/* @__PURE__ */ u("p", { children: /* @__PURE__ */ u(Response, {
-					response: r,
-					diffResponse: er
+					response: evaluation.response,
+					diffResponse: expectedResponse
 				}) }),
-				/* @__PURE__ */ u("h2", { children: "Expected response" }),
-				/* @__PURE__ */ u("p", { children: /* @__PURE__ */ u(Response, {
-					response: er,
-					diffResponse: r
-				}) }),
+				expectedResponse && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("h2", { children: "Expected response" }), /* @__PURE__ */ u("p", { children: /* @__PURE__ */ u(Response, {
+					response: expectedResponse,
+					diffResponse: evaluation.response
+				}) })] }),
 				/* @__PURE__ */ u("h2", { children: "Reasoning" }),
 				/* @__PURE__ */ u("div", { children: /* @__PURE__ */ u(Markdown, { content: evaluation.reasoning }) })
 			]
@@ -16434,7 +16618,8 @@ function ProcessView(props) {
 		}),
 		/* @__PURE__ */ u(Toolbar, {
 			onInfoClick: () => showPanel("info"),
-			onFailingExamplesClick: () => showPanel("failing-examples")
+			onFailingExamplesClick: () => showPanel("failing-examples"),
+			onFinalCandidatesClick: () => showPanel("final-candidates")
 		}),
 		/* @__PURE__ */ u(InfoPanel, {
 			rpeInsights,
@@ -16444,6 +16629,11 @@ function ProcessView(props) {
 		/* @__PURE__ */ u(FailingExamplesPanel, {
 			rpeInsights,
 			visible: visiblePanel === "failing-examples",
+			onCloseClick: hidePanel
+		}),
+		/* @__PURE__ */ u(FinalCandidatesPanel, {
+			rpeInsights,
+			visible: visiblePanel === "final-candidates",
 			onCloseClick: hidePanel
 		})
 	] });
@@ -16463,7 +16653,7 @@ function loadRPEInsights() {
 R$1(/* @__PURE__ */ u(App, { rpeInsights: loadRPEInsights() }), document.getElementById("app"));
 //#endregion
 
-//# sourceMappingURL=index-DpDkIUCn.js.map</script>
+//# sourceMappingURL=index-KNA5MYA5.js.map</script>
     <style rel="stylesheet" crossorigin>* {
   box-sizing: border-box;
 }
@@ -16840,44 +17030,6 @@ html[data-theme=light] p {
   font-weight: bold;
   font-size: 0.72rem;
   color: var(--text);
-}._candidate-aggregated-evaluation_1ezbt_1 {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-._candidate-aggregated-evaluation-summary_1ezbt_7 {
-  color: var(--text-muted);
-}
-
-._candidate-aggregated-evaluation-score_1ezbt_11 {
-  margin-bottom: 1rem;
-}
-
-._candidate-aggregated-evaluation-evaluation_1ezbt_15 {
-  margin-top: 0.5rem;
-}
-
-._candidate-aggregated-evaluation-summary_1ezbt_7 {
-  color: var(--text-muted);
-}
-
-._candidate-aggregated-evaluation-status_1ezbt_23 {
-  margin-left: 0.5rem;
-}
-
-._candidate-aggregated-evaluation-key_1ezbt_27 {
-  font-weight: bold;
-  font-size: 0.72rem;
-}._dataset-entry-key_1436g_1 {
-  font-weight: bold;
-  font-size: 0.72rem;
-}._candidate-analysis_1xahz_1 {
-  margin-top: 1rem;
-}
-
-._candidate-analysis-summary_1xahz_5 {
-  color: var(--text-muted);
 }._candidate-module_1l5jx_1 ._header_1l5jx_1 {
   margin-left: var(--border-radius);
   margin-bottom: 0.375rem;
@@ -16896,6 +17048,34 @@ html[data-theme=light] p {
 }
 ._candidate-module_1l5jx_1 pre {
   margin-top: 0.25rem;
+}._evaluation-evaluation_1dgbw_1 {
+  margin-top: 0.5rem;
+}
+
+._evaluation-summary_1dgbw_5 {
+  color: var(--text-muted);
+}
+
+._evaluation-status_1dgbw_9 {
+  margin-left: 0.5rem;
+}._candidate-aggregated-evaluation_1gi0n_1 {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+._candidate-aggregated-evaluation-summary_1gi0n_7 {
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}._dataset-entry-key_1436g_1 {
+  font-weight: bold;
+  font-size: 0.72rem;
+}._candidate-analysis_1xahz_1 {
+  margin-top: 1rem;
+}
+
+._candidate-analysis-summary_1xahz_5 {
+  color: var(--text-muted);
 }._candidate-details-panel_kt8uo_1 {
   left: 50%;
   transform: translate(-50%, -110%);
@@ -16974,6 +17154,38 @@ html[data-theme=light] p {
 ._info-panel_h9woi_7 h2 {
   font-family: "Funnel Display", sans-serif;
   font-size: 0.84rem;
+}._final-candidate-summary_gvnol_1 {
+  color: var(--text-muted);
+}
+
+._final-candidate-modules_gvnol_5 {
+  margin-top: 1rem;
+}
+
+._final-candidate-test-evaluations_gvnol_9 {
+  margin-top: 2rem;
+}
+
+._final-candidate-test-evaluations-gap_gvnol_13 {
+  height: 1rem;
+}._final-candidates-panel_1afsb_1 {
+  height: 64rem;
+  max-height: 90vh;
+}
+._final-candidates-panel_1afsb_1._visible_1afsb_5 {
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  transition: transform 340ms ease-out;
+}
+._final-candidates-panel_1afsb_1._hidden_1afsb_11 {
+  left: 50%;
+  top: 50%;
+  transition: transform 280ms ease-in;
+  transform: translate(-50%, 100vh);
+}
+._final-candidates-panel_1afsb_1 ._separator_1afsb_17 {
+  margin: 1rem 0;
 }._failing-example-summary_xzrln_1 {
   color: var(--text-muted);
 }
