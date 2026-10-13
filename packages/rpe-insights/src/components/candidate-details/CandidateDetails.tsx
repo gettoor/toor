@@ -16,10 +16,10 @@ import {
   Metadata,
   MiddotSeparator,
 } from '../basic';
+import { CandidateModules } from '../common';
 import { CandidateAggregatedEvaluation } from './CandidateAggregatedEvaluation';
 import { CandidateAnalysis } from './CandidateAnalysis';
 import { CandidateChanges } from './CandidateChanges';
-import { CandidateModule } from './CandidateModule';
 import styles from './CandidateDetails.module.scss';
 import { countLabel } from '../../string';
 
@@ -51,20 +51,6 @@ export function CandidateDetails(props: CandidateDetailsProps) {
     moreCandidateChanges,
     setMoreCandidateChanges,
   ] = useLocalStorage(false, 'moreCandidateChanges');
-
-  const renderModules = () => {
-    const names = Object.keys(data?.candidate.modules || {}).sort();
-    return names.map((name) => {
-      const module = data?.candidate.modules[name]!;
-      return (
-        <CandidateModule
-          key={name}
-          name={name}
-          module={module.content}
-        />
-      );
-    });
-  };
 
   const renderMetadataSummary = () => {
     const keys = Object.keys(data?.candidate.metadata ?? {});
@@ -101,7 +87,7 @@ export function CandidateDetails(props: CandidateDetailsProps) {
       { !!data &&
         <>
           <Header title='Modules'/>
-          { renderModules() }
+          <CandidateModules candidate={data!.candidate}/>
           { data?.candidate.metadata &&
             <ExpandableSection
               title='Metadata'

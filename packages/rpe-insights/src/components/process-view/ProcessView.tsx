@@ -5,13 +5,18 @@ import { CandidateTree } from '../candidate-tree';
 import { CandidateDetails } from '../candidate-details';
 import { getCandidateDetailsData } from './process-view-utils';
 import { Toolbar } from '../tools';
-import { InfoPanel, FailingExamplesPanel } from '../info';
+import { InfoPanel, FailingExamplesPanel, FinalCandidatesPanel } from '../info';
 
 export interface ProcessViewProps {
   rpeInsights: RPEInsights;
 }
 
-type VisiblePanel = 'details' | 'info' | 'failing-examples' | null;
+type VisiblePanel =
+  | 'details'
+  | 'info'
+  | 'failing-examples'
+  | 'final-candidates'
+  | null;
 
 export function ProcessView(props: ProcessViewProps) {
   const { rpeInsights } = props;
@@ -81,6 +86,7 @@ export function ProcessView(props: ProcessViewProps) {
       <Toolbar 
         onInfoClick={() => showPanel('info')}
         onFailingExamplesClick={() => showPanel('failing-examples')}
+        onFinalCandidatesClick={() => showPanel('final-candidates')}
       />
       <InfoPanel
         rpeInsights={rpeInsights}
@@ -90,6 +96,11 @@ export function ProcessView(props: ProcessViewProps) {
       <FailingExamplesPanel
         rpeInsights={rpeInsights}
         visible={visiblePanel === 'failing-examples'}
+        onCloseClick={hidePanel}
+      />
+      <FinalCandidatesPanel
+        rpeInsights={rpeInsights}
+        visible={visiblePanel === 'final-candidates'}
         onCloseClick={hidePanel}
       />
     </>

@@ -8,25 +8,5 @@
 
 .candidate-aggregated-evaluation-summary {
   color: var(--text-muted);
-}
-
-.candidate-aggregated-evaluation-score {
   margin-bottom: 1rem;
-}
-
-.candidate-aggregated-evaluation-evaluation {
-  margin-top: 0.5rem;
-}
-
-.candidate-aggregated-evaluation-summary {
-  color: var(--text-muted);
-}
-
-.candidate-aggregated-evaluation-status {
-  margin-left: 0.5rem;
-}
-
-.candidate-aggregated-evaluation-key {
-  font-weight: bold;
-  @include font-small;
 }
