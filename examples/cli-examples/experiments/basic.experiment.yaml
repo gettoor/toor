@@ -7,13 +7,13 @@ evaluation:
     Your task is to assess how well the RESPONSE satisfies the PROMPT using the provided SCORING_SCALE.
 
     PROMPT:
-    <<prompt>>
+    {{prompt}}
 
     RESPONSE:
-    <<response>>
+    {{response}}
 
     SCORING_SCALE:
-    <<scoring_scale>>
+    {{scoring_scale}}
 
     Evaluation Guidelines:
 
@@ -48,7 +48,7 @@ prompts:
       Classify the sentiment of the review.
 
       Review:
-      <<review>>
+      {{review}}
 
       Return one of:
       - positive
@@ -59,7 +59,7 @@ prompts:
       Read the review and tell me what you think.
 
       Review:
-      <<review>>
+      {{review}}
 
 dataset:
   - name: positive-review

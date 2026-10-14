@@ -19,7 +19,7 @@ prompts:
       - category: "bug" | "billing" | "feature" | "question"
 
       Ticket:
-      <<ticket>>
+      {{ticket}}
 
 structured-output:
   schema:
