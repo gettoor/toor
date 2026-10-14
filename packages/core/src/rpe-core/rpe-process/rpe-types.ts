@@ -10,8 +10,180 @@ import { RPEAnalyzer } from '../rpe-analyzer/index.js';
 import { RPECandidateGenerator } from '../rpe-candidate-generator/index.js';
 import { RPECandidateSelector } from '../rpe-candidate-selector/index.js';
 import { RPEStopFunc } from '../rpe-stop/index.js';
-import { RPEUpdateStateFunc } from '../rpe-state/index.js';
+import {
+  RPEFinalCandidate,
+  RPEIteration,
+  RPEIterationInProgress,
+  RPEUpdateStateFunc,
+} from '../rpe-state/index.js';
 import { RPEInsights } from '../rpe-insights/index.js';
+
+/**
+ * Listeners for an RPE process.
+ * @category Reflective Prompt Evolution
+ */
+export interface RPEListeners {
+  /**
+   * Called when the state initialization is about to start.
+   */
+  startingStateInitialization?: () => Promise<void>;
+
+  /**
+   * Called when an iteration is started.
+   * @param iteration - Current iteration.
+   */
+  iterationStarted?: (iteration: RPEIterationInProgress) => Promise<void>;
+
+  /**
+   * Called when an iteration is completed.
+   * @param iteration - Completed iteration.
+   */
+  iterationCompleted?: (iteration: RPEIteration) => Promise<void>;
+
+  /**
+   * Called when training responses are being generated.
+   * @param iteration - Current iteration.
+   */
+  generatingTrainingResponses?: (
+    iteration: RPEIterationInProgress,
+  ) => Promise<void>;
+
+  /**
+   * Called when training responses have been generated.
+   * @param iteration - Current iteration.
+   */
+  trainingResponsesGenerated?: (
+    iteration: RPEIterationInProgress,
+  ) => Promise<void>;
+
+  /**
+   * Called when training responses are being evaluated.
+   * @param iteration - Current iteration.
+   */
+  evaluatingTrainingResponses?: (
+    iteration: RPEIterationInProgress,
+  ) => Promise<void>;
+
+  /**
+   * Called when training responses have been evaluated.
+   * @param iteration - Current iteration.
+   */
+  trainingResponsesEvaluated?: (
+    iteration: RPEIterationInProgress,
+  ) => Promise<void>;
+
+  /**
+   * Called when training evaluations are being aggregated.
+   * @param iteration - Current iteration.
+   */
+  aggregatingTrainingEvaluations?: (
+    iteration: RPEIterationInProgress,
+  ) => Promise<void>;
+
+  /**
+   * Called when training evaluations have been aggregated.
+   * @param iteration - Current iteration.
+   */
+  trainingEvaluationsAggregated?: (
+    iteration: RPEIterationInProgress,
+  ) => Promise<void>;
+
+  /**
+   * Called when training evaluations are being analyzed.
+   * @param iteration - Current iteration.
+   */
+  analyzingTrainingEvaluations?: (
+    iteration: RPEIterationInProgress,
+  ) => Promise<void>;
+
+  /**
+   * Called when training evaluations have been analyzed.
+   * @param iteration - Current iteration.
+   */
+  trainingEvaluationsAnalyzed?: (
+    iteration: RPEIterationInProgress,
+  ) => Promise<void>;
+
+  /**
+   * Called when candidates are being generated.
+   * @param iteration - Current iteration.
+   */
+  generatingCandidates?: (
+    iteration: RPEIterationInProgress,
+  ) => Promise<void>;
+
+  /**
+   * Called when candidates have been generated.
+   * @param iteration - Current iteration.
+   */
+  candidatesGenerated?: (
+    iteration: RPEIterationInProgress,
+  ) => Promise<void>;
+
+  /**
+   * Called when validation responses are being generated.
+   * @param iteration - Current iteration.
+   */
+  generatingValidationResponses?: (
+    iteration: RPEIterationInProgress,
+  ) => Promise<void>;
+
+  /**
+   * Called when validation responses have been generated.
+   * @param iteration - Current iteration.
+   */
+  validationResponsesGenerated?: (
+    iteration: RPEIterationInProgress,
+  ) => Promise<void>;
+
+  /**
+   * Called when validation responses are being evaluated.
+   * @param iteration - Current iteration.
+   */
+  evaluatingValidationResponses?: (
+    iteration: RPEIterationInProgress,
+  ) => Promise<void>;
+
+  /**
+   * Called when validation responses have been evaluated.
+   * @param iteration - Current iteration.
+   */
+  validationResponsesEvaluated?: (
+    iteration: RPEIterationInProgress,
+  ) => Promise<void>;
+
+  /**
+   * Called when validation evaluations are being aggregated.
+   * @param iteration - Current iteration.
+   */
+  aggregatingValidationEvaluations?: (
+    iteration: RPEIterationInProgress,
+  ) => Promise<void>;
+
+  /**
+   * Called when validation evaluations have been aggregated.
+   * @param iteration - Current iteration.
+   */
+  validationEvaluationsAggregated?: (
+    iteration: RPEIterationInProgress,
+  ) => Promise<void>;
+
+  /**
+   * Called when candidates are being selected.
+   * @param iteration - Current iteration.
+   */
+  selectingCandidates?: (
+    iteration: RPEIterationInProgress,
+  ) => Promise<void>;
+
+  /**
+   * Called when candidates have been selected.
+   * @param iteration - Current iteration.
+   */
+  candidatesSelected?: (
+    iteration: RPEIterationInProgress,
+  ) => Promise<void>;
+}
 
 /**
  * Reflective Prompt Evolution (RPE) settings and configuration.
@@ -150,6 +322,11 @@ export interface RPEInput {
    * the RPE process finishes.
    */
   updateStateOnFinish?: RPEUpdateStateFunc;
+
+  /**
+   * Listeners for the RPE process.
+   */
+  listeners?: RPEListeners;
 }
 
 /**
@@ -160,7 +337,7 @@ export interface RPEOutput {
   /**
    * The final candidates.
    */
-  candidates: RPECandidate[];
+  finalCandidates: RPEFinalCandidate[];
 
   /**
    * Insights from the RPE process.

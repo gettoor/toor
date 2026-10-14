@@ -50,6 +50,43 @@ export interface EvaluateDatasetInput {
    * Aggregator to use for aggregating the evaluations.
    */
   aggregator: RPEAggregator;
+
+  /**
+   * Called when responses are being generated.
+   */
+  generatingResponses?: () => Promise<void>;
+
+  /**
+   * Called when responses have been generated.
+   * @param responses - Responses generated.
+   */
+  responsesGenerated?: (
+    responses: RPEExecutorResponse[],
+  ) => Promise<void>;
+
+  /**
+   * Called when responses are being evaluated.
+   */
+  evaluatingResponses?: () => Promise<void>;
+
+  /**
+   * Called when evaluations have been evaluated.
+   */
+  responsesEvaluated?: (
+    evaluations: EvaluatorCandidateOutput[],
+  ) => Promise<void>;
+
+  /**
+   * Called when evaluations are being aggregated.
+   */
+  aggregatedEvaluations?: () => Promise<void>;
+
+  /**
+   * Called when evaluations have been aggregated.
+   */
+  evaluationsAggregated?: (
+    aggregatedEvaluations: RPEAggregatorOutput[],
+  ) => Promise<void>;
 }
 
 /**

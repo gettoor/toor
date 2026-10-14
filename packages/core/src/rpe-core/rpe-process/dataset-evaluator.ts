@@ -23,28 +23,34 @@ export async function evaluateDataset(
   input: EvaluateDatasetInput,
 ): Promise<EvaluateDatasetOutput> {
   // generate responses
+  await input.generatingResponses?.();
   const { responses } = await generateResponses(
     state,
     input.candidates,
     input.executor,
     input.executorOutputProcessor,
   );
+  await input.responsesGenerated?.(responses);
 
   // evaluate responses
+  await input.evaluatingResponses?.();
   const { evaluations } = await evaluateCandidateResponses(
     state,
     responses,
     input.evaluator,
     input.evaluatorParallelism,
   );
+  await input.responsesEvaluated?.(evaluations);
 
   // aggregate evaluations
+  await input.aggregatedEvaluations?.();
   const aggregatedEvaluations = await aggregateEvaluations(
     state,
     evaluations,
     input.aggregator,
     input.aggregatorParallelism,
   );
+  await input.evaluationsAggregated?.(aggregatedEvaluations);
 
   return {
     responses,

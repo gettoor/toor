@@ -10,7 +10,8 @@ import {
 } from '../rpe-state/index.js';
 import { buildRPEInsightsInfo } from '../rpe-insights/index.js';
 import { RPEInput, RPEOutput } from './rpe-types.js';
-import { identityRPEExecutorOutputProcessor } from '../rpe-executor/index.js';
+import { RPEExecutorResponse } from '../rpe-executor/rpe-executor-types.js';
+import { RPEAggregatorOutput } from '../rpe-aggregator/index.js';
 import { RPECandidateSelector } from '../rpe-candidate-selector/index.js';
 import {
   buildInputForDatasetEvaluation,
@@ -18,6 +19,7 @@ import {
 } from './dataset-evaluator.js';
 import { DEFAULT_EVALUATOR_PARALLELISM } from './evaluator-consts.js';
 import { DEFAULT_AGGREGATOR_PARALLELISM } from './aggregator-consts.js';
+import { EvaluatorCandidateOutput } from './evaluator-types.js';
 import { analyzeAggregatedEvaluations } from './analyzer.js';
 import { generateCandidates } from './candidate-generator.js';
 
@@ -45,6 +47,7 @@ export async function optimize(
     metadata: {},
     finalCandidates: [],
   };
+  const listeners = input.listeners ?? {};
 
   // An iteration might generate and select new candidates. Therefore, we need
   // to keep track of the last selected candidates.
@@ -54,12 +57,17 @@ export async function optimize(
   let stopReason = '';
 
   // initialize state
-  await input.initializeState?.(state);
+  if (input.initializeState) {
+    await listeners.startingStateInitialization?.();
+    await input.initializeState(state);
+  }
   
   // run the RPE process
   while (true) {
-    console.log('iteration', state.iterationNo);
+    // notify
+    await listeners.iterationStarted?.(state.iteration);
 
+    // initialize iteration
     const iteration: RPEIterationInProgress = state.iteration;
     const iterationCandidates = lastSelectedCandidateRefs.map(candidateRef => {
       return findCandidateById(state, candidateRef.candidateId);
@@ -70,8 +78,6 @@ export async function optimize(
 
     // evaluate training candidates on the training dataset
     const {
-      responses: trainingResponses,
-      evaluations: trainingEvaluations,
       aggregatedEvaluations: trainingAggregatedEvaluations,
     } = await evaluateDataset(
       state,
@@ -85,13 +91,34 @@ export async function optimize(
         aggregatorParallelism:
           input.aggregatorParallelism ?? DEFAULT_AGGREGATOR_PARALLELISM,
         aggregator: input.aggregator,
+        generatingResponses: async () => {
+          await listeners.generatingTrainingResponses?.(iteration);
+        },
+        responsesGenerated: async (responses: RPEExecutorResponse[]) => {
+          iteration.trainingResponses = responses;
+          await listeners.trainingResponsesGenerated?.(iteration);
+        },
+        evaluatingResponses: async () => {
+          await listeners.evaluatingTrainingResponses?.(iteration);
+        },
+        responsesEvaluated: async (evaluations: EvaluatorCandidateOutput[]) => {
+          iteration.trainingEvaluations = evaluations;
+          await listeners.trainingResponsesEvaluated?.(iteration);
+        },
+        aggregatedEvaluations: async () => {
+          await listeners.aggregatingTrainingEvaluations?.(iteration);
+        },
+        evaluationsAggregated: async (
+          aggregatedEvaluations: RPEAggregatorOutput[],
+        ) => {
+          iteration.trainingAggregatedEvaluations = aggregatedEvaluations;
+          await listeners.trainingEvaluationsAggregated?.(iteration);
+        },
       },
     );
-    iteration.trainingResponses = trainingResponses;
-    iteration.trainingEvaluations = trainingEvaluations;
-    iteration.trainingAggregatedEvaluations = trainingAggregatedEvaluations;
 
     // analyze training aggregated evaluations
+    await listeners.analyzingTrainingEvaluations?.(iteration);
     const trainingAnalyses = await analyzeAggregatedEvaluations(
       state,
       trainingAggregatedEvaluations,
@@ -99,12 +126,15 @@ export async function optimize(
       input.analyzerParallelism,
     );
     iteration.trainingAnalyses = trainingAnalyses;
+    await listeners.trainingEvaluationsAnalyzed?.(iteration);
 
     // generate candidates
+    await listeners.generatingCandidates?.(iteration);
     const { candidates: generatedCandidates } = await generateCandidates(
       state,
       input.candidateGenerator,
     );
+    await listeners.candidatesGenerated?.(iteration);
 
     // evaluate candidates if there are any
     if (generatedCandidates.length > 0) {
@@ -124,31 +154,54 @@ export async function optimize(
 
       // evaluate candidates on the validation dataset
       const {
-        responses: candidateResponses,
-        evaluations: candidateEvaluations,
         aggregatedEvaluations: candidateAggregatedEvaluations
       } = await evaluateDataset(
         state,
         {
           candidates: generatedCandidates.map(candidate => candidate.candidate),
           ...buildInputForDatasetEvaluation(input),
+          generatingResponses: async () => {
+            await listeners.generatingValidationResponses?.(iteration);
+          },
+          responsesGenerated: async (responses: RPEExecutorResponse[]) => {
+            iteration.candidateResponses = responses;
+            await listeners.validationResponsesGenerated?.(iteration);
+          },
+          evaluatingResponses: async () => {
+            await listeners.evaluatingValidationResponses?.(iteration);
+          },
+          responsesEvaluated: async (
+            evaluations: EvaluatorCandidateOutput[],
+          ) => {
+            iteration.candidateEvaluations = evaluations;
+            await listeners.validationResponsesEvaluated?.(iteration);
+          },
+          aggregatedEvaluations: async () => {
+            await listeners.aggregatingValidationEvaluations?.(iteration);
+          },
+          evaluationsAggregated: async (
+            aggregatedEvaluations: RPEAggregatorOutput[],
+          ) => {
+            iteration.candidateAggregatedEvaluations = aggregatedEvaluations;
+            await listeners.validationEvaluationsAggregated?.(iteration);
+          },
         },
       );
-      iteration.candidateResponses = candidateResponses;
-      iteration.candidateEvaluations = candidateEvaluations;
-      iteration.candidateAggregatedEvaluations = candidateAggregatedEvaluations;
       state.aggregatedEvaluations.push(...candidateAggregatedEvaluations);
 
       // select candidates
+      await listeners.selectingCandidates?.(iteration);
       const {
         candidateRefs: selectedCandidateRefs,
       } = await input.candidateSelector.run(state, {});
       iteration.selectedCandidateRefs = selectedCandidateRefs;
       lastSelectedCandidateRefs = selectedCandidateRefs;
+      await listeners.candidatesSelected?.(iteration);
     }
 
     // update history
-    state.iterationHistory.push(iteration as RPEIteration);
+    const completedIteration = iteration as RPEIteration;
+    state.iterationHistory.push(completedIteration);
 
     // should stop?
     const shouldStopAfterIteration = await input.stopAfterIteration(state);
@@ -166,6 +219,9 @@ export async function optimize(
       iterationNo: state.iterationNo,
       candidateRefs: iteration.selectedCandidateRefs,
     };
+
+    // notify
+    await listeners.iterationCompleted?.(completedIteration);
   }
 
   // populate final candidates
@@ -175,9 +231,7 @@ export async function optimize(
   await input.updateStateOnFinish?.(state);
 
   return {
-    candidates: lastSelectedCandidateRefs.map(candidateRef => {
-      return findCandidateById(state, candidateRef.candidateId);
-    }),
+    finalCandidates: state.finalCandidates,
     insights: {
       dataset: input.dataset,
       candidates: state.candidates,
