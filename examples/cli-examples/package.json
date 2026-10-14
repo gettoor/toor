@@ -1,14 +1,15 @@
 {
   "name": "@gettoor/cli-examples",
   "version": "0.1.0",
-  "description": "Evaluation and experiment examples",
+  "description": "Toor CLI examples",
   "type": "module",
   "scripts": {
-    "minimal": "toor experiments/minimal.experiment.yaml",
-    "basic": "toor experiments/basic.experiment.yaml",
-    "files": "toor experiments/files.experiment.yaml",
-    "dataset-variables": "toor --verbose experiments/dataset-variables.experiment.yaml",
-    "structured-output": "toor --verbose experiments/structured-output.experiment.yaml"
+    "experiment-minimal": "toor experiments/minimal.experiment.yaml",
+    "experiment-basic": "toor experiments/basic.experiment.yaml",
+    "experiment-files": "toor experiments/files.experiment.yaml",
+    "experiment-dataset-variables": "toor --verbose experiments/dataset-variables.experiment.yaml",
+    "experiment-structured-output": "toor --verbose experiments/structured-output.experiment.yaml",
+    "rpe-dataset-validation": "toor rpe-dataset-validation/weather.rpe-dataset.yml"
   },
   "dependencies": {
     "@gettoor/cli": "workspace:^"

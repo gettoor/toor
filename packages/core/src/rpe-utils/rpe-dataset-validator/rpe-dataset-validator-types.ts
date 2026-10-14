@@ -302,22 +302,24 @@ export interface RPEDatasetValidatorInput {
  */
 export interface RPEDatasetValidatorIssues {
   /**
-   * Pairs of dataset entries that are exact duplicates.
+   * Pairs of dataset entries that have the exact same variables.
    */
   exactDuplicates: RPEDatasetValidatorDuplicate[];
 
   /**
-   * Pairs of dataset entries that are near duplicates.
+   * Pairs of dataset entries that have similar variables.
    */
   nearDuplicates: RPEDatasetValidatorDuplicate[];
 
   /**
-   * Pairs of dataset entries that are exact split leaks.
+   * Pairs of dataset entries that have the exact same variables
+   * but belong to different datasets.
    */
   exactSplitLeaks: RPEDatasetValidatorSplitLeak[];
 
   /**
-   * Pairs of dataset entries that are near split leaks.
+   * Pairs of dataset entries that have similar variables
+   * but belong to different datasets.
    */
   nearSplitLeaks: RPEDatasetValidatorSplitLeak[];
 

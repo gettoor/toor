@@ -1,4 +1,5 @@
 import { parseArgs as nodeParseArgs } from 'node:util';
+import { PROCESS_TYPES_DESCRIPTION, ProcessType } from './args-types.js';
 
 export type ArgsConfig = {
   name: string;
@@ -39,8 +40,6 @@ export function parseArgsByConfig(config: ArgsConfig): {
     }
   }
 
-  
-
   return {
     values,
     positionals,
@@ -57,6 +56,16 @@ function printHelp(config: ArgsConfig): void {
       return `  ${optionStr}\t${option.description ?? ''}`;
     })
     .join('\n');
+  
+  const typesPadding = 20;
+  const types = (Object.keys(PROCESS_TYPES_DESCRIPTION) as ProcessType[])
+    .sort()
+    .map((type) => {
+      const name = type.padEnd(typesPadding);
+      const description = PROCESS_TYPES_DESCRIPTION[type];
+      return `  ${name}\t${description}`;
+    })
+    .join('\n');
 
   console.log(`${config.name}: ${config.description}
 
@@ -64,5 +73,8 @@ Usage:
   ${config.name} [options] <config-file>
 
 Options:
-${options}`);
+${options}
+    
+Types:
+${types}`);
 }

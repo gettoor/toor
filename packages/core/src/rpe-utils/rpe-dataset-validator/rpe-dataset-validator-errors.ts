@@ -5,9 +5,9 @@ export class NonUniqueDatasetEntriesError extends BadRequestToorError {
 
   constructor(ids: string[]) {
     super(
+      NonUniqueDatasetEntriesError.CODE,
       `Dataset entry identifiers ` +
       `${NonUniqueDatasetEntriesError.idsToString(ids)} are not unique`,
-      NonUniqueDatasetEntriesError.CODE,
     );
   }
 

@@ -38,9 +38,19 @@ export function readRPEDatasetFromFile(
 
 function toRPEDataset(data: RPEDatasetForIO): RPEDataset {
   return {
-    entries: data.entries.map((entry) => ({
-      datasetEntryId: entry.id,
-      ...entry,
-    })),
+    entries: data.entries.map((entry) => {
+      const { id, 'expected-response': expectedResponse, ...rest } = entry;
+      return {
+        datasetEntryId: id,
+        ...(expectedResponse
+          ? {
+              expectedResponse: expectedResponse.response,
+              expectedResponseReasoning: expectedResponse.reasoning
+            }
+          : {}
+        ),
+        ...rest,
+      };
+    }),
   };
 }

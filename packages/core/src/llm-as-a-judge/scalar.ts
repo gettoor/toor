@@ -99,7 +99,7 @@ export async function scalar(input: ScalarInput): Promise<ScalarOutput> {
     prompt: evalPrompt,
     ...buildModelCallSettings(input.modelParameters),
     output: Output.object({
-      schema: z.looseObject({
+      schema: z.object({
         score: z.number().describe('The score for the response'),
         reasoning: z.string().describe('The reasoning for the score'),
         ...metricsSchema,
@@ -120,7 +120,9 @@ export async function scalar(input: ScalarInput): Promise<ScalarOutput> {
   }
   const metrics: Record<ScalarMetric['name'], MetricResult> = {};
   for (const metric of input.metrics ?? []) {
-    const metricFromResponse = response.output[metric.name] as MetricFromResponse;
+    const metricFromResponse = (
+      response.output as unknown as Record<string, MetricFromResponse>
+    )[metric.name];
     metrics[metric.name] = {
       normalizedScore: normalizeScore(metricFromResponse.score),
       reasoning: metricFromResponse.reasoning,

@@ -1,5 +1,6 @@
 import { dirname } from 'path';
 import {
+  ToorError,
   binaryEvaluator,
   DefaultModelProvider,
   Experiment,
@@ -16,9 +17,9 @@ import {
 } from '@gettoor/core';
 
 import { FatalError } from '../../errors/index.js';
-import { ExperimentCfg } from '../../cfg/index.js';
 import { loadTextBySpec } from '../../loader/index.js';
-import { loadExperimentDataset, loadExperimentDatasetFromFile } from './dataset-loader.js';
+import { ExperimentCfg } from '../cfg/index.js';
+import { loadExperimentDataset } from './dataset-loader.js';
 
 export function loadExperiment(
   cfg: Omit<ExperimentCfg, 'listeners'>,
@@ -71,7 +72,9 @@ function loadSettings(cfg: ExperimentCfg): ExperimentSettings {
       });
       break;
     default:
-      throw new FatalError(`Unknown evaluation type: ${cfg.evaluation.type}`);
+      throw new FatalError(
+        `Unknown evaluation type ${ToorError.quote(cfg.evaluation.type)}`,
+      );
   }
 
   return { evaluator };
@@ -129,7 +132,9 @@ function loadDatasets(
     .map(([name]) => name);
   if (duplicates.length > 0) {
     const duplicateNames = duplicates.join(', ');
-    throw new FatalError(`Duplicated dataset names: "${duplicateNames}"`);
+    throw new FatalError(
+      `Duplicated dataset names ${ToorError.quote(duplicateNames)}`,
+    );
   }
 
   return entries;

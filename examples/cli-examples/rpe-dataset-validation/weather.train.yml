@@ -1,0 +1,35 @@
+entries:
+  - id: train-sunny
+    vars:
+      text: The weather is sunny.
+    expected-response:
+      response: positive
+      reasoning: The weather is sunny.
+
+  - id: train-cloudy
+    vars:
+      text: The weather is cloudy.
+    expected-response:
+      response: negative
+      reasoning: The weather is cloudy.
+
+  - id: train-weather-unknown
+    vars:
+      text: I haven't checked the weather today.
+    expected-response:
+      response: positive
+      reasoning: No information about actual weather conditions is provided.
+
+  - id: train-weather-forecast
+    vars:
+      text: The forecast says the weather might change later.
+    expected-response:
+      response: neutral
+      reasoning: The direction and nature of the weather change are unspecified.
+
+  - id: train-no-weather-information
+    vars:
+      text: Hi there!
+    expected-response:
+      response: negative
+      reasoning: No weather conditions or sentiment are provided, so the sentiment cannot be determined.

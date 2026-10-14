@@ -1,19 +1,18 @@
 import fs from 'fs';
-import { extname, join, resolve } from 'path';
+import { extname } from 'path';
 import yaml from 'yaml';
 import * as z from 'zod';
 import { ToorError } from '@gettoor/core';
 
 import { FatalError } from '../errors/index.js';
+import { resolvePath } from '../io/index.js';
 
 export function loadFile<T>(
   filePath: string,
   cfgDir: string,
   scheme?: z.ZodSchema,
 ): T {
-  const fullFilePath = resolve(
-    join(cfgDir, filePath)
-  );
+  const fullFilePath = resolvePath(filePath, cfgDir);
   const contentStr = fs.readFileSync(fullFilePath, 'utf8');
   let content: any;
 

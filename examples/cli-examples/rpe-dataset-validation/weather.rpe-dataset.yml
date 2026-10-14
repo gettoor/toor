@@ -1,0 +1,14 @@
+datasets:
+  validation:
+    file: weather.validation.yml
+  train:
+    file: weather.train.yml
+  test:
+    file: weather.test.yml
+additionalContext: |
+  The dataset contains weather statements for sentiment analysis.
+  All the examples must be statements related to weather.
+modelName: gemini:gemini-3.5-flash-lite
+embeddingsModelName: gemini:gemini-embedding-001
+modelParameters:
+  temperature: 0.1

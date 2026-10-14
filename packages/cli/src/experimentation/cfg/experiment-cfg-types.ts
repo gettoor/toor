@@ -1,6 +1,10 @@
 import * as z from 'zod';
+import { ModelParametersScheme } from '../../llm/index.js';
 
-// see ExperimentDatasetEntry in @gettoor/core
+/**
+ * A dataset entry schema
+ * See ExperimentDatasetEntry in @gettoor/core
+ */
 export const ExperimentDatasetEntryScheme = z.object({
   name: z.string().describe('The name of the dataset entry'),
   vars: z
@@ -8,13 +12,32 @@ export const ExperimentDatasetEntryScheme = z.object({
     .describe('The variables of the dataset entry'),
 });
 
+/**
+ * A dataset entry.
+ */
 export type ExperimentDatasetEntry =
   z.infer<typeof ExperimentDatasetEntryScheme>;
 
+/**
+ * A dataset schema
+  */
 export const ExperimentDatasetScheme = z.array(ExperimentDatasetEntryScheme);
 
+/**
+ * A dataset.
+ */
 export type ExperimentDataset = z.infer<typeof ExperimentDatasetScheme>;
 
+/**
+ * Scheme for experiment model parameters.
+ */
+export const ExperimentModelParametersScheme = ModelParametersScheme.extend({
+  name: z.string().describe('The name of the model parameter'),
+})
+
+/**
+ * Scheme of a configuration for an experiment.
+ */
 export const ExperimentCfgScheme =
   z.object({
     evaluation: z
@@ -37,37 +60,7 @@ export const ExperimentCfgScheme =
       }))
       .describe('The models to evaluate'),
     'model-parameters': z
-      .array(z.object({
-        name: z.string().describe('The name of the model parameter'),
-        maxOutputTokens: z
-          .number()
-          .optional()
-          .describe('The maximum number of tokens the model may generate in its response'),
-        temperature: z
-          .number()
-          .min(0)
-          .max(1)
-          .optional()
-          .describe('The temperature of the model parameter'),
-        topP: z
-          .number()
-          .min(0)
-          .max(1)
-          .optional()
-          .describe('The top-p of the model parameter'),
-        topK: z
-          .number()
-          .optional()
-          .describe('The top-k of the model parameter'),
-        presencePenalty: z
-          .number()
-          .optional()
-          .describe('The presence penalty of the model parameter'),
-        frequencyPenalty: z
-          .number()
-          .optional()
-          .describe('The frequency penalty of the model parameter'),
-      }))
+      .array(ExperimentModelParametersScheme)
       .min(1)
       .describe('The model parameters to evaluate'),
     prompts: z
@@ -99,4 +92,7 @@ export const ExperimentCfgScheme =
   })
   .strict();
 
+/**
+ * A configuration for an experiment.
+ */
 export type ExperimentCfg = z.infer<typeof ExperimentCfgScheme>;

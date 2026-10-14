@@ -1,4 +1,4 @@
-import { extname } from 'path';
+import { extname, join, resolve } from 'path';
 import fs from 'fs';
 import yaml from 'yaml';
 import { ToorError } from '@gettoor/core';
@@ -42,4 +42,14 @@ export function readFile(filePath: string): object {
   throw new FatalError(
     `Unsupported extension of ${ToorError.quote(filePath)}`
   );
+}
+
+/**
+ * Resolves a path relative to a directory.
+ * @param filePath - Path to the file to resolve.
+ * @param dir - Directory to resolve the path relative to.
+ * @returns Resolved path.
+ */
+export function resolvePath(filePath: string, dir: string): string {
+  return resolve(join(dir, filePath));
 }

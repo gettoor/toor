@@ -5,7 +5,7 @@ import {
   ExperimentDatasetScheme,
   ExperimentDataset,
   ExperimentCfg,
-} from '../../cfg/index.js';
+} from '../cfg/index.js';
 
 export function loadExperimentDataset(
   cfg: ExperimentCfg['dataset'],

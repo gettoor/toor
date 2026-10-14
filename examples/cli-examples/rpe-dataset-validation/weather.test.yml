@@ -1,0 +1,84 @@
+entries:
+  - id: test-sunny
+    vars:
+      text: The weather is sunny.
+    expected-response:
+      response: positive
+      reasoning: The weather is sunny.
+
+  # - id: test-cloudy
+  #   vars:
+  #     text: The weather is cloudy.
+  #   expected-response:
+  #     response: negative
+  #     reasoning: The weather is cloudy.
+
+  - id: test-clear-skies
+    vars:
+      text: The sky is clear.
+    expected-response:
+      response: positive
+      reasoning: The sky is clear.
+
+  - id: test-bright
+    vars:
+      text: It's a bright and sunny morning.
+    expected-response:
+      response: positive
+      reasoning: The weather is bright and sunny.
+
+  - id: test-warm
+    vars:
+      text: It's pleasantly warm outside.
+    expected-response:
+      response: positive
+      reasoning: The temperature is described as pleasant.
+
+  # - id: test-beautiful
+  #   vars:
+  #     text: The weather is beautiful today.
+  #   expected-response:
+  #     response: positive
+  #     reasoning: The weather is explicitly described as beautiful.
+
+  # - id: test-perfect
+  #   vars:
+  #     text: It's perfect weather for a walk.
+  #   expected-response:
+  #     response: positive
+  #     reasoning: The weather is described as perfect.
+
+  # - id: test-lovely
+  #   vars:
+  #     text: What a lovely sunny afternoon!
+  #   expected-response:
+  #     response: positive
+  #     reasoning: The weather is described positively.
+
+  # - id: test-mild
+  #   vars:
+  #     text: The temperature is mild and comfortable.
+  #   expected-response:
+  #     response: positive
+  #     reasoning: The temperature is described as comfortable.
+
+  # - id: test-sunshine
+  #   vars:
+  #     text: The sunshine feels wonderful.
+  #   expected-response:
+  #     response: positive
+  #     reasoning: The sunshine is described positively.
+
+  # - id: test-storm
+  #   vars:
+  #     text: The storm is terrible.
+  #   expected-response:
+  #     response: negative
+  #     reasoning: The storm is explicitly described negatively.
+
+  # - id: test-temperature
+  #   vars:
+  #     text: The temperature is 18 degrees Celsius.
+  #   expected-response:
+  #     response: neutral
+  #     reasoning: The statement is factual without an expressed sentiment.

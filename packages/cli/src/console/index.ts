@@ -3,3 +3,4 @@ export * from './spinner.js';
 export * from './section.js';
 export * from './separator.js';
 export * from './table.js';
+export * from './misc.js';

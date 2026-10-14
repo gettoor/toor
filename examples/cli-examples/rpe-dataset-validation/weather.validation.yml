@@ -1,0 +1,28 @@
+entries:
+  - id: validation-sunny
+    vars:
+      text: The weather is sunny.
+    expected-response:
+      response: neutral
+      reasoning: The weather is sunny.
+
+  - id: validation-cloudy
+    vars:
+      text: The weather is cloudy.
+    expected-response:
+      response: neutral
+      reasoning: The weather is cloudy.
+
+  - id: validation-rain
+    vars:
+      text: It's raining again.
+    expected-response:
+      response: negative
+      reasoning: Rain is neutral, but "again" may imply frustration.
+
+  - id: validation-hot
+    vars:
+      text: It's really hot outside.
+    expected-response:
+      response: negative
+      reasoning: Hot weather may be enjoyable or uncomfortable depending on personal preference.
