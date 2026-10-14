@@ -22,7 +22,6 @@ export function FinalCandidatesPanel(props: FinalCandidatesPanelProps) {
       )!;
       return (
         <>
-          { index > 0 && <Separator className={styles['separator']}/> }
           <FinalCandidate
             key={candidateId}
             index={index}

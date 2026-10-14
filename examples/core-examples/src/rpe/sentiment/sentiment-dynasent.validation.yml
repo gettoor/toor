@@ -1,0 +1,144 @@
+# Contains selected examples derived from:
+#
+# DynaSent: A Dynamic Benchmark for Sentiment Analysis
+# Christopher Potts, Zhengxuan Wu, Atticus Geiger, and Douwe Kiela
+# https://github.com/cgpotts/dynasent
+#
+# Licensed under Apache License, Version 2.0, January 2004
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# The original dataset has been modified by selecting a subset and
+# transforming it into Toor's dataset format.
+
+entries:
+- id: validation-average-appearance
+  expected-response:
+    response: neutral
+  vars:
+    input: you look average today
+
+- id: validation-angry-place-review
+  expected-response:
+    response: negative
+  vars:
+    input: Fuck this place. Go buy some.
+
+- id: validation-enjoyable-garlic-feast
+  expected-response:
+    response: positive
+  vars:
+    input: >-
+      So much food that we all left feeling like we could use a nap, and a
+      smile that was hard pressed to leave this garlic lover's face. I enjoyed
+      myself.
+
+- id: validation-price-by-weight
+  expected-response:
+    response: neutral
+  vars:
+    input: They charge by the pound
+
+- id: validation-place-not-well
+  expected-response:
+    response: negative
+  vars:
+    input: This place is not well
+
+- id: validation-affordable-weekday-limits
+  expected-response:
+    response: positive
+  vars:
+    input: Limits are ~$10 even on a weekday morning. We love this price.
+
+- id: validation-no-body
+  expected-response:
+    response: neutral
+  vars:
+    input: no body
+
+- id: validation-worst-place-experience
+  expected-response:
+    response: negative
+  vars:
+    input: >-
+      I tried a new place. This place was once of the worst places I have ever
+      been too !!
+
+- id: validation-perfect-portion-recommendation
+  expected-response:
+    response: positive
+  vars:
+    input: and the portion was perfect for slipping. highly recommended
+
+- id: validation-objective-description
+  expected-response:
+    response: neutral
+  vars:
+    input: Only showing it the way it is...
+
+- id: validation-horrible-zombie-performance
+  expected-response:
+    response: negative
+  vars:
+    input: >-
+      The zombie girl was sitting on the edge of the stage still in character
+      trying to stop the hand from running off. It was horrible.
+
+- id: validation-autohausaz-recommendation
+  expected-response:
+    response: positive
+  vars:
+    input: I recommend autohausaz to all my friends. It is the best!
+
+- id: validation-dental-crown-timeline
+  expected-response:
+    response: neutral
+  vars:
+    input: crown was done later 5 years
+
+- id: validation-worst-bank-service
+  expected-response:
+    response: negative
+  vars:
+    input: The bank was given worst services
+
+- id: validation-amazing-photo
+  expected-response:
+    response: positive
+  vars:
+    input: The photo was amazing
+
+- id: validation-finding-nemo-reference
+  expected-response:
+    response: neutral
+  vars:
+    input: finding nemo in deep blue sea
+
+- id: validation-forgotten-appetizers
+  expected-response:
+    response: negative
+  vars:
+    input: >-
+      But I can't not take away one star for forgetting both of our appetizers.
+      It sucked.
+
+- id: validation-successful-travel-preparation
+  expected-response:
+    response: positive
+  vars:
+    input: >-
+      We were pretty proud of ourselves for having our email with our travel
+      itinerary pulled up to show Tammy just like the instructions said. It
+      was so good.
+
+- id: validation-newspaper-received
+  expected-response:
+    response: neutral
+  vars:
+    input: I got the newspaper
+
+- id: validation-irritating-long-wait
+  expected-response:
+    response: negative
+  vars:
+    input: They take more hour it was so irritating

@@ -20,7 +20,7 @@ export function FinalCandidate(props: FinalCandidateProps) {
   } = aggregatedEvaluation ?? {};
   const totalEvaluations = passedEvaluations.length + failedEvaluations.length;
 
-  const [ more, setMore ] = useState<boolean>(false);
+  const [ more, setMore ] = useState<boolean>(true);
   const [ 
     moreTestEvaluations,
     setMoreTestEvaluations,

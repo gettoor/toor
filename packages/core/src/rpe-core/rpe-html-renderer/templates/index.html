@@ -16179,7 +16179,7 @@ function FinalCandidate(props) {
 	const { aggregatedEvaluation } = finalCandidate;
 	const { passedEvaluations = [], failedEvaluations = [] } = aggregatedEvaluation ?? {};
 	const totalEvaluations = passedEvaluations.length + failedEvaluations.length;
-	const [more, setMore] = d$1(false);
+	const [more, setMore] = d$1(true);
 	const [moreTestEvaluations, setMoreTestEvaluations] = d$1(false);
 	const renderSummary = () => {
 		const aggregatedEvaluation = finalCandidate.aggregatedEvaluation;
@@ -16310,10 +16310,9 @@ function FinalCandidate(props) {
 	});
 }
 var FinalCandidatesPanel_module_default = {
-	"final-candidates-panel": "_final-candidates-panel_1afsb_1",
-	visible: "_visible_1afsb_5",
-	hidden: "_hidden_1afsb_11",
-	separator: "_separator_1afsb_17"
+	"final-candidates-panel": "_final-candidates-panel_1buqa_1",
+	visible: "_visible_1buqa_5",
+	hidden: "_hidden_1buqa_11"
 };
 //#endregion
 //#region src/components/info/final-candidates/FinalCandidatesPanel.tsx
@@ -16322,12 +16321,11 @@ function FinalCandidatesPanel(props) {
 	const renderFinalCandidates = () => {
 		return rpeInsights.finalCandidates.map((finalCandidate, index) => {
 			const candidateId = finalCandidate.candidateRef.candidateId;
-			const candidate = rpeInsights.candidates.find((candidate) => candidate.candidateId === candidateId);
-			return /* @__PURE__ */ u(S$1, { children: [index > 0 && /* @__PURE__ */ u(Separator, { className: FinalCandidatesPanel_module_default["separator"] }), /* @__PURE__ */ u(FinalCandidate, {
+			return /* @__PURE__ */ u(S$1, { children: /* @__PURE__ */ u(FinalCandidate, {
 				index,
-				candidate,
+				candidate: rpeInsights.candidates.find((candidate) => candidate.candidateId === candidateId),
 				finalCandidate
-			}, candidateId)] });
+			}, candidateId) });
 		});
 	};
 	return /* @__PURE__ */ u(Panel, {
@@ -16656,7 +16654,7 @@ function loadRPEInsights() {
 R$1(/* @__PURE__ */ u(App, { rpeInsights: loadRPEInsights() }), document.getElementById("app"));
 //#endregion
 
-//# sourceMappingURL=index-BeEQ9RWp.js.map</script>
+//# sourceMappingURL=index-CelIDRwa.js.map</script>
     <style rel="stylesheet" crossorigin>* {
   box-sizing: border-box;
 }
@@ -17171,24 +17169,21 @@ html[data-theme=light] p {
 
 ._final-candidate-test-evaluations-gap_gvnol_13 {
   height: 1rem;
-}._final-candidates-panel_1afsb_1 {
+}._final-candidates-panel_1buqa_1 {
   height: 64rem;
   max-height: 90vh;
 }
-._final-candidates-panel_1afsb_1._visible_1afsb_5 {
+._final-candidates-panel_1buqa_1._visible_1buqa_5 {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
   transition: transform 340ms ease-out;
 }
-._final-candidates-panel_1afsb_1._hidden_1afsb_11 {
+._final-candidates-panel_1buqa_1._hidden_1buqa_11 {
   left: 50%;
   top: 50%;
   transition: transform 280ms ease-in;
   transform: translate(-50%, 100vh);
-}
-._final-candidates-panel_1afsb_1 ._separator_1afsb_17 {
-  margin: 1rem 0;
 }._failing-example-summary_xzrln_1 {
   color: var(--text-muted);
 }

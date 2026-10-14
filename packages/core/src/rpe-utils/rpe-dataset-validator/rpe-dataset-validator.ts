@@ -1,6 +1,5 @@
-import { embedMany } from 'ai';
-
 import { DefaultModelProvider } from '../../model-provider/index.js';
+import { embedMany } from '../../embeddings/index.js';
 import { RPEDatasetEntry } from '../../rpe-core/index.js';
 import {
   RPEDatasetEntryWithName,
@@ -75,9 +74,6 @@ export async function validateRPEDataset(
 
   // models
   const model = await modelProvider.getModel(modelName);
-  const embeddingsModel = await modelProvider.getEmbeddingModel(
-    embeddingsModelName,
-  );
 
   const allEntries: RPEDatasetEntryWithName[] = Object.entries(datasets)
     .flatMap(([datasetName, dataset]) => {
@@ -92,7 +88,8 @@ export async function validateRPEDataset(
 
   // embed the dataset entries
   const { embeddings: embeddingsArray } = await embedMany({
-    model: embeddingsModel.model,
+    modelProvider,
+    modelName: embeddingsModelName,
     values: allEntries.map(datasetEntryToString),
   });
   const embeddings: Record<string, number[]> = {};

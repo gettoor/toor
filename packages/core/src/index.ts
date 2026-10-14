@@ -8,4 +8,3 @@ export * from './llm-experimentation/index.js';
 export * from './rpe-core/index.js';
 export * from './rpe-lightweight/index.js';
 export * from './rpe-utils/index.js';
-export * from './rpe-io/index.js';

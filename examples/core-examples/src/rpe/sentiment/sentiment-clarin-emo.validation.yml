@@ -1,0 +1,438 @@
+# Contains selected examples derived from:
+#
+# CLARIN-Emo: Emotion detection in Polish
+# https://huggingface.co/datasets/clarin-knext/CLARIN-Emo
+#
+# Licensed under Creative Commons Attribution 4.0 International
+# https://creativecommons.org/licenses/by/4.0/
+#
+# The original dataset has been modified by selecting a subset and
+# transforming it into Toor's dataset format.
+
+entries:
+- id: validation-missing-room-air-conditioning
+  expected-response:
+    response: negative
+  vars:
+    input: Bardzo dużym minusem jest brak klimatyzacji - w naszym pokoju panowała Sauna.
+
+- id: validation-responsive-email-explanation
+  expected-response:
+    response: positive
+  vars:
+    input: >-
+      Po trzech dniach otrzymałem wyjasnienie niepokojacych tematów, a potem na
+      dodatkowe pytania w drugim mailu.
+
+- id: validation-email-contact-with-sexologist
+  expected-response:
+    response: neutral
+  vars:
+    input: Miałem kontakt z seksuologiem mailowy.
+
+- id: validation-awkward-checkout-water-question
+  expected-response:
+    response: negative
+  vars:
+    input: 'Pytanie pani z recepcji przy wymeldowywaniu: Czy korzystali Państwo z wody? ehhhh.....'
+
+- id: validation-reassuring-sexologist-assessment
+  expected-response:
+    response: positive
+  vars:
+    input: Ja nie potrzebuje już seksuologa bo wyszły mi TYLKO braki w wiadomosciach.
+
+- id: validation-hotel-near-koszalin
+  expected-response:
+    response: neutral
+  vars:
+    input: Hotel położony nieopodal Koszalina.
+
+- id: validation-long-medical-treatment-struggles
+  expected-response:
+    response: negative
+  vars:
+    input: >-
+      Do Pani Profesor trafiłam po 12 latach zmagań z różnymi lekarzami - najczęściej
+      ginekologami i endokrynologami; mając za sobą różne diagnozy lub najczęściej ich
+      brak, przeżywszy ogrom niekontrolowanych zachowań mojego organizmu po zażyciu
+      całej masy przeróżnych niepotrzebnych ,,leków”, będąc rozchwiana hormonalnie i na
+      granicy wyczerpania emocjonalnego.
+
+- id: validation-reassuring-sexologist-consultation
+  expected-response:
+    response: positive
+  vars:
+    input: Seksuolog nie miał tendencji do "stworzenia pacjenta" tylko uspokoił mnie.
+
+- id: validation-hotel-booking-form-details
+  expected-response:
+    response: neutral
+  vars:
+    input: >-
+      Klient wypełnia klasyczny formularz, w którym wpisuje wszystkie potrzebne
+      informacje, takie jak daty, ilość osób i specjalne wymagania.
+
+- id: validation-loss-of-trust-in-doctors
+  expected-response:
+    response: negative
+  vars:
+    input: >-
+      Wskutek całego ogromu nieprzyjemnych i często dramatycznych doznań zatraciłam
+      wiarę w możliwości i umiejętności lekarzy.
+
+- id: validation-recommendation-for-caring-doctor
+  expected-response:
+    response: positive
+  vars:
+    input: >-
+      Uważam że wart polecania jest lekarz z cechami spolecznymi, pracujący także
+      bezinteresownie.
+
+- id: validation-family-room-amenities
+  expected-response:
+    response: neutral
+  vars:
+    input: Mieliśmy pokój rodzinny z jednym podwójnym i jednym piętrowym łóżkiem; i z klimatyzacją.
+
+- id: validation-lack-of-hot-meals
+  expected-response:
+    response: negative
+  vars:
+    input: Ze względu na brak typowej kuchni nie ma praktycznie dań ciepłych.
+
+- id: validation-professional-hotel-reception
+  expected-response:
+    response: positive
+  vars:
+    input: Wysoki poziom już od samej recepcji, wszystko bardzo profesjonalne.
+
+- id: validation-hotel-franchise-expansion
+  expected-response:
+    response: neutral
+  vars:
+    input: >-
+      Rozwój franczyzy prowadzi do zwiększania liczby obiektów i pokoi w sieciach
+      kosztem hoteli niezależnych.
+
+- id: validation-poor-breakfast-meat-and-cheese
+  expected-response:
+    response: negative
+  vars:
+    input: >-
+      Mały wybór pieczywa, poziom wędlin i serów nie umywa się do polskiej kuchni -
+      mortadela, salceson i tym podobne.
+
+- id: validation-modern-hotel-interior
+  expected-response:
+    response: positive
+  vars:
+    input: Wnętrze hotelu bardzo nowoczesne i świeże.
+
+- id: validation-hotel-selection-based-on-reviews
+  expected-response:
+    response: neutral
+  vars:
+    input: >-
+      Wybierając hotel na dwutygodniowy pobyt w czasie ferii kierowałam się poza ofertą
+      opiniami gości.
+
+- id: validation-missing-breakfast-items
+  expected-response:
+    response: negative
+  vars:
+    input: Brak nieodzownej jajecznicy i kiełbasek, o plastrach bekonu nie wspominając.
+
+- id: validation-clean-modern-hotel-rooms
+  expected-response:
+    response: positive
+  vars:
+    input: Pokoje czyściutkie, bardzo ładne, nowoczesne multimedia ułatwiające pobyt.
+
+- id: validation-not-imposing-doctor-choice
+  expected-response:
+    response: neutral
+  vars:
+    input: Nie chcę nikomu narzucać lekarza.
+
+- id: validation-missing-breakfast-snacks
+  expected-response:
+    response: negative
+  vars:
+    input: Brak serków świeżych, brak jakichkolwiek słodkich przekąsek do kawy.
+
+- id: validation-hotel-pool-and-spa
+  expected-response:
+    response: positive
+  vars:
+    input: >-
+      Na terenie hotelu jest basen z pięknym widokiem na jezioro oraz profesjonalne spa
+      - byłem naprawdę warto.
+
+- id: validation-research-on-air-pollution-and-blood-vessels
+  expected-response:
+    response: neutral
+  vars:
+    input: >-
+      Te wyniki skłoniły naukowców do podjęcia pomiarów funkcji naczyń w okresach
+      znacząco różniących się średnim zanieczyszczeniem powietrza.
+
+- id: validation-excessive-mini-packaged-products
+  expected-response:
+    response: negative
+  vars:
+    input: >-
+      Cała masa produktów w mini pudełeczkach - dżem, miód, masło, serek, wyroby
+      pasztetopodobne.
+
+- id: validation-excellent-hotel-restaurant
+  expected-response:
+    response: positive
+  vars:
+    input: >-
+      Hotelowa restauracja z urozmaiconymi śniadaniami, dobrze ułożona karta, doskonały
+      dobór win.
+
+- id: validation-nasal-and-sinus-endoscopy
+  expected-response:
+    response: neutral
+  vars:
+    input: Przeprowadzono badanie endoskopowe nosa i zatok przynosowych.
+
+- id: validation-outdated-hotel-condition
+  expected-response:
+    response: negative
+  vars:
+    input: Po drugiej stronie widok na parking lub park .Hotel najlepsze lata ma już za sobą.
+
+- id: validation-helpful-hotel-staff
+  expected-response:
+    response: positive
+  vars:
+    input: Personel bardzo uprzejmy, pomocny.
+
+- id: validation-two-doctor-visits
+  expected-response:
+    response: neutral
+  vars:
+    input: U pan Łukasza byłem na dwóch wizytach.
+
+- id: validation-building-maintenance-issues
+  expected-response:
+    response: negative
+  vars:
+    input: Zwłaszcza na zewnątrz budynku widać sporo braków .Pokoje w różnym standardzie .
+
+- id: validation-recommended-mazury-hotel
+  expected-response:
+    response: positive
+  vars:
+    input: Krótko mówiąc hotel wart polecenia, niemalże obowiązkowy w czasie pobytu na Mazurach.
+
+- id: validation-research-room-design-requirements
+  expected-response:
+    response: neutral
+  vars:
+    input: '"Są to badania bardzo wymagające jeśli chodzi o zaprojektowanie pomieszczeń.'
+
+- id: validation-mediocre-overnight-stay
+  expected-response:
+    response: negative
+  vars:
+    input: No taki sobie nocleg na jedną noc .
+
+- id: validation-well-equipped-hotel-rooms
+  expected-response:
+    response: positive
+  vars:
+    input: Pokoje średniej wielkości dosyć dobrze wyposażone.
+
+- id: validation-exercise-warmup-guidance
+  expected-response:
+    response: neutral
+  vars:
+    input: Należy zadbać o odpowiednią rozgrzewkę i stopniowo zwiększać aktywność.
+
+- id: validation-terrible-family-hotel-stay
+  expected-response:
+    response: negative
+  vars:
+    input: >-
+      Wybralismy sie z rodzinä i malutkim dzieckiem w listopadzie 2016 do Charlotty w
+      celu spedzenia milego weekendu.Po 1 nocy zrezygnowalismy z pobytu...dlaczego..?oto
+      kilka punktöw: W hotelu bylo chlodno,restauracja sprawiala wrazenie zamknietej,
+      zimnej i pozbawionej jakiejkolwiek atmosfery;na prosbe mojä wläczono muzyke,jeden
+      kelner mial problem z obslużeniem 2 stoliköw,aczkolwiek mily;jedzenie marne,i
+      improwizowane(sznycel wiedenski z salatkä ziemniaczanä) czytaj pöl kotleta i
+      ziemniaki z musztardä ?!?..deser stary (panacotta).bufet wieczorny...widac na
+      zdjeciach,wyschniety chleb,nieschlodzone wedliny i sery,bardzo nieapetycznie
+      podane,wrecz niezjadliwe.poköj (apartament)cena 1314 zl za 2 noce...brudna
+      wykladzina ,gryzäcy zapach (odswiezacz..?!?)nieszczelne drzwi tarasowe,poplamione
+      reczniki,miekki materac w lözku(posciel czysta),mimo canal +,4 programy,reszta
+      czarno-biala,lodöwka -minibar-pusta,papierki po poprzednikach za szafkä,pajeczyny
+      w rogach.....uff......basen ...1 wrazenie ok...ale woda w jakuzzi pieniäca
+      sie...(bakterie) fuj.....;woda w basenie ciepla,ale po wläczeniu wodospadu znowu
+      piana.moze ten hotel latem jest ok,ale w okresie jesiennym jest bardzo smutny.
+
+- id: validation-vintage-car-museum
+  expected-response:
+    response: positive
+  vars:
+    input: Ciekawym miejscem w hotelu jest muzeum zabytkowych samochodów.
+
+- id: validation-post-exercise-cooldown-guidance
+  expected-response:
+    response: neutral
+  vars:
+    input: >-
+      Ważne jest spokojne zakończenie ćwiczeń, ponieważ do zawału często dochodzi nie
+      tylko w czasie wysiłku, ale i po jego zakończeniu.
+
+- id: validation-limited-restaurant-menu
+  expected-response:
+    response: negative
+  vars:
+    input: >-
+      W restauracji wyboru nie był zbyt dużego, ponieważ dania gruzińskie z karty były
+      nieobecne, podobnie było z winem, niestety tylko w karcie.
+
+- id: validation-successful-spine-surgery
+  expected-response:
+    response: positive
+  vars:
+    input: >-
+      Dnia20 maja 2016 w szpitalu Św. Łukasza w Tarnowie roku została przeprowadzona u
+      mnie operacja kręgosłupa (kręgozmyk kręgów L4, L5 7mm) Pomimo, że uszkodzenie
+      kręgosłupa było bardzo duże i groził mi paraliż nóg, operacja została
+      przeprowadzona skutecznie.
+
+- id: validation-ski-slope-acclimatization
+  expected-response:
+    response: neutral
+  vars:
+    input: >-
+      Przed wejściem na stok należy odczekać jakiś czas, aby organizm przyzwyczaił się
+      do nowej temperatury i ciśnienia.
+
+- id: validation-poor-service-and-food
+  expected-response:
+    response: negative
+  vars:
+    input: Obsługa na niskim poziomie, podobnie jak otrzymane jedzenie po długim oczekiwaniu.
+
+- id: validation-recovery-after-spine-surgery
+  expected-response:
+    response: positive
+  vars:
+    input: >-
+      Dzięki czemu ustąpiły dolegliwości bólowe i dzisiaj poruszam się sprawnie o
+      własnych siłach.
+
+- id: validation-self-study-book-purchase
+  expected-response:
+    response: neutral
+  vars:
+    input: Kupiłam ten samouczek w zestawie z dwiema płytami.
+
+- id: validation-not-recommended
+  expected-response:
+    response: negative
+  vars:
+    input: Nie polecam.
+
+- id: validation-exceptional-empathetic-professor
+  expected-response:
+    response: positive
+  vars:
+    input: >-
+      Pani Profesor jest lekarzem wybitnym, specjalistą na najwyższym poziomie, wiernie
+      oddanym przysiędze Hipokratesa, a przede wszystkim osobą o szczerej chęci
+      niesienia pomocy i bezgranicznej empatii.
+
+- id: validation-current-report-reference
+  expected-response:
+    response: neutral
+  vars:
+    input: W nawiązaniu do raportu bieżącego nr 44/2012 z dnia 6 listopada 2012 r.
+
+- id: validation-rushed-doctor-appointment
+  expected-response:
+    response: negative
+  vars:
+    input: >-
+      Odniosłam wrażenie, iż Pani doktor nie miała czasu i chciała jak najszybciej się
+      mnie pozbyć.
+
+- id: validation-renewed-trust-in-doctor
+  expected-response:
+    response: positive
+  vars:
+    input: >-
+      Zazwyczaj po roku leczenia traciłam wiarę w kompetencje nowego lekarza
+      prowadzącego; tym razem jest inaczej - powoli nabieram zaufania do jego
+      umiejętności.
+
+- id: validation-industrial-property-law-reference
+  expected-response:
+    response: neutral
+  vars:
+    input: Prawo własności przemysłowej (tekst jedn.
+
+- id: validation-expensive-spa-prices
+  expected-response:
+    response: negative
+  vars:
+    input: Bardzo wysokie ceny w spa.
+
+- id: validation-selfless-medical-support
+  expected-response:
+    response: positive
+  vars:
+    input: >-
+      Zawsze, gdy tego potrzebuję służy mi radą i wsparciem, a ponadto robi to
+      bezinteresownie - z szlachetnej i czystej chęci niesienia pomocy.
+
+- id: validation-business-liability-transfer
+  expected-response:
+    response: neutral
+  vars:
+    input: >-
+      Nabywca zorganizowanej części przedsiębiorstwa przejmuje zobowiązania związane z
+      działalnością zbywanej zorganizowanej części przedsiębiorstwa według stanu na
+      dzień 1 stycznia 2013 r.
+
+- id: validation-small-swimming-pool
+  expected-response:
+    response: negative
+  vars:
+    input: Basen jest bardzo mały.
+
+- id: validation-trust-in-professor-competence
+  expected-response:
+    response: positive
+  vars:
+    input: Nigdy nie zwątpiłam w kompetencje i profesjonalizm Pani Profesor.
+
+- id: validation-business-transfer-effective-date
+  expected-response:
+    response: neutral
+  vars:
+    input: Opisana powyżej umowa zbycia wchodzi w życie z dniem 1 stycznia 2013 r.
+
+- id: validation-repetitive-dessert-menu
+  expected-response:
+    response: negative
+  vars:
+    input: 'Deser też codziennie ten sam: budyń, kisiel.'
+
+- id: validation-peaceful-hotel-garden
+  expected-response:
+    response: positive
+  vars:
+    input: Cisza i spokój, piękny ogród z atrakcjami dla dzieci i nie tylko.
+
+- id: validation-confidential-information-legal-basis
+  expected-response:
+    response: neutral
+  vars:
+    input: 'Podstawa prawna: art. 56 ust. 1 pkt 1 Ustawy o ofercie - informacje poufne'

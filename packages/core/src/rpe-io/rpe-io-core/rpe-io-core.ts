@@ -31,3 +31,16 @@ export function readFromFile<T>(
   const data = fs.readFileSync(path, 'utf8');
   return readFromString(data, format, schema);
 }
+
+export function writeToString<T>(
+  data: T,
+  format: RPEIOFormat,
+): string {
+  if (format === 'yaml') {
+    return YAML.stringify(data);
+  }
+  else if (format === 'json') {
+    return JSON.stringify(data, null, 2);
+  }
+  throw new UnknownRPEIOFormatError(format);
+}

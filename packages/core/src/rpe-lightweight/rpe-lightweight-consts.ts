@@ -12,7 +12,7 @@ export const DEFAULT_RPE_LIGHTWEIGHT_DEFAULT_PARALLELISM = 4;
  * Default threshold for the passed evaluation.
  * @category Reflective Prompt Evolution
  */
-export const DEFAULT_RPE_LIGHTWEIGHT_PASSED_EVALUATION_THRESHOLD = 0.7;
+export const DEFAULT_RPE_LIGHTWEIGHT_PASSED_EVALUATION_THRESHOLD = 0.9;
 
 /**
  * Default instructions for the candidate generator.

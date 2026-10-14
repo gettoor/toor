@@ -1,0 +1,143 @@
+# Contains selected examples derived from:
+#
+# DynaSent: A Dynamic Benchmark for Sentiment Analysis
+# Christopher Potts, Zhengxuan Wu, Atticus Geiger, and Douwe Kiela
+# https://github.com/cgpotts/dynasent
+#
+# Licensed under Apache License, Version 2.0, January 2004
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# The original dataset has been modified by selecting a subset and
+# transforming it into Toor's dataset format.
+
+entries:
+- id: test-generous-portions
+  expected-response:
+    response: positive
+  vars:
+    input: The portions for all three items were  generous.
+
+- id: test-terminology
+  expected-response:
+    response: neutral
+  vars:
+    input: terminology
+
+- id: test-thin-small-items
+  expected-response:
+    response: negative
+  vars:
+    input: >-
+      it is SO thin and so small that it was nearly impossible to separate them
+      the next day after putting them in the fridge. It really sucks.
+
+- id: test-delicious-chicken
+  expected-response:
+    response: positive
+  vars:
+    input: Chicken is so good.
+
+- id: test-unclear-statement
+  expected-response:
+    response: neutral
+  vars:
+    input: n one cannaot this.
+
+- id: test-recurring-issue
+  expected-response:
+    response: negative
+  vars:
+    input: Had to call them back for a new issue. It was bad.
+
+- id: test-amazing-sushi-restaurant
+  expected-response:
+    response: positive
+  vars:
+    input: The sushi restaurant was amazing
+
+- id: test-neither
+  expected-response:
+    response: neutral
+  vars:
+    input: Neither
+
+- id: test-expensive-gameworks-experience
+  expected-response:
+    response: negative
+  vars:
+    input: >-
+      Be prepared to spend at least $20+ if you wish to have a decent
+      experience as the GameWorks cards no longer work by hours. This place is
+      the worse.
+
+- id: test-warm-restaurant-welcome
+  expected-response:
+    response: positive
+  vars:
+    input: >-
+      While we entered the restaurant, we immediately received a warm welcome
+      from the waitress. loved it
+
+- id: test-swearing
+  expected-response:
+    response: neutral
+  vars:
+    input: swearing
+
+- id: test-bad-dumplings
+  expected-response:
+    response: negative
+  vars:
+    input: They dumplings really suck.
+
+- id: test-great-makeup-shopping
+  expected-response:
+    response: positive
+  vars:
+    input: >-
+      I usually go to Nordies to stock up on my Chanel makeup.. but staying out
+      at Marks lately.. It is so good.
+
+- id: test-nobody
+  expected-response:
+    response: neutral
+  vars:
+    input: nobody
+
+- id: test-unsatisfactory-service
+  expected-response:
+    response: negative
+  vars:
+    input: the service was not good enough
+
+- id: test-well-balanced-flavors
+  expected-response:
+    response: positive
+  vars:
+    input: The flavors mix well.
+
+- id: test-defence
+  expected-response:
+    response: neutral
+  vars:
+    input: defence
+
+- id: test-staff-unaware-of-location
+  expected-response:
+    response: negative
+  vars:
+    input: >-
+      He asked them where I was at and they did not know was there reply. It
+      was bad.
+
+- id: test-amazing-cookies-and-cream
+  expected-response:
+    response: positive
+  vars:
+    input: Our cookies and cream was amazing.
+
+- id: test-incomplete-comparison
+  expected-response:
+    response: neutral
+  vars:
+    input: that is unlike

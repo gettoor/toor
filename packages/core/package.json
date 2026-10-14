@@ -13,9 +13,14 @@
     "./rpe-html-renderer": {
       "types": "./dist/rpe-core/rpe-html-renderer/index.d.ts",
       "import": "./dist/rpe-core/rpe-html-renderer/index.js"
+    },
+    "./rpe-io": {
+      "types": "./dist/rpe-io/index.d.ts",
+      "import": "./dist/rpe-io/index.js"
     }
   },
   "scripts": {
+    "prebuild": "node prebuild.mjs",
     "build": "tsc",
     "clean-package": "rm -rf node_modules dist",
     "test": "jest --passWithNoTests"

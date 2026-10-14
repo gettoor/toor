@@ -29,6 +29,16 @@ export interface RPELightweightInput {
   validationDataset: RPEDataset;
 
   /**
+   * Dataset used for testing the final candidate(s).
+   */
+  testDataset: RPEDataset;
+
+  /**
+   * Additional context describing the task (prompt) and the datasets.
+   */
+  additionalContext?: string;
+
+  /**
    * Metrics to use for the evaluation.
    */
   metrics?: ScalarMetric[];

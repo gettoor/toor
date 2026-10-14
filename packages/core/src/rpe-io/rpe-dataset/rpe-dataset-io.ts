@@ -3,6 +3,7 @@ import {
   RPEIOFormat,
   readFromFile,
   readFromString,
+  writeToString,
 } from '../rpe-io-core/index.js';
 import { RPEDatasetForIO, RPEDatasetSchema } from './rpe-dataset-io-types.js';
 
@@ -53,4 +54,41 @@ function toRPEDataset(data: RPEDatasetForIO): RPEDataset {
       };
     }),
   };
+}
+
+/**
+ * Write a RPE dataset to a string.
+ * @category Reflective Prompt Evolution
+ * @param dataset - RPE dataset.
+ * @param format - Format of the data.
+ * @returns String representation of the RPE dataset.
+ */
+export function writeRPEDatasetToString(
+  dataset: RPEDataset,
+  format: RPEIOFormat,
+): string {
+  const mapped = {
+    ...dataset,
+    entries: dataset.entries.map((entry) => {
+      const {
+        datasetEntryId,
+        expectedResponse,
+        expectedResponseReasoning,
+        ...rest
+      } = entry;
+      return {
+        id: datasetEntryId,
+        ...(expectedResponse
+          ? {
+            'expected-response': {
+              response: expectedResponse,
+              reasoning: expectedResponseReasoning,
+            },
+          }
+          : {}),
+        ...rest,
+      };
+    }),
+  }
+  return writeToString(mapped, format);
 }

@@ -17,4 +17,7 @@ export default defineConfig({
       'react/jsx-runtime': 'preact/jsx-runtime',
     },
   },
+  css: {
+    devSourcemap: true,
+  }
 });

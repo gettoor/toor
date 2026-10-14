@@ -1,18 +1,21 @@
 import { cp } from 'node:fs/promises';
-import { dirname, join } from 'node:path';
+import { dirname, extname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const srcDir = join(__dirname, 'src');
 const distDir = join(__dirname, 'dist');
 
+function isTypeScriptFile(src) {
+  return ['.ts', '.tsx'].includes(extname(src));
+}
+
 async function copyResourceFiles() {
   console.log('Copying resource files...');
   await cp(srcDir, distDir, {
     recursive: true,
-    filter: (src) =>
-      src.includes('index.html') ||
-      !src.includes('.'),
+    force: true,
+    filter: (src) => !isTypeScriptFile(src)
   });
 }
 

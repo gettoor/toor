@@ -1,0 +1,433 @@
+# Contains selected examples derived from:
+#
+# CLARIN-Emo: Emotion detection in Polish
+# https://huggingface.co/datasets/clarin-knext/CLARIN-Emo
+#
+# Licensed under Creative Commons Attribution 4.0 International
+# https://creativecommons.org/licenses/by/4.0/
+#
+# The original dataset has been modified by selecting a subset and
+# transforming it into Toor's dataset format.
+
+entries:
+- id: test-wrong-diagnosis-for-twelve-years
+  expected-response:
+    response: negative
+  vars:
+    input: Przez 12 lat leczyła mnie ze złym rozpoznaniem.
+
+- id: test-improved-health-after-correct-treatment
+  expected-response:
+    response: positive
+  vars:
+    input: >-
+      Teraz jestem leczony na prawidłową chorobę, biorę odpowiednie leki i od razu czuję się
+      lepiej w porównaniu z tym co było.
+
+- id: test-hotel-birthday-party-organization
+  expected-response:
+    response: neutral
+  vars:
+    input: Organizowałam w hotelu imprezę urodzinową na 40 osób.
+
+- id: test-undisclosed-medication-pregnancy-risks
+  expected-response:
+    response: negative
+  vars:
+    input: >-
+      Na dodatek pani doktor nie raczyła poinformować mnie też, że leki, które kazała mi brać,
+      powodują uszkodzenia i zniekształcenia płodu! (na szczęście moja dziewczyna nie zaszła
+      w ciążę)
+
+- id: test-beautiful-air-max-design
+  expected-response:
+    response: positive
+  vars:
+    input: Podeszwa Air Max oraz ten srebrny kolor, coś pięknego.
+
+- id: test-electric-toothbrush-for-children
+  expected-response:
+    response: neutral
+  vars:
+    input: >-
+      Kupiłem ją dzieciom, bo ręcznymi szczoteczkami nie doczyszczały dokładnie zębów i odkładał
+      się płytka przy dziąsłach.
+
+- id: test-strong-warning
+  expected-response:
+    response: negative
+  vars:
+    input: OSTRZEGAM!!
+
+- id: test-careful-varicose-vein-surgery
+  expected-response:
+    response: positive
+  vars:
+    input: >-
+      Poprzednią nogę operował inny doktor - noga ta była dużo gorsza, więc była operowana
+      w pierwszej kolejności, nie spieszyło się doktorowi , zaznaczył szczegółowo wszystkie
+      miejsca z żylakami, a następnie je zoperował.
+
+- id: test-hotel-construction-pipeline-statistics
+  expected-response:
+    response: neutral
+  vars:
+    input: >-
+      869 hoteli ze 145 303 pokojami znajdowało się w budowie, zaawansowanym planowaniu i
+      planowaniu w styczniu br. wynika z zestawienia Global Construction Pipeline Report przygotowanego
+      przez firmę STR.
+
+- id: test-unprepared-birthday-party-dj
+  expected-response:
+    response: negative
+  vars:
+    input: >-
+      Dj którego zapewnił organizator bladego pojęcia nie miał jaka imprezę będzie prowadził,
+      był kompletnie nieprzygotowany, trzykrotnie mylił imię jubilatki, a wszelkie wcześniejsze
+      ustalenia i zapewnienia menadżera okazały się pustymi słowami.
+
+- id: test-excellent-pregnancy-doctor-care
+  expected-response:
+    response: positive
+  vars:
+    input: >-
+      Jestem pacjętką doktora od 3 lat i naprawdę jestem zadowolona jest miły kompetentny
+      do gabinetu na babanie ide na luzie bez stresu :) prowadzi mi ciążę chodzę do gabinetu
+      na św.wojciecha ale usg robiłam prywatnie w medicusie zależało mi na tym żeby zrobić
+      usg 4D i mieć pewność że wszystko jest wporządku pierwsze usg robiłam w 12 tyg było
+      ok następne w 18tyg pomierzył wszystko co trzeba powiedział że będe miała córcie ale
+      nie podobało mu się serce więc podał mi namiary na bardzo dobrego specjalistę od echa
+      serca płodu w szczecinie i miałam pojechać na wizytę w międzyczasie dowiedział się że
+      ze skierowaniem nie będę musiała płacić za badanie wypisał mi skierowanie i powiedział
+      żebym umówiła sie na wizytę w 20tyg a nastepnego dnia po wizycie w Szczecinie mam przyjść
+      do gabinetu z opisem co i jak.Po badaniu w Szczecinie doktor stwierdził że plamka jest
+      ale jest nie grożna kamień spadł mi z serca.Natępnego dnia poszłam do doktora z opisem
+      od specjalisty ze Szczecina widziałam w jego oczach tez ulge że wszytko jest wporządku.Naprawdę
+      szczerze polecam świetny doktor .
+
+- id: test-hotel-development-statistics
+  expected-response:
+    response: neutral
+  vars:
+    input: W styczniu 2012 łańcuch rozwoju obejmował 866 hoteli z 139 700 pokojami.
+
+- id: test-unavailable-promised-drinks
+  expected-response:
+    response: negative
+  vars:
+    input: >-
+      Zaledwie po 3 godzinach "zabawy" usłyszałam, ze napoi zimnych nie otrzymamy ponieważ
+      już się skończyły choć umowa zawierała informację ze mamy je bez limitu.
+
+- id: test-effective-washing-performance
+  expected-response:
+    response: positive
+  vars:
+    input: 'Zalety: dobrze pierze.'
+
+- id: test-annual-hotel-room-growth
+  expected-response:
+    response: neutral
+  vars:
+    input: W tym roku powstaje więc o 0,35 proc. hoteli i o 4 proc. pokoi więcej niż przed
+      rokiem.
+
+- id: test-disputed-party-drinks-agreement
+  expected-response:
+    response: negative
+  vars:
+    input: >-
+      Gdy następnego dnia próbowałam wyjaśnić cała sytuacje a przede wszystkim poinformować
+      o wszystkim menadżera otrzymałam informacje, ze nieprawda jest to co mówię, napoi nikt
+      nie obiecywał a żeby dodać sprawie pazura usłyszałam, ze jeden z moich gości nie uregulował
+      należności za swój pokój.
+
+- id: test-faster-capsule-endoscopy-analysis
+  expected-response:
+    response: positive
+  vars:
+    input: >-
+      "Wykorzystanie naszego oprogramowania ma umożliwić sprawną i rzetelną analizę filmów
+      wykonywanych za pośrednictwem kamerki umieszczonej w kapsułce - mówi w rozmowie z PAP
+      Dawid Jereczek z CTAdventure. - Tym samym skróci to czas potrzebny na analizę nagrania
+      i zmniejszy liczbę godzin, jakie lekarz musi na nią poświęcić".
+
+- id: test-hotel-construction-city-rankings
+  expected-response:
+    response: neutral
+  vars:
+    input: >-
+      O ile w styczniu 2012 największym placem budowy hoteli był przygotowujący się do letnich
+      igrzysk Londyn, w którym łańcuch rozwojowy obejmował 4 638 pokoi, to w styczniu br.
+      najwięcej pokoi – 4 228 - powstawało w tureckim Stambule.Drugim z największych hotelowych
+      placów budów pozostaje niezmiennie Moskwa, w której w tym roku powstaje 2 523 pokoje
+      wobec 2 228 w styczniu 2012 r.
+
+- id: test-manager-stopped-responding
+  expected-response:
+    response: negative
+  vars:
+    input: Kiedy go poinformowałam ze owy gość rachunek uregulował i mam na to dowód kontakt
+      się urwał.
+
+- id: test-reduced-medical-examination-cost
+  expected-response:
+    response: positive
+  vars:
+    input: >-
+      Jereczek uważa natomiast, że gdyby wykorzystano oprogramowanie, koszt badania mógłby
+      spaść co najmniej o połowę.
+
+- id: test-hotel-construction-by-city
+  expected-response:
+    response: neutral
+  vars:
+    input: >-
+      Więcej niż 1 000 pokoi powstaje jeszcze w Londynie – 2 181, Berlinie – 2 077 pokoi,
+      Amsterdamie – 1 775 i Wiedniu 1 061 pokoi.Zdjęcia: Największym z obiektów realizowanych
+      w Stambule jest obecnie liczący 829 pokoi i 11 tys. stóp kw. powierzchni konferencyjnej
+      Hilton Istanbul Bomonti Hotel & Conference Center.
+
+- id: test-uncomfortable-shoe-fit
+  expected-response:
+    response: negative
+  vars:
+    input: >-
+      Musiałem sobie kupić wkładki, ponieważ moja stopa leży za nisko i but uginał się u góry
+      podczas chodzenia.
+
+- id: test-more-affordable-preventive-care
+  expected-response:
+    response: positive
+  vars:
+    input: >-
+      A wtedy więcej osób będzie sobie mogło pozwolić na profilaktykę" - wyraża nadzieję rozmówca
+      PAP.
+
+- id: test-product-launch-timeline
+  expected-response:
+    response: neutral
+  vars:
+    input: >-
+      Na rynek amerykański produkt ma być wdrożony w 2020 r. a na rynek europejski - rok później.
+      „W USA patent wygasa wcześniej, w Europie możemy to zrobić dopiero rok później” - wyjaśnił.
+
+- id: test-uncomfortable-shoes
+  expected-response:
+    response: negative
+  vars:
+    input: >-
+      Nie wiem, co jeszcze powinienem napisać, buty nie są najwygodniejszymi jakie w życiu
+      miałem jednak tragedii nie ma.
+
+- id: test-clean-rooms-and-excellent-service
+  expected-response:
+    response: positive
+  vars:
+    input: Pokoje w widokiem na szlak, zawsze czyste, obsługa na najwyższym poziomie.
+
+- id: test-product-development-duration
+  expected-response:
+    response: neutral
+  vars:
+    input: Zaznaczył, że prace nad jednym produktem trwają około ośmiu lat.
+
+- id: test-doctor-not-recommended
+  expected-response:
+    response: negative
+  vars:
+    input: Przykro mi, ale nie będę polecała nikomu tego lekarza.Dip.
+
+- id: test-delicious-breakfast-and-friendly-service
+  expected-response:
+    response: positive
+  vars:
+    input: Obfite urozmaicone śniadania, Dania restauracyjne smaczne i znów przemiła obsługa.
+
+- id: test-summer-camp-dates
+  expected-response:
+    response: neutral
+  vars:
+    input: Tegoroczny obóz trwa od 5 do 26 lipca.
+
+- id: test-expensive-capsule-endoscopy
+  expected-response:
+    response: negative
+  vars:
+    input: Teraz badanie z wykorzystaniem kapsułki endoskopowej może kosztować nawet 4-5 tys.
+      zł.
+
+- id: test-good-electric-toothbrush
+  expected-response:
+    response: positive
+  vars:
+    input: Szczoteczka sam w sobie jest dobra.
+
+- id: test-third-hotel-visit
+  expected-response:
+    response: neutral
+  vars:
+    input: Byłam w tym Hotelu po raz trzeci.
+
+- id: test-weak-toothbrush-battery
+  expected-response:
+    response: negative
+  vars:
+    input: Niestety akumulator w tej szczoteczce jest słaby (technologia NiMH).
+
+- id: test-helpful-toothbrushing-timer
+  expected-response:
+    response: positive
+  vars:
+    input: Pomocny jest też timer, który zmusza niejako dzieci do dokładniejszego mycia zębów.
+
+- id: test-need-for-business-flexibility
+  expected-response:
+    response: neutral
+  vars:
+    input: Na globalnym rynku trzeba być przedsiębiorstwem dynamicznym i elastycznym.
+
+- id: test-disappointing-product-quality
+  expected-response:
+    response: negative
+  vars:
+    input: Trochę się tego spodziewałem, że nie będzie bardzo dobrze, ale oczekiwałem trochę
+      więcej.
+
+- id: test-lightweight-product
+  expected-response:
+    response: positive
+  vars:
+    input: Ale na szczęście nie jest ciężka.
+
+- id: test-low-emissions-business-strategy
+  expected-response:
+    response: neutral
+  vars:
+    input: >-
+      Nowa strategia uwzględnia unijne regulacje i plany w zakresie gospodarki niskoemisyjnej
+      i elektromobilności.
+
+- id: test-toothbrush-shuts-off-unexpectedly
+  expected-response:
+    response: negative
+  vars:
+    input: Potrafi się po prostu wyłączyć podczas mycia.
+
+- id: test-acceptable-equipment-quality
+  expected-response:
+    response: positive
+  vars:
+    input: Sprzęt nie jest zły.
+
+- id: test-stakeholder-ethical-expectations
+  expected-response:
+    response: neutral
+  vars:
+    input: >-
+      Nasi pracownicy, kontrahenci, dostawcy czy odbiorcy, a także szeroko rozumiani interesariusze,
+      oczekują jasnych deklaracji i regulacji w zakresie kwestii etycznych.
+
+- id: test-broken-screwdriver-bit
+  expected-response:
+    response: negative
+  vars:
+    input: >-
+      Myślałem, że ucierpią tylko moje walory estetyczne, jednakże przy próbie wykręcenia
+      twardego dysku z komputera na małej śrubce poległ bit oznaczony jako 3/32 (płaski śrubokręt
+      2,5mm).
+
+- id: test-excellent-spa-pool-and-breakfast
+  expected-response:
+    response: positive
+  vars:
+    input: >-
+      Pozytywne wrażenie pozostawiło SPA, przestronny basen z widokiem na jezioro i pyszne
+      śniadanie:-)
+
+- id: test-no-breakfast-experience
+  expected-response:
+    response: neutral
+  vars:
+    input: Nie mam opinii o śniadaniu ponieważ nie korzystaliśmy z niego.
+
+- id: test-poor-doctor-treatment
+  expected-response:
+    response: negative
+  vars:
+    input: >-
+      byłam u pana doktora w lutym na usg,stwierdził ciążę obumarłą,z kpiną w głosie i uśmieszkiem
+      na twarzy powiedział 'tak to jest jak jest się po trzydziestce" skierował do szpitala.po
+      łyżeczkowaniu i 1 okresie poszłam na wizytę kontrolną,a on mi na to,że mnie nie przyjmie,bo
+      im się pieniądze z funduszu skończyły i mam przyjść za 3tyg. obecnie jestem w 16tc.byłam
+      w poradni,bo od paru dni nie czułam ruchów synka(a czułam je od 2 tyg regularnie) panie
+      pielęgniarki pół godz skakały nade mną z detektorem i sprawdzały tętno,niestety nic
+      nie wyczuły.pan doktor nie zbadał mnie na usg,nawet nie obejrzał mojego brzucha...bo
+      miał wywiad do jakiejś gazety!!!!nie miał czasu!kazał tylko iść do szpitala na ostry
+      dyżur. mój mąż jest wściekły,ja zrozpaczona całą tą sytuacją.
+
+- id: test-excellent-athens-hotel
+  expected-response:
+    response: positive
+  vars:
+    input: >-
+      Doskonała łazienka, bardzo przyjemna, choć nie rozumiem, po co komu w niej telefon,
+      skoro jeden już jest przy łóżku.W sumie jest to doskonały hotel na pobyt w Atenach,
+      cena trochę ponad 100 euro za noc, ale warto.Nie zastanawiałbym sie nad innym hotelem
+      w Atenach niż ten.
+
+- id: test-incomplete-numbered-instruction
+  expected-response:
+    response: neutral
+  vars:
+    input: 'W szczególności należy zwrócić uwagę na: 1.'
+
+- id: test-hasselblad-film-limitations
+  expected-response:
+    response: negative
+  vars:
+    input: >-
+      Ma jednak kilka minusów: - trudno dostępne filmy (ja kupuję wysyłkowo w Amazon w USA,
+      ale koszty przesyłki są wysokie) - filmy Hasselblada wymagają specjalnie wyposażonej
+      ciemni jeśli fotografie mają być naprawdę dobrej jakości (to są kolejne koszty) - byłoby
+      miło, gdyby zdjęcia były zapisywane nie tylko na filmie, ale także na karcie pamięci
+      i tu pojawia się problem, bo ten sprzęt nie przetwarza cyfrowo obrazu Poza tym ok.
+
+- id: test-friendly-patent-course-lecturer
+  expected-response:
+    response: positive
+  vars:
+    input: >-
+      Kurs: Informacja Patentowa Ocena: W porządku[/b] Pan Kotarba to bardzo przyjazny i idący
+      na ręke wykładowca.
+
+- id: test-accounting-loss-explanation
+  expected-response:
+    response: neutral
+  vars:
+    input: >-
+      Strata to jest konsekwencja dokonania odpisów księgowych, podyktowanych restrukturyzacją
+      największych — historycznie problematycznych projektów oraz porządkowaniem sytuacji
+      w Grupie Kapitałowej, o czym szerzej w pkt.III poniżej.
+
+- id: test-unprofessional-hotel-staff
+  expected-response:
+    response: negative
+  vars:
+    input: >-
+      Niestety czar pryska po przekroczeniu drzwi hotelu:-( Obsługa bardzo uprzejma ale totalnie
+      nieprofesjonalna, nie sądzę by była to wyszkolona kadra hotelowa.
+
+- id: test-friendly-service-and-welcome-treats
+  expected-response:
+    response: positive
+  vars:
+    input: Obsługa była przemiła, na stole w pokoju czekały na nas słodkości (przepyszne!).
+
+- id: test-potential-investor-interest
+  expected-response:
+    response: neutral
+  vars:
+    input: >-
+      Aktualnie trwa proces weryfikacji zainteresowania potencjalnych inwestorów zakupem Sygnity
+      Business Solutions.

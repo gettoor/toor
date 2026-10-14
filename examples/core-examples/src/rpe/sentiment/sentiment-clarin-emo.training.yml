@@ -1,0 +1,270 @@
+# Contains selected examples derived from:
+#
+# CLARIN-Emo: Emotion detection in Polish
+# https://huggingface.co/datasets/clarin-knext/CLARIN-Emo
+#
+# Licensed under Creative Commons Attribution 4.0 International
+# https://creativecommons.org/licenses/by/4.0/
+#
+# The original dataset has been modified by selecting a subset and
+# transforming it into Toor's dataset format.
+
+entries:
+- id: training-two-star-rating
+  expected-response:
+    response: negative
+  vars:
+    input: 2 gwiazdki.
+
+- id: training-satisfactory-room-amenities
+  expected-response:
+    response: positive
+  vars:
+    input: Woda jest, telewizor ma ze 20 cali, wiec chyba trafiłem dobrze.
+
+- id: training-going-to-dinner
+  expected-response:
+    response: neutral
+  vars:
+    input: Schodzę na obiadokolacje.
+
+- id: training-low-hotel-rating
+  expected-response:
+    response: negative
+  vars:
+    input: Na tyle maksymalnie zasługuje ten hotel.
+
+- id: training-compact-tripod-size
+  expected-response:
+    response: positive
+  vars:
+    input: >-
+      Statyw zwraca na siebie uwagę naprawdę mikroskopijnymi wymiarami (po
+      złożeniu mieści się do plecaka).
+
+- id: training-dinner-menu-options
+  expected-response:
+    response: neutral
+  vars:
+    input: Do wyboru jest pomidorowa, sałatka, ryba i schabowy.
+
+- id: training-misleading-hotel-stars
+  expected-response:
+    response: negative
+  vars:
+    input: To, ze hotel ma 4 gwiazdki w nazwie jest żałosne.
+
+- id: training-convenient-tripod-height
+  expected-response:
+    response: positive
+  vars:
+    input: Po rozłożeniu z wysokością 125cm daje się w miarę wygodnie użytkować.
+
+- id: training-returning-to-room
+  expected-response:
+    response: neutral
+  vars:
+    input: Wracam wiec do pokoju.
+
+- id: training-incompetent-hotel-reception
+  expected-response:
+    response: negative
+  vars:
+    input: >-
+      Śmiesznie było już podczas rezerwacji, pani z recepcji nie bardzo
+      potrafiła odpowiedzieć na najprostsze pytania.
+
+- id: training-affordable-tripod-for-amateurs
+  expected-response:
+    response: positive
+  vars:
+    input: >-
+      Cena dość niska i dla amatorów wystarczy, jeżeli ktoś poszukuje sprzęt
+      pod cięższy aparat czy kamerę polecam wyższe modele (np 61).
+
+- id: training-simple-acknowledgment
+  expected-response:
+    response: neutral
+  vars:
+    input: Ok.
+
+- id: training-incorrect-hotel-room-category
+  expected-response:
+    response: negative
+  vars:
+    input: >-
+      Czyli dostałem najtańszy pokój, mimo ze zapłaciłem za podwyższony… Powrót
+      do recepcji i wyjaśnianie sprawy.
+
+- id: training-strong-conventional-energy-performance
+  expected-response:
+    response: positive
+  vars:
+    input: Kolejny dobry rok odnotował segment energetyki konwencjonalnej.
+
+- id: training-share-repurchase-resolution
+  expected-response:
+    response: neutral
+  vars:
+    input: >-
+      Zgodnie z Uchwałą nr 4 NWZA z dnia 19 sierpnia 2011 roku skupione akcje
+      własne mogą być przeznaczone na: a) umorzenie w drodze obniżenia
+      kapitału zakładowego, b) lub do dalszej ich odsprzedaży, c) lub do
+      zaoferowania ich do nabycia pracownikom Spółki lub podmiotom z nią
+      powiązanym, a to w celu realizacji programu motywacyjnego, jeżeli taki
+      zostanie uchwalony, w tym w szczególności do realizacji pracowniczych
+      programów opcji na akcje lub innych przydziałów akcji pracownikom Spółki
+      lub spółki z nią powiązanej.
+
+- id: training-wrong-hotel-wing-directions
+  expected-response:
+    response: negative
+  vars:
+    input: >-
+      Niestety pokoju nie ma, pani skierowała mnie do złego skrzydła hotelu (sa
+      cale dwa…).
+
+- id: training-rising-energy-price-opportunities
+  expected-response:
+    response: positive
+  vars:
+    input: Rosnące ceny energii stwarzają nowe możliwości w tym zakresie.
+
+- id: training-financial-amount-percentage
+  expected-response:
+    response: neutral
+  vars:
+    input: 380 mln zł tj. 68%.
+
+- id: training-repeated-hotel-reception-visits
+  expected-response:
+    response: negative
+  vars:
+    input: Wiec znów powrót do recepcji i od początku szukanie.
+
+- id: training-successful-solar-energy-auction
+  expected-response:
+    response: positive
+  vars:
+    input: >-
+      Nasza spółka rozwijająca projekty farm fotowoltaicznych o łącznej mocy
+      8MW wygrała aukcję w 2018 r.
+
+- id: training-electricity-price-increase
+  expected-response:
+    response: neutral
+  vars:
+    input: >-
+      Przez cały 2018 r. obserwowaliśmy systematyczny wzrost cen energii
+      elektrycznej na rynku spot i terminowym.
+
+- id: training-broken-hotel-air-conditioning
+  expected-response:
+    response: negative
+  vars:
+    input: W pokoju sterownik do klimatyzacji, ale oczywiście klima nie działa.
+
+- id: training-investment-program-on-schedule
+  expected-response:
+    response: positive
+  vars:
+    input: >-
+      W segmencie dystrybucji realizacja wdrożonego w 2016 roku programu
+      inwestycyjnego przebiega zgodnie z harmonogramem.
+
+- id: training-university-lecture-attendance
+  expected-response:
+    response: neutral
+  vars:
+    input: Byłem u dra Wilhelma na wykładzie i na ćwiczeniach....
+
+- id: training-poor-hotel-soundproofing
+  expected-response:
+    response: negative
+  vars:
+    input: >-
+      Całość jest tak akustyczna, ze miałem okazje wysłuchać nocnych rozmów
+      Polaków przy wódce, odgłosów rzygania, sikania i paru innych.
+
+- id: training-largest-kfc-franchisee
+  expected-response:
+    response: positive
+  vars:
+    input: >-
+      Dodatkowo AmRest stanie się również największym franczyzobiorcą marki KFC
+      w Hiszpanii.
+
+- id: training-estimated-company-net-debt
+  expected-response:
+    response: neutral
+  vars:
+    input: >-
+      Szacowany dług netto Spółki na dzień Finalizacji Umowy wynosi 32 miliony
+      EUR.
+
+- id: training-disappointing-hotel-standard
+  expected-response:
+    response: negative
+  vars:
+    input: Niestety, nazwa zapowiada standard, o który ten hotel się nie ociera.
+
+- id: training-positive-acquisition-outlook
+  expected-response:
+    response: positive
+  vars:
+    input: >-
+      AmRest spodziewa się, że przejęcie Restauravia pozytywnie wpłynie na
+      marże generowane przez AmRest i przyczyni się do zwiększenia wartości
+      dodanej dla naszych akcjonariuszy.
+
+- id: training-minority-shareholder-put-options
+  expected-response:
+    response: neutral
+  vars:
+    input: >-
+      Równocześnie akcjonariusze mniejszościowi posiadają opcje sprzedaży
+      ("Opcja Put") całości lub części udziałów.
+
+- id: training-avoid-hotel-warning
+  expected-response:
+    response: negative
+  vars:
+    input: Omijaj ten hotel szerokim łukiem!
+
+- id: training-recommended-english-teacher
+  expected-response:
+    response: positive
+  vars:
+    input: >-
+      Angielski B1/E Polecam Miałem z nią B1/E i bardzo dobrze wspominam te
+      zajęcia.
+
+- id: training-put-option-exercise-period
+  expected-response:
+    response: neutral
+  vars:
+    input: Opcja Put może być wykonana po 3 i do 6 lat od dnia Finalizacji Umowy.
+
+- id: training-unstable-tripod-construction
+  expected-response:
+    response: negative
+  vars:
+    input: >-
+      Rozczarowuje jednak słabą konstrukcją, mała stabilnością oraz dośc
+      niewygodną regulacją wysokości (nie mamy tu bowiem korbki,ale zwykła
+      śrubę).
+
+- id: training-relaxed-atmosphere
+  expected-response:
+    response: positive
+  vars:
+    input: Ogólnie totalny luz.
+
+- id: training-option-exercise-price-calculation
+  expected-response:
+    response: neutral
+  vars:
+    input: >-
+      Cena wykonania obu ww. opcji będzie równa 8,2 razy wysokości EBITDA za
+      ostatnie 12 miesięcy, skorygowana o wartość długu netto w dniu wykonania
+      opcji.

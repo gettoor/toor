@@ -2,11 +2,10 @@ import path, { dirname } from 'path';
 import { ZodError } from 'zod';
 import {
   ToorError,
-  RPEIOFormat,
   RPEDataset,
   RPEDatasetValidatorInput,
-  readRPEDatasetFromFile,
 } from '@gettoor/core';
+import { readRPEDatasetFromFile, RPEIOFormat } from '@gettoor/core/rpe-io';
 
 import { FatalError } from '../../errors/index.js';
 import { prettyZodError } from '../../zod/index.js';
