@@ -1,12 +1,15 @@
-import { dim, green, red } from '../console.js';
 import { binary, BinaryOutput } from '@gettoor/core';
+import { Styles } from '@gettoor/core/console';
 
 function printResult(result: BinaryOutput): void {
+  const resultStr = result.result
+    ? Styles.success('Passed')
+    : Styles.error('Failed');
   console.log(
-    `   ${dim('Result:')} ${result.result ? green('Passed') : red('Failed')}\n` +
-    `${dim('Reasoning:')} ${result.reasoning}`
+    `   ${Styles.muted('Result:')} ${resultStr}\n` +
+    `${Styles.muted('Reasoning:')} ${result.reasoning}`
   );
-}``
+}
 
 async function basic(): Promise<void> {
   const result = await binary({

@@ -4,19 +4,19 @@ import {
   ExperimentEvaluator,
   runExperiment,
 } from '@gettoor/core';
-import { table } from '../console.js';
+import { printTable } from '@gettoor/core/console';
 
 function printResults(results: ExperimentResult[]): void {
-  table(
+  printTable([
     ['Model', 'Parameters', 'Prompt', 'Dataset', 'Score'],
-    results.map((result) => [
+    ...results.map((result) => [
       result.modelName,
       result.parametersName,
       result.promptName,
       result.datasetName,
       result.score.scoreAsString,
     ])
-  );
+  ]);
 }
 
 async function customEvaluator(): Promise<void> {

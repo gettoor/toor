@@ -2,7 +2,7 @@
 
 import { ToorError } from '@gettoor/core';
 
-import { gray, red } from './console/index.js';
+import { Styles } from '@gettoor/core/console';
 import { FatalError } from './errors/index.js';
 import {
   Args,
@@ -71,7 +71,7 @@ async function run(): Promise<void> {
 
 run().catch((error) => {
   const printError = (message: string) => {
-    console.error(red(message));
+    console.error(Styles.error(message));
   };
 
   if (error instanceof FatalError) {
@@ -86,7 +86,7 @@ run().catch((error) => {
   if (isVerbose() && error instanceof Error) {
     const stack = error.stack;
     if (stack) {
-      printError(gray(stack));
+      printError(Styles.muted(stack));
     }
   }
   process.exit(1);

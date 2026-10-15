@@ -1,0 +1,124 @@
+entries:
+- id: validation-editor-crash-data-loss
+  expected-response:
+    response:
+      type: incident
+      priority: high
+      department: Technical Support
+  vars:
+    message: The application stopped responding while I was editing a document and I
+      lost the changes I had made during the last 20 minutes.
+
+- id: validation-block-file-downloads
+  expected-response:
+    response:
+      type: request
+      priority: low
+      department: Technical Support
+  vars:
+    message: It would be useful if project owners could prevent other users from
+      downloading attached files. Is that something you can add?
+
+- id: validation-renewal-card-declined
+  expected-response:
+    response:
+      type: incident
+      priority: high
+      department: Billing and Payments
+  vars:
+    message: My card was declined when renewing the subscription, although the same
+      card works elsewhere and has sufficient funds.
+
+- id: validation-withdraw-marketing-consent
+  expected-response:
+    response:
+      type: request
+      priority: medium
+      department: Privacy & Data Protection
+  vars:
+    message: I previously agreed to receive marketing emails, but I want to withdraw
+      that consent and stop my information being used for marketing.
+
+- id: validation-delayed-notifications
+  expected-response:
+    response:
+      type: incident
+      priority: medium
+      department: Technical Support
+  vars:
+    message: For the past two weeks, notifications sometimes arrive immediately and
+      sometimes several hours late. There does not seem to be a consistent
+      pattern.
+
+- id: validation-remove-user-license
+  expected-response:
+    response:
+      type: request
+      priority: medium
+      department: Billing and Payments
+  vars:
+    message: Please remove the extra user license from our subscription before the
+      next renewal because that employee has left the company.
+
+- id: validation-discount-sort-error
+  expected-response:
+    response:
+      type: incident
+      priority: medium
+      department: Technical Support
+  vars:
+    message: When I sort products by price, the order is wrong whenever discounted
+      products are included. This has happened every time I tested it.
+
+- id: validation-annual-account-statement
+  expected-response:
+    response:
+      type: request
+      priority: medium
+      department: Billing and Payments
+  vars:
+    message: Could you provide a statement showing all invoices and payments made on
+      our account during the previous financial year?
+
+- id: validation-customer-data-email-leak
+  expected-response:
+    response:
+      type: incident
+      priority: high
+      department: Privacy & Data Protection
+  vars:
+    message: I received an email containing another customer's name and order
+      details. I am concerned that personal information is being sent to the
+      wrong people.
+
+- id: validation-comment-timezone-label
+  expected-response:
+    response:
+      type: incident
+      priority: low
+      department: Technical Support
+  vars:
+    message: Comment timestamps show the correct time, but they do not say which
+      time zone they use. I can still read every comment and reply as usual.
+
+- id: validation-billing-history-card-brand
+  expected-response:
+    response:
+      type: request
+      priority: low
+      department: Billing and Payments
+  vars:
+    message: Could the billing history show the card brand next to the last four
+      digits? I can already tell the payments apart, this would only make them
+      easier to recognize.
+
+- id: validation-inactive-data-retention
+  expected-response:
+    response:
+      type: request
+      priority: medium
+      department: Privacy & Data Protection
+  vars:
+    message: Could you tell me how long you keep data for an inactive account before
+      it is removed? I do not need a copy of my information or any change to
+      my account.

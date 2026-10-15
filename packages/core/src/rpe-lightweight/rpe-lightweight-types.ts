@@ -1,3 +1,4 @@
+import { type JSONSchema7 } from 'json-schema';
 import { AggregationFunc } from '../math/index.js';
 import { ModelParameters } from '../llm/index.js';
 import { ModelProvider } from '../model-provider/index.js';
@@ -135,4 +136,23 @@ export interface RPELightweightInput {
    * If not provided, the default model parameters will be used.
    */
   candidateGeneratorModelParameters?: ModelParameters;
+
+  /**
+   * Schema of the structured output.
+   */
+  structuredOutputSchema?: JSONSchema7;
+
+  /**
+   * Maximum number of iterations.
+   * If not provided, the default maximum number of iterations will be used.
+   * @default {@link DEFAULT_RPE_LIGHTWEIGHT_MAXIMUM_ITERATIONS}
+   */
+  maxIterations?: number;
+
+  /**
+   * Minimum evaluation score to stop the RPE process.
+   * If not provided, the default minimum score will be used.
+   * @default {@link DEFAULT_RPE_LIGHTWEIGHT_MIN_SCORE}
+   */
+  minScore?: number;
 }

@@ -10,7 +10,7 @@ import {
   ScalarScoringScale,
   scalar,
 } from '@gettoor/core';
-import { dim } from '../console.js';
+import { Styles } from '@gettoor/core/console';
 
 function capitalize(str: string): string {
   return str.charAt(0).toUpperCase() + str.slice(1);
@@ -18,18 +18,18 @@ function capitalize(str: string): string {
 
 function printResult(result: ScalarOutput): void {
   console.log(
-    `   ${dim('Result:')} ${result.result.score}\n` +
-    `${dim('Reasoning:')} ${result.reasoning}`
+    `   ${Styles.muted('Result:')} ${result.result.score}\n` +
+    `${Styles.muted('Reasoning:')} ${result.reasoning}`
   );
 
   const metricNames = Object.keys(result.result.metrics).sort();
   if (metricNames.length > 0) {
-    console.log(`  ${dim('Metrics:')}`);
+    console.log(`  ${Styles.muted('Metrics:')}`);
     for (const name of metricNames) {
       console.log(
-        `     ${dim(capitalize(name))}: ` +
+        `     ${Styles.muted(capitalize(name))}: ` +
         `${result.result.metrics[name].normalizedScore.toFixed(2)}` +
-        ` ${dim('·')} ${result.result.metrics[name].reasoning}`
+        ` ${Styles.muted('·')} ${result.result.metrics[name].reasoning}`
       );
     }
   }

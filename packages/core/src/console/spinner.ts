@@ -1,8 +1,8 @@
-import { blue, Style } from './styles.js';
+import { Style, Styles } from './styles.js';
 
 export interface SpinnerOptions {
   prefix?: string;
-  color?: Style;
+  style?: Style;
 }
 
 export interface Spinner {
@@ -30,12 +30,12 @@ export function newSpinner(): Spinner {
       options?: SpinnerOptions,
     ) => {
       const prefix = options?.prefix ?? '';
-      const color = options?.color ?? blue;
+      const style = options?.style ?? Styles.progress;
       current = 0;
       interval = setInterval(() => {
         current = (current + 1) % characters.length;
         clearLine();
-        line = `${prefix}${color(characters[current])} ${message}`;
+        line = `${prefix}${style(characters[current])} ${message}`;
         process.stdout.write(line);
       }, 96);
     },

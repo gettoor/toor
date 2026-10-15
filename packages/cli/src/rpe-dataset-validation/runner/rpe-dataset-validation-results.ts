@@ -9,17 +9,13 @@ import {
   RPEDatasetValidatorOutput,
   RPEDatasetValidatorSplitLeak,
 } from '@gettoor/core';
-
 import {
-  gray,
-  yellow,
-  bold,
-  terminalWidth,
-  separator,
+  Styles,
   TableCell,
   printTable,
   newSection,
-} from '../../console/index.js';
+  terminalWidth,
+} from '@gettoor/core/console';
 
 const DEFAULT_WIDTH = 64;
 const width = Math.min(DEFAULT_WIDTH, terminalWidth());
@@ -41,9 +37,9 @@ export function printResults(results: RPEDatasetValidatorOutput): void {
 }
 
 function printHeader(title: string, details?: string): void {
-  process.stdout.write(yellow(bold(title)) + '\n');
+  process.stdout.write(Styles.highlight(Styles.bold(title)) + '\n');
   if (details) {
-    process.stdout.write(gray(details) + '\n');
+    process.stdout.write(Styles.muted(details) + '\n');
   }
   process.stdout.write('\n');
 }

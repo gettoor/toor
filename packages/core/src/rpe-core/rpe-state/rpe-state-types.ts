@@ -92,8 +92,8 @@ export interface RPEIteration {
  * @category Reflective Prompt Evolution
  */
 export type RPEIterationInProgress =
-  Partial<Omit<RPEIteration, 'candidateRefs'>> &
-  Pick<RPEIteration, 'candidateRefs'>;
+  Partial<Omit<RPEIteration, 'iterationNo' | 'candidateRefs'>> &
+  Pick<RPEIteration, 'iterationNo' | 'candidateRefs'>;
 
 /**
  * State of the RPE process.

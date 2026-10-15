@@ -8,7 +8,7 @@ import {
   RPEIterationInProgress,
   RPEState,
 } from '../rpe-state/index.js';
-import { buildRPEInsightsInfo } from '../rpe-insights/index.js';
+import { buildRPEInsightsInfo, RPEInsights } from '../rpe-insights/index.js';
 import { RPEInput, RPEOutput } from './rpe-types.js';
 import { RPEExecutorResponse } from '../rpe-executor/rpe-executor-types.js';
 import { RPEAggregatorOutput } from '../rpe-aggregator/index.js';
@@ -230,17 +230,23 @@ export async function optimize(
   // update state on finish
   await input.updateStateOnFinish?.(state);
 
+  // build insights
+  const insights: RPEInsights = {
+    dataset: input.dataset,
+    candidates: state.candidates,
+    aggregatedEvaluations: state.aggregatedEvaluations,
+    stopReason,
+    iterationHistory: state.iterationHistory,
+    finalCandidates: state.finalCandidates,
+    info: await buildRPEInsightsInfo(input),
+  };
+
+  // notify
+  await listeners.processCompleted?.(insights);
+
   return {
     finalCandidates: state.finalCandidates,
-    insights: {
-      dataset: input.dataset,
-      candidates: state.candidates,
-      aggregatedEvaluations: state.aggregatedEvaluations,
-      stopReason,
-      iterationHistory: state.iterationHistory,
-      finalCandidates: state.finalCandidates,
-      info: await buildRPEInsightsInfo(input),
-    },
+    insights,
   };
 }
 

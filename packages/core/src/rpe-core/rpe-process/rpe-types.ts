@@ -183,6 +183,14 @@ export interface RPEListeners {
   candidatesSelected?: (
     iteration: RPEIterationInProgress,
   ) => Promise<void>;
+
+  /**
+   * Called when the RPE process is completed.
+   * @param insights - Insights from the RPE process.
+     */
+  processCompleted?: (
+    insights: RPEInsights,
+  ) => Promise<void>;
 }
 
 /**

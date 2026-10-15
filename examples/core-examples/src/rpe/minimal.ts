@@ -43,6 +43,16 @@ async function run(): Promise<void> {
         },
       ],
     },
+    testDataset: {
+      entries: [
+        {
+          datasetEntryId: 'e3',
+          vars: {
+            input: 'The product is great. I love it!',
+          },
+        },
+      ],
+    },
     modelName: 'gemini:gemini-2.5-flash',
     modelParameters: {
       temperature: 0.0,

@@ -17,6 +17,10 @@
     "./rpe-io": {
       "types": "./dist/rpe-io/index.d.ts",
       "import": "./dist/rpe-io/index.js"
+    },
+    "./console": {
+      "types": "./dist/console/index.d.ts",
+      "import": "./dist/console/index.js"
     }
   },
   "scripts": {

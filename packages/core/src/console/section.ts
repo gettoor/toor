@@ -1,4 +1,4 @@
-import { blue, dim, reset, Style } from './styles.js';
+import { Style, Styles } from './styles.js';
 
 export interface PropertyOptions {
   nameColor?: Style;
@@ -12,7 +12,7 @@ export interface Section {
 }
 
 export function newSection(): Section {
-  const bar = blue('│') + ' ';
+  const bar = Styles.progress('│') + ' ';
   const defaultNameWidth = 16;
   const valuePrefix = bar + ' '.repeat(defaultNameWidth);
 
@@ -23,7 +23,7 @@ export function newSection(): Section {
       options: PropertyOptions = {},
     ) => {
       const nameWidth = options.nameWidth ?? defaultNameWidth;
-      const nameColor = options.nameColor ?? dim;
+      const nameColor = options.nameColor ?? Styles.muted;
       process.stdout.write(bar + nameColor((name + ': ').padStart(nameWidth)));
 
       // determine width available for value
@@ -54,12 +54,14 @@ export function newSection(): Section {
       }
 
       // print lines
-      const valueColor = options.valueColor ?? reset;
+      const valueColor = options.valueColor ?? Styles.reset;
       lines.forEach((line, idx) => {
         if (idx === 0) {
           process.stdout.write(valueColor(line) + '\n');
         } else {
-          process.stdout.write(bar + ' '.repeat(nameWidth) + valueColor(line) + '\n');
+          process.stdout.write(
+            bar + ' '.repeat(nameWidth) + valueColor(line) + '\n',
+          );
         }
       });
     },

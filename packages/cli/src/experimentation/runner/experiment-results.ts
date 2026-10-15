@@ -2,12 +2,12 @@ import {
   average,
   ExperimentResult,
 } from '@gettoor/core';
-
 import {
-  dim,
-  printTable,
   TableCell,
-} from '../../console/index.js';
+  printTable,
+  Styles,
+} from '@gettoor/core/console';
+
 import { 
   colorForNormalizedScore,
   colorForScore,
@@ -107,7 +107,7 @@ export function printModelScores(
         style: colorForNormalizedScore(modelNormalizedScore),
       },
       { 
-        value: `${modelResponseGenerationTime} ${dim('ms')}`,
+        value: `${modelResponseGenerationTime} ${Styles.muted('ms')}`,
       },
     ]);
   }
@@ -168,7 +168,7 @@ export function printPromptScores(
         value: promptScore.toString(),
         style: colorForNormalizedScore(promptNormalizedScore),
       },
-      { value: `${promptResponseGenerationTime} ${dim('ms')}` },
+      { value: `${promptResponseGenerationTime} ${Styles.muted('ms')}` },
     ]);
   }
   printTable(table);
@@ -228,7 +228,7 @@ export function printParametersScores(
         value: parameterScore.toString(),
         style: colorForNormalizedScore(parameterNormalizedScore),
       },
-      { value: `${parameterResponseGenerationTime} ${dim('ms')}` },
+      { value: `${parameterResponseGenerationTime} ${Styles.muted('ms')}` },
     ]);
   }
   printTable(table);
@@ -288,7 +288,7 @@ export function printDatasetScores(
         value: datasetScore.toString(),
         style: colorForNormalizedScore(datasetNormalizedScore),
       },
-      { value: `${datasetResponseGenerationTime} ${dim('ms')}` },
+      { value: `${datasetResponseGenerationTime} ${Styles.muted('ms')}` },
     ]);
   }
   printTable(table);

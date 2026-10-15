@@ -1,0 +1,133 @@
+entries:
+- id: test-service-connection-timeout
+  expected-response:
+    response:
+      type: incident
+      priority: high
+      department: Technical Support
+  vars:
+    message: None of our employees can connect to the service this morning. We all
+      get a connection timeout, even from different networks.
+
+- id: test-auto-archive-projects
+  expected-response:
+    response:
+      type: request
+      priority: low
+      department: Technical Support
+  vars:
+    message: Could you add an option to automatically archive completed projects
+      after a configurable number of days?
+
+- id: test-charge-after-cancellation
+  expected-response:
+    response:
+      type: incident
+      priority: high
+      department: Billing and Payments
+  vars:
+    message: I cancelled my subscription last week, but another payment was taken
+      from my account today.
+
+- id: test-invoice-legal-details
+  expected-response:
+    response:
+      type: request
+      priority: medium
+      department: Billing and Payments
+  vars:
+    message: We changed our legal entity last month. Please update the legal company
+      name and tax identification number used on future invoices.
+
+- id: test-third-party-data-sharing
+  expected-response:
+    response:
+      type: request
+      priority: medium
+      department: Privacy & Data Protection
+  vars:
+    message: Can you tell me which third-party companies receive my personal data
+      and what information is shared with each of them?
+
+- id: test-slow-search
+  expected-response:
+    response:
+      type: incident
+      priority: high
+      department: Technical Support
+  vars:
+    message: Search has become increasingly slow as we add more records. It used to
+      return results almost instantly, but now it regularly takes 15 to 30
+      seconds.
+
+- id: test-bank-transfer-switch
+  expected-response:
+    response:
+      type: request
+      priority: medium
+      department: Billing and Payments
+  vars:
+    message: Please switch the payment method for our account from the current
+      credit card to bank transfer for future invoices.
+
+- id: test-cross-workspace-products
+  expected-response:
+    response:
+      type: incident
+      priority: high
+      department: Technical Support
+  vars:
+    message: Users occasionally see products from another workspace in the
+      recommendations panel. Refreshing the page usually makes them disappear,
+      but the issue keeps coming back.
+
+- id: test-payment-not-recorded
+  expected-response:
+    response:
+      type: request
+      priority: medium
+      department: Billing and Payments
+  vars:
+    message: We made a payment three days ago, but the invoice is still marked as
+      unpaid in the portal. Could you check whether the payment was received?
+
+- id: test-profile-phone-update
+  expected-response:
+    response:
+      type: request
+      priority: medium
+      department: Technical Support
+  vars:
+    message: My profile contains an old phone number and I cannot change it myself.
+      Please replace it with the new number I provided in my account settings.
+
+- id: test-empty-state-blur
+  expected-response:
+    response:
+      type: incident
+      priority: low
+      department: Technical Support
+  vars:
+    message: The illustration on the empty tasks page looks slightly blurry. The
+      task list is sharp, and I can create and complete tasks as usual.
+
+- id: test-renewal-date-words
+  expected-response:
+    response:
+      type: request
+      priority: low
+      department: Billing and Payments
+  vars:
+    message: Could the subscription page also show the renewal date in words, such
+      as "1 March", next to the numeric date? I can already read the date that
+      is there.
+
+- id: test-cookie-settings-menu-link
+  expected-response:
+    response:
+      type: request
+      priority: low
+      department: Privacy & Data Protection
+  vars:
+    message: Could the account menu include a link to the cookie settings? I can
+      already open them from the footer, so this is only for convenience.

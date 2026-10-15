@@ -10,6 +10,8 @@ import {
 import { readRPEDatasetFromFile } from '@gettoor/core/rpe-io';
 import { renderRPEInsightsToHTML } from '@gettoor/core/rpe-html-renderer';
 
+import { consoleRPEListeners } from '../console/index.js';
+
 const dirname = path.dirname(new URL(import.meta.url).pathname);
 
 async function run(): Promise<void> {
@@ -50,12 +52,12 @@ async function run(): Promise<void> {
       temperature: 0.3,
     },
   });
+  input.listeners = consoleRPEListeners();
 
   const { insights } = await optimize(input);
-  fs.writeFile('insights.json', JSON.stringify(insights, null, 2));
 
   const html = await renderRPEInsightsToHTML(insights);
-  fs.writeFile('sentiment.html', html);
+  await fs.writeFile('sentiment.html', html);
 }
 
 run().catch(console.error);

@@ -6,7 +6,7 @@ export interface MinimumScoreRPEStopInput {
   /**
    * The minimum score to stop the RPE.
    */
-  score: number;
+  minScore: number;
 
   /**
    * The reason to stop the RPE. Default used if not provided.

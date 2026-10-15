@@ -4,11 +4,14 @@
   "description": "Evaluation and experiment examples",
   "type": "module",
   "scripts": {
+    "prebuild": "node ./prebuild.mjs",
     "build": "tsc"
   },
   "dependencies": {
     "@gettoor/cli": "workspace:^",
-    "@gettoor/core": "workspace:^"
+    "@gettoor/core": "workspace:^",
+    "ai": "^7.0.111",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "typescript": "^6.0.3"

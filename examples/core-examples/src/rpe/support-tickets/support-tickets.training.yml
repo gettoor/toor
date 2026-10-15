@@ -1,0 +1,309 @@
+entries:
+- id: training-login-server-error
+  expected-response:
+    response:
+      type: incident
+      priority: high
+      department: Technical Support
+    reasoning: >-
+      Type is incident because the user reports a login failure that is
+      already happening, not a request for a change or a new feature.
+
+      Priority is high because the user cannot log in and cannot finish their
+      work today. Login is critical functionality and it is unavailable.
+
+      Department is Technical Support because an internal server error on the
+      website is a product failure, not a billing or privacy issue.
+  vars:
+    message: I have been trying to log in for the last hour, but the website keeps
+      showing an internal server error. I need access to my account to finish
+      my work today.
+
+
+- id: training-mobile-dark-mode
+  expected-response:
+    response:
+      type: request
+      priority: low
+      department: Technical Support
+    reasoning: >-
+      Type is request because the user asks for dark mode, which is a new
+      feature.
+
+      Priority is low because it affects one user, the application can still
+      be used, and a bright interface is a cosmetic inconvenience rather than
+      a block to work.
+
+      Department is Technical Support because dark mode is a change to the
+      product interface.
+  vars:
+    message: Could you please add dark mode to the mobile application? I often use
+      it at night and the current interface is very bright.
+
+
+- id: training-duplicate-charge
+  expected-response:
+    response:
+      type: request
+      priority: high
+      department: Billing and Payments
+    reasoning: >-
+      Type is request because the user asks for a refund, which is a requested
+      change, rather than only reporting a product failure.
+
+      Priority is high because money has already been taken incorrectly and
+      the user cannot recover it without support. A duplicate charge is a
+      serious billing failure, not a minor inconvenience or a routine account
+      update that can wait.
+
+      Department is Billing and Payments because the ticket is about a
+      subscription charge and a refund.
+  vars:
+    message: I was charged twice for my subscription this month. Please refund the
+      duplicate payment.
+
+
+- id: training-invoice-company-details
+  expected-response:
+    response:
+      type: request
+      priority: medium
+      department: Billing and Payments
+    reasoning: >-
+      Type is request because the user asks to change the company name and
+      billing address on future invoices.
+
+      Priority is medium because incorrect invoice details have a meaningful
+      effect, but the user can keep working, the scope is this account, and no
+      critical functionality is unavailable. It is not low because legal
+      billing details are more than a cosmetic fix, and not high because work
+      is not blocked.
+
+      Department is Billing and Payments because the change is to invoice
+      content.
+  vars:
+    message: We need to update the company name and billing address shown on all
+      future invoices.
+
+
+- id: training-personal-data-copy
+  expected-response:
+    response:
+      type: request
+      priority: medium
+      department: Privacy & Data Protection
+    reasoning: >-
+      Type is request because the user asks for a copy of stored personal
+      information, not a report of something that has already failed.
+
+      Priority is medium because a request for all stored personal data is
+      meaningful, but it affects one person, the user can continue using the
+      service, and there is no sign that work is blocked or that many users
+      are affected. It is not low because this is more than a minor
+      inconvenience or a cosmetic issue.
+
+      Department is Privacy & Data Protection because the ticket is about
+      personal information the company stores.
+  vars:
+    message: I would like a copy of all personal information your company y stores
+      about me.
+
+
+- id: training-upload-failures
+  expected-response:
+    response:
+      type: incident
+      priority: medium
+      department: Technical Support
+    reasoning: >-
+      Type is incident because uploads are already failing and need attention.
+      The user is not asking for a change or a new feature.
+
+      Priority is medium because the failures are meaningful and affect
+      several people every day, but retrying sometimes works, so the team can
+      still continue working and the scope stays limited. It is not high
+      because uploads are not fully unavailable and there is no broader
+      outage. It is not low because a daily failure for several users is more
+      than a minor inconvenience.
+
+      Department is Technical Support because file upload is product behavior.
+  vars:
+    message: File uploads randomly fail for several members of our team. Retrying
+      sometimes works, but the issue has been happening every day this week.
+
+
+- id: training-annual-plan-switch
+  expected-response:
+    response:
+      type: request
+      priority: medium
+      department: Billing and Payments
+    reasoning: >-
+      Type is request because the user asks to change the subscription from
+      monthly to annual.
+
+      Priority is medium because changing the plan is a meaningful account
+      change, but it starts next billing period, the current plan still works,
+      and only this subscription is affected. It is not high because nothing
+      is broken and work can continue. It is not low because a plan change is
+      not a cosmetic or non-urgent convenience tweak.
+
+      Department is Billing and Payments because the ticket is about the
+      subscription plan and billing period.
+  vars:
+    message: Can you change my current monthly subscription to the annual plan
+      starting with the next billing period?
+
+
+- id: training-export-date-shift
+  expected-response:
+    response:
+      type: incident
+      priority: medium
+      department: Technical Support
+    reasoning: >-
+      Type is incident because the export feature is already producing wrong
+      dates and needs attention. The user is not asking for a new feature.
+
+      Priority is medium because incorrect dates on every export are a
+      meaningful problem, but the user can still export and keep working, and
+      the report does not show a broad outage. It is not high because critical
+      functionality is not unavailable. It is not low because wrong dates are
+      more than a cosmetic issue.
+
+      Department is Technical Support because this is a defect in the product
+      export feature.
+  vars:
+    message: The export feature produces a CSV file where dates are shifted by one
+      day. This happens on every export we have tried.
+
+
+- id: training-missing-vat-number
+  expected-response:
+    response:
+      type: request
+      priority: medium
+      department: Billing and Payments
+    reasoning: >-
+      Type is request because the user asks for a corrected invoice, which is
+      a requested change to a billing document.
+
+      Priority is medium because a missing VAT number matters for this
+      invoice, but the user can keep working and the scope is one invoice. It
+      is not high because work is not blocked and critical functionality is
+      available. It is not low because a missing tax identifier is a
+      meaningful billing correction, not a cosmetic issue.
+
+      Department is Billing and Payments because the ticket is about invoice
+      content.
+  vars:
+    message: Our invoice for September is missing our VAT number. Could you send us
+      a corrected invoice?
+
+
+- id: training-account-data-deletion
+  expected-response:
+    response:
+      type: request
+      priority: medium
+      department: Privacy & Data Protection
+    reasoning: >-
+      Type is request because the user asks for their account and personal
+      data to be deleted, which is a requested change.
+
+      Priority is medium because deleting stored personal data is meaningful,
+      but it affects one account, the user is not blocked from working, and
+      there is no breach or impact on many users. It is not low because
+      erasure of personal data is not a minor inconvenience or a cosmetic
+      request. It is not high because critical functionality is still
+      available and the scope is limited.
+
+      Department is Privacy & Data Protection because the ticket is about
+      deleting an account and the personal data stored with it.
+  vars:
+    message: Please delete my account and all personal data associated with it. I no
+      longer want my information stored by your service.
+
+
+- id: training-save-tooltip-typo
+  expected-response:
+    response:
+      type: incident
+      priority: low
+      department: Technical Support
+    reasoning: >-
+      Type is incident because the tooltip text is already wrong and needs
+      attention. The user is not asking for a new feature.
+
+      Priority is low because it affects one user, saving still works, and a
+      spelling mistake is a cosmetic issue with a minor impact on
+      productivity.
+
+      Department is Technical Support because the mistake is in the product
+      interface.
+  vars:
+    message: The tooltip that appears when I hover over the Save button says "Svae
+      changes". Saving works correctly, so this is only a spelling mistake.
+
+
+- id: training-widget-order-memory
+  expected-response:
+    response:
+      type: request
+      priority: low
+      department: Technical Support
+    reasoning: >-
+      Type is request because the user asks the dashboard to remember widget
+      order, which is a new behavior.
+
+      Priority is low because one user is affected, they can keep working by
+      rearranging the widgets, and the user says the change is not urgent. The
+      impact on productivity is minor.
+
+      Department is Technical Support because this is a change to product
+      behavior.
+  vars:
+    message: Could the dashboard remember the order I drag the widgets into? I can
+      rearrange them each time I sign in, so this is not urgent.
+
+
+- id: training-payment-email-spacing
+  expected-response:
+    response:
+      type: incident
+      priority: low
+      department: Billing and Payments
+    reasoning: >-
+      Type is incident because the confirmation email already has a formatting
+      error and needs attention. The user is not asking for a new feature.
+
+      Priority is low because the payment succeeded, the amounts are correct,
+      and an extra blank line is a cosmetic issue for one user. Work can
+      continue and the impact is minor.
+
+      Department is Billing and Payments because the email confirms a payment.
+  vars:
+    message: The payment confirmation email has an extra blank line before the
+      greeting. The payment went through and every amount in the email is
+      correct.
+
+
+- id: training-public-privacy-policy-copy
+  expected-response:
+    response:
+      type: request
+      priority: low
+      department: Privacy & Data Protection
+    reasoning: >-
+      Type is request because the user asks to be sent a copy of the public
+      privacy policy.
+
+      Priority is low because one person wants a public document for their
+      records, no personal data or account change is involved, and there is no
+      impact on productivity. It is a non-urgent request.
+
+      Department is Privacy & Data Protection because the document requested
+      is the privacy policy.
+  vars:
+    message: Could you send me a copy of your current public privacy policy for my
+      records? I am not asking for any of my personal data.

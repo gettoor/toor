@@ -1,10 +1,10 @@
-import fs from 'fs';
-import { newSpinner } from '../../console/index.js';
 import {
   RPEDatasetValidatorInput,
   RPEDatasetValidatorOutput,
   validateRPEDataset,
 } from '@gettoor/core';
+import { newSpinner } from '@gettoor/core/console';
+
 import { printResults } from './rpe-dataset-validation-results.js';
 
 export async function runRPEDatasetValidation(

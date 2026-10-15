@@ -14,7 +14,7 @@ function createState(scores?: number[]): RPEState {
 
 describe('minimumScoreRPEStop', () => {
   it('does not stop when every aggregated score is below the minimum', async () => {
-    const stop = minimumScoreRPEStop({ score: 0.8 });
+    const stop = minimumScoreRPEStop({ minScore: 0.8 });
 
     await expect(stop(createState([0.4, 0.79, 0.5]))).resolves.toEqual({
       stop: false,
@@ -22,7 +22,7 @@ describe('minimumScoreRPEStop', () => {
   });
 
   it('stops when an aggregated score equals the minimum', async () => {
-    const stop = minimumScoreRPEStop({ score: 0.8 });
+    const stop = minimumScoreRPEStop({ minScore: 0.8 });
 
     await expect(stop(createState([0.4, 0.8, 0.5]))).resolves.toEqual({
       stop: true,
@@ -31,7 +31,7 @@ describe('minimumScoreRPEStop', () => {
   });
 
   it('stops when an aggregated score exceeds the minimum', async () => {
-    const stop = minimumScoreRPEStop({ score: 0.8 });
+    const stop = minimumScoreRPEStop({ minScore: 0.8 });
 
     await expect(stop(createState([0.9]))).resolves.toEqual({
       stop: true,
@@ -40,7 +40,7 @@ describe('minimumScoreRPEStop', () => {
   });
 
   it('stops if any candidate reaches the minimum, not only the first', async () => {
-    const stop = minimumScoreRPEStop({ score: 0.75 });
+    const stop = minimumScoreRPEStop({ minScore: 0.75 });
 
     await expect(stop(createState([0.1, 0.2, 0.75]))).resolves.toEqual({
       stop: true,
@@ -49,20 +49,20 @@ describe('minimumScoreRPEStop', () => {
   });
 
   it('does not stop when the evaluation list is empty', async () => {
-    const stop = minimumScoreRPEStop({ score: 0.5 });
+    const stop = minimumScoreRPEStop({ minScore: 0.5 });
 
     await expect(stop(createState([]))).resolves.toEqual({ stop: false });
   });
 
   it('does not stop when the evaluation list is missing', async () => {
-    const stop = minimumScoreRPEStop({ score: 0.5 });
+    const stop = minimumScoreRPEStop({ minScore: 0.5 });
 
     await expect(stop(createState())).resolves.toEqual({ stop: false });
   });
 
   it('uses a custom stop reason when provided', async () => {
     const stop = minimumScoreRPEStop({
-      score: 0.5,
+      minScore: 0.5,
       stopReason: 'custom stop reason',
     });
 
@@ -74,7 +74,7 @@ describe('minimumScoreRPEStop', () => {
 
   it('does not use the custom stop reason when continuing', async () => {
     const stop = minimumScoreRPEStop({
-      score: 0.9,
+      minScore: 0.9,
       stopReason: 'custom stop reason',
     });
 
@@ -82,7 +82,7 @@ describe('minimumScoreRPEStop', () => {
   });
 
   it('formats the default stop reason to two decimal places', async () => {
-    const stop = minimumScoreRPEStop({ score: 1 });
+    const stop = minimumScoreRPEStop({ minScore: 1 });
 
     await expect(stop(createState([1]))).resolves.toEqual({
       stop: true,

@@ -5,7 +5,10 @@ import { z } from 'zod';
  */
 export const RPEDatasetEntryExpectedResponseScheme = z.object({
   response: z
-    .string()
+    .union([
+      z.record(z.string(), z.any()),
+      z.string(),
+    ])
     .describe('Expected response from a LLM model to the candidate.'),
   reasoning: z
     .string()

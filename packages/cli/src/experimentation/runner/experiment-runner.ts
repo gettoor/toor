@@ -6,15 +6,14 @@ import {
   runExperiment as runExperimentFromCore,
   sumLLMUsage,
 } from '@gettoor/core';
-
 import {
-  green,
   newSection,
   newSpinner,
   Section,
   separator,
-  dim,
-} from '../../console/index.js';
+  Styles,
+} from '@gettoor/core/console';
+
 import { colorForScore } from './experiment-styles.js';
 import { printResults } from './experiment-results.js';
 import { isVerbose } from '../../args/args.js';
@@ -70,7 +69,7 @@ export async function runExperiment(
       if (metrics.responseGenerationTime) {
         section.property(
           'Prompt generation time',
-          `${metrics.responseGenerationTime} ${dim('ms')}`,
+          `${metrics.responseGenerationTime} ${Styles.muted('ms')}`,
           {
             nameWidth: metricsNameWidth,
           }
@@ -100,7 +99,7 @@ export async function runExperiment(
       if (metrics.evaluationTime) {
         section.property(
           'Evaluation time',
-          `${metrics.evaluationTime} ${dim('ms')}`,
+          `${metrics.evaluationTime} ${Styles.muted('ms')}`,
           {
             nameWidth: metricsNameWidth,
           }
@@ -131,20 +130,20 @@ export async function runExperiment(
       }
 
       if (isVerbose()) {
-        console.log('\n' + dim('Prompt:'));
+        console.log('\n' + Styles.muted('Prompt:'));
         console.log(input.prompt);
-        console.log('\n' + dim('Response:'));
+        console.log('\n' + Styles.muted('Response:'));
         console.log(input.response + '\n');
       }
 
-      console.log(' ' + separator({ width: 32, color: dim }));
+      console.log(' ' + separator({ width: 32, style: Styles.muted }));
     },
 
     generatingResponse: async () => {
       spinner.start(
         `Generating response`,
         {
-          color: green,
+          style: Styles.progress,
           prefix: section.getValuePrefix(),
         },
       );
@@ -158,7 +157,7 @@ export async function runExperiment(
       spinner.start(
         `Running evaluation`,
         {
-          color: green,
+          style: Styles.progress,
           prefix: section.getValuePrefix(),
         },
       );

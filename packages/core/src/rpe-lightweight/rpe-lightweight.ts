@@ -26,6 +26,8 @@ import {
   DEFAULT_RPE_LIGHTWEIGHT_DEFAULT_PARALLELISM,
   DEFAULT_RPE_LIGHTWEIGHT_PASSED_EVALUATION_THRESHOLD,
   DEFAULT_RPE_LIGHTWEIGHT_CANDIDATE_GENERATOR_INSTRUCTIONS,
+  DEFAULT_RPE_LIGHTWEIGHT_MAXIMUM_ITERATIONS,
+  DEFAULT_RPE_LIGHTWEIGHT_MIN_SCORE,
 } from './rpe-lightweight-consts.js';
 import { RPELightweightInput } from './rpe-lightweight-types.js';
 
@@ -48,6 +50,10 @@ export function rpeLightweight(input: RPELightweightInput): RPEInput {
   const additionalContext = input.additionalContext;
   const parallelism = input.parallelism ??
     DEFAULT_RPE_LIGHTWEIGHT_DEFAULT_PARALLELISM;
+  const maxIterations = input.maxIterations ??
+    DEFAULT_RPE_LIGHTWEIGHT_MAXIMUM_ITERATIONS;
+  const minScore = input.minScore ??
+    DEFAULT_RPE_LIGHTWEIGHT_MIN_SCORE;
   
   const executorOutputProcessor = identityRPEExecutorOutputProcessor();
   const evaluator = singlePromptJudgeRPEEvaluator({
@@ -72,6 +78,7 @@ export function rpeLightweight(input: RPELightweightInput): RPEInput {
         explorationCount: 1,
       }),
       parallelism,
+      structuredOutputSchema: input.structuredOutputSchema,
     }),
     trainingEvaluatorParallelism: parallelism,
     trainingEvaluator: evaluator,
@@ -101,6 +108,7 @@ export function rpeLightweight(input: RPELightweightInput): RPEInput {
       ...model(input.executorModelName, input.executorModelParameters),
       dataset: input.validationDataset,
       parallelism,
+      structuredOutputSchema: input.structuredOutputSchema,
     }),
     candidateEvaluatorParallelism: parallelism,
     candidateEvaluator: evaluator,
@@ -110,8 +118,8 @@ export function rpeLightweight(input: RPELightweightInput): RPEInput {
     }),
     finalCandidateSelector: bestScoreFinalCandidateSelector(),
     stopAfterIteration: orRPEStop([
-      maximumIterationsRPEStop({ maxIterations: 16 }),
-      minimumScoreRPEStop({ score: 0.95 }),
+      maximumIterationsRPEStop({ maxIterations }),
+      minimumScoreRPEStop({ minScore }),
       patienceRPEStop({ noImprovementCount: 4, minScoreImprovement: 0.01 }),
     ]),
   }
