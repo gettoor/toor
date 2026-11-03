@@ -26,6 +26,22 @@ export interface RPEFinalCandidate {
 }
 
 /**
+ * Represents a rejected candidate of the RPE process.
+ * @category Reflective Prompt Evolution
+ */
+export interface RPERejectedCandidate {
+  /**
+   * Rejected candidate.
+   */
+  candidate: CandidateGeneratorOutputCandidate;
+
+  /**
+   * Reason for the rejection.
+   */
+  reason: string;
+}
+
+/**
  * Represents a completed iteration of the RPE process.
  * @category Reflective Prompt Evolution
  */
@@ -41,48 +57,52 @@ export interface RPEIteration {
   candidateRefs?: RPECandidateRef[];
   
   /**
-   * The responses generated for the candidates in the current iteration.
+   * Responses generated for the candidates in the current iteration.
    */
   trainingResponses: RPEExecutorResponse[];
 
   /**
-   * The evaluations of the responses in the current iteration.
+   * Evaluations of the responses in the current iteration.
    */
   trainingEvaluations: EvaluatorCandidateOutput[];
 
   /**
-   * The aggregated evaluations of the responses in the current iteration.
+   * Aggregated evaluations of the responses in the current iteration.
    */
   trainingAggregatedEvaluations: RPEAggregatorOutput[];
 
   /**
-   * The analyses of the aggregated evaluations in the current iteration.
+   * Analyses of the aggregated evaluations in the current iteration.
    */
   trainingAnalyses: RPEAnalyzerOutput[];
 
   /**
-   * The candidates generated for the candidates in the current iteration.
+   * Valid (not rejected) candidates in the current iteration.
    */
-  generatedCandidates?: CandidateGeneratorOutputCandidate[];
+  validCandidates?: CandidateGeneratorOutputCandidate[];
 
   /**
-   * The responses generated for the candidates in the current iteration.
+   * Rejected candidates in the current iteration.
+   */
+  rejectedCandidates?: RPERejectedCandidate[];
+
+  /**
+   * Responses generated for the candidates in the current iteration.
    */
   candidateResponses?: RPEExecutorResponse[];
 
   /**
-   * The evaluations of the candidate responses in the current iteration. 
+   * Evaluations of the candidate responses in the current iteration. 
    */
   candidateEvaluations?: EvaluatorCandidateOutput[];
 
   /**
-   * The aggregated evaluations of the candidate responses
-   * in the current iteration.
+   * Aggregated evaluations of the candidate responses in the current iteration.
    */
   candidateAggregatedEvaluations?: RPEAggregatorOutput[];
 
   /**
-   * References to the candidates selected for the next iteration.
+   * References to candidates selected for the next iteration.
    */
   selectedCandidateRefs?: RPECandidateRef[];
 }

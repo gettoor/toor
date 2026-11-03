@@ -6,7 +6,7 @@ import {
  * Default parallelism for the candidate generator.
  * @category Reflective Prompt Evolution
  */
-export const DEFAULT_RPE_LIGHTWEIGHT_DEFAULT_PARALLELISM = 4;
+export const DEFAULT_RPE_LIGHTWEIGHT_DEFAULT_PARALLELISM = 1;
 
 /**
  * Default threshold for the passed evaluation.

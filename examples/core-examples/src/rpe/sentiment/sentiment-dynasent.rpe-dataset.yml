@@ -2,7 +2,7 @@ datasets:
   validation:
     file: sentiment-clarin-emo.validation.yml
   train:
-    file: sentiment-clarin-emo.train.yml
+    file: sentiment-clarin-emo.training.yml
   test:
     file: sentiment-clarin-emo.test.yml
 additionalContext: |

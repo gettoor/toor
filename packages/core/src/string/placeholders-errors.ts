@@ -42,16 +42,27 @@ export class InvalidPlaceholderFormatError extends BadRequestToorError {
 export class NoValueForPlaceholderError extends NotFoundToorError {
   public static readonly CODE = 'NoValueForPlaceholderError';
 
-  public constructor(private readonly placeholders: string[]) {
+  public constructor(
+    private readonly placeholders: string[],
+    text?: string,
+  ) {
     super(
       NoValueForPlaceholderError.CODE,
       `No value provided for placeholders ` +
-      `${ToorError.quote(placeholders.join(', '))}`,
+      `${ToorError.quote(placeholders.join(', '))}` +
+      NoValueForPlaceholderError.textMessage(text),
     );
   }
 
   public getPlaceholders(): string[] {
     return [...this.placeholders];
+  }
+
+  private static textMessage(text?: string): string {
+    if (!text) {
+      return '';
+    }
+    return ` in text ${ToorError.quote(text)}`;
   }
 }
 

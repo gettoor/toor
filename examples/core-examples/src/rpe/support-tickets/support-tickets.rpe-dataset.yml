@@ -1,0 +1,13 @@
+datasets:
+  validation:
+    file: support-tickets.validation.yml
+  train:
+    file: support-tickets.training.yml
+  test:
+    file: support-tickets.test.yml
+additionalContext: |
+  The dataset contains support tickets for classification.
+modelName: gemini:gemini-3.5-flash-lite
+embeddingsModelName: gemini:gemini-embedding-001
+modelParameters:
+  temperature: 0.1

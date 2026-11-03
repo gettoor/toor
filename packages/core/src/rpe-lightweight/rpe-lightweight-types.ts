@@ -3,7 +3,12 @@ import { AggregationFunc } from '../math/index.js';
 import { ModelParameters } from '../llm/index.js';
 import { ModelProvider } from '../model-provider/index.js';
 import { ScalarMetric } from '../llm-as-a-judge/index.js';
-import { RPECandidate, RPEDataset } from '../rpe-core/index.js';
+import {
+  RPECandidate,
+  RPEDataset,
+  RPEEvaluator,
+  RPEExecutorOutputProcessor,
+} from '../rpe-core/index.js';
 import {
   SinglePromptRPECandidateGeneratorInstruction,
 } from './rpe-candidate-generator/index.js';
@@ -38,6 +43,13 @@ export interface RPELightweightInput {
    * Additional context describing the task (prompt) and the datasets.
    */
   additionalContext?: string;
+
+  /**
+   * Placeholders that each candidate must contain. A candidate is rejected
+   * if it is missing any of the placeholders, there are extra placeholders,
+   * or there are duplicates of the placeholders.
+   */
+  // validPlaceholders?: string[];
 
   /**
    * Metrics to use for the evaluation.
@@ -80,12 +92,12 @@ export interface RPELightweightInput {
   modelProvider?: ModelProvider;
 
   /**
-   * Default model name used when other model names are not provided.
+   * Model name to use.
    */
   modelName: string;
 
   /**
-   * Default model parameters used when other model parameters are not provided.
+   * Model parameters to use.
    */
   modelParameters?: ModelParameters;
 
@@ -155,4 +167,18 @@ export interface RPELightweightInput {
    * @default {@link DEFAULT_RPE_LIGHTWEIGHT_MIN_SCORE}
    */
   minScore?: number;
+
+  /**
+   * Training and candidate evaluator to use.
+   * If not provided, a single-prompt judge RPE evaluator will be used.
+   * @default {@link singlePromptJudgeRPEEvaluator}
+   */
+  evaluator?: RPEEvaluator;
+
+  /**
+   * Output processor to use for the executor.
+   * If not provided, the default output processor will be used.
+   * @default {@link identityRPEExecutorOutputProcessor}
+   */
+  executorOutputProcessor?: RPEExecutorOutputProcessor;
 }

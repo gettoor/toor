@@ -58,7 +58,7 @@ export function improvedCandidateSelector(
 
       const selectedCandidateRefs: RPECandidateRef[] = [];
       // check which candidates are improved
-      for (const { candidateRef } of state.iteration.generatedCandidates ?? []) {
+      for (const { candidateRef } of state.iteration.validCandidates ?? []) {
         const generatedCandidate = findCandidateById(candidateRef.candidateId);
         if (!generatedCandidate.parentCandidateIds) {
           throw new InternalToorError(

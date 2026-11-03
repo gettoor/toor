@@ -17,14 +17,15 @@ async function run(): Promise<void> {
     trainingDataset: {
       entries: [
         {
-          datasetEntryId: 'e0',
+          datasetEntryId: 'training-loved-product',
           vars: {
-            input: 'I absolutely loved the product. It exceeded all my expectations.',
+            input:
+              'I absolutely loved the product. It exceeded all my expectations.',
           },
           expectedResponse: 'positive',
         },
         {
-          datasetEntryId: 'e1',
+          datasetEntryId: 'training-bad-battery',
           vars: {
             input: 'The battery barely lasts an hour.',
           },
@@ -35,7 +36,7 @@ async function run(): Promise<void> {
     validationDataset: {
       entries: [
         {
-          datasetEntryId: 'e2',
+          datasetEntryId: 'validation-okay-product',
           vars: {
             input: 'The product is okay, but it could be better.',
           },
@@ -46,10 +47,11 @@ async function run(): Promise<void> {
     testDataset: {
       entries: [
         {
-          datasetEntryId: 'e3',
+          datasetEntryId: 'test-great-product',
           vars: {
             input: 'The product is great. I love it!',
           },
+          expectedResponse: 'positive',
         },
       ],
     },

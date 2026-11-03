@@ -1,57 +1,37 @@
-import fs from 'fs/promises';
 import { JSONSchema7 } from 'ai';
+import path from 'path';
 import { 
   RPECandidate,
-  RPEDataset,
   RPEInput,
-  orRPEStop,
-  maximumIterationsRPEStop,
-  minimumScoreRPEStop,
-  singlePromptLLMRPEExecutor,
-  failurePrioritizedDatasetProvider,
-  defaultRPEAggregator,
   optimize,
-  average,
-  singlePromptRPEAnalyzer,
-  singlePromptRPECandidateGenerator,
-  isCandidateImprovedByScore,
-  improvedCandidateSelector,
   buildSinglePromptCandidateModules,
-  DEFAULT_RPE_LIGHTWEIGHT_CANDIDATE_GENERATOR_INSTRUCTIONS,
-  patienceRPEStop,
-  mergeRPEDatasets,
-  SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_INSTRUCTIONS,
-  evaluateSeedCandidatesRPEStateUpdate,
-  testFinalCandidatesRPEStateUpdate,
-  bestScoreFinalCandidateSelector,
   perFieldRPEEvaluator,
   exactStringRPEFieldEvaluator,
-  stringArrayRPEFieldEvaluator,
+  stringSetRPEFieldEvaluator,
   sortStringArrayTraverseRPEExecutorOutputCallback,
   traverseRPEExecutorOutputProcessor,
-  identityRPEExecutorOutputProcessor,
+  rpeLightweight,
 } from '@gettoor/core';
-import { renderRPEInsightsToHTML } from '@gettoor/core/rpe-html-renderer';
-import {
-  TRAINING_JOB_OFFERS,
-  VALIDATION_JOB_OFFERS,
-  TEST_JOB_OFFERS,
-} from './job-offers-dataset.js';
+import { consoleRPEListeners } from '../console/index.js';
+import { readFile, writeInsightsToFile } from '../io/index.js';
+import { readRPEDatasetFromFile } from '@gettoor/core/rpe-io';
+
+const dirname = path.dirname(new URL(import.meta.url).pathname);
 
 async function run(): Promise<void> {
-  const trainingDataset: RPEDataset = {
-    entries: TRAINING_JOB_OFFERS.slice(0, 20),
-  };
-  const validationDataset: RPEDataset = {
-    entries: VALIDATION_JOB_OFFERS.slice(0, 20),
-  };
-  const testDataset: RPEDataset = {
-    entries: TEST_JOB_OFFERS.slice(0, 20),
-  };
-  const additionalContext = `
-The dataset contains job offers for software positions. Each example includes a job description.
-`;
-  
+  const trainingDataset = readRPEDatasetFromFile(
+    path.join(dirname, 'job-offers.training.yml'),
+    'yaml',
+  );
+  const validationDataset = readRPEDatasetFromFile(
+    path.join(dirname, 'job-offers.validation.yml'),
+    'yaml',
+  );
+  const testDataset = readRPEDatasetFromFile(
+    path.join(dirname, 'job-offers.test.yml'),
+    'yaml',
+  );
+ 
   const structuredOutputSchema = {
     type: 'object',
     properties: {
@@ -91,41 +71,31 @@ The dataset contains job offers for software positions. Each example includes a 
           'e.g. ["GraphQL", "Docker"]',
       },
     },
+    additionalProperties: false,
     required: ['title', 'seniority', 'role', 'requiredSkills', 'preferredSkills'],
   } satisfies JSONSchema7;
 
-  const seedPrompt: RPECandidate = {
-    modules: buildSinglePromptCandidateModules(
-      'Given the below description of a software job offer, ' +
-      'classify the title, seniority, role, required skills, and preferred skills\n\n' +
-      'Description:\n{{jobDescription}}\n\n'
-    ),
+  const seedPrompt = await readFile(
+    dirname,
+    'job-offers-seed-prompt.md',
+  );
+  const seedInputs = await readFile(
+    dirname,
+    'job-offers-seed-inputs.md',
+  );
+  const seedCandidate: RPECandidate = {
+    modules: buildSinglePromptCandidateModules({
+      prompt: seedPrompt,
+      inputs: seedInputs,
+    }),
     candidateId: 'seed',
   };
 
-  // const evaluator = singlePromptJudgeRPEEvaluator({
-  //   modelName: 'gemini:gemini-3.5-flash-lite',
-  //   modelParameters: {
-  //     temperature: 0.3,
-  //   },
-  //   metrics: [
-  //     SCALAR_METRIC_RELEVANCE,
-  //     SCALAR_METRIC_GRAMMAR,
-  //     SCALAR_METRIC_COHERENCE,
-  //     SCALAR_METRIC_HELPFULNESS,
-  //   ],
-  // });
+  const additionalContext = await readFile(
+    dirname,
+    'job-offers-additional-context.md',
+  );
 
-  /*
-              "mid": 11,
-              "senior": 9,
-              "junior": 5,
-              "lead": 2,
-              "staff": 2,
-              "principal": 1
-
-  */
-  
   const executorOutputProcessor = traverseRPEExecutorOutputProcessor({
     onResponseArray: sortStringArrayTraverseRPEExecutorOutputCallback(),
   });
@@ -147,118 +117,32 @@ The dataset contains job offers for software positions. Each example includes a 
           return mapping[value] ?? value;
         },
       }),
-      requiredSkills: stringArrayRPEFieldEvaluator({
-        sort: (strings) => strings.sort(),
-      }),
-      preferredSkills: stringArrayRPEFieldEvaluator({
-        sort: (strings) => strings.sort(),
-      }),
+      requiredSkills: stringSetRPEFieldEvaluator({}),
+      preferredSkills: stringSetRPEFieldEvaluator({}),
     },
   });
 
-/*
-              "backend": 5,
-              "frontend": 4,
-              "fullstack": 2,
-              "devops": 3,
-              "data": 3,
-              "ml": 1,
-              "qa": 2,
-              "mobile": 3,
-              "cloud": 1,
-              "security": 1,
-              "platform": 2,
-              "embedded": 1,
-              "database": 1,
-              "game": 1
-
-*/
-
-  const input: RPEInput = {
-    seed: [seedPrompt],
-    dataset: mergeRPEDatasets(trainingDataset, validationDataset, testDataset),
+  const input: RPEInput = rpeLightweight({
+    seed: [seedCandidate],
+    trainingDataset: trainingDataset,
+    validationDataset: validationDataset,
+    testDataset: testDataset,
+    additionalContext,
+    modelName: 'gemini:gemini-3.5-flash-lite',
+    // modelName: 'openai:gpt-5-nano',
+    // modelName: 'openai:gpt-6-luna',
+    modelParameters: {
+      // temperature: 0.3,
+    },
+    structuredOutputSchema,
+    minScore: 1.0,
+    evaluator,
     executorOutputProcessor,
-    trainingExecutor: singlePromptLLMRPEExecutor({
-      modelName: 'gemini:gemini-2.5-flash',
-      modelParameters: {
-        temperature: 0.0,
-      },
-      // dataset: epochBatchShuffledDatasetProvider(trainingDataset, 5),
-      dataset: failurePrioritizedDatasetProvider({
-        dataset: trainingDataset,
-        persistentFailureCount: 5,
-        newFailureCount: 3,
-        passedCount: 1,
-        explorationCount: 1,
-      }),
-      parallelism: 8,
-      structuredOutputSchema,
-    }),
-    trainingEvaluatorParallelism: 8,
-    trainingEvaluator: evaluator,
-    aggregatorParallelism: 8,
-    aggregator: defaultRPEAggregator({
-      aggregationFunc: average,
-      passedEvaluationThreshold: 0.95,
-    }),
-    analyzerParallelism: 8,
-    analyzer: singlePromptRPEAnalyzer({
-      modelName: 'gemini:gemini-3.5-flash-lite',
-      modelParameters: {
-        temperature: 0.3,
-      },
-      additionalContext,
-    }),
-    candidateGenerator: singlePromptRPECandidateGenerator({
-      parallelism: 8,
-      modelName: 'gemini:gemini-3.5-flash-lite',
-      modelParameters: {
-        temperature: 0.7,
-      },
-      additionalContext,
-      candidateInstructions:
-      // DEFAULT_RPE_LIGHTWEIGHT_CANDIDATE_GENERATOR_INSTRUCTIONS,
-      [SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_INSTRUCTIONS.defaultInstruction],
-    }),
-    candidateExecutor: singlePromptLLMRPEExecutor({
-      modelName: 'gemini:gemini-2.5-flash',
-      modelParameters: {
-        temperature: 0.0,
-      },
-      dataset: validationDataset,
-      parallelism: 8,
-      structuredOutputSchema,
-    }),
-    candidateEvaluatorParallelism: 8,
-    candidateEvaluator: evaluator,
-    candidateSelector: improvedCandidateSelector({
-      isCandidateImproved: isCandidateImprovedByScore,
-      selectParentCandidatesIfBetter: true,
-    }),
-    finalCandidateSelector: bestScoreFinalCandidateSelector(),
-    stopAfterIteration: orRPEStop([
-      maximumIterationsRPEStop({ maxIterations: 16 }),
-      minimumScoreRPEStop({ minScore: 0.975 }),
-      patienceRPEStop({ noImprovementCount: 4, minScoreImprovement: 0.01 }),
-    ]),
-  };
-
-  input.initializeState = evaluateSeedCandidatesRPEStateUpdate(input);
-  input.updateStateOnFinish = testFinalCandidatesRPEStateUpdate({
-    testDataset,
-    executorOutputProcessor,
-    executor: input.candidateExecutor,
-    evaluatorParallelism: input.candidateEvaluatorParallelism!,
-    evaluator: input.candidateEvaluator,
-    aggregatorParallelism: input.aggregatorParallelism!,
-    aggregator: input.aggregator,
   });
+  input.listeners = consoleRPEListeners();
 
   const { insights } = await optimize(input);
-  fs.writeFile('insights.json', JSON.stringify(insights, null, 2));
-
-  const html = await renderRPEInsightsToHTML(insights);
-  fs.writeFile('support-tickets.html', html);
+  await writeInsightsToFile(insights, 'job-offers');
 }
 
 run().catch(console.error);

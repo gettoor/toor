@@ -47,7 +47,8 @@ export async function binary(input: BinaryInput): Promise<BinaryOutput> {
         reasoning: z
           .string()
           .describe('The reasoning for the evaluation'),
-      }),
+      })
+      .strict(),
     }),
   });
 

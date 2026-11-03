@@ -1,10 +1,10 @@
 import { RPECandidate } from '../rpe-candidate/index.js';
+import { RPEIterationInProgress, RPEState } from './rpe-state-types.js';
 import {
   CandidateNotFoundError,
   GeneratedCandidateNotFoundError,
 } from './rpe-state-errors.js';
 import { CandidateGeneratorOutputCandidate } from '../rpe-process/index.js';
-import { RPEState } from './rpe-state-types.js';
 
 /**
  * Finds a candidate by its identifier.
@@ -38,7 +38,7 @@ export function findGeneratedCandidateById(
   candidateId: string,
 ): CandidateGeneratorOutputCandidate {
   const allGeneratedCandidates = state.iterationHistory.flatMap(itr => {
-    return itr.generatedCandidates ?? [];
+    return itr.validCandidates ?? [];
   });
   const candidate = allGeneratedCandidates.find(itr => {
     return itr.candidateRef.candidateId === candidateId;
@@ -83,4 +83,21 @@ export function findCandidateAncestorsById(
   collectAncestors(findCandidateById(state, candidateId));
 
   return ancestors;
+}
+
+/**
+ * Gets all the generated candidates from an iteration.
+ * @category Reflective Prompt Evolution
+ * @param iteration - Iteration to get the generated candidates from.
+ * @returns Generated candidates.
+ */
+export function getGeneratedCandidates(
+  iteration: RPEIterationInProgress,
+): CandidateGeneratorOutputCandidate[] {
+  return [
+    ...(iteration.validCandidates ?? []),
+    ...(iteration.rejectedCandidates ?? []).map(rejectedCandidate => {
+      return rejectedCandidate.candidate;
+    }),
+  ];
 }

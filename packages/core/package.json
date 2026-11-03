@@ -24,7 +24,7 @@
     }
   },
   "scripts": {
-    "prebuild": "node prebuild.mjs",
+    "prebuild": "node ./prebuild.mjs",
     "build": "tsc",
     "clean-package": "rm -rf node_modules dist",
     "test": "jest --passWithNoTests"

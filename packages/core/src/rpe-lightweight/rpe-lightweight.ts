@@ -1,10 +1,14 @@
+import { findUniquePlaceholders } from '../string/index.js';
 import { average } from '../math/index.js';
 import { ModelParameters } from '../llm/index.js';
 import {
+  RPECandidateValidator,
   RPEInput,
   bestScoreFinalCandidateSelector,
+  compositeRPECandidateValidator,
   defaultRPEAggregator,
   evaluateSeedCandidatesRPEStateUpdate,
+  exactPlaceholdersRPECandidateValidator,
   failurePrioritizedDatasetProvider,
   identityRPEExecutorOutputProcessor,
   improvedCandidateSelector,
@@ -12,14 +16,17 @@ import {
   maximumIterationsRPEStop,
   mergeRPEDatasets,
   minimumScoreRPEStop,
+  noPlaceholdersRPECandidateValidator,
   orRPEStop,
   patienceRPEStop,
+  semanticRPECandidateValidator,
   testFinalCandidatesRPEStateUpdate,
 } from '../rpe-core/index.js';
 import { singlePromptLLMRPEExecutor } from './rpe-executor/index.js';
 import { singlePromptJudgeRPEEvaluator } from './rpe-evaluator/index.js';
 import { singlePromptRPEAnalyzer } from './rpe-analyzer/index.js';
 import {
+  SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_INSTRUCTIONS,
   singlePromptRPECandidateGenerator,
 } from './rpe-candidate-generator/index.js';
 import {
@@ -54,9 +61,11 @@ export function rpeLightweight(input: RPELightweightInput): RPEInput {
     DEFAULT_RPE_LIGHTWEIGHT_MAXIMUM_ITERATIONS;
   const minScore = input.minScore ??
     DEFAULT_RPE_LIGHTWEIGHT_MIN_SCORE;
+  // const validPlaceholders = input.validPlaceholders;
   
-  const executorOutputProcessor = identityRPEExecutorOutputProcessor();
-  const evaluator = singlePromptJudgeRPEEvaluator({
+  const executorOutputProcessor = input.executorOutputProcessor ??
+    identityRPEExecutorOutputProcessor();
+  const evaluator = input.evaluator ?? singlePromptJudgeRPEEvaluator({
     ...model(input.evaluatorModelName, input.evaluatorModelParameters),
     metrics: input.metrics,
   });
@@ -101,9 +110,11 @@ export function rpeLightweight(input: RPELightweightInput): RPEInput {
       ),
       candidateInstructions: input.candidateInstructions ??
         DEFAULT_RPE_LIGHTWEIGHT_CANDIDATE_GENERATOR_INSTRUCTIONS,
+        // [SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_INSTRUCTIONS.defaultInstruction],
       additionalContext,
-      parallelism,
+      parallelism: 1,
     }),
+    candidateValidator: createCandidateValidator(input),
     candidateExecutor: singlePromptLLMRPEExecutor({
       ...model(input.executorModelName, input.executorModelParameters),
       dataset: input.validationDataset,
@@ -136,4 +147,56 @@ export function rpeLightweight(input: RPELightweightInput): RPEInput {
   });  
 
   return rpeInput;
+}
+
+function createCandidateValidator(
+  input: RPELightweightInput,
+): RPECandidateValidator | undefined {
+  const { additionalContext } = input;
+  const validators: RPECandidateValidator[] = [];
+
+  const validPlaceholdersPerModule: Record<string, string[]> = {};
+  const modulesWithoutPlaceholders: string[] = [];
+
+  const seed0 = input.seed[0];
+  Object.keys(seed0.modules).forEach((moduleKey) => {
+    const module = seed0.modules[moduleKey];
+    const placeholders = findUniquePlaceholders(module.content);
+
+    if (placeholders.length) {
+      validPlaceholdersPerModule[moduleKey] = placeholders;
+    } else {
+      modulesWithoutPlaceholders.push(moduleKey);
+    }
+  });
+
+
+  if (Object.keys(validPlaceholdersPerModule).length) {
+    validators.push(
+      exactPlaceholdersRPECandidateValidator({ validPlaceholdersPerModule }),
+    );
+  }
+  if (modulesWithoutPlaceholders.length) {
+    validators.push(
+      noPlaceholdersRPECandidateValidator({ modulesWithoutPlaceholders }),
+    );
+  }
+
+  if (additionalContext) {
+    validators.push(
+      semanticRPECandidateValidator(
+        {
+          contract: additionalContext,
+          modelName: input.modelName,
+          modelProvider: input.modelProvider,
+          modelParameters: input.modelParameters,
+        },
+      ),
+    );
+  }
+
+  if (!validators.length) {
+    return undefined;
+  }
+  return compositeRPECandidateValidator({ validators });
 }

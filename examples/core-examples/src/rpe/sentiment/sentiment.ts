@@ -6,11 +6,12 @@ import {
   optimize,
   buildSinglePromptCandidateModules,
   rpeLightweight,
+  exactStringRPEEvaluator,
 } from '@gettoor/core';
 import { readRPEDatasetFromFile } from '@gettoor/core/rpe-io';
-import { renderRPEInsightsToHTML } from '@gettoor/core/rpe-html-renderer';
 
 import { consoleRPEListeners } from '../console/index.js';
+import { readFile, writeInsightsToFile } from '../io/index.js';
 
 const dirname = path.dirname(new URL(import.meta.url).pathname);
 
@@ -28,36 +29,38 @@ async function run(): Promise<void> {
     'yaml',
   );
 
-  const additionalContext =
-    'Valid responses are exactly positive, negative, or neutral.\n' +
-    'Return exactly one lowercase label with no additional text.\n' +
-    'All three labels remain valid even if a particular training or ' +
-    'reflection minibatch contains only a subset of them.';
-
-  const seedPrompt: RPECandidate = {
-    modules: buildSinglePromptCandidateModules(
-      'What is the sentiment of the following input\n\n{{input}}'
-    ),
+  const seedPrompt = await readFile(
+    dirname,
+    'sentiment-seed-prompt.md',
+  );
+  const seedCandidate: RPECandidate = {
+    modules: buildSinglePromptCandidateModules(seedPrompt),
     candidateId: 'seed',
   };
 
+  const additionalContext = await readFile(
+    dirname,
+    'sentiment-additional-context.md',
+  );
+  const evaluator = exactStringRPEEvaluator();
+
   const input: RPEInput = rpeLightweight({
-    seed: [seedPrompt],
+    seed: [seedCandidate],
     trainingDataset: trainingDataset,
     validationDataset: validationDataset,
     testDataset: testDataset,
     additionalContext,
     modelName: 'gemini:gemini-3.5-flash-lite',
+    // modelName: 'openai:gpt-6.1-sol',
     modelParameters: {
-      temperature: 0.3,
+      // temperature: 0.3,
     },
+    evaluator,
   });
   input.listeners = consoleRPEListeners();
 
   const { insights } = await optimize(input);
-
-  const html = await renderRPEInsightsToHTML(insights);
-  await fs.writeFile('sentiment.html', html);
+  await writeInsightsToFile(insights, 'sentiment');
 }
 
 run().catch(console.error);

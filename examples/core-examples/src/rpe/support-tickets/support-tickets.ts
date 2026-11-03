@@ -7,9 +7,13 @@ import {
   optimize,
   buildSinglePromptCandidateModules,
   rpeLightweight,
+  perFieldRPEEvaluator,
+  exactStringRPEFieldEvaluator,
 } from '@gettoor/core';
 import { readRPEDatasetFromFile } from '@gettoor/core/rpe-io';
-import { renderRPEInsightsToHTML } from '@gettoor/core/rpe-html-renderer';
+
+import { consoleRPEListeners } from '../console/index.js';
+import { readFile, writeInsightsToFile } from '../io/index.js';
 
 const dirname = path.dirname(new URL(import.meta.url).pathname);
 
@@ -25,11 +29,6 @@ async function run(): Promise<void> {
   const testDataset = readRPEDatasetFromFile(
     path.join(dirname, 'support-tickets.test.yml'),
     'yaml',
-  );
-
-  const additionalContext = await fs.readFile(
-    path.join(dirname, 'support-tickets-additional-context.md'),
-    'utf8',
   );
 
   const structuredOutputSchema = {
@@ -58,14 +57,27 @@ async function run(): Promise<void> {
     required: ['type', 'priority', 'department'],
   } satisfies JSONSchema7;
 
-  const seedPrompt = await fs.readFile(
-    path.join(dirname, 'support-tickets-additional-seed-prompt.md'),
-    'utf8',
+  const seedPrompt = await readFile(
+    dirname,
+    'support-tickets-additional-seed-prompt.md',
   );
   const seedCandidate: RPECandidate = {
     modules: buildSinglePromptCandidateModules(seedPrompt),
     candidateId: 'seed',
   };
+
+  const additionalContext = await readFile(
+    dirname,
+    'support-tickets-additional-context.md',
+  );
+
+  const evaluator = perFieldRPEEvaluator({
+    evaluators: {
+      type: exactStringRPEFieldEvaluator(),
+      priority: exactStringRPEFieldEvaluator(),
+      department: exactStringRPEFieldEvaluator(),
+    },
+  });  
 
   const input: RPEInput = rpeLightweight({
     seed: [seedCandidate],
@@ -79,12 +91,12 @@ async function run(): Promise<void> {
     },
     structuredOutputSchema,
     minScore: 1.0,
+    evaluator,
   });  
+  input.listeners = consoleRPEListeners();
 
   const { insights } = await optimize(input);
-
-  const html = await renderRPEInsightsToHTML(insights);
-  await fs.writeFile('support-tickets.html', html);
+  await writeInsightsToFile(insights, 'support-tickets');
 }
 
 run().catch(console.error);

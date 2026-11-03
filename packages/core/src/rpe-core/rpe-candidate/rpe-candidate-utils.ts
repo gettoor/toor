@@ -1,9 +1,13 @@
 import { InternalToorError } from '../../errors/index.js';
-import { PROMPT_MODULE_NAME } from './rpe-candidate-consts.js';
+import {
+  INPUTS_MODULE_NAME,
+  PROMPT_MODULE_NAME,
+} from './rpe-candidate-consts.js';
 import {
   RPECandidate,
   RPECandidateModules,
   RPECandidateRef,
+  RPESinglePromptCandidateInput,
 } from './rpe-candidate-types.js';
 
 /**
@@ -27,13 +31,44 @@ export function candidateRefFromCandidate(
  * @returns Candidate modules with a single prompt module.
  */
 export function buildSinglePromptCandidateModules(
-  prompt: string,
+  prompt: string | RPESinglePromptCandidateInput,
 ): RPECandidateModules {
+  if (typeof prompt === 'string') {
+    return {
+      [PROMPT_MODULE_NAME]: {
+        content: prompt,
+      },
+    }
+  }
   return {
     [PROMPT_MODULE_NAME]: {
-      content: prompt,
+      content: prompt.prompt,
     },
+    ...(prompt.inputs
+      ? {
+        [INPUTS_MODULE_NAME]: {
+          content: prompt.inputs,
+        },
+      }
+      : {}
+    ),
   }
+}
+
+/**
+ * Builds a prompt from a single prompt candidate.
+ * @category Reflective Prompt Evolution
+ * @param candidate - Candidate to build a prompt from.
+ * @returns Prompt from the candidate.
+ */
+export function buildPromptFromSinglePromptCandidate(
+  candidate: RPECandidate,
+): string {
+  let prompt = requireSinglePromptCandidateModule(candidate.modules);
+  if (candidate.modules[INPUTS_MODULE_NAME]) {
+    prompt += candidate.modules[INPUTS_MODULE_NAME].content;
+  }
+  return prompt;
 }
 
 /**
@@ -45,16 +80,10 @@ export function buildSinglePromptCandidateModules(
 export function requireSinglePromptCandidateModule(
   modules: RPECandidateModules,
 ): string {
-  const keys = Object.keys(modules);
-  if (keys.length !== 1) {
-    throw new InternalToorError(
-      'Candidate must have exactly one module for single prompt candidate'
-    );
-  }
-  if (keys[0] !== PROMPT_MODULE_NAME) {
+  if (modules[PROMPT_MODULE_NAME] === undefined) {
     throw new InternalToorError(
       `Candidate must have a ${PROMPT_MODULE_NAME} module ` +
-      `for single prompt candidate`
+      `for single prompt candidate`,
     );
   }
   return modules[PROMPT_MODULE_NAME].content;

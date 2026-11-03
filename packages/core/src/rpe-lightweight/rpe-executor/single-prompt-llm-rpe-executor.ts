@@ -1,4 +1,4 @@
-import { generateText, jsonSchema, JSONSchema7, Output } from 'ai';
+import { generateText, JSONSchema7 } from 'ai';
 
 import { replacePlaceholders } from '../../string/index.js';
 import { runParallelBatchesOrThrow } from '../../concurrency/index.js';
@@ -13,13 +13,13 @@ import {
   modelParametersToRPEInfo,
   RPEDatasetEntry,
   candidateRefFromCandidate,
-  requireSinglePromptCandidateModule,
   RPECandidate,
   RPEExecutor,
   RPEExecutorInfo,
   RPEExecutorInput,
   RPEExecutorResponse,
   RPEState,
+  buildPromptFromSinglePromptCandidate,
 } from '../../rpe-core/index.js';
 import {
   SinglePromptLLMRPEExecutorInput,
@@ -103,7 +103,7 @@ async function generateResponse(
 ): Promise<RPEExecutorResponse> {
   // build prompt
   const prompt = replacePlaceholders(
-    requireSinglePromptCandidateModule(candidate.modules),
+    buildPromptFromSinglePromptCandidate(candidate),
     datasetEntry.vars,
   );
 
@@ -127,6 +127,9 @@ async function generateResponse(
           outputTokens: response.usage.outputTokens,
         },
       ],
+    },
+    metadata: {
+      prompt: prompt.text,
     },
   };  
 }

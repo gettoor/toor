@@ -101,8 +101,22 @@ export interface ModelParameters {
    * resulting in more varied output.
    */
   frequencyPenalty?: number;
-}
 
+  /**
+   * Maximum number of retries.
+   */
+  maxRetries?: number;
+
+  /**
+   * Timeout in milliseconds. 
+   */
+  timeoutMs?: number;
+
+  /**
+   * Map the model parameters to a new set of parameters.
+   */
+  map?: (parameters: ModelParameters) => ModelParameters;
+}
 
 /**
  * A language model.

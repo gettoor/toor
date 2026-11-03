@@ -1,5 +1,4 @@
 import { isObject, isFunction } from '../../lang/index.js';
-import { average } from '../../math/index.js';
 import { candidateRefFromCandidate } from '../rpe-candidate/index.js';
 import { InvalidRPEResponseTypeError } from '../rpe-core/index.js';
 import { InvalidRPEExpectedResponseTypeError } from '../rpe-dataset/index.js';
@@ -12,6 +11,7 @@ import {
   PerFieldRPEEvaluatorFieldEvaluatorOutput,
   PerFieldRPEEvaluatorInput,
 } from './per-field-rpe-evaluator-types.js';
+import { MetricResult } from '../../index.js';
 
 export function perFieldRPEEvaluator(
   input: PerFieldRPEEvaluatorInput,
@@ -54,6 +54,7 @@ export function perFieldRPEEvaluator(
       // aggregate the outputs
       const score = scoreAggregator(outputs);
       const reasoning = reasoningAggregator(outputs);
+      const metrics = aggregateMetrics(outputs);
 
       return {
         candidateRef: candidateRefFromCandidate(candidate),
@@ -61,6 +62,7 @@ export function perFieldRPEEvaluator(
         response,
         score,
         reasoning,
+        metrics,
       };
     },
 
@@ -117,10 +119,9 @@ async function traverse(
   // array
   if (Array.isArray(response)) {
     for (let index = 0; index < response.length; index++) {
-      const fieldIndex = `[${index}]`;
       const field = parentField.length > 0
-        ? `${parentField}[${fieldIndex}]`
-        : `[${fieldIndex}]`;
+        ? `${parentField}[${index}]`
+        : `[${index}]`;
       const value = response[index];
       const expectedValue = expectedResponse?.[index];
       const evaluator = evaluators[index];
@@ -156,6 +157,20 @@ function defaultReasoningAggregator(
   outputs: PerFieldRPEEvaluatorFieldEvaluatorOutput[],
 ): string {
   return outputs
-    .map(output => `${output.field}: ${output.reasoning}`)
+    .map(output => output.reasoning)
     .join('\n');
+}
+
+function aggregateMetrics(
+  outputs: PerFieldRPEEvaluatorFieldEvaluatorOutput[],
+): Record<string, MetricResult> {
+  return outputs.reduce(
+    (acc, output) => {
+      if (output.metrics) {
+        Object.assign(acc, output.metrics);
+      }
+      return acc;
+    },
+    {},
+  );
 }

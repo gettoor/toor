@@ -7,6 +7,7 @@ export * from './rpe-evaluator/index.js';
 export * from './rpe-aggregator/index.js';
 export * from './rpe-analyzer/index.js';
 export * from './rpe-candidate-generator/index.js';
+export * from './rpe-candidate-validator/index.js';
 export * from './rpe-candidate-selector/index.js';
 export * from './rpe-state/index.js';
 export * from './rpe-dataset-provider/index.js';

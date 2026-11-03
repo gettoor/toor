@@ -32,6 +32,7 @@ export interface CandidateDetailsData {
   trainingAggregatedEvaluation?: RPEAggregatorOutput;
   trainingAnalysis?: RPEAnalyzerOutput;
   finalAggregatedEvaluation?: RPEAggregatorOutput;
+  rejectionReason?: string;
 }
 
 export interface CandidateDetailsProps {
@@ -51,6 +52,10 @@ export function CandidateDetails(props: CandidateDetailsProps) {
     moreCandidateChanges,
     setMoreCandidateChanges,
   ] = useLocalStorage(false, 'moreCandidateChanges');
+  const [
+    moreRejectionReason,
+    setMoreRejectionReason,
+  ] = useLocalStorage(false, 'moreRejectionReason');
 
   const renderMetadataSummary = () => {
     const keys = Object.keys(data?.candidate.metadata ?? {});
@@ -138,6 +143,17 @@ export function CandidateDetails(props: CandidateDetailsProps) {
                   candidateId={data!.candidate.candidateId}
                   changes={data!.changes}
                 />
+              </ExpandableSection.Details>
+            </ExpandableSection>
+          }
+          { data?.rejectionReason &&
+            <ExpandableSection
+              title='Rejection Reason'
+              expanded={moreRejectionReason}
+              onToggle={() => { setMoreRejectionReason(!moreRejectionReason); }}
+            >
+              <ExpandableSection.Details>
+                <div className='text-muted'>{ data.rejectionReason }</div>
               </ExpandableSection.Details>
             </ExpandableSection>
           }

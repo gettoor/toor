@@ -1,3 +1,4 @@
+import * as YAML from 'yaml';
 import { ModelParameters } from '../../llm/index.js';
 import { 
   RPEPropertyValue,
@@ -18,6 +19,15 @@ export function rpePropertyIfDef(
     return [];
   }
   return [{ key, value, description }];
+}
+
+export function objectToRPEPropertyValue(
+  object: Record<string, any> | undefined,
+): RPEPropertyValue {
+  if (!object) {
+    return '-';
+  }
+  return YAML.stringify(object);
 }
 
 export function modelParametersToRPEInfo(

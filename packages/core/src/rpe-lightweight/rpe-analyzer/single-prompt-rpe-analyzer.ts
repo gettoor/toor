@@ -89,7 +89,6 @@ export function singlePromptRPEAnalyzer(
           schema: SinglePromptRPEAnalyzerOutputSchema,
         })
       });
-      
 
       const failedExampleAnalysis = output.failedExampleAnalysis
         .filter((_, index) => {
@@ -120,6 +119,9 @@ export function singlePromptRPEAnalyzer(
               outputTokens: usage.outputTokens,
             },
           ],
+        },
+        metadata: {
+          prompt: prompt.text,
         },
       };
     },

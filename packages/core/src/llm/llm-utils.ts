@@ -1,9 +1,10 @@
 import {
-  CallSettings,
   JSONSchema7,
   generateText,
   Output,
   jsonSchema,
+  LanguageModelCallOptions,
+  RequestOptions,
 } from 'ai';
 import { LLMModelUsage, LLMUsage, ModelParameters } from './llm-types.js';
 
@@ -40,8 +41,11 @@ function ifDefined<T>(
 }
 
 export function buildModelCallSettings(
-  modelParameters?: ModelParameters,
-): CallSettings {
+  rawModelParameters?: ModelParameters,
+): LanguageModelCallOptions & RequestOptions {
+  const modelParameters = rawModelParameters && rawModelParameters.map
+    ? rawModelParameters.map(rawModelParameters)
+    : rawModelParameters;
   return {
     ...ifDefined(modelParameters?.maxOutputTokens, 'maxOutputTokens'),
     ...ifDefined(modelParameters?.temperature, 'temperature'),
@@ -49,6 +53,15 @@ export function buildModelCallSettings(
     ...ifDefined(modelParameters?.topK, 'topK'),
     ...ifDefined(modelParameters?.presencePenalty, 'presencePenalty'),
     ...ifDefined(modelParameters?.frequencyPenalty, 'frequencyPenalty'),
+    ...ifDefined(
+      modelParameters?.maxRetries,
+      'maxRetries',
+      0,
+    ),
+    ...ifDefined(
+      modelParameters?.timeoutMs,
+      'timeout',
+    ),
   }
 }
 

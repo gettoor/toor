@@ -27,24 +27,26 @@ export interface SinglePromptRPECandidateGeneratorInstruction {
  * RPE flow.
  * @category Reflective Prompt Evolution
  */
-export const SinglePromptRPECandidateGeneratorOutputSchema = z.object({
-  prompt: z.string().describe('Improved prompt.'),
-  changesSummary: z
-    .string()
-    .describe('Summary of the changes made to the prompt.'),
-  changes: z
-    .array(
-      z.object({
-        description: z
-          .string()
-          .describe('Brief description of the change made to the prompt.'),
-        reasoning: z
-          .string()
-          .describe('Why this change improves the prompt.'),
-      }),
-    )
-    .describe('List of prompt changes and rationale.'),
-});
+export const SinglePromptRPECandidateGeneratorOutputSchema =
+  z.object({
+    prompt: z.string().describe('Improved prompt.'),
+    changesSummary: z
+      .string()
+      .describe('Summary of the changes made to the prompt.'),
+    changes: z
+      .array(
+        z.object({
+          description: z
+            .string()
+            .describe('Brief description of the change made to the prompt.'),
+          reasoning: z
+            .string()
+            .describe('Why this change improves the prompt.'),
+        }),
+      )
+      .describe('List of prompt changes and rationale.'),
+  })
+  .strict();
 
 /**
  * Type for the candidate generator JSON output used by the single-prompt

@@ -26,7 +26,7 @@ describe('minimumScoreRPEStop', () => {
 
     await expect(stop(createState([0.4, 0.8, 0.5]))).resolves.toEqual({
       stop: true,
-      stopReason: 'Minimum score of 0.80 reached',
+      stopReason: 'Minimum aggregated evaluation score of 0.80 reached',
     });
   });
 
@@ -35,7 +35,7 @@ describe('minimumScoreRPEStop', () => {
 
     await expect(stop(createState([0.9]))).resolves.toEqual({
       stop: true,
-      stopReason: 'Minimum score of 0.80 reached',
+      stopReason: 'Minimum aggregated evaluation score of 0.80 reached',
     });
   });
 
@@ -44,7 +44,7 @@ describe('minimumScoreRPEStop', () => {
 
     await expect(stop(createState([0.1, 0.2, 0.75]))).resolves.toEqual({
       stop: true,
-      stopReason: 'Minimum score of 0.75 reached',
+      stopReason: 'Minimum aggregated evaluation score of 0.75 reached',
     });
   });
 
@@ -86,7 +86,7 @@ describe('minimumScoreRPEStop', () => {
 
     await expect(stop(createState([1]))).resolves.toEqual({
       stop: true,
-      stopReason: 'Minimum score of 1.00 reached',
+      stopReason: 'Minimum aggregated evaluation score of 1.00 reached',
     });
   });
 });

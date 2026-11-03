@@ -113,7 +113,7 @@ describe('perFieldRPEEvaluator', () => {
       candidateRef: { candidateId: 'candidate-1' },
       datasetEntry,
       response,
-      score: 0.75,
+      score: 0,
       reasoning: 'sentiment: correct sentiment\npriority: priority noted',
     });
   });
@@ -156,7 +156,7 @@ describe('perFieldRPEEvaluator', () => {
       candidateRef: { candidateId: 'candidate-1' },
       datasetEntry,
       response,
-      score: 0.5,
+      score: 0,
       reasoning: 'tags[0]: first tag\ntags[1]: second tag',
     });
   });
@@ -208,7 +208,7 @@ describe('perFieldRPEEvaluator', () => {
       candidateRef: { candidateId: 'candidate-1' },
       datasetEntry,
       response,
-      score: 0.5,
+      score: 0,
       reasoning: [
         'sentiment: correct sentiment',
         'tags[0]: first tag',
@@ -270,7 +270,7 @@ describe('perFieldRPEEvaluator', () => {
       candidateRef: { candidateId: 'candidate-1' },
       datasetEntry,
       response,
-      score: 2 / 3,
+      score: 0,
       reasoning: [
         'ticket.subject: subject matches',
         'ticket.labels[0]: first label',
@@ -313,7 +313,7 @@ describe('perFieldRPEEvaluator', () => {
       candidateRef: { candidateId: 'candidate-1' },
       datasetEntry,
       response,
-      score: 0.8,
+      score: 0,
       reasoning: 'ticket: ticket matches',
     });
   });

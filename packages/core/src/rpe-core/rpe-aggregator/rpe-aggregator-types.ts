@@ -1,4 +1,5 @@
 import { LLMUsage, MetricResult } from '../../llm/index.js';
+import { RPEMetadata } from '../rpe-core/index.js';
 import { RPEProperties } from '../rpe-info/index.js';
 import { RPECandidate, RPECandidateRef } from '../rpe-candidate/index.js';
 import { RPEEvaluatorOutput } from '../rpe-evaluator/index.js';
@@ -54,6 +55,11 @@ export interface RPEAggregatorOutput {
    * Usage of the model.
    */
   usage?: LLMUsage;
+
+  /**
+   * Metadata of the aggregation.
+   */
+  metadata?: RPEMetadata;
 }
 
 /**

@@ -1,4 +1,4 @@
-import { RPEInsights, type RPECandidate } from '@gettoor/core';
+import { getGeneratedCandidates, RPEInsights, type RPECandidate } from '@gettoor/core';
 
 import { 
   PADDING,
@@ -78,7 +78,8 @@ export function resolveBoxes(
   // candidates from each iteration
   for (const iteration of iterationHistory) {
     let x = PADDING;
-    for (const newCandidate of iteration.generatedCandidates ?? []) {
+    const generatedCandidates = getGeneratedCandidates(iteration);
+    for (const newCandidate of generatedCandidates) {
       const candidate = findCandidateById(
         newCandidate.candidateRef.candidateId,
       );

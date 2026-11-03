@@ -1,6 +1,11 @@
 import { generateText, Output } from 'ai';
 
-import { replacePlaceholders } from '../../string/index.js';
+import {
+  PLACEHOLDER_CLOSING,
+  PLACEHOLDER_OPENING,
+  findUniquePlaceholders,
+  replacePlaceholders,
+} from '../../string/index.js';
 import { InternalToorError, ToorError } from '../../errors/index.js';
 import { runParallelBatchesOrThrow } from '../../concurrency/index.js';
 import {
@@ -34,6 +39,8 @@ import {
   findCandidateAncestorsById,
   RPECandidateGeneratorChange,
   rpePropertyIfDef,
+  responseToString,
+  INPUTS_MODULE_NAME,
 } from '../../rpe-core/index.js';
 import { 
   SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_PROMPT,
@@ -127,23 +134,23 @@ export function singlePromptRPECandidateGenerator(
       // tasks
       const tasks = taskEntries.map(async (taskEntry, index) => {
         // generate candidate
-        const newCandidateId = `i${state.iterationNo}p${index}`;
-        const candidate = await generateCandidate(
+        const newCandidateId = `i${state.iterationNo}c${index}`;
+        const candidate = await generateCandidate({
           modelProvider,
           modelName,
           modelParameters,
           state,
-          candidateGeneratorPrompt ??
+          generatorPrompt: candidateGeneratorPrompt ??
             SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_PROMPT.prompt,
           additionalContext,
-          findCandidateById(state, taskEntry.candidateId),
-          taskEntry.candidateInstruction,
+          candidate: findCandidateById(state, taskEntry.candidateId),
+          candidateInstruction: taskEntry.candidateInstruction,
           newCandidateId,
-          taskEntry.aggregation,
-          taskEntry.analysis,
-          state.datasetEntries,
-          includeFailedExpectedResponses,
-        );
+          aggregation: taskEntry.aggregation,
+          analysis: taskEntry.analysis,
+          datasetEntries: state.datasetEntries,
+          includeExpectedResponse: includeFailedExpectedResponses,
+        });
         return candidate;
       });
 
@@ -179,57 +186,63 @@ export function singlePromptRPECandidateGenerator(
 }
 
 async function generateCandidate(
-  modelProvider: ModelProvider,
-  modelName: string,
-  modelParameters: ModelParameters | undefined,
-  state: RPEState,
-  generatorPrompt: string,
-  additionalContext: string | undefined,
-  candidate: RPECandidate,
-  candidateInstruction: SinglePromptRPECandidateGeneratorInstruction,
-  newCandidateId: string,
-  aggregation: RPEAggregatorOutput,
-  analysis: RPEAnalyzerOutput,
-  datasetEntries: RPEDatasetEntry[],
-  includeExpectedResponse: boolean,
+  input: GenerateCandidateInput,
+): Promise<RPECandidateGeneratorCandidate | undefined> {
+  const candidate = await doGenerateCandidate(input);
+  return candidate;
+}
+
+async function doGenerateCandidate(
+  input: GenerateCandidateInput,
 ): Promise<RPECandidateGeneratorCandidate | undefined> {
   // don't generate candidate if no evaluations failed
-  if (aggregation.failedEvaluations.length === 0) {
+  if (input.aggregation.failedEvaluations.length === 0) {
     return undefined;
   }
+  const { candidate } = input;
 
+  // original prompt
+  const originalPrompt = requireSinglePromptCandidateModule(
+    candidate.modules,
+  );
+  const originalPromptPlaceholders = findUniquePlaceholders(originalPrompt);
+
+  // prompt
   const prompt = replacePlaceholders(
-    generatorPrompt,
+    input.generatorPrompt,
     {
-      original_prompt: requireSinglePromptCandidateModule(
-        candidate.modules,
-      ),
+      original_prompt: originalPrompt,
+      allowed_placeholders: originalPromptPlaceholders
+        .map(placeholder => {
+          return `${PLACEHOLDER_OPENING}${placeholder}${PLACEHOLDER_CLOSING}`;
+        })
+        .join('\n'),
       additional_context:
-        additionalContext ?? 'No additional context provided.',
+        input.additionalContext ?? 'No additional context provided.',
       previous_changes: previousChangesForPrompt(
-        state,
+        input.state,
         candidate.candidateId,
       ),
       aggregated_metrics: aggregatedMetricsForPrompt(
-        aggregation.aggregatedMetrics ?? {},
+        input.aggregation.aggregatedMetrics ?? {},
       ),
       strengths: listForPrompt(
-        analysis.strengths,
+        input.analysis.strengths,
         'No strengths',
       ),
       recommendations: listForPrompt(
-        analysis.recommendations,
+        input.analysis.recommendations,
         'No recommendations'
       ),
       passed_evaluations: passedEvaluationsForPrompt(
-        aggregation.passedEvaluations,
+        input.aggregation.passedEvaluations,
       ),
       failed_examples: failedExampleAnalysisForPrompt(
-        datasetEntries,
-        analysis.failedExampleAnalysis,
-        includeExpectedResponse,
+        input.datasetEntries,
+        input.analysis.failedExampleAnalysis,
+        input.includeExpectedResponse,
       ),
-      candidate_instruction: candidateInstruction.instruction,
+      candidate_instruction: input.candidateInstruction.instruction,
     },
     {
       ignorePlaceholders:
@@ -237,11 +250,12 @@ async function generateCandidate(
     },
   );
 
-  const model = await modelProvider.getModel(modelName);
+  // generate candidate
+  const model = await input.modelProvider.getModel(input.modelName);
   const { output, usage } = await generateText({
     model: model.model,
     prompt: prompt.text,
-    ...buildModelCallSettings(modelParameters),
+    ...buildModelCallSettings(input.modelParameters),
     output: Output.object({
       schema: SinglePromptRPECandidateGeneratorOutputSchema,
     })
@@ -249,11 +263,14 @@ async function generateCandidate(
 
   const generatedCandidate: RPECandidateGeneratorCandidate = {
     candidate: {
-      candidateId: newCandidateId,
-      modules: buildSinglePromptCandidateModules(output.prompt),
+      candidateId: input.newCandidateId,
+      modules: buildSinglePromptCandidateModules({
+        prompt: output.prompt,
+        inputs: candidate.modules[INPUTS_MODULE_NAME]?.content,
+      }),
       parentCandidateIds: [candidate.candidateId],
       metadata: {
-        candidateInstructionId: candidateInstruction.id,
+        candidateInstructionId: input.candidateInstruction.id,
       },
     },
     changesSummary: output.changesSummary,
@@ -269,6 +286,9 @@ async function generateCandidate(
           outputTokens: usage.outputTokens,
         },
       ],
+    },
+    metadata: {
+      prompt: prompt.text,
     },
   };
   return generatedCandidate;
@@ -373,13 +393,13 @@ function failedExampleAnalysisForPrompt(
       }
 
       // response
-      output += `Response:\n${analysis.response}\n\n`;
+      output += `**Response**:\n${responseToString(analysis.response)}\n\n`;
 
       // expected response
       if (includeFailedExpectedResponses) {
         if (datasetEntry.expectedResponse) {
-          output += `Expected Response:\n` +
-            `${datasetEntry.expectedResponse}\n\n`;
+          output += `**Expected Response(()):\n` +
+            `${responseToString(datasetEntry.expectedResponse)}\n\n`;
         }
         if (datasetEntry.expectedResponseReasoning) {
           output += `Expected Response Reasoning:\n` +
@@ -410,4 +430,20 @@ function failedExampleAnalysisForPrompt(
     });
 
   return output;
+}
+
+interface GenerateCandidateInput {
+  modelProvider: ModelProvider;
+  modelName: string;
+  modelParameters: ModelParameters | undefined;
+  state: RPEState;
+  generatorPrompt: string;
+  additionalContext: string | undefined;
+  candidate: RPECandidate;
+  candidateInstruction: SinglePromptRPECandidateGeneratorInstruction;
+  newCandidateId: string;
+  aggregation: RPEAggregatorOutput;
+  analysis: RPEAnalyzerOutput;
+  datasetEntries: RPEDatasetEntry[];
+  includeExpectedResponse: boolean;
 }

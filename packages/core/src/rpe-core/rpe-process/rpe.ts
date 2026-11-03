@@ -1,3 +1,4 @@
+import { ToorError, InternalToorError } from '../../errors/index.js';
 import {
   RPECandidateRef,
   candidateRefFromCandidate,
@@ -12,6 +13,9 @@ import { buildRPEInsightsInfo, RPEInsights } from '../rpe-insights/index.js';
 import { RPEInput, RPEOutput } from './rpe-types.js';
 import { RPEExecutorResponse } from '../rpe-executor/rpe-executor-types.js';
 import { RPEAggregatorOutput } from '../rpe-aggregator/index.js';
+import { 
+  RPECandidateGeneratorCandidate,
+} from '../rpe-candidate-generator/index.js';
 import { RPECandidateSelector } from '../rpe-candidate-selector/index.js';
 import {
   buildInputForDatasetEvaluation,
@@ -22,6 +26,11 @@ import { DEFAULT_AGGREGATOR_PARALLELISM } from './aggregator-consts.js';
 import { EvaluatorCandidateOutput } from './evaluator-types.js';
 import { analyzeAggregatedEvaluations } from './analyzer.js';
 import { generateCandidates } from './candidate-generator.js';
+import { 
+  toCandidateGeneratorOutputCandidate,
+} from './candidate-generator-utils.js';
+import { validateCandidates } from './candidate-validator.js';
+import { RPERejectedCandidateRef } from './candidate-validator-types.js';
 
 /**
  * Runs the Reflective Prompt Evolution (RPE) process.
@@ -55,6 +64,9 @@ export async function optimize(
     candidate => candidateRefFromCandidate(candidate)
   );
   let stopReason = '';
+
+  // notify
+  await listeners.processStarted?.(state);
 
   // initialize state
   if (input.initializeState) {
@@ -136,20 +148,53 @@ export async function optimize(
     );
     await listeners.candidatesGenerated?.(iteration);
 
-    // evaluate candidates if there are any
+    // validate and evaluate candidates if there are any
     if (generatedCandidates.length > 0) {
       // keep generated candidates
-      iteration.generatedCandidates = generatedCandidates.map(
-        generatedCandidate => {
-          const { candidate, ...description } = generatedCandidate;
-          return {
-            candidateRef: candidateRefFromCandidate(candidate),
-            ...description,
-          };
-        },
-      );
       state.candidates.push(
         ...generatedCandidates.map(candidate => candidate.candidate),
+      );
+
+      // validate candidates
+      const { validCandidates } = await validateCandidates(
+        state,
+        {
+          candidates: generatedCandidates,
+          candidateValidator: input.candidateValidator,
+          parallelism: input.candidateValidatorParallelism,
+          validatingCandidates: async () => {
+            await listeners.validatingCandidates?.(iteration);
+          },
+          candidatesValidated: async (
+            validCandidates: RPECandidateGeneratorCandidate[],
+            rejectedCandidates: RPERejectedCandidateRef[],
+          ) => {
+            // valid (not rejected) candidates
+            iteration.validCandidates = validCandidates.map(
+              toCandidateGeneratorOutputCandidate,
+            );
+
+            // rejected candidates
+            iteration.rejectedCandidates = rejectedCandidates.map(rejectedCandidate => {
+              const generatedCandidate = generatedCandidates.find(generatedCandidate => {
+                return generatedCandidate.candidate.candidateId ===
+                  rejectedCandidate.candidateRef.candidateId;
+              });
+              if (!generatedCandidate) {
+                throw new InternalToorError(
+                  `Generated candidate not found for rejected candidate ` +
+                  `${ToorError.quote(rejectedCandidate.candidateRef.candidateId)}`,
+                );
+              }
+              return {
+                candidate: toCandidateGeneratorOutputCandidate(generatedCandidate),
+                reason: rejectedCandidate.reason,
+              };
+            });
+
+            await listeners.candidatesValidated?.(iteration);
+          },
+        },
       );
 
       // evaluate candidates on the validation dataset
@@ -158,7 +203,7 @@ export async function optimize(
       } = await evaluateDataset(
         state,
         {
-          candidates: generatedCandidates.map(candidate => candidate.candidate),
+          candidates: validCandidates.map(candidate => candidate.candidate),
           ...buildInputForDatasetEvaluation(input),
           generatingResponses: async () => {
             await listeners.generatingValidationResponses?.(iteration);
@@ -203,6 +248,9 @@ export async function optimize(
     const completedIteration = iteration as RPEIteration;
     state.iterationHistory.push(completedIteration);
 
+    // notify
+    await listeners.iterationCompleted?.(completedIteration);
+
     // should stop?
     const shouldStopAfterIteration = await input.stopAfterIteration(state);
     if (shouldStopAfterIteration.stop) {
@@ -219,9 +267,6 @@ export async function optimize(
       iterationNo: state.iterationNo,
       candidateRefs: iteration.selectedCandidateRefs,
     };
-
-    // notify
-    await listeners.iterationCompleted?.(completedIteration);
   }
 
   // populate final candidates

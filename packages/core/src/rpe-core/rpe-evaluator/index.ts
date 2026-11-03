@@ -5,6 +5,6 @@ export * from './per-field-rpe-evaluator-types.js';
 export * from './per-field-rpe-evaluator.js';
 export * from './exact-string-rpe-field-evaluator-types.js';
 export * from './exact-string-rpe-field-evaluator.js';
-export * from './string-array-rpe-field-evaluator-types.js';
-export * from './string-array-rpe-field-evaluator.js';
+export * from './string-set-rpe-field-evaluator-types.js';
+export * from './string-set-rpe-field-evaluator.js';
 export * from './per-field-rpe-evaluator-value-mapping-types.js';

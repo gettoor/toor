@@ -9,8 +9,8 @@ import {
 /**
  * Exact string RPE evaluator. It makes strict string comparison between
  * the response and the expected response. Returns score 1 if the response is
- * exactly the same as the expected response, 0 otherwise. Uses LLM-as-a-judge
- * to generate metrics.
+ * exactly the same as the expected response, 0 otherwise.
+ * @category Reflective Prompt Evolution
  * @param input - Input for the exact string RPE evaluator.
  * @returns Exact string RPE evaluator.
  */
@@ -31,7 +31,7 @@ export function exactStringRPEEvaluator(
       if (!datasetEntry.expectedResponse) {
         throw new InternalToorError(
           `No expected response in dataset entry ` +
-          `${ datasetEntry.datasetEntryId } for the exact string evaluator`
+          `${datasetEntry.datasetEntryId} for the exact string evaluator`
         );
       }
 

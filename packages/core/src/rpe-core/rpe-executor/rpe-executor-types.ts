@@ -1,5 +1,5 @@
 import { LLMUsage } from '../../llm/index.js';
-import { RPEResponse } from '../rpe-core/index.js';
+import { RPEMetadata, RPEResponse } from '../rpe-core/index.js';
 import { RPEProperties } from '../rpe-info/index.js';
 import { RPEDatasetEntry } from '../rpe-dataset/index.js';
 import { RPEState } from '../rpe-state/index.js';
@@ -40,6 +40,11 @@ export interface RPEExecutorResponse {
    * Usage of the model.
    */
   usage?: LLMUsage;
+
+  /**
+   * Metadata of the response.
+   */
+  metadata?: RPEMetadata;
 }
 
 /**

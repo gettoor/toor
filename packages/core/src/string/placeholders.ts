@@ -27,7 +27,12 @@ export interface ReplacePlaceholderOutput {
   unusedValueKeys: string[];
 }
 
-const PLACEHOLDER_PATTERN = /\{\{([^{}]+)\}\}/g;
+export const PLACEHOLDER_OPENING = '{{';
+export const PLACEHOLDER_CLOSING = '}}';
+const PLACEHOLDER_PATTERN = new RegExp(
+  `${PLACEHOLDER_OPENING}([^{}]+)${PLACEHOLDER_CLOSING}`,
+  'g',
+);
 
 /**
  * Replaces placeholders in a string with values.
@@ -71,7 +76,7 @@ export function replacePlaceholders(
     return !(key in values);
   });
   if (missingPlaceholders.length > 0) {
-    throw new NoValueForPlaceholderError(missingPlaceholders);
+    throw new NoValueForPlaceholderError(missingPlaceholders, text);
   }
 
   // replace placeholders with values
@@ -80,7 +85,7 @@ export function replacePlaceholders(
     const [ key, format ] = parseFullKey(placeholder);
     const value = values[key];
     if (value === undefined) {
-      throw new NoValueForPlaceholderError([placeholder]);
+      throw new NoValueForPlaceholderError([placeholder], text);
     }
     const placeholderWithBrackets = `{{${placeholder}}}`;
     text = text.replace(
@@ -97,14 +102,61 @@ export function replacePlaceholders(
 }
 
 /**
- * Finds placeholders in a string.
+ * Finds all placeholders (including duplicates) in a string.
  * @category Utils
  * @param text - The text to get the placeholders from.
  * @returns The placeholders in the text.
+ * @example
+ * ```ts
+ * const text = 'Hello {{name}}! {{name}} is {{age}} years old.';
+ * const placeholders = findPlaceholders(text);
+ * // The placeholders will be:
+ * // ['name', 'name', 'age']
+ * ```
  */
-export function findPlaceholders(text: string): string[] {
+export function findAllPlaceholders(text: string): string[] {
   return [...text.matchAll(PLACEHOLDER_PATTERN)]
     .map((match) => match[1].trim());
+}
+
+/**
+ * Finds all unique placeholders in a string.
+ * @category Utils
+ * @param text - The text to get the unique placeholders from.
+ * @returns The unique placeholders in the text.
+ * @example
+ * ```ts
+ * const text = 'Hello {{name}}! {{name}} is {{age}} years old.';
+ * const uniquePlaceholders = findUniquePlaceholders(text);
+ * // The unique placeholders will be:
+ * // ['name', 'age']
+ * ```
+ */
+export function findUniquePlaceholders(text: string): string[] {
+  return [...new Set(findAllPlaceholders(text))];
+}
+
+/**
+ * Counts the number of times each placeholder appears in a string.
+ * @param text - Text to count the placeholders in.
+ * @returns Number of times each placeholder appears in the text.
+ * @example
+ * ```ts
+ * const text = 'Hello {{name}}! {{name}} is {{age}} years old.';
+ * const count = countPlaceholders(text);
+ * // The count will be:
+ * // { name: 2, age: 1 }
+ * ```
+ */
+export function countPlaceholders(text: string): Record<string, number> {
+  const placeholders = findAllPlaceholders(text);
+  return placeholders.reduce(
+    (acc, placeholder) => {
+      acc[placeholder] = (acc[placeholder] || 0) + 1;
+      return acc;
+    },
+    {} as Record<string, number>,
+  );
 }
 
 /**
@@ -118,7 +170,7 @@ export function requirePlaceholders(
   text: string,
   requiredPlaceholders: string[],
 ): void {
-  const placeholdersInText = findPlaceholders(text);
+  const placeholdersInText = findUniquePlaceholders(text);
   for (const requiredPlaceholder of requiredPlaceholders) {
     if (!placeholdersInText.includes(requiredPlaceholder)) {
       throw new MissingPlaceholderError(requiredPlaceholder);
@@ -136,7 +188,7 @@ export function rejectUnknownPlaceholders(
   text: string,
   expectedPlaceholders: string[],
 ): void {
-  const placeholdersInText = findPlaceholders(text);
+  const placeholdersInText = findUniquePlaceholders(text);
   const unknownPlaceholders = placeholdersInText.filter((placeholder) => {
     return !expectedPlaceholders.includes(placeholder);
   });

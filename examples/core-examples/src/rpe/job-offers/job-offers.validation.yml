@@ -1,0 +1,697 @@
+entries:
+- id: validation-senior-backend-node-typescript
+  expected-response:
+    response:
+      title: Senior Node.js Engineer
+      seniority: senior
+      role: backend
+      requiredSkills:
+        - Node.js
+        - TypeScript
+      preferredSkills:
+        - Redis
+    reasoning: The title explicitly states Senior Node.js Engineer and the
+      responsibilities are backend-focused. Node.js and TypeScript are
+      essential, while Redis is described as useful rather than required.
+  vars:
+    jobDescription: We are looking for a Senior Node.js Engineer to join the team
+      responsible for our core API platform. You will design backend features,
+      review technical proposals, improve service reliability, and support
+      other engineers with difficult implementation problems. Strong
+      professional experience with Node.js and TypeScript is essential.
+      Candidates should be comfortable taking ownership of complex backend
+      changes from initial design to production. Experience using Redis in
+      production systems would be useful.
+
+- id: validation-frontend-react-javascript
+  expected-response:
+    response:
+      title: Frontend Developer
+      seniority: mid
+      role: frontend
+      requiredSkills:
+        - React
+        - JavaScript
+      preferredSkills:
+        - Tailwind CSS
+    reasoning: The description explicitly identifies a mid-level Frontend Developer.
+      React and JavaScript are required, while Tailwind CSS is only a plus.
+  vars:
+    jobDescription: Our frontend team is hiring a mid-level Frontend Developer to
+      build responsive interfaces for our web platform. You will implement new
+      customer-facing functionality, improve existing components, work from
+      product designs, and participate in code reviews. Solid commercial
+      experience with React and JavaScript is required. You should be able to
+      deliver frontend features independently while collaborating closely with
+      the rest of the team. Familiarity with Tailwind CSS is a plus.
+
+- id: validation-junior-fullstack-react-node
+  expected-response:
+    response:
+      title: Junior Full Stack Engineer
+      seniority: junior
+      role: fullstack
+      requiredSkills:
+        - JavaScript
+        - React
+        - Node.js
+      preferredSkills:
+        - PostgreSQL
+    reasoning: The title explicitly gives Junior Full Stack Engineer and the tasks
+      span frontend and backend. JavaScript, React, and Node.js are required,
+      while PostgreSQL is preferred.
+  vars:
+    jobDescription: We are looking for a Junior Full Stack Engineer to join a small
+      product team building an internal business platform. You will work on
+      frontend components, simple backend endpoints, bug fixes, and automated
+      tests with support from senior engineers. A practical understanding of
+      JavaScript, React, and Node.js is required. Commercial experience is
+      welcome but not essential. Previous exposure to PostgreSQL through work,
+      education, or personal projects is preferred.
+
+- id: validation-lead-devops-aws-kubernetes
+  expected-response:
+    response:
+      title: Lead DevOps Engineer
+      seniority: lead
+      role: devops
+      requiredSkills:
+        - Terraform
+        - AWS
+        - Kubernetes
+      preferredSkills:
+        - Helm
+    reasoning: The title explicitly identifies a Lead DevOps Engineer. Terraform,
+      AWS, and Kubernetes are required, while Helm is described as
+      advantageous.
+  vars:
+    jobDescription: We are seeking a Lead DevOps Engineer to guide infrastructure
+      improvements across several engineering teams. You will remain hands-on
+      while defining deployment practices, reviewing infrastructure changes,
+      solving reliability issues, and helping other engineers improve
+      operational processes. Deep experience with Terraform, AWS, and
+      Kubernetes is required. The role requires both technical leadership and
+      strong production troubleshooting skills. Previous experience managing
+      Kubernetes deployments with Helm would be advantageous.
+
+- id: validation-senior-data-engineer-kafka
+  expected-response:
+    response:
+      title: Senior Data Engineer
+      seniority: senior
+      role: data
+      requiredSkills:
+        - Python
+        - SQL
+        - Apache Kafka
+      preferredSkills:
+        - Apache Spark
+    reasoning: The posting explicitly states Senior Data Engineer. Python, SQL, and
+      Apache Kafka are required, while Apache Spark is desirable.
+  vars:
+    jobDescription: We are hiring a Senior Data Engineer to help evolve a platform
+      that processes data from several business systems. You will design
+      reliable pipelines, improve processing performance, establish data
+      quality practices, and collaborate with analysts and application
+      engineers. Strong production experience with Python, SQL, and Apache
+      Kafka is required. You should be comfortable making architectural
+      decisions around data processing. Experience using Apache Spark is
+      desirable.
+
+- id: validation-ml-engineer-tensorflow
+  expected-response:
+    response:
+      title: ML Engineer
+      seniority: mid
+      role: ml
+      requiredSkills:
+        - Python
+        - TensorFlow
+      preferredSkills:
+        - PyTorch
+    reasoning: The description explicitly calls this a mid-level ML Engineer role.
+      Python and TensorFlow are required, while PyTorch is a bonus.
+  vars:
+    jobDescription: Our machine learning team is looking for an ML Engineer to help
+      develop and productionize models used by customer-facing features. You
+      will implement training workflows, evaluate models, improve inference
+      code, and work closely with data and application engineers. Strong
+      Python programming skills and practical TensorFlow experience are
+      required. This is a mid-level role for someone who can independently
+      deliver well-defined ML engineering projects. PyTorch experience would
+      be a bonus.
+
+- id: validation-junior-frontend-react
+  expected-response:
+    response:
+      title: Junior React Developer
+      seniority: junior
+      role: frontend
+      requiredSkills:
+        - React
+        - HTML
+        - CSS
+      preferredSkills:
+        - TypeScript
+    reasoning: The posting explicitly names a Junior React Developer. React, HTML,
+      and CSS are required foundations, while TypeScript is only nice to have.
+  vars:
+    jobDescription: We are looking for a Junior React Developer to support the
+      development of our web applications. You will implement smaller UI
+      features, fix styling issues, write tests, and learn our engineering
+      practices through regular code reviews. Candidates need a solid
+      understanding of React, HTML, and CSS, demonstrated through
+      professional, academic, or personal projects. We are open to people
+      starting their software careers. TypeScript knowledge is nice to have.
+
+- id: validation-senior-backend-dotnet-sqlserver
+  expected-response:
+    response:
+      title: Senior Backend Developer
+      seniority: senior
+      role: backend
+      requiredSkills:
+        - C#
+        - .NET
+        - SQL Server
+      preferredSkills:
+        - Azure
+    reasoning: The title explicitly gives Senior Backend Developer. C#, .NET, and
+      SQL Server are required, while Azure is preferred.
+  vars:
+    jobDescription: We are seeking a Senior Backend Developer for an enterprise
+      application team. You will design new backend functionality, improve
+      existing services, troubleshoot production issues, and support other
+      engineers through code reviews and technical discussions. Extensive
+      experience with C#, .NET, and SQL Server is required. Candidates should
+      be able to own complex backend work without close supervision.
+      Experience building or operating applications on Azure is preferred.
+
+- id: validation-qa-api-testing
+  expected-response:
+    response:
+      title: QA Engineer
+      seniority: mid
+      role: qa
+      requiredSkills:
+        - Manual Testing
+        - API Testing
+      preferredSkills:
+        - Postman
+    reasoning: The description explicitly states this QA Engineer role is mid-level.
+      Manual testing and API testing are required, while Postman is preferred.
+  vars:
+    jobDescription: Our product team is looking for a QA Engineer to help validate
+      web and API-based features before release. You will plan test scenarios,
+      execute regression testing, investigate defects with developers, and
+      improve the team's overall testing practices. Practical experience with
+      manual testing and API testing is required. This is a mid-level role
+      where you will independently own testing for assigned features.
+      Knowledge of Postman is preferred.
+
+- id: validation-android-kotlin
+  expected-response:
+    response:
+      title: Android Developer
+      seniority: mid
+      role: mobile
+      requiredSkills:
+        - Kotlin
+        - Android SDK
+      preferredSkills:
+        - Firebase
+    reasoning: The posting explicitly describes a mid-level Android Developer, which
+      is a mobile role. Kotlin and Android SDK are required, while Firebase is
+      beneficial.
+  vars:
+    jobDescription: We are hiring an Android Developer to work on a mature mobile
+      application with an active user base. You will develop new product
+      features, improve existing screens, investigate crashes, and participate
+      in technical discussions with the mobile team. Solid commercial
+      experience with Kotlin and the Android SDK is required. This is a
+      mid-level role and requires the ability to deliver features
+      independently. Familiarity with Firebase would be beneficial.
+
+- id: validation-senior-ios-swiftui
+  expected-response:
+    response:
+      title: Senior iOS Engineer
+      seniority: senior
+      role: mobile
+      requiredSkills:
+        - Swift
+        - SwiftUI
+      preferredSkills:
+        - Objective-C
+    reasoning: The role is explicitly Senior iOS Engineer. Swift and SwiftUI are
+      required, while Objective-C experience is described as useful.
+  vars:
+    jobDescription: We are looking for a Senior iOS Engineer to take ownership of
+      major areas of our consumer mobile application. Responsibilities include
+      implementing complex features, reviewing pull requests, improving
+      maintainability, and contributing to mobile architecture. Strong
+      professional experience with Swift and SwiftUI is required. Candidates
+      should be confident diagnosing production problems and mentoring other
+      engineers. Previous experience maintaining Objective-C code would be
+      useful.
+
+- id: validation-backend-python-fastapi
+  expected-response:
+    response:
+      title: Backend Engineer
+      seniority: mid
+      role: backend
+      requiredSkills:
+        - Python
+        - FastAPI
+        - PostgreSQL
+      preferredSkills:
+        - Redis
+    reasoning: The posting explicitly identifies a mid-level Backend Engineer.
+      Python, FastAPI, and PostgreSQL are required, while Redis is explicitly
+      optional.
+  vars:
+    jobDescription: Our backend engineering team is looking for a mid-level Backend
+      Engineer to build APIs and services supporting several internal
+      products. You will implement features, improve tests, review code, and
+      help resolve production issues. Strong working knowledge of Python and
+      FastAPI is required, as is commercial experience with PostgreSQL. We
+      value engineers who write clear, maintainable backend code and can work
+      independently. Redis experience is optional but would be helpful.
+
+- id: validation-senior-cloud-azure-terraform
+  expected-response:
+    response:
+      title: Senior Cloud Engineer
+      seniority: senior
+      role: cloud
+      requiredSkills:
+        - Azure
+        - Terraform
+        - Kubernetes
+      preferredSkills:
+        - AWS
+    reasoning: The title explicitly states Senior Cloud Engineer. Azure, Terraform,
+      and Kubernetes are required, while AWS is only a plus.
+  vars:
+    jobDescription: We are hiring a Senior Cloud Engineer to improve and standardize
+      cloud infrastructure used across our engineering organization. You will
+      automate infrastructure changes, contribute to platform design, help
+      resolve production incidents, and advise application teams on cloud
+      architecture. Strong hands-on experience with Azure, Terraform, and
+      Kubernetes is required. Candidates should have significant experience
+      operating production environments. Knowledge of AWS would be a plus.
+
+- id: validation-security-siem-incident-response
+  expected-response:
+    response:
+      title: Cybersecurity Engineer
+      seniority: mid
+      role: security
+      requiredSkills:
+        - SIEM
+        - Linux
+        - Incident Response
+      preferredSkills:
+        - Splunk
+    reasoning: The posting explicitly states this Cybersecurity Engineer role is
+      mid-level. SIEM, Linux, and incident response are required, while Splunk
+      is desirable.
+  vars:
+    jobDescription: Our cybersecurity team is looking for a Cybersecurity Engineer
+      to strengthen monitoring and incident response capabilities. You will
+      investigate alerts, support security incidents, improve detection rules,
+      and work with engineering teams to reduce recurring security risks.
+      Practical experience with SIEM platforms, Linux, and incident response
+      is required. This is a mid-level position requiring independent
+      investigation skills. Familiarity with Splunk is desirable.
+
+- id: validation-data-scientist-sklearn
+  expected-response:
+    response:
+      title: Data Scientist
+      seniority: mid
+      role: data
+      requiredSkills:
+        - Python
+        - scikit-learn
+      preferredSkills:
+        - NLP
+    reasoning: The description explicitly identifies this as a mid-level Data
+      Scientist role. Python and scikit-learn are required, while NLP
+      experience is preferred.
+  vars:
+    jobDescription: We are looking for a Data Scientist to work with product and
+      business teams on predictive and analytical projects. You will explore
+      datasets, develop models, validate results, communicate findings, and
+      collaborate with engineers when models need to be productionized. Strong
+      Python skills and commercial experience with scikit-learn are required.
+      This is a mid-level role requiring independent analytical problem
+      solving. Experience working on NLP problems is preferred.
+
+- id: validation-senior-frontend-vue
+  expected-response:
+    response:
+      title: Senior Vue Developer
+      seniority: senior
+      role: frontend
+      requiredSkills:
+        - Vue.js
+        - TypeScript
+      preferredSkills:
+        - Nuxt
+    reasoning: Senior Vue Developer is explicitly stated and the position is
+      frontend-focused. Vue.js and TypeScript are required, while Nuxt is a
+      bonus.
+  vars:
+    jobDescription: We are seeking a Senior Vue Developer to join the frontend team
+      responsible for a complex browser-based application. You will implement
+      new modules, improve performance, review code, and help establish
+      frontend engineering standards. Strong production experience with Vue.js
+      and TypeScript is required. Candidates should be able to make technical
+      decisions and support less experienced developers. Previous experience
+      building applications with Nuxt would be a bonus.
+
+- id: validation-fullstack-java-react
+  expected-response:
+    response:
+      title: Full Stack Developer
+      seniority: mid
+      role: fullstack
+      requiredSkills:
+        - Java
+        - React
+        - Spring Boot
+      preferredSkills:
+        - Docker
+    reasoning: The description explicitly says mid-level Full Stack Developer and
+      includes frontend and backend work. Java, React, and Spring Boot are
+      required, while Docker is helpful but not required.
+  vars:
+    jobDescription: Our engineering team is hiring a mid-level Full Stack Developer
+      to work on both customer-facing interfaces and backend services. You
+      will implement complete features, participate in design discussions, fix
+      defects, and collaborate with product managers and designers. Commercial
+      experience with Java, React, and Spring Boot is required. You should be
+      comfortable switching between frontend and backend tasks. Docker
+      experience would help but is not required.
+
+- id: validation-senior-platform-kubernetes
+  expected-response:
+    response:
+      title: Senior Platform Engineer
+      seniority: senior
+      role: platform
+      requiredSkills:
+        - Kubernetes
+        - Terraform
+        - Linux
+      preferredSkills:
+        - Istio
+    reasoning: The title explicitly identifies a Senior Platform Engineer.
+      Kubernetes, Terraform, and Linux are required, while Istio experience is
+      preferred.
+  vars:
+    jobDescription: We are looking for a Senior Platform Engineer to help build the
+      infrastructure layer used by dozens of internal services. You will
+      improve developer workflows, automate platform operations, design
+      reliable infrastructure components, and assist teams with difficult
+      deployment issues. Extensive experience with Kubernetes, Terraform, and
+      Linux is required. Candidates should be comfortable making cross-team
+      platform decisions. Experience with Istio is preferred.
+
+- id: validation-junior-backend-java
+  expected-response:
+    response:
+      title: Junior Java Developer
+      seniority: junior
+      role: backend
+      requiredSkills:
+        - Java
+        - Git
+      preferredSkills:
+        - Spring Boot
+    reasoning: The role is explicitly a Junior Java Developer working on a backend
+      team. Java and Git are required, while Spring Boot is useful and
+      preferred.
+  vars:
+    jobDescription: We are hiring a Junior Java Developer to join a backend team
+      working on business applications. You will start with small features and
+      bug fixes, write tests, participate in code reviews, and receive regular
+      support from experienced engineers. A practical understanding of Java
+      and Git is required. We welcome candidates with limited commercial
+      experience. Previous exposure to Spring Boot would be useful and is
+      preferred.
+
+- id: validation-principal-backend-java-kafka
+  expected-response:
+    response:
+      title: Principal Backend Engineer
+      seniority: principal
+      role: backend
+      requiredSkills:
+        - Java
+        - Distributed Systems
+        - Apache Kafka
+      preferredSkills:
+        - Kubernetes
+    reasoning: The title explicitly gives Principal Backend Engineer. Java,
+      distributed systems, and Apache Kafka are required, while Kubernetes is
+      only a plus.
+  vars:
+    jobDescription: We are seeking a Principal Backend Engineer to provide technical
+      direction across several backend teams. You will tackle difficult
+      architecture problems, define engineering standards, review major
+      technical decisions, and continue contributing to critical production
+      code. Deep expertise in Java, distributed systems, and Apache Kafka is
+      required. Candidates should have a strong record of influencing
+      technical direction across teams. Kubernetes knowledge would be a plus.
+
+- id: validation-qa-automation-python-selenium
+  expected-response:
+    response:
+      title: Automation Test Engineer
+      seniority: mid
+      role: qa
+      requiredSkills:
+        - Python
+        - Selenium
+      preferredSkills:
+        - Cypress
+    reasoning: The posting explicitly describes a mid-level Automation Test
+      Engineer. Python and Selenium are required, while Cypress is
+      advantageous.
+  vars:
+    jobDescription: Our quality engineering group is looking for an Automation Test
+      Engineer to expand automated test coverage for a growing web platform.
+      You will implement automated test suites, investigate failures, maintain
+      test infrastructure, and work with developers to improve testability.
+      Strong experience with Python and Selenium is required. This is a
+      mid-level position requiring independent ownership of automation tasks.
+      Cypress experience would be advantageous.
+
+- id: validation-senior-embedded-cpp-linux
+  expected-response:
+    response:
+      title: Senior Embedded Engineer
+      seniority: senior
+      role: embedded
+      requiredSkills:
+        - C++
+        - Embedded Linux
+      preferredSkills:
+        - CAN Bus
+    reasoning: The title explicitly gives Senior Embedded Engineer. C++ and embedded
+      Linux are required, while CAN Bus knowledge is preferred.
+  vars:
+    jobDescription: We are looking for a Senior Embedded Engineer to develop
+      software for connected hardware products. You will implement system
+      components, investigate complex device issues, review designs, and
+      support less experienced engineers. Strong professional experience with
+      C++ and embedded Linux is required. Candidates should be confident
+      debugging problems involving both software and hardware interactions.
+      Knowledge of CAN Bus communication is preferred.
+
+- id: validation-sre-kubernetes-grafana
+  expected-response:
+    response:
+      title: Site Reliability Engineer
+      seniority: mid
+      role: devops
+      requiredSkills:
+        - Kubernetes
+        - Linux
+        - Grafana
+      preferredSkills:
+        - Prometheus
+    reasoning: The posting explicitly states this Site Reliability Engineer role is
+      mid-level and operational, so it is categorized as DevOps. Kubernetes,
+      Linux, and Grafana are required, while Prometheus is preferred.
+  vars:
+    jobDescription: We are hiring a Site Reliability Engineer to help keep our
+      production platform stable as usage grows. You will respond to
+      incidents, improve monitoring, automate recurring operational work, and
+      collaborate with development teams on reliability improvements. Strong
+      hands-on experience with Kubernetes, Linux, and Grafana is required.
+      This is a mid-level role with participation in production support
+      responsibilities. Prometheus knowledge is preferred.
+
+- id: validation-senior-mobile-react-native
+  expected-response:
+    response:
+      title: Senior React Native Engineer
+      seniority: senior
+      role: mobile
+      requiredSkills:
+        - React Native
+        - TypeScript
+      preferredSkills:
+        - Swift
+    reasoning: The title explicitly states Senior React Native Engineer, making this
+      a senior mobile role. React Native and TypeScript are required, while
+      Swift is a plus.
+  vars:
+    jobDescription: We are looking for a Senior React Native Engineer to help
+      develop our cross-platform mobile applications. You will lead
+      implementation of complex features, improve application architecture,
+      review code, and work closely with product and design teams. Strong
+      professional experience with React Native and TypeScript is required.
+      Candidates should be comfortable mentoring other mobile developers.
+      Familiarity with native iOS development using Swift would be a plus.
+
+- id: validation-database-postgres-tuning
+  expected-response:
+    response:
+      title: PostgreSQL Database Engineer
+      seniority: mid
+      role: database
+      requiredSkills:
+        - PostgreSQL
+        - SQL Performance Tuning
+      preferredSkills:
+        - Linux
+    reasoning: The position is explicitly a mid-level PostgreSQL Database Engineer.
+      PostgreSQL and SQL performance tuning are required, while Linux is
+      beneficial.
+  vars:
+    jobDescription: Our database team is hiring a PostgreSQL Database Engineer to
+      support systems that handle large volumes of transactional data. You
+      will investigate performance issues, optimize expensive queries, advise
+      developers on database design, and assist with database maintenance.
+      Strong PostgreSQL expertise and practical SQL performance tuning
+      experience are required. This is a mid-level role. Linux knowledge would
+      be beneficial for troubleshooting database environments.
+
+- id: validation-staff-platform-kubernetes
+  expected-response:
+    response:
+      title: Staff Platform Engineer
+      seniority: staff
+      role: platform
+      requiredSkills:
+        - Kubernetes
+        - Distributed Systems
+      preferredSkills:
+        - Go
+    reasoning: The title explicitly identifies a Staff Platform Engineer. Kubernetes
+      and distributed systems are required, while Go is explicitly preferred
+      but not mandatory.
+  vars:
+    jobDescription: We are seeking a Staff Platform Engineer to solve large-scale
+      infrastructure problems and influence platform strategy across the
+      organization. You will design shared platform capabilities, guide
+      technical decisions across teams, and contribute directly to difficult
+      implementations. Deep knowledge of Kubernetes and distributed systems is
+      required. This is a senior individual-contributor role requiring broad
+      technical influence. Professional Go experience is preferred but not
+      mandatory.
+
+- id: validation-data-analyst-sql-tableau
+  expected-response:
+    response:
+      title: Data Analyst
+      seniority: mid
+      role: data
+      requiredSkills:
+        - SQL
+        - Tableau
+      preferredSkills:
+        - Python
+    reasoning: The description explicitly calls this a mid-level Data Analyst role.
+      SQL and Tableau are required, while Python is only a bonus.
+  vars:
+    jobDescription: We are looking for a Data Analyst to help product and commercial
+      teams understand business performance. You will write queries, create
+      dashboards, investigate changes in key metrics, and answer ad hoc
+      analytical questions. Strong practical experience with SQL and Tableau
+      is required. This is a mid-level role, and you should be comfortable
+      managing analysis tasks from initial question to final presentation.
+      Python knowledge would be a bonus.
+
+- id: validation-junior-game-unity
+  expected-response:
+    response:
+      title: Junior Unity Developer
+      seniority: junior
+      role: game
+      requiredSkills:
+        - C#
+        - Unity
+      preferredSkills:
+        - 3D Graphics
+    reasoning: The title explicitly identifies a Junior Unity Developer. C# and
+      Unity are required, while 3D graphics experience is preferred.
+  vars:
+    jobDescription: Our studio is hiring a Junior Unity Developer to help implement
+      gameplay functionality for an upcoming title. You will work on small
+      features, fix defects, test changes, and collaborate closely with more
+      experienced developers and game designers. A practical understanding of
+      C# and Unity is required, whether gained professionally or through
+      substantial personal projects. Previous experience working with 3D
+      graphics concepts is preferred.
+
+- id: validation-lead-frontend-react
+  expected-response:
+    response:
+      title: Lead Frontend Engineer
+      seniority: lead
+      role: frontend
+      requiredSkills:
+        - React
+        - TypeScript
+        - Frontend Architecture
+      preferredSkills:
+        - Next.js
+    reasoning: The title explicitly gives Lead Frontend Engineer. React, TypeScript,
+      and frontend architecture are required, while Next.js is desirable.
+  vars:
+    jobDescription: We are looking for a Lead Frontend Engineer to provide technical
+      leadership for a team building a large web application. You will remain
+      hands-on while guiding architecture decisions, reviewing complex
+      changes, improving development practices, and mentoring frontend
+      engineers. Strong expertise with React, TypeScript, and frontend
+      architecture is required. Candidates should have previous experience
+      leading technical initiatives. Next.js experience is desirable.
+
+- id: validation-cloud-devops-aws-docker
+  expected-response:
+    response:
+      title: Cloud DevOps Engineer
+      seniority: mid
+      role: devops
+      requiredSkills:
+        - AWS
+        - Docker
+        - CI/CD
+      preferredSkills:
+        - Terraform
+    reasoning: The posting explicitly describes a mid-level Cloud DevOps Engineer.
+      AWS, Docker, and CI/CD are required, while Terraform is preferred.
+  vars:
+    jobDescription: We are hiring a Cloud DevOps Engineer to improve infrastructure
+      automation and deployment reliability across several services. You will
+      maintain cloud resources, improve delivery pipelines, automate
+      repetitive work, and support engineers during production incidents.
+      Strong practical experience with AWS, Docker, and CI/CD is required.
+      This is a mid-level role for someone comfortable with cloud operations.
+      Terraform knowledge is preferred.

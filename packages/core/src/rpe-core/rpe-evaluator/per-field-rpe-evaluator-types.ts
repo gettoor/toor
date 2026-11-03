@@ -1,3 +1,4 @@
+import { MetricResult } from '../../llm/index.js';
 import { AggregationFunc } from '../../math/index.js';
 
 /**
@@ -10,6 +11,9 @@ export interface PerFieldRPEEvaluatorFieldEvaluatorOutput {
 
   /** Result score for the field evaluation. */
   score: number;
+
+  /** Metrics for the field evaluation. */
+  metrics?: Record<string, MetricResult>;
 
   /** Reasoning for the field evaluation. */
   reasoning: string;

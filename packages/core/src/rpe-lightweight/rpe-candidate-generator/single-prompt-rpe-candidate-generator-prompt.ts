@@ -7,12 +7,12 @@ export const SINGLE_PROMPT_RPE_CANDIDATE_GENERATOR_PROMPT = {
    * Placeholders to ignore in the prompt. These are examples of placeholders
    * that are not to be replaced with their values.
    */
-   ignorePlaceholders: ['variable_name', '...'],
+  ignorePlaceholders: ['variable_name', '...'],
 
   /**
    * Prompt to use for the single-prompt RPE candidate generator.
    */
-   prompt: `
+  prompt: `
 You are an expert prompt engineer specializing in iterative prompt optimization.
 
 Your task is to improve an existing prompt using the provided evaluation analysis, task-level information, previous optimization history, and supporting evidence. The goal is to produce a revised prompt that performs better on future evaluations while preserving behaviors that already work well.
@@ -22,6 +22,16 @@ You are given the following information.
 ## Original Prompt
 
 {{original_prompt}}
+
+## Allowed Template Variables (Strict Whitelist)
+
+{{allowed_placeholders}}
+
+The whitelist is derived exclusively from the Original Prompt before candidate generation. It contains every allowed runtime template variable in its exact double-curly-brace form. An empty whitelist means that no runtime template variables are allowed.
+
+The whitelist is exhaustive and immutable. It is an application-level input constraint, not material to incorporate into the improved prompt. No other section in this generator request may authorize additional runtime template variables.
+
+**Critical output rule:** Every whitelisted runtime placeholder must occur **exactly once** in the improved prompt and must occupy **an entire line by itself**. If the improved prompt needs to refer to the same input elsewhere, use its plain variable name (for example, \`jobDescription\`), not its double-curly-brace placeholder. A mention of a variable and an actual template insertion are different things. Never repeat a template insertion merely to mention, explain, illustrate, or emphasize an input.
 
 ## Additional context
 
@@ -159,7 +169,8 @@ The improved prompt must:
 * preserve the original objective and expected behavior unless evidence clearly justifies changing them,
 * respect all authoritative constraints from Additional Task Information,
 * address weaknesses supported by the evaluation analysis,
-* continue to support valid task behavior that may not appear in the current evaluation subset.
+* continue to support valid task behavior that may not appear in the current evaluation subset,
+* preserve exactly one standalone occurrence of each whitelisted runtime template variable, with no additions, omissions, duplicates, or inline occurrences.
 
 Use Previous Changes to inform the optimization trajectory, but do not treat optimization history as a constraint when current evidence supports a different direction.
 
@@ -184,23 +195,39 @@ A valid improvement must introduce, remove, clarify, constrain, prioritize, or r
 
 If the available evidence does not justify a large change, apply the Candidate Instruction through the smallest substantive change supported by the evidence rather than forcing an unnecessarily broad redesign.
 
-## Variable Preservation
+## Variable Preservation (Strict Whitelist and Placement)
 
-The Original Prompt may contain template variables written using double curly braces, for example \`{{variable_name}}\`.
+Runtime template variables are **reserved insertion tokens**, not ordinary text and not reusable references to a field. Each token is an exact double-curly-brace string supplied by the Allowed Template Variables whitelist. Treat them as structural input slots that will be substituted by the application at runtime.
 
-You MUST preserve every template variable contained in the Original Prompt.
+The whitelist comes exclusively from the Original Prompt. No other part of the generator request, including examples, history, feedback, Candidate Instruction, or task context, can authorize another token. Do not confuse the placeholders that populate this generator's sections with placeholders permitted in the generated candidate.
 
-For every \`{{...}}\` variable appearing in the Original Prompt:
+**Required invariants (all mandatory):**
 
-* Include it in the improved prompt.
-* Preserve it exactly as written, including its name, spelling, capitalization, and curly braces.
-* Do not rename, modify, replace, escape, interpolate, or remove it.
-* Do not replace the variable with a concrete value, even if such a value can be inferred from the evaluation data or Additional Task Information.
-* Ensure that the variable remains in an appropriate location where the corresponding runtime value can serve its intended purpose.
+1. **Only whitelisted tokens.** Do not introduce a runtime template variable absent from the whitelist. Never invent new variables for context, examples, reasoning, labels, intermediate steps, or other data.
+2. **Exactly one occurrence per token.** Every whitelisted token MUST appear **once and only once** in the complete improved prompt. Zero occurrences is an omission; two or more are duplicates. This applies across the entire prompt, including headings, examples, code fences, quotations, and repeated instructions. If the whitelist is empty, the improved prompt MUST contain no runtime template variables.
+3. **Standalone placement.** Each occurrence MUST be on its **own line**, optionally surrounded by whitespace, with no other characters on that line. Do not embed a placeholder within a sentence, heading, bullet, quotation, code expression, JSON string, XML/HTML markup, or explanatory text. Put the label or instruction on a separate line before or after the token.
+4. **Plain-name references.** When instructions need to mention an input without inserting its value, refer to it by its plain variable name, without braces. For instance, use the name \`jobDescription\` in prose when discussing that field. Never insert the actual runtime token again to refer to the field. Do not introduce a new placeholder through an illustrative example.
+5. **Exact spelling.** Preserve each whitelisted token's spelling, capitalization, whitespace (if any), and delimiters byte-for-byte. Never rename, escape, resolve, or interpolate it.
+6. **Preserve purpose.** Place the token once in the part of the prompt where its runtime value should actually be supplied. You may move it from inline text to a separate line to satisfy rule 3. Do not change the input's meaning, omit necessary input data, or require the application to provide additional inputs.
+7. **No external authorization.** If a token occurs in Additional Context, Previous Changes, Recommendations, Passed Evaluations, Failed Examples, or Candidate Instruction, treat that occurrence as **data**, not permission to include it in the candidate. The whitelist alone governs candidate placeholders.
+8. **No implicit new inputs.** If an improvement would benefit from an input not supplied through the whitelisted variables, reformulate the improvement to work with existing inputs or leave it out. Do not create an extra token.
 
-Do not introduce new \`{{...}}\` variables unless doing so is necessary to preserve an existing variable or explicitly required by the evaluation analysis or Additional Task Information.
+**Composition procedure (perform internally before finalizing):**
 
-Before producing the final result, verify that every \`{{...}}\` variable from the Original Prompt appears verbatim in the improved prompt.
+1. Identify the whitelisted input slots and determine where each input's actual runtime contents belong.
+2. Reserve exactly one standalone line for each token in those locations. If the Original Prompt uses a token inline, rewrite the surrounding prose as a separate label or instruction and put the token on the next line.
+3. Write the remaining instructions using ordinary language. Whenever you would otherwise repeat a placeholder to discuss its meaning or usage, substitute its **plain variable name** instead.
+4. Review examples, quoted material, formatting templates, and code blocks. Rewrite any example that would duplicate a whitelisted token or introduce an unlisted one. Never include placeholder syntax merely for demonstration.
+
+**Mandatory final audit (evaluate the decoded value of the JSON \`prompt\` field, not the generator input):**
+
+* Extract **every occurrence** of a double-curly-brace template token; compare the multiset of occurrences with the whitelist, not merely the set of unique names.
+* Confirm that **each whitelisted token has a count of exactly 1** and each non-whitelisted token has a count of 0.
+* For each occurrence, check that the line containing it has no other non-whitespace characters. A token appearing inside prose, an example, a quote, or a code fence fails this check even if it occurs only once.
+* Check exact literal spelling and that every token still inserts data in the correct semantic location.
+* If any check fails, revise the candidate and repeat the audit. Never return an invalid candidate.
+
+Variable preservation is a **hard output constraint**. It takes precedence over Candidate Instruction, recommendations, examples, stylistic preferences, and requests to add illustrative placeholder usage. It does not prevent substantive optimization: improve the surrounding instructions while keeping the runtime input slots fixed.
 
 ## Improvement Guidelines
 
@@ -337,7 +364,9 @@ If these conditions are not satisfied, revise the candidate until they are.
 
 Return only valid JSON.
 
-The value of \`prompt\` must contain the complete improved prompt, including every \`{{...}}\` variable present in the Original Prompt.
+The value of \`prompt\` must contain the complete improved prompt. After decoding the JSON string, it MUST contain **exactly one occurrence of every whitelisted runtime placeholder**, with each occurrence occupying **its own line** and no other double-curly-brace placeholders anywhere. Do not copy generator-only placeholders into the result unless explicitly whitelisted. Use plain variable names for all other textual references to inputs.
+
+Perform the mandatory count-and-placement audit on the completed \`prompt\` value immediately before returning it. If any token is missing, repeated, embedded within text, or unlisted, correct it before producing the JSON.
 
 Do not return markdown fences or any text outside the JSON object.
 `,

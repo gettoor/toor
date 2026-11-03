@@ -1,4 +1,5 @@
 import { RPEDatasetEntry } from '@gettoor/core';
+import { writeRPEDatasetToString } from '@gettoor/core/rpe-io';
 
 interface JobOfferExpectedResponse {
   title: string;
@@ -942,3 +943,5 @@ export const TEST_JOB_OFFERS: RPEDatasetEntry<JobOfferExpectedResponse>[] = [
     `The title explicitly states Senior DevOps Engineer. GCP, Terraform, and CI/CD are required, while Kubernetes knowledge is preferred.`,
   ),
 ];
+
+console.log(writeRPEDatasetToString({ entries: VALIDATION_JOB_OFFERS }, 'yaml'));

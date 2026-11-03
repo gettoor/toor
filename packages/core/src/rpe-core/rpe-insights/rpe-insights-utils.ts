@@ -53,8 +53,12 @@ export function sumRPEInsightsUsage(insights: RPEInsights): Required<LLMUsage> {
       pushLLMUsage(analysis.usage);
     });
 
-    iteration.generatedCandidates?.forEach(candidate => {
+    iteration.validCandidates?.forEach(candidate => {
       pushLLMUsage(candidate.usage);
+    });
+
+    iteration.rejectedCandidates?.forEach(candidate => {
+      pushLLMUsage(candidate.candidate.usage);
     });
 
     iteration.candidateResponses?.forEach(response => {

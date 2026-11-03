@@ -1,4 +1,5 @@
 import { 
+  getGeneratedCandidates,
   type RPEAggregatorOutput,
   type RPEAnalyzerOutput,
   RPEInsights,
@@ -87,9 +88,16 @@ export function getCandidateDetailsData(
   // candidates from each iteration
   for (let index = 0; index < iterationHistory.length; index++) {
     const iteration = iterationHistory[index];
-    const candidate = iteration.generatedCandidates?.find(candidate => {
+    const generatedCandidates = getGeneratedCandidates(iteration);
+    const candidate = generatedCandidates.find(candidate => {
       return candidate.candidateRef.candidateId === selectedCandidateId;
     });
+    const rejectedCandidate = iteration.rejectedCandidates?.find(
+      rejectedCandidate => {
+        const rejectedRef = rejectedCandidate.candidate.candidateRef;
+        return rejectedRef.candidateId === selectedCandidateId;
+      }
+    );
     if (candidate !== undefined) {
       // candidates are training-evaluated in the next iteration
       const nextIteration = iterationHistory[index + 1];
@@ -113,6 +121,7 @@ export function getCandidateDetailsData(
         finalAggregatedEvaluation: findFinalAggregatedEvaluationByCandidateId(
           selectedCandidateId,
         ),
+        rejectionReason: rejectedCandidate?.reason,
       };
       break;
     }

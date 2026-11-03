@@ -103,7 +103,8 @@ export async function scalar(input: ScalarInput): Promise<ScalarOutput> {
         score: z.number().describe('The score for the response'),
         reasoning: z.string().describe('The reasoning for the score'),
         ...metricsSchema,
-      }),
+      })
+      .strict(),
     }),
   });
 

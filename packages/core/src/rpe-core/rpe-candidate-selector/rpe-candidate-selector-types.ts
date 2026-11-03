@@ -1,4 +1,5 @@
 import { LLMUsage } from '../../llm/index.js';
+import { RPEMetadata } from '../rpe-core/index.js';
 import { RPEProperties } from '../rpe-info/index.js';
 import { RPECandidateRef } from '../rpe-candidate/index.js';
 import { RPEState } from '../rpe-state/index.js';
@@ -23,6 +24,11 @@ export interface RPECandidateSelectorOutput {
    * Usage of the model.
    */
   usage?: LLMUsage;
+
+  /**
+   * Metadata of the candidate selector.
+   */
+  metadata?: RPEMetadata;
 }
 
 /**

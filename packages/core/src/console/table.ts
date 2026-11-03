@@ -6,8 +6,16 @@ export type TableCell = {
   style?: Style;
 } | string;
 
-export function printTable(table: TableCell[][]): void {
+export interface TableOptions {
+  prefix?: string;
+}
+
+export function printTable(
+  table: TableCell[][],
+  options?: TableOptions,
+): void {
   const SPACER = '   ';
+  const prefix = options?.prefix ?? '';
 
   const cellValue = (cell: TableCell): string => {
     if (typeof cell === 'string') {
@@ -34,7 +42,7 @@ export function printTable(table: TableCell[][]): void {
         return style(cellValue(cell).padEnd(maxWidths[index]));
       })
       .join(SPACER);
-    console.log(row)
+    console.log(prefix + row);
   };
 
   // header
@@ -42,7 +50,7 @@ export function printTable(table: TableCell[][]): void {
   const headerWidth =
     maxWidths.reduce((acc, width) => acc + width, 0) +
     SPACER.length * (maxWidths.length - 1);
-  console.log(separator({ width: headerWidth, style: Styles.muted }));
+  console.log(prefix + separator({ width: headerWidth, style: Styles.muted }));
 
   // body
   for (const row of table.slice(1)) {

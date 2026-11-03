@@ -1,3 +1,4 @@
+import { RPEMetadata } from '../rpe-core/index.js';
 import { RPEProperties } from '../rpe-info/index.js';
 import { RPECandidate } from '../rpe-candidate/index.js';
 import { RPEState } from '../rpe-state/index.js';
@@ -57,6 +58,11 @@ export interface RPECandidateGeneratorCandidate
    * Reference to the candidate.
    */
   candidate: RPECandidate;
+
+  /**
+   * Metadata of the candidate.
+   */
+  metadata?: RPEMetadata;
 }
 
 /**

@@ -14,15 +14,23 @@ import {
   RPEFinalCandidate,
   RPEIteration,
   RPEIterationInProgress,
+  RPEState,
   RPEUpdateStateFunc,
 } from '../rpe-state/index.js';
 import { RPEInsights } from '../rpe-insights/index.js';
+import { RPECandidateValidator } from '../rpe-candidate-validator/index.js';
 
 /**
  * Listeners for an RPE process.
  * @category Reflective Prompt Evolution
  */
 export interface RPEListeners {
+  /**
+   * Called when the RPE process is started.
+   * @param state - Process state valid in the subsequent listeners.
+   */
+  processStarted?: (state: RPEState) => Promise<void>;
+
   /**
    * Called when the state initialization is about to start.
    */
@@ -117,6 +125,22 @@ export interface RPEListeners {
    * @param iteration - Current iteration.
    */
   candidatesGenerated?: (
+    iteration: RPEIterationInProgress,
+  ) => Promise<void>;
+
+  /**
+  * Called when candidates are being validated.
+  * @param iteration - Current iteration.
+  */
+  validatingCandidates?: (
+    iteration: RPEIterationInProgress,
+  ) => Promise<void>;
+
+  /**
+   * Called when candidates have been validated.
+   * @param iteration - Current iteration.
+   */
+  candidatesValidated?: (
     iteration: RPEIterationInProgress,
   ) => Promise<void>;
 
@@ -263,6 +287,18 @@ export interface RPEInput {
    * evaluations and analyses.
    */
   candidateGenerator: RPECandidateGenerator;
+
+  /**
+   * Number of concurrent candidate validators to use. Defaults to 1 that means
+   * that the candidate validators are run sequentially.
+   */
+  candidateValidatorParallelism?: number;
+
+  /**
+   * A candidate validator determines if a candidate is valid or not. If it's
+   * invalid, it's rejected and not considered for further processing.
+   */
+  candidateValidator?: RPECandidateValidator;
 
   /**
    * Executor to use for the generated candidates. Candidate must

@@ -7,15 +7,28 @@ import {
 import {
   ExactStringRPEFieldEvaluatorInput,
 } from './exact-string-rpe-field-evaluator-types.js';
+import { quoteField } from './per-field-rpe-evaluator-utils.js';
 
+/**
+ * Exact string RPE field evaluator. It makes strict string comparison between
+ * the response and the expected response. Returns score 1 if the response is
+ * exactly the same as the expected response, 0 otherwise.
+ * @category Reflective Prompt Evolution
+ * @param input - Input for the exact string RPE field evaluator.
+ * @returns Exact string RPE field evaluator.
+ */
 export function exactStringRPEFieldEvaluator(
   input?: ExactStringRPEFieldEvaluatorInput,
 ): PerFieldRPEEvaluatorFieldEvaluator<string> {
   const {
     caseSensitive = true,
-    matchReasoning,
-    mismatchReasoning,
+    matchReasoning = defaultMatchReasoning,
+    mismatchReasoning = defaultMismatchReasoning,
   } = input ?? {};
+  const matchReasoningForMetrics =
+    input?.matchReasoningForMetrics ?? matchReasoning;
+  const mismatchReasoningForMetrics =
+    input?.mismatchReasoningForMetrics ?? mismatchReasoning;
 
   return async (
     value: string,
@@ -39,8 +52,8 @@ export function exactStringRPEFieldEvaluator(
     }
     if (typeof expectedValue !== 'string') {
       throw new InternalToorError(
-        `Expected value must be a string for the exact string field evaluator ` +
-        `for field ${ToorError.quote(field.field)}`
+        `Expected value must be a string for the exact string field ` +
+        `evaluator for field ${ToorError.quote(field.field)}`
       );
     }
 
@@ -57,7 +70,23 @@ export function exactStringRPEFieldEvaluator(
       return {
         field: field.field,
         score: 1,
-        reasoning: resolveMatchReasoning(matchReasoning, caseSensitive),
+        reasoning: matchReasoning(
+          field,
+          value,
+          expectedValue,
+          caseSensitive,
+        ),
+        metrics: {
+          [field.field + '_exact_match']: {
+            normalizedScore: 1,
+            reasoning: matchReasoningForMetrics(
+              field,
+              value,
+              expectedValue,
+              caseSensitive,
+            ),
+          },
+        },
       };
     }
 
@@ -65,42 +94,51 @@ export function exactStringRPEFieldEvaluator(
     return {
       field: field.field,
       score: 0,
-      reasoning: resolveMismatchReasoning(
-        mismatchReasoning,
-        caseSensitive,
+      reasoning: mismatchReasoning(
+        field,
         value,
         expectedValue,
+        caseSensitive,
       ),
+      metrics: {
+        [field.field + '_exact_match']: {
+          normalizedScore: 0,
+          reasoning: mismatchReasoningForMetrics(
+            field,
+            value,
+            expectedValue,
+            caseSensitive,
+          ),
+        },
+      },
     };
   }
 }
 
-function resolveMatchReasoning(
-  custom: string | undefined,
-  caseSensitive: boolean,
-): string {
-  if (custom) {
-    return custom;
-  }
-  if (!caseSensitive) {
-    return 'The value matches the expected value, ignoring letter case.';
-  }
-  return 'The value exactly matches the expected value.';
-}
-
-function resolveMismatchReasoning(
-  custom: string | undefined,
-  caseSensitive: boolean,
+function defaultMatchReasoning(
+  field: PerFieldRPEEvaluatorField,
   value: string,
   expectedValue: string,
+  caseSensitive: boolean,
 ): string {
-  if (custom) {
-    return custom;
-  }
   if (!caseSensitive) {
-    return `The value "${value}" does not match the expected value, ` +
-      `"${expectedValue}", even when letter case is ignored.`;
+    return `The value in the field ${quoteField(field)} matches ` +
+      `the expected value, ignoring letter case.`;
   }
-  return `The value "${value}" does not match ` +
-    `the expected value "${expectedValue}".`;
+  return `The value in the field ${quoteField(field)} exactly ` +
+    `matches the expected value.`;
+}
+
+function defaultMismatchReasoning(
+  field: PerFieldRPEEvaluatorField,
+  value: string,
+  expectedValue: string,
+  caseSensitive: boolean,
+): string {
+  if (!caseSensitive) {
+    return `The value in the field ${quoteField(field)} does not match ` +
+      `the expected value, even when letter case is ignored.`;
+  }
+  return `The value in the field ${quoteField(field)} does not match ` +
+    `the expected value.`;
 }
