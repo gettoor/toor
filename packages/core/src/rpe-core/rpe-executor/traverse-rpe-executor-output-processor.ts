@@ -17,10 +17,7 @@ import {
 export function traverseRPEExecutorOutputProcessor(
   input: TraverseRPEExecutorOutputProcessorInput,
 ): RPEExecutorOutputProcessor {
-  const {
-    onResponseObject = defaultOnResponseObject,
-    onResponseArray = defaultOnResponseArray,
-  } = input;
+  const { responseProcessor } = input;
 
   return {
     process: async (output: RPEExecutorOutput) => {
@@ -28,10 +25,8 @@ export function traverseRPEExecutorOutputProcessor(
         if (typeof response.response === 'string') {
           continue;
         }
-        const newResponse = await traverseObject(
+        const newResponse = await responseProcessor.process(
           response.response,
-          onResponseObject,
-          onResponseArray,
         );
         response.response = newResponse;
       }
@@ -40,68 +35,17 @@ export function traverseRPEExecutorOutputProcessor(
     },
 
     getInfo: async () => {
-      return { name: 'Identity Executor Output Processor' };
+      const responseProcessorInfo = await responseProcessor.getInfo();
+      return {
+        name: 'Traverse Executor Output Processor',
+        properties: [
+          {
+            key: 'responseProcessor',
+            value: responseProcessorInfo.name,
+            description: 'Processor for processing the response.',
+          }
+        ],
+      };
     },
   };
-}
-
-function isObject(value: unknown): value is Record<string, unknown> {
-  return value !== null && typeof value === 'object' && !Array.isArray(value);
-}
-
-async function traverseObject(
-  object: Record<string, unknown>,
-  onObject:
-    NonNullable<TraverseRPEExecutorOutputProcessorInput['onResponseObject']>,
-  onArray:
-    NonNullable<TraverseRPEExecutorOutputProcessorInput['onResponseArray']>,
-): Promise<Record<string, unknown>> {
-  const newObject = await onObject(object);
-  const keys = Object.keys(newObject);
-  for (const key of keys) {
-    newObject[key] = await traverse(newObject[key], onObject, onArray);
-  }
-  return newObject; 
-}
-
-async function traverseArray(
-  array: unknown[],
-  onObject:
-      NonNullable<TraverseRPEExecutorOutputProcessorInput['onResponseObject']>,
-  onArray:
-    NonNullable<TraverseRPEExecutorOutputProcessorInput['onResponseArray']>,
-): Promise<unknown[]> {
-  const newArray = await onArray(array);
-  for (let index = 0; index < newArray.length; index++) {
-    newArray[index] = await traverse(newArray[index], onObject, onArray);
-  }
-  return newArray;
-}
-
-async function traverse(
-  value: unknown,
-  onObject:
-    NonNullable<TraverseRPEExecutorOutputProcessorInput['onResponseObject']>,
-  onArray:
-    NonNullable<TraverseRPEExecutorOutputProcessorInput['onResponseArray']>,
-): Promise<unknown> {
-  if (Array.isArray(value)) {
-    return traverseArray(value, onObject, onArray);
-  }
-  if (isObject(value)) {
-    return traverseObject(value as Record<string, unknown>, onObject, onArray);
-  }
-  return value;
-}
-
-function defaultOnResponseObject(
-  object: Record<string, unknown>,
-): Promise<Record<string, unknown>> {
-  return Promise.resolve(object);
-}
-
-function defaultOnResponseArray(
-  array: unknown[],
-): Promise<unknown[]> {
-  return Promise.resolve(array);
 }

@@ -1,15 +1,12 @@
+import { RPEResponseProcessor } from '../rpe-response/index.js';
+
+/**
+ * Input for the traverse RPE executor output processor.
+ * @category Reflective Prompt Evolution
+ */
 export interface TraverseRPEExecutorOutputProcessorInput {
   /**
-   * Callback to execute for each object.
+   * Response processor to use for processing the responses.
    */
-  onResponseObject?: (
-    object: Record<string, unknown>,
-  ) => Promise<Record<string, unknown>>;
-
-  /**
-   * Callback to execute for each array.
-   */
-  onResponseArray?: (
-    array: unknown[],
-  ) => Promise<unknown[]>;
+  responseProcessor: RPEResponseProcessor;
 }

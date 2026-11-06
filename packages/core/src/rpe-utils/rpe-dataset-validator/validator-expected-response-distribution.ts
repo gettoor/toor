@@ -25,6 +25,13 @@ export function findExpectedResponseDistributions(
     if (typeof expectedResponse === 'string') {
       incDistribution(distribution, '', expectedResponse);
     }
+    else if (Array.isArray(expectedResponse)) {
+      expectedResponse.forEach(value => {
+        if (typeof value === 'string') {
+          incDistribution(distribution, '', value);
+        }
+      });
+    }
     else if (typeof expectedResponse === 'object') {
       const keys = Object.keys(expectedResponse);
       keys.forEach(key => {

@@ -1,5 +1,6 @@
 import { LLMUsage } from '../../llm/index.js';
-import { RPEMetadata, RPEResponse } from '../rpe-core/index.js';
+import { RPEMetadata } from '../rpe-core/index.js';
+import { RPEResponse } from '../rpe-response/index.js';
 import { RPEProperties } from '../rpe-info/index.js';
 import { RPEDatasetEntry } from '../rpe-dataset/index.js';
 import { RPEState } from '../rpe-state/index.js';

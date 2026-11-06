@@ -1,7 +1,7 @@
 import { RPEDatasetEntry } from '@gettoor/core';
 import { writeRPEDatasetToString } from '@gettoor/core/rpe-io';
 
-interface SupportTicketExpectedResponse {
+type SupportTicketExpectedResponse = {
   type: string;
   priority: string;
   department: string;

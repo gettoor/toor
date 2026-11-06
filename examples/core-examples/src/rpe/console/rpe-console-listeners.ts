@@ -65,6 +65,7 @@ export function consoleRPEListeners(): RPEListeners {
       }
       else {
         bar('No candidates evaluated');
+        console.log('');
       }
     },
 

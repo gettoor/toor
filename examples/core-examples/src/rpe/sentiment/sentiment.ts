@@ -44,7 +44,7 @@ async function run(): Promise<void> {
   );
   const evaluator = exactStringRPEEvaluator();
 
-  const input: RPEInput = rpeLightweight({
+  const input: RPEInput = await rpeLightweight({
     seed: [seedCandidate],
     trainingDataset: trainingDataset,
     validationDataset: validationDataset,

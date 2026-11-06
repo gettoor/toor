@@ -3,7 +3,10 @@ import { average } from '../math/index.js';
 import { ModelParameters } from '../llm/index.js';
 import {
   RPECandidateValidator,
+  RPEDataset,
+  RPEExecutorOutputProcessor,
   RPEInput,
+  RPEResponseProcessor,
   bestScoreFinalCandidateSelector,
   compositeRPECandidateValidator,
   defaultRPEAggregator,
@@ -19,8 +22,10 @@ import {
   noPlaceholdersRPECandidateValidator,
   orRPEStop,
   patienceRPEStop,
+  processRPEDatasetExpectedResponses,
   semanticRPECandidateValidator,
   testFinalCandidatesRPEStateUpdate,
+  traverseRPEExecutorOutputProcessor,
 } from '../rpe-core/index.js';
 import { singlePromptLLMRPEExecutor } from './rpe-executor/index.js';
 import { singlePromptJudgeRPEEvaluator } from './rpe-evaluator/index.js';
@@ -46,7 +51,9 @@ import { RPELightweightInput } from './rpe-lightweight-types.js';
  * @param input - Input for the RPE lightweight preset.
  * @returns RPE input for the lightweight preset.
  */
-export function rpeLightweight(input: RPELightweightInput): RPEInput {
+export async function rpeLightweight(
+  input: RPELightweightInput,
+): Promise<RPEInput> {
   const model = (name?: string, parameters?: ModelParameters) => {
     return {
       modelName: name ?? input.modelName,
@@ -61,21 +68,24 @@ export function rpeLightweight(input: RPELightweightInput): RPEInput {
     DEFAULT_RPE_LIGHTWEIGHT_MAXIMUM_ITERATIONS;
   const minScore = input.minScore ??
     DEFAULT_RPE_LIGHTWEIGHT_MIN_SCORE;
-  // const validPlaceholders = input.validPlaceholders;
   
-  const executorOutputProcessor = input.executorOutputProcessor ??
-    identityRPEExecutorOutputProcessor();
+  const executorOutputProcessor = createExecutorOutputProcessor(input);
   const evaluator = input.evaluator ?? singlePromptJudgeRPEEvaluator({
     ...model(input.evaluatorModelName, input.evaluatorModelParameters),
     metrics: input.metrics,
   });
 
+  const trainingDataset = await processDataset(
+    input.trainingDataset,
+    input.responseProcessor);
+  const validationDataset = await processDataset(
+    input.validationDataset,
+    input.responseProcessor,
+  );
+
   const rpeInput: RPEInput = {
     seed: input.seed,
-    dataset: mergeRPEDatasets(
-      input.trainingDataset,
-      input.validationDataset,
-    ),
+    dataset: mergeRPEDatasets(trainingDataset, validationDataset),
     executorOutputProcessor,
     trainingExecutor: singlePromptLLMRPEExecutor({
       ...model(input.executorModelName, input.executorModelParameters),
@@ -149,6 +159,17 @@ export function rpeLightweight(input: RPELightweightInput): RPEInput {
   return rpeInput;
 }
 
+function createExecutorOutputProcessor(
+  input: RPELightweightInput,
+): RPEExecutorOutputProcessor {
+  if (!input.responseProcessor) {
+    return identityRPEExecutorOutputProcessor();
+  }
+  return traverseRPEExecutorOutputProcessor({
+    responseProcessor: input.responseProcessor,
+  });
+}
+
 function createCandidateValidator(
   input: RPELightweightInput,
 ): RPECandidateValidator | undefined {
@@ -199,4 +220,14 @@ function createCandidateValidator(
     return undefined;
   }
   return compositeRPECandidateValidator({ validators });
+}
+
+async function processDataset(
+  dataset: RPEDataset,
+  responseProcessor?: RPEResponseProcessor,
+): Promise<RPEDataset> {
+  if (!responseProcessor) {
+    return dataset;
+  }
+  return processRPEDatasetExpectedResponses(dataset, responseProcessor);
 }

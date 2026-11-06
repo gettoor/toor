@@ -1,4 +1,5 @@
 export * from './rpe-core/index.js';
+export * from './rpe-response/index.js';
 export * from './rpe-info/index.js';
 export * from './rpe-dataset/index.js';
 export * from './rpe-candidate/index.js';

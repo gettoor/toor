@@ -1,17 +1,14 @@
-import {
-  TraverseRPEExecutorOutputProcessorInput,
-} from './traverse-rpe-executor-output-processor-types.js';
+import { RPEResponseArrayProcessor } from './rpe-response-types.js';
 
 /**
  * Sort a string array. Returns the original array if it is not a string array.
- * @param array - Array to sort.
+ * @category Reflective Prompt Evolution
+ * @param sortFunction - Function to use for sorting the array.
  * @returns Sorted array.
  */
-export function sortStringArrayTraverseRPEExecutorOutputCallback(
+export function sortStringArrayRPEResponseProcessor(
   sortFunction?: (a: string, b: string) => number,
-):
-  NonNullable<TraverseRPEExecutorOutputProcessorInput['onResponseArray']>
-{
+): RPEResponseArrayProcessor {
   return async (array: unknown[]): Promise<unknown[]> => {
     const isStringArray = array.every(item => typeof item === 'string');
     if (!isStringArray) {

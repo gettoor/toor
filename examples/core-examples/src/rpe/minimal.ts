@@ -7,7 +7,7 @@ import {
 import { renderRPEInsightsToHTML } from '@gettoor/core/rpe-html-renderer';
 
 async function run(): Promise<void> {
-  const input = rpeLightweight({
+  const input = await rpeLightweight({
     seed: [{
       modules: buildSinglePromptCandidateModules(
         'What is the sentiment of the following input\n\n{{input}}'

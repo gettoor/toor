@@ -8,9 +8,9 @@ import {
   perFieldRPEEvaluator,
   exactStringRPEFieldEvaluator,
   stringSetRPEFieldEvaluator,
-  sortStringArrayTraverseRPEExecutorOutputCallback,
-  traverseRPEExecutorOutputProcessor,
   rpeLightweight,
+  sortStringArrayRPEResponseProcessor,
+  traverseRPEResponseProcessor,
 } from '@gettoor/core';
 import { consoleRPEListeners } from '../console/index.js';
 import { readFile, writeInsightsToFile } from '../io/index.js';
@@ -96,9 +96,9 @@ async function run(): Promise<void> {
     'job-offers-additional-context.md',
   );
 
-  const executorOutputProcessor = traverseRPEExecutorOutputProcessor({
-    onResponseArray: sortStringArrayTraverseRPEExecutorOutputCallback(),
-  });
+  const responseProcessor = traverseRPEResponseProcessor({
+    onArray: sortStringArrayRPEResponseProcessor(),
+  })
 
   const evaluator = perFieldRPEEvaluator({
     evaluators: {
@@ -122,12 +122,13 @@ async function run(): Promise<void> {
     },
   });
 
-  const input: RPEInput = rpeLightweight({
+  const input: RPEInput = await rpeLightweight({
     seed: [seedCandidate],
     trainingDataset: trainingDataset,
     validationDataset: validationDataset,
     testDataset: testDataset,
     additionalContext,
+    responseProcessor,
     modelName: 'gemini:gemini-3.5-flash-lite',
     // modelName: 'openai:gpt-5-nano',
     // modelName: 'openai:gpt-6-luna',
@@ -137,7 +138,6 @@ async function run(): Promise<void> {
     structuredOutputSchema,
     minScore: 1.0,
     evaluator,
-    executorOutputProcessor,
   });
   input.listeners = consoleRPEListeners();
 

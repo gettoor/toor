@@ -1,5 +1,6 @@
+import { RPEResponseProcessor } from '../rpe-response/index.js';
 import { DuplicateDatasetEntryError } from './rpe-dataset-errors.js';
-import { RPEDataset } from './rpe-dataset-types.js';
+import { RPEDataset, RPEDatasetEntry } from './rpe-dataset-types.js';
 
 /**
  * Split a dataset into multiple datasets based on the given ratios.
@@ -57,4 +58,33 @@ export function mergeRPEDatasets(
   return {
     entries: datasets.flatMap(dataset => dataset.entries),
   };
+}
+
+/**
+ * Process the expected responses for a dataset using a response processor.
+ * @category Reflective Prompt Evolution
+ * @param dataset - Dataset to process.
+ * @param responseProcessor - Response processor to use.
+ * @returns Processed dataset.
+ */
+export async function processRPEDatasetExpectedResponses(
+  dataset: RPEDataset,
+  responseProcessor: RPEResponseProcessor,
+): Promise<RPEDataset> {
+  const newEntries: RPEDatasetEntry[] = [];
+  for (const entry of dataset.entries) {
+    const newEntry: RPEDatasetEntry = {
+      ...entry,
+    };
+    if (entry.expectedResponse) {
+      newEntry.expectedResponse = await responseProcessor.process(
+        entry.expectedResponse,
+      );
+    }
+    newEntries.push(newEntry);
+  }
+  return {
+    ...dataset,
+    entries: newEntries,
+  }
 }

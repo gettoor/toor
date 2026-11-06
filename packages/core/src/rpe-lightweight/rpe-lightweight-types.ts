@@ -8,6 +8,7 @@ import {
   RPEDataset,
   RPEEvaluator,
   RPEExecutorOutputProcessor,
+  RPEResponseProcessor,
 } from '../rpe-core/index.js';
 import {
   SinglePromptRPECandidateGeneratorInstruction,
@@ -180,5 +181,11 @@ export interface RPELightweightInput {
    * If not provided, the default output processor will be used.
    * @default {@link identityRPEExecutorOutputProcessor}
    */
-  executorOutputProcessor?: RPEExecutorOutputProcessor;
+  // executorOutputProcessor?: RPEExecutorOutputProcessor;
+
+  /**
+   * Response processor to use for responses from the executor and
+   * the expected responses from the dataset.
+   */
+  responseProcessor?: RPEResponseProcessor;
 }

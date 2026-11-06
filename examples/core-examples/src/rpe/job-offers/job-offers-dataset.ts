@@ -1,13 +1,13 @@
 import { RPEDatasetEntry } from '@gettoor/core';
 import { writeRPEDatasetToString } from '@gettoor/core/rpe-io';
 
-interface JobOfferExpectedResponse {
+type JobOfferExpectedResponse = {
   title: string;
   seniority: string;
   role: string;
   requiredSkills: string[];
   preferredSkills: string[];
-}
+};
 
 function entry(
   id: string,

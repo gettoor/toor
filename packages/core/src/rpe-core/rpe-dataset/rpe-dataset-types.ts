@@ -1,4 +1,4 @@
-import { RPEResponse } from '../rpe-core/index.js';
+import { RPEResponse } from '../rpe-response/index.js';
 
 /**
  * RPE dataset entry.
