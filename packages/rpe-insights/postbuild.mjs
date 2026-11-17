@@ -41,10 +41,10 @@ async function copyIndexHtmlToCore() {
 
 // TODO: delete me
 async function embedRPEInsights() {
-  const rpeInsights = await readFile('../../job-offers.json');
+  const rpeInsights = await readFile('../../job-offers-anthropic.json');
   const html = await readFile(distIndexHtmlPath, 'utf-8');
   const updatedHtml = html.replace('__RPE_INSIGHTS__', rpeInsights);
-  await writeFile(join(__dirname, 'dist', 'index-with-rpe-insights.html'), updatedHtml);
+  await writeFile(join(__dirname, 'dist', 'rpe-insights.html'), updatedHtml);
 }
 
 async function run() {

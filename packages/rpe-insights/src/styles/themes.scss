@@ -10,7 +10,9 @@
   --link-color: #6686e1;
 
   --red: #fb7185;
+  --red-muted: #89525d;
   --green: #10b981;
+  --green-muted: #528977;
 
   p {
     color: var(--text-muted);
@@ -29,7 +31,9 @@ html[data-theme="light"] {
   --link-color: #001aae;
 
   --red: #D2042D;
+  --red-muted: #c25c72;
   --green: #009E60;
+  --green-muted: #3fa668;
 
   p {
     color: var(--text-muted);

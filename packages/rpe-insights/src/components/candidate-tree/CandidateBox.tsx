@@ -5,6 +5,7 @@ import { MiddotSeparator } from '../basic';
 export interface CandidateBoxData {
   candidateId: string;
   isRejected: boolean;
+  isFinalCandidate: boolean;
   parentCandidateIds?: string[];
   aggregatedScore?: number;
   finalAggregatedScore?: number;
@@ -23,6 +24,28 @@ export interface CandidateBoxProps {
   isHighlighted?: boolean;
   onClick: () => void;
 }
+
+type StrokeColorState = 'default' | 'rejected' | 'final';
+
+type StrokeColors = {
+  default: string;
+  selected: string;
+}
+
+const STROKE_COLORS: Record<StrokeColorState, StrokeColors> = {
+  default: {
+    default: 'var(--stroke)',
+    selected: 'var(--stroke-selected)',
+  },
+  rejected: {
+    default: 'var(--red-muted)',
+    selected: 'var(--red)',
+  },
+  final: {
+    default: 'var(--green-muted)',
+    selected: 'var(--green)',
+  }
+};
 
 export function CandidateBox(props: CandidateBoxProps) {
   const { data } = props;
@@ -49,7 +72,13 @@ export function CandidateBox(props: CandidateBoxProps) {
   );
 
   const fill = 'var(--fill)';
-  const stroke = props.isSelected ? 'var(--stroke-selected)' : 'var(--stroke)';
+  const strokeColorState = data.isRejected
+    ? 'rejected'
+    : data.isFinalCandidate
+      ? 'final'
+      : 'default';
+  const strokeColorName = props.isSelected ? 'selected' : 'default';
+  const stroke = STROKE_COLORS[strokeColorState][strokeColorName];
 
   return (
     <>

@@ -22,7 +22,7 @@ export function CandidateBoxConnection(props: CandidateBoxConnectionProps) {
       stroke='var(--stroke)'
       strokeWidth={1}
       fill='none'
-      opacity={props.isHighlighted == false ? 0.25 : 1}
+      opacity={props.isHighlighted == false ? 0 : 1}
     />
   );
 }

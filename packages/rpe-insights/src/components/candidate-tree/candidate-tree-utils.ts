@@ -43,6 +43,12 @@ export function resolveBoxes(
     });
   };
 
+  const isFinalCandidate = (candidateId: string) => {
+    return rpeInsights.finalCandidates.some((evaluation) => {
+      return evaluation.candidateRef.candidateId === candidateId;
+    });
+  };
+
   // seed prompts
   const firstIteration = iterationHistory[0];
   let x = PADDING;
@@ -58,6 +64,7 @@ export function resolveBoxes(
       data: {
         candidateId: candidateRef.candidateId,
         isRejected: false,
+        isFinalCandidate: isFinalCandidate(candidateRef.candidateId),
         parentCandidateIds: prompt.parentCandidateIds,
         aggregatedScore: aggregatedEvaluation?.aggregatedScore,
         finalAggregatedScore:
@@ -105,6 +112,7 @@ export function resolveBoxes(
         data: {
           candidateId: candidate.candidateId,
           isRejected,
+          isFinalCandidate: isFinalCandidate(candidate.candidateId),
           parentCandidateIds: candidate.parentCandidateIds,
           aggregatedScore: candidateAggregatedEvaluation?.aggregatedScore,
           finalAggregatedScore:
