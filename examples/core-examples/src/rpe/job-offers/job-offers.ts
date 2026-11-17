@@ -11,6 +11,7 @@ import {
   rpeLightweight,
   sortStringArrayRPEResponseProcessor,
   traverseRPEResponseProcessor,
+  rpeLightweightExecutorAndCriticModels,
 } from '@gettoor/core';
 import { consoleRPEListeners } from '../console/index.js';
 import { readFile, writeInsightsToFile } from '../io/index.js';
@@ -129,12 +130,14 @@ async function run(): Promise<void> {
     testDataset: testDataset,
     additionalContext,
     responseProcessor,
-    modelName: 'gemini:gemini-3.5-flash-lite',
-    // modelName: 'openai:gpt-5-nano',
-    // modelName: 'openai:gpt-6-luna',
-    modelParameters: {
-      // temperature: 0.3,
-    },
+    ...rpeLightweightExecutorAndCriticModels({
+      executorModelName: 'gemini:gemini-3.5-flash-lite',
+      criticModelName: 'gemini:gemini-3.8-flash',
+      // executorModelName: 'anthropic:claude-haiku-5-5',
+      // criticModelName: 'anthropic:claude-sonnet-5-5',
+      // executorModelName: 'openai:gpt-5-nano',
+      // criticModelName: 'openai:gpt-6-luna',
+    }),
     structuredOutputSchema,
     minScore: 1.0,
     evaluator,

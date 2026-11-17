@@ -11,9 +11,9 @@ export interface RPERejectedCandidateRef {
   candidateRef: RPECandidateRef;
 
   /**
-   * Reason for the rejection.
+   * Reasons for the rejection (can be markdown).
    */
-  reason: string;
+  reasons: string[];
 }
 
 export interface ValidateCandidateInput {

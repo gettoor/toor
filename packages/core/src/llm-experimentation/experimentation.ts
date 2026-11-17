@@ -1,10 +1,13 @@
-/**
- * Runs an experiment.
- */
-import { generateText, jsonSchema, Output } from 'ai';
 import yaml from 'yaml';
+import { jsonSchema } from 'ai';
 
-import { LLMModel, LLMUsage, buildModelCallSettings } from '../llm/index.js';
+import { 
+  LLMModel,
+  LLMUsage,
+  buildModelCallSettings,
+  llmGenerateStructuredOutput,
+  llmGenerateText,
+} from '../llm/index.js';
 import { replacePlaceholders } from '../string/index.js';
 import { 
   DefaultModelProvider,
@@ -219,25 +222,15 @@ async function generateResponse(
   const { name: _name, ...modelParameters } = experimentModelParameters;
 
   // generate text response
-  const response = await generateText({
-    model: model.model,
+  const response = await llmGenerateText({
+    model,
     prompt,
     ...buildModelCallSettings(modelParameters)
   });
 
-  // build result
-  const usage: LLMUsage = {
-    modelUsage: [
-      {
-        modelName: model.name,
-        inputTokens: response.usage.inputTokens,
-        outputTokens: response.usage.outputTokens,
-      },
-    ],
-  };
   return {
-    response: response.text,
-    usage,
+    response: response.output,
+    usage: response.usage,
   };
 }
 
@@ -247,25 +240,15 @@ async function generateStructuredResponse(
   prompt: string,
   structuredOutput: ExperimentStructuredOutput,
 ): Promise<{ response: string, usage: LLMUsage }> {
-  const response = await generateText({
-    model: model.model,
+  const response = await llmGenerateStructuredOutput({
+    model,
     prompt,
-    temperature: modelParameters.temperature,
-    output: Output.object({
-      schema: jsonSchema(structuredOutput.schema),
-    }),
+    modelParameters,
+    schema: jsonSchema(structuredOutput.schema),
   });
 
   const output = response.output;
-  const usage: LLMUsage = {
-    modelUsage: [
-      {
-        modelName: model.name,
-        inputTokens: response.usage.inputTokens,
-        outputTokens: response.usage.outputTokens,
-      },
-    ],
-  };
+  const usage = response.usage;
 
   // format
   let responseAsText: string | undefined;

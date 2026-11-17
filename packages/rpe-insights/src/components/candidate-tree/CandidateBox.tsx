@@ -4,6 +4,7 @@ import { MiddotSeparator } from '../basic';
 
 export interface CandidateBoxData {
   candidateId: string;
+  isRejected: boolean;
   parentCandidateIds?: string[];
   aggregatedScore?: number;
   finalAggregatedScore?: number;
@@ -46,6 +47,8 @@ export function CandidateBox(props: CandidateBoxProps) {
         data.failedEvaluationsCount > 0
     },
   );
+
+  const fill = 'var(--fill)';
   const stroke = props.isSelected ? 'var(--stroke-selected)' : 'var(--stroke)';
 
   return (
@@ -55,7 +58,7 @@ export function CandidateBox(props: CandidateBoxProps) {
         y={props.y + 0.5}
         width={props.width}
         height={props.height}
-        fill='var(--fill)'
+        fill={fill}
         stroke={stroke}
         strokeWidth={'1px'}
         vectorEffect='non-scaling-stroke'

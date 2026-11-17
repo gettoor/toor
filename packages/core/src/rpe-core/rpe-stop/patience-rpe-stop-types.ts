@@ -4,8 +4,10 @@
  */
 export interface PatienceRPEStopInput {
   /**
-   * Number of iterations without best score improvement after which
-   * the RPE process should stop.
+   * Number of iterations without improvement after which the RPE process
+   * should stop. An iteration does not improve when no generated candidate
+   * is selected, or when the best selected score does not increase by
+   * {@link minScoreImprovement}.
    */
   noImprovementCount: number;
 

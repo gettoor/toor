@@ -2,20 +2,47 @@ import { RPEState } from '../rpe-state/index.js';
 import { patienceRPEStop } from './patience-rpe-stop.js';
 
 function createState(scores?: number[]): RPEState {
-  return {
+  const state = {
     metadata: {},
-    iteration: {
-      candidateAggregatedEvaluations: scores?.map(aggregatedScore => ({
-        aggregatedScore,
-      })),
-    },
+    iteration: {},
   } as RPEState;
+  if (scores !== undefined) {
+    setScores(state, scores);
+  }
+  return state;
 }
 
 function setScores(state: RPEState, scores: number[]): void {
+  const candidateIds = scores.map((_, index) => `generated-${index}`);
   state.iteration.candidateAggregatedEvaluations = scores.map(
-    aggregatedScore => ({ aggregatedScore }),
+    (aggregatedScore, index) => ({
+      candidateRef: { candidateId: candidateIds[index] },
+      aggregatedScore,
+    }),
   ) as RPEState['iteration']['candidateAggregatedEvaluations'];
+  state.iteration.validCandidates = candidateIds.map(candidateId => ({
+    candidateRef: { candidateId },
+  })) as RPEState['iteration']['validCandidates'];
+  state.iteration.selectedCandidateRefs = candidateIds.map(candidateId => ({
+    candidateId,
+  }));
+}
+
+function setScoresWithPreviousCandidatesSelected(
+  state: RPEState,
+  scores: number[],
+): void {
+  const candidateIds = scores.map((_, index) => `generated-${index}`);
+  state.iteration.candidateAggregatedEvaluations = scores.map(
+    (aggregatedScore, index) => ({
+      candidateRef: { candidateId: candidateIds[index] },
+      aggregatedScore,
+    }),
+  ) as RPEState['iteration']['candidateAggregatedEvaluations'];
+  state.iteration.validCandidates = candidateIds.map(candidateId => ({
+    candidateRef: { candidateId },
+  })) as RPEState['iteration']['validCandidates'];
+  state.iteration.selectedCandidateRefs = [{ candidateId: 'seed' }];
 }
 
 describe('patienceRPEStop', () => {
@@ -159,6 +186,52 @@ describe('patienceRPEStop', () => {
       stop: true,
       stopReason:
         'No improvement in the best score after 1 iterations',
+    });
+  });
+
+  it('counts keeping the previous candidates as no improvement', async () => {
+    const stop = patienceRPEStop({
+      noImprovementCount: 2,
+      minScoreImprovement: 0.01,
+    });
+    const state = createState([0.5]);
+
+    await expect(stop(state)).resolves.toEqual({ stop: false });
+
+    setScoresWithPreviousCandidatesSelected(state, [0.8]);
+    await expect(stop(state)).resolves.toEqual({ stop: false });
+
+    setScoresWithPreviousCandidatesSelected(state, [0.9]);
+    await expect(stop(state)).resolves.toEqual({
+      stop: true,
+      stopReason:
+        'No improvement in the best score after 2 iterations',
+    });
+  });
+
+  it('resets the count when a generated candidate is selected again', async () => {
+    const stop = patienceRPEStop({
+      noImprovementCount: 2,
+      minScoreImprovement: 0.01,
+    });
+    const state = createState([0.5]);
+
+    await expect(stop(state)).resolves.toEqual({ stop: false });
+
+    setScoresWithPreviousCandidatesSelected(state, [0.9]);
+    await expect(stop(state)).resolves.toEqual({ stop: false });
+
+    setScores(state, [0.6]);
+    await expect(stop(state)).resolves.toEqual({ stop: false });
+
+    setScoresWithPreviousCandidatesSelected(state, [0.99]);
+    await expect(stop(state)).resolves.toEqual({ stop: false });
+
+    setScoresWithPreviousCandidatesSelected(state, [0.99]);
+    await expect(stop(state)).resolves.toEqual({
+      stop: true,
+      stopReason:
+        'No improvement in the best score after 2 iterations',
     });
   });
 });

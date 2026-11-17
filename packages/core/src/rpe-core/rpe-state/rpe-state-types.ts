@@ -36,9 +36,9 @@ export interface RPERejectedCandidate {
   candidate: CandidateGeneratorOutputCandidate;
 
   /**
-   * Reason for the rejection.
+   * Reasons for the rejection (can be markdown).
    */
-  reason: string;
+  reasons: string[];
 }
 
 /**

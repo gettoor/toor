@@ -57,6 +57,7 @@ export function resolveBoxes(
     boxes.push({
       data: {
         candidateId: candidateRef.candidateId,
+        isRejected: false,
         parentCandidateIds: prompt.parentCandidateIds,
         aggregatedScore: aggregatedEvaluation?.aggregatedScore,
         finalAggregatedScore:
@@ -94,9 +95,16 @@ export function resolveBoxes(
           return selectedCandidateRef.candidateId === candidate.candidateId;
         },
       );
+      const isRejected = (iteration.rejectedCandidates ?? []).some(
+        (rejectedCandidate) => {
+          const { candidateRef } = rejectedCandidate.candidate;
+          return candidateRef.candidateId === candidate.candidateId;
+        },
+      );
       boxes.push({
         data: {
           candidateId: candidate.candidateId,
+          isRejected,
           parentCandidateIds: candidate.parentCandidateIds,
           aggregatedScore: candidateAggregatedEvaluation?.aggregatedScore,
           finalAggregatedScore:

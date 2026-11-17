@@ -9,6 +9,7 @@ import {
   rpeLightweight,
   perFieldRPEEvaluator,
   exactStringRPEFieldEvaluator,
+  rpeLightweightExecutorAndCriticModels,
 } from '@gettoor/core';
 import { readRPEDatasetFromFile } from '@gettoor/core/rpe-io';
 
@@ -54,15 +55,23 @@ async function run(): Promise<void> {
         description: 'The department to which the support ticket belongs',
       },
     },
+    additionalProperties: false,
     required: ['type', 'priority', 'department'],
   } satisfies JSONSchema7;
 
   const seedPrompt = await readFile(
     dirname,
-    'support-tickets-additional-seed-prompt.md',
+    'support-tickets-seed-prompt.md',
+  );
+  const seedInputs = await readFile(
+    dirname,
+    'support-tickets-seed-inputs.md',
   );
   const seedCandidate: RPECandidate = {
-    modules: buildSinglePromptCandidateModules(seedPrompt),
+    modules: buildSinglePromptCandidateModules({
+      prompt: seedPrompt,
+      inputs: seedInputs,
+    }),
     candidateId: 'seed',
   };
 
@@ -85,10 +94,14 @@ async function run(): Promise<void> {
     validationDataset: validationDataset,
     testDataset: testDataset,
     additionalContext,
-    modelName: 'gemini:gemini-3.5-flash-lite',
-    modelParameters: {
-      temperature: 0.3,
-    },
+    ...rpeLightweightExecutorAndCriticModels({
+      // executorModelName: 'openai:gpt-5-nano',
+      // criticModelName: 'openai:gpt-6-luna',
+      executorModelName: 'gemini:gemini-3.5-flash-lite',
+      criticModelName: 'gemini:gemini-3.8-flash',
+      // executorModelName: 'anthropic:claude-haiku-5-5',
+      // criticModelName: 'anthropic:claude-sonnet-5-5',
+    }),       
     structuredOutputSchema,
     minScore: 1.0,
     evaluator,

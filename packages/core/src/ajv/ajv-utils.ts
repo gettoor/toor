@@ -1,5 +1,23 @@
-import { ErrorObject } from 'ajv';
+import { Ajv, type ErrorObject } from 'ajv';
+import { JSONSchema7 } from 'json-schema';
 import { ToorError } from '@gettoor/core';
+
+import { AjvValidateObjectResult } from './ajv-types.js';
+
+const ajv = new Ajv({ allErrors: true });
+
+export function validateObject(
+  schema: JSONSchema7,
+  data: unknown,
+): AjvValidateObjectResult {
+  const validate = ajv.compile(schema);
+  const valid = validate(data);
+
+  return {
+    valid,
+    errors: validate.errors ?? [],
+  };
+}
 
 export function humanizeAjvErrors(
   errors: ErrorObject[],

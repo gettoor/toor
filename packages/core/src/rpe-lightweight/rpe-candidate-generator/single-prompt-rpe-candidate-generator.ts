@@ -113,11 +113,13 @@ export function singlePromptRPECandidateGenerator(
           return analysis.candidateRef.candidateId === candidateId;
         });
         if (!analysis) {
-          throw new InternalToorError(
-            `Analysis not found for candidate ` +
-            `${ToorError.quote(candidateId)} ` +
-            `during candidate generation`,
-          );
+          // throw new InternalToorError(
+          //   `Analysis not found for candidate ` +
+          //   `${ToorError.quote(candidateId)} ` +
+          //   `during candidate generation`,
+          // );
+          // TODO: log warning
+          return;
         }
 
         // for each candidate instruction
@@ -258,7 +260,12 @@ async function doGenerateCandidate(
     ...buildModelCallSettings(input.modelParameters),
     output: Output.object({
       schema: SinglePromptRPECandidateGeneratorOutputSchema,
-    })
+    }),
+    providerOptions: {
+      anthropic: {
+        structuredOutputMode: 'outputFormat',
+      },
+    },
   });
 
   const generatedCandidate: RPECandidateGeneratorCandidate = {

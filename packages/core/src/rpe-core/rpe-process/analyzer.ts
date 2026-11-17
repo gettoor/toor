@@ -18,13 +18,18 @@ export async function analyzeAggregatedEvaluations(
 
   // tasks
   const tasks = aggregatedEvaluations.map(async aggregatedEvaluation => {
-    const output = await analyzer.run(
-      state,
-      {
-        aggregation: aggregatedEvaluation,
-      },
-    );
-    outputs.push(output);
+    try {
+      const output = await analyzer.run(
+        state,
+        {
+          aggregation: aggregatedEvaluation,
+        },
+      );
+      outputs.push(output);
+    } catch (error) {
+      console.error(error);
+      // TODO: handle error
+    }
   });
 
   // run tasks in parallel

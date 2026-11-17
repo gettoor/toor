@@ -5,6 +5,7 @@ import {
   LLMUsage,
   MetricResult,
   buildModelCallSettings,
+  llmGenerateStructuredOutput,
 } from '../llm/index.js';
 import { 
   rejectUnknownPlaceholders,
@@ -94,18 +95,16 @@ export async function scalar(input: ScalarInput): Promise<ScalarOutput> {
   }
 
   // generate text
-  const response = await generateText({
-    model: model.model,
+  const response = await llmGenerateStructuredOutput({
+    model,
     prompt: evalPrompt,
     ...buildModelCallSettings(input.modelParameters),
-    output: Output.object({
-      schema: z.object({
-        score: z.number().describe('The score for the response'),
-        reasoning: z.string().describe('The reasoning for the score'),
-        ...metricsSchema,
-      })
-      .strict(),
-    }),
+    schema: z.object({
+      score: z.number().describe('The score for the response'),
+      reasoning: z.string().describe('The reasoning for the score'),
+      ...metricsSchema,
+    })
+    .strict(),
   });
 
   // the model returns the final and metrics score according to the scoring
@@ -137,14 +136,5 @@ export async function scalar(input: ScalarInput): Promise<ScalarOutput> {
     normalizedScore: normalizeScore(output.score),
     metrics,
   };
-  const usage: LLMUsage = {
-    modelUsage: [
-      {
-        modelName: model.name,
-        inputTokens: response.usage.inputTokens,
-        outputTokens: response.usage.outputTokens,
-      },
-    ],
-  };
-  return { result, reasoning: output.reasoning, usage };
+  return { result, reasoning: output.reasoning, usage: response.usage };
 }

@@ -1,9 +1,7 @@
-import { generateText, Output } from 'ai';
-
 import { InternalToorError, ToorError } from '../../errors/index.js';
 import { runParallelBatchesOrThrow } from '../../concurrency/index.js';
 import {
-  buildModelCallSettings,
+  llmGenerateStructuredOutput,
   LLMModel,
   ModelParameters,
 } from '../../llm/index.js';
@@ -103,14 +101,12 @@ async function findContradiction(
     },
   );
 
-  const { output } = await generateText({
-    model: model.model,
+  const { output } = await llmGenerateStructuredOutput({
+    model: model,
     prompt: prompt.text,
-    ...buildModelCallSettings(modelParameters),
-    output: Output.object({
-      schema: ContradictionsOutputSchema,
-    }),
-  });  
+    modelParameters,
+    schema: ContradictionsOutputSchema,
+  });
 
   return output;
 }

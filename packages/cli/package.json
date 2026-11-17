@@ -14,12 +14,10 @@
   "dependencies": {
     "@gettoor/core": "workspace:^",
     "ajv": "^8.20.0",
-    "ajv-errors": "^3.0.0",
     "yaml": "^2.9.0",
     "zod": "^4.4.3"
   },
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "author": "AndCreations",
   "license": "MIT"
 }

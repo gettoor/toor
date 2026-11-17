@@ -53,7 +53,7 @@ export async function validateCandidates(
     else {
       rejectedCandidates.push({
         candidateRef: candidateRefFromCandidate(candidate.candidate),
-        reason: output.violations.join('\n'),
+        reasons: output.violations,
       });
     }
   });

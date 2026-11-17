@@ -2,7 +2,7 @@ import { generateText, Output } from 'ai';
 
 import { replacePlaceholders } from '../../string/index.js';
 import { DefaultModelProvider } from '../../model-provider/index.js';
-import { buildModelCallSettings } from '../../llm/index.js';
+import { llmGenerateStructuredOutput } from '../../llm/index.js';
 import { modelParametersToRPEInfo } from '../rpe-info/index.js';
 import { RPECandidate } from '../rpe-candidate/rpe-candidate-types.js';
 import { 
@@ -54,14 +54,16 @@ export function semanticRPECandidateValidator(
         },
       );
 
-      // generate text response
-      const { output, usage } = await generateText({
-        model: model.model,
+      const { output, usage } = await llmGenerateStructuredOutput({
+        model: model,
         prompt: prompt.text,
-        ...buildModelCallSettings(modelParameters),
-        output: Output.object({
-          schema: SemanticRPECandidateValidatorSchema,
-        })
+        modelParameters,
+        schema: SemanticRPECandidateValidatorSchema,
+        // providerOptions: {
+        //   anthropic: {
+        //     structuredOutputMode: 'outputFormat',
+        //   },
+        // },
       });
 
       const violations = output.violations.map(violation => {
@@ -73,15 +75,7 @@ export function semanticRPECandidateValidator(
       });
       return {
         violations,
-        usage: {
-          modelUsage: [
-            {
-              modelName: model.name,
-              inputTokens: usage.inputTokens,
-              outputTokens: usage.outputTokens,
-            },
-          ],
-        },
+        usage,
       };
     },
 

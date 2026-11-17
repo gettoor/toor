@@ -84,6 +84,11 @@ export class DefaultModelProvider implements ModelProvider {
       return {
         name: modelId,
         model,
+        structuredOutputProviderOptions: {
+          anthropic: {
+            structuredOutputMode: 'outputFormat',
+          },
+        },
       };
     }
   

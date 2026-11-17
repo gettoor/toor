@@ -221,9 +221,6 @@ importers:
       ajv:
         specifier: ^8.20.0
         version: 8.20.0
-      ajv-errors:
-        specifier: ^3.0.0
-        version: 3.0.0(ajv@8.20.0)
       yaml:
         specifier: ^2.9.0
         version: 2.9.0
@@ -245,6 +242,12 @@ importers:
       ai:
         specifier: ^7.0.111
         version: 7.0.111(zod@4.6.5)
+      ajv:
+        specifier: ^8.20.0
+        version: 8.20.0
+      ajv-errors:
+        specifier: ^3.0.0
+        version: 3.0.0(ajv@8.20.0)
       json-schema:
         specifier: ^0.4.0
         version: 0.4.0

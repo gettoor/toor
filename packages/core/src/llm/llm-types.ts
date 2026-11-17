@@ -1,4 +1,15 @@
-import { LanguageModel, EmbeddingModel as AiEmbeddingModel } from 'ai';
+import {
+  LanguageModel,
+  EmbeddingModel as AiEmbeddingModel,
+  type FlexibleSchema,
+  type InferSchema,
+  generateText,
+} from 'ai';
+
+/**
+ * AI SDK provider options.
+ */
+type AiProviderOptions = Parameters<typeof generateText>[0]['providerOptions'];
 
 /**
  * Usage information for a specific model.
@@ -132,6 +143,11 @@ export interface LLMModel {
    * AI SDK language model.
    */
   model: LanguageModel;
+
+  /**
+   * Provider options to use.
+   */
+  structuredOutputProviderOptions?: AiProviderOptions;
 }
 
 /**
@@ -148,4 +164,87 @@ export interface EmbeddingModel {
    * AI SDK embedding model.
    */
   model: AiEmbeddingModel;
+}
+
+/**
+ * Input for generating text input from a language model.
+ * @category LLM
+ */
+export type LLMGenerateTextInput = {
+  /**
+   * Language model to use.
+   */
+  model: LLMModel;
+  
+  /**
+   * Model parameters to use.
+   */
+  modelParameters?: ModelParameters;
+
+  /**
+   * Prompt to use.
+   */
+  prompt: string;
+}
+
+/**
+ * Output for generating text input from a language model.
+ * @category LLM
+ */
+export type LLMGenerateTextInputOutput = {
+  /**
+   * Output from the language model.
+   */
+  output: string;
+  
+  /**
+   * Usage information for the language model.
+   */
+  usage: LLMUsage;
+}
+
+/**
+ * Input for generating structured output from a language model.
+ * @category LLM
+ */
+export type LLMGenerateStructuredOutputInput<
+  T extends FlexibleSchema = FlexibleSchema
+> = {
+  /**
+   * Language model to use.
+   */
+  model: LLMModel;
+
+  /**
+   * Model parameters to use.
+   */
+  modelParameters?: ModelParameters;
+
+  /**
+   * Prompt to use.
+   */
+  prompt: string;
+
+  /**
+   * Schema to use for structured output.
+   */
+  schema: T;
+}
+
+/**
+ * Output for generating structured output from a language model.
+ * @category LLM
+ */
+export type LLMGenerateStructuredOutputOutput<
+  T extends FlexibleSchema = FlexibleSchema
+> = {
+  /**
+   * Output from the language model.
+   */
+  output: InferSchema<T>;
+
+  /**
+   * Usage information for the language model.
+   */
+  usage: LLMUsage;
 }

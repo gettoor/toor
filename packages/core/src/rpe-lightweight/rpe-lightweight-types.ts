@@ -1,4 +1,5 @@
 import { type JSONSchema7 } from 'json-schema';
+
 import { AggregationFunc } from '../math/index.js';
 import { ModelParameters } from '../llm/index.js';
 import { ModelProvider } from '../model-provider/index.js';
@@ -7,12 +8,39 @@ import {
   RPECandidate,
   RPEDataset,
   RPEEvaluator,
-  RPEExecutorOutputProcessor,
   RPEResponseProcessor,
 } from '../rpe-core/index.js';
 import {
   SinglePromptRPECandidateGeneratorInstruction,
 } from './rpe-candidate-generator/index.js';
+
+/**
+ * Models to use for the executor and critic.
+ * @category Reflective Prompt Evolution
+ */
+export interface RPELightweightExecutorAndCriticModels {
+  /**
+   * Model name to use for the executor.
+   */
+  executorModelName: string;
+
+  /**
+   * Model parameters to use for the executor.
+   */
+  executorModelParameters?: ModelParameters;
+
+  /**
+   * Model name to use for the evaluator, analyzer, candidate generator
+   * and components other than the executor.
+   */
+  criticModelName: string;
+
+  /**
+   * Model parameters to use for the evaluator, analyzer, candidate generator
+   * and components other than the executor.
+   */
+  criticModelParameters?: ModelParameters;
+}
 
 /**
  * Input for the RPE lightweight preset.
@@ -93,12 +121,12 @@ export interface RPELightweightInput {
   modelProvider?: ModelProvider;
 
   /**
-   * Model name to use.
+   * Default model name to use.
    */
-  modelName: string;
+  modelName?: string;
 
   /**
-   * Model parameters to use.
+   * Default model parameters to use.
    */
   modelParameters?: ModelParameters;
 
@@ -151,6 +179,18 @@ export interface RPELightweightInput {
   candidateGeneratorModelParameters?: ModelParameters;
 
   /**
+   * Model name to use for the candidate validator.
+   * If not provided, the default model name will be used.
+   */
+  candidateValidatorModelName?: string;
+
+  /**
+   * Model parameters to use for the candidate validator.
+   * If not provided, the default model parameters will be used.
+   */
+  candidateValidatorModelParameters?: ModelParameters;
+
+  /**
    * Schema of the structured output.
    */
   structuredOutputSchema?: JSONSchema7;
@@ -175,13 +215,6 @@ export interface RPELightweightInput {
    * @default {@link singlePromptJudgeRPEEvaluator}
    */
   evaluator?: RPEEvaluator;
-
-  /**
-   * Output processor to use for the executor.
-   * If not provided, the default output processor will be used.
-   * @default {@link identityRPEExecutorOutputProcessor}
-   */
-  // executorOutputProcessor?: RPEExecutorOutputProcessor;
 
   /**
    * Response processor to use for responses from the executor and

@@ -121,7 +121,7 @@ export function getCandidateDetailsData(
         finalAggregatedEvaluation: findFinalAggregatedEvaluationByCandidateId(
           selectedCandidateId,
         ),
-        rejectionReason: rejectedCandidate?.reason,
+        rejectionReasons: rejectedCandidate?.reasons,
       };
       break;
     }

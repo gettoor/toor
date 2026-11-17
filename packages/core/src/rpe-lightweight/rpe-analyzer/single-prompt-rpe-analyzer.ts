@@ -1,9 +1,8 @@
-import { generateText, Output } from 'ai';
 import * as YAML from 'yaml';
 
 import { replacePlaceholders } from '../../string/index.js';
 import { 
-  buildModelCallSettings,
+  llmGenerateStructuredOutput,
   MetricResult,
   removeNewlines,
 } from '../../llm/index.js';
@@ -81,13 +80,11 @@ export function singlePromptRPEAnalyzer(
       
       // generate text response
       const model = await modelProvider.getModel(modelName);
-      const { output, usage } = await generateText({
-        model: model.model,
+      const { output, usage } = await llmGenerateStructuredOutput({
+        model: model,
         prompt: prompt.text,
-        ...buildModelCallSettings(modelParameters),
-        output: Output.object({
-          schema: SinglePromptRPEAnalyzerOutputSchema,
-        })
+        modelParameters,
+        schema: SinglePromptRPEAnalyzerOutputSchema,
       });
 
       const failedExampleAnalysis = output.failedExampleAnalysis
@@ -111,15 +108,7 @@ export function singlePromptRPEAnalyzer(
         recommendations: output.recommendations.map(recommendation => {
           return `${recommendation.goal} (${recommendation.reason})`;
         }),
-        usage: {
-          modelUsage: [
-            {
-              modelName: model.name,
-              inputTokens: usage.inputTokens,
-              outputTokens: usage.outputTokens,
-            },
-          ],
-        },
+        usage,
         metadata: {
           prompt: prompt.text,
         },

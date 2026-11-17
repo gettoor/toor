@@ -1,10 +1,9 @@
 import * as z from 'zod';
 import { Ajv } from 'ajv';
-import { ToorError } from '@gettoor/core';
+import { ToorError, humanizeAjvErrors } from '@gettoor/core';
 
 import { FatalError } from '../../errors/index.js';
 import { readFile } from '../../io/index.js';
-import { humanizeAjvErrors } from '../../ajv/index.js';
 import { 
   ExperimentCfgScheme,
   ExperimentCfg,

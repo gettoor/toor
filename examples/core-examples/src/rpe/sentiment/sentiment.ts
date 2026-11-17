@@ -7,6 +7,7 @@ import {
   buildSinglePromptCandidateModules,
   rpeLightweight,
   exactStringRPEEvaluator,
+  rpeLightweightExecutorAndCriticModels,
 } from '@gettoor/core';
 import { readRPEDatasetFromFile } from '@gettoor/core/rpe-io';
 
@@ -33,8 +34,15 @@ async function run(): Promise<void> {
     dirname,
     'sentiment-seed-prompt.md',
   );
+  const seedInputs = await readFile(
+    dirname,
+    'sentiment-seed-inputs.md',
+  );
   const seedCandidate: RPECandidate = {
-    modules: buildSinglePromptCandidateModules(seedPrompt),
+    modules: buildSinglePromptCandidateModules({
+      prompt: seedPrompt,
+      inputs: seedInputs,
+    }),
     candidateId: 'seed',
   };
 
@@ -50,11 +58,14 @@ async function run(): Promise<void> {
     validationDataset: validationDataset,
     testDataset: testDataset,
     additionalContext,
-    modelName: 'gemini:gemini-3.5-flash-lite',
-    // modelName: 'openai:gpt-6.1-sol',
-    modelParameters: {
-      // temperature: 0.3,
-    },
+    ...rpeLightweightExecutorAndCriticModels({
+      executorModelName: 'openai:gpt-5-nano',
+      criticModelName: 'openai:gpt-6-luna',
+      // executorModelName: 'gemini:gemini-3.5-flash-lite',
+      // criticModelName: 'gemini:gemini-3.8-flash',
+      // executorModelName: 'anthropic:claude-haiku-5-5',
+      // criticModelName: 'anthropic:claude-sonnet-5-5',
+    }),    
     evaluator,
   });
   input.listeners = consoleRPEListeners();

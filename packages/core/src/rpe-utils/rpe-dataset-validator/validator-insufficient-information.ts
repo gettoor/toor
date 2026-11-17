@@ -1,17 +1,11 @@
-import { generateText, Output } from 'ai';
-
 import { runParallelBatchesOrThrow } from '../../concurrency/parallel.js';
 import { LLMModel, ModelParameters } from '../../llm/llm-types.js';
-import { buildModelCallSettings } from '../../llm/llm-utils.js';
 import { replacePlaceholders } from '../../string/placeholders.js';
 import {
   RPEDatasetEntryWithName,
   RPEDatasetValidatorInsufficientInformation,
 } from './rpe-dataset-validator-types.js';
-import {
-  expectedResponseToPrompt,
-  varsToPrompt,
-} from './rpe-dataset-validator-utils.js';
+import { varsToPrompt } from './rpe-dataset-validator-utils.js';
 import {
   InsufficientInformationOutput,
   InsufficientInformationOutputSchema,
@@ -19,6 +13,7 @@ import {
 import {
   INSUFFICIENT_INFORMATION_PROMPT,
 } from './validator-insufficient-information-prompt.js';
+import { llmGenerateStructuredOutput } from '../../llm/index.js';
 
 export async function findInsufficientInformation(
   entries: RPEDatasetEntryWithName[],
@@ -79,13 +74,13 @@ async function findInsufficientInformationForEntry(
       variables: varsToPrompt(entry.vars),
     },
   );
-  const { output } = await generateText({
-    model: model.model,
+
+  const { output } = await llmGenerateStructuredOutput({
+    model: model,
     prompt: prompt.text,
-    ...buildModelCallSettings(modelParameters),
-    output: Output.object({
-      schema: InsufficientInformationOutputSchema,
-    }),
+    modelParameters,
+    schema: InsufficientInformationOutputSchema,
   });
+
   return output;
 }

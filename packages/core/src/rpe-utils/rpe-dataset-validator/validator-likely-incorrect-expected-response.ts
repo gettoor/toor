@@ -1,7 +1,5 @@
-import { generateText, Output } from 'ai';
-
 import {
-  buildModelCallSettings,
+  llmGenerateStructuredOutput,
   LLMModel,
   ModelParameters,
 } from '../../llm/index.js';
@@ -80,13 +78,11 @@ async function findLikelyIncorrectExpectedResponse(
     },
   );
 
-  const { output } = await generateText({
-    model: model.model,
+  const { output } = await llmGenerateStructuredOutput({
+    model: model,
     prompt: prompt.text,
-    ...buildModelCallSettings(modelParameters),
-    output: Output.object({
-      schema: LikelyIncorrectExpectedResponseOutputSchema,
-    }),
+    modelParameters,
+    schema: LikelyIncorrectExpectedResponseOutputSchema,
   });
 
   return output;

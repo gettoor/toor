@@ -32,7 +32,7 @@ export interface CandidateDetailsData {
   trainingAggregatedEvaluation?: RPEAggregatorOutput;
   trainingAnalysis?: RPEAnalyzerOutput;
   finalAggregatedEvaluation?: RPEAggregatorOutput;
-  rejectionReason?: string;
+  rejectionReasons?: string[];
 }
 
 export interface CandidateDetailsProps {
@@ -72,6 +72,18 @@ export function CandidateDetails(props: CandidateDetailsProps) {
       <span className='text-muted'>
         {data?.changesSummary}&nbsp;
       </span>
+    );
+  };
+
+  const renderRejectionReasons = (reasons: string[]) => {
+    return (
+      <div className='text-muted'>
+        { reasons.map((reason, index) => {
+          return (
+            <div key={index.toString()}>{ reason }</div>
+          );
+        }) }
+      </div>
     );
   };
 
@@ -146,14 +158,14 @@ export function CandidateDetails(props: CandidateDetailsProps) {
               </ExpandableSection.Details>
             </ExpandableSection>
           }
-          { data?.rejectionReason &&
+          { data?.rejectionReasons &&
             <ExpandableSection
               title='Rejection Reason'
               expanded={moreRejectionReason}
               onToggle={() => { setMoreRejectionReason(!moreRejectionReason); }}
             >
               <ExpandableSection.Details>
-                <div className='text-muted'>{ data.rejectionReason }</div>
+                { renderRejectionReasons(data.rejectionReasons) }
               </ExpandableSection.Details>
             </ExpandableSection>
           }

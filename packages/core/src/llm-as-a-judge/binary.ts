@@ -1,7 +1,6 @@
-import { generateText, Output } from 'ai';
 import { z } from 'zod';
 
-import { LLMUsage, buildModelCallSettings } from '../llm/index.js';
+import { llmGenerateStructuredOutput, LLMUsage, buildModelCallSettings } from '../llm/index.js';
 import { 
   requirePlaceholders,
   replacePlaceholders,
@@ -35,32 +34,24 @@ export async function binary(input: BinaryInput): Promise<BinaryOutput> {
   const modelProvider = input.modelProvider ?? new DefaultModelProvider();
   const model = await modelProvider.getModel(input.modelName);
 
-  const response = await generateText({
-    model: model.model,
+  const response = await llmGenerateStructuredOutput({
+    model,
     prompt: evalPrompt,
     ...buildModelCallSettings(input.modelParameters),
-    output: Output.object({
-      schema: z.object({
-        passed: z
-          .boolean()
-          .describe('Whether the response passed the evaluation'),
-        reasoning: z
-          .string()
-          .describe('The reasoning for the evaluation'),
-      })
-      .strict(),
-    }),
+    schema: z.object({
+      passed: z
+        .boolean()
+        .describe('Whether the response passed the evaluation'),
+      reasoning: z
+        .string()
+        .describe('The reasoning for the evaluation'),
+    }).strict(),
   });
 
   const { passed, reasoning } = response.output;
-  const usage: LLMUsage = {
-    modelUsage: [
-      {
-        modelName: model.name,
-        inputTokens: response.usage.inputTokens,
-        outputTokens: response.usage.outputTokens,
-      },
-    ],
+  return { 
+    result: passed,
+    reasoning,
+    usage: response.usage,
   };
-  return { result: passed, reasoning, usage };
 }

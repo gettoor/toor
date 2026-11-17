@@ -9159,13 +9159,14 @@ function CandidateBox(props) {
 	const infoClassName = clsx(CandidateBox_module_default["candidate-box-foreign-object"], { [CandidateBox_module_default.muted]: props.isHighlighted == false });
 	const passedEvaluationsCountClassName = clsx(CandidateBox_module_default["candidate-box-info-value"], { [CandidateBox_module_default["candidate-box-info-value-green"]]: data.passedEvaluationsCount !== void 0 && data.passedEvaluationsCount > 0 });
 	const failedEvaluationsCountClassName = clsx(CandidateBox_module_default["candidate-box-info-value"], { [CandidateBox_module_default["candidate-box-info-value-red"]]: data.failedEvaluationsCount !== void 0 && data.failedEvaluationsCount > 0 });
+	const fill = "var(--fill)";
 	const stroke = props.isSelected ? "var(--stroke-selected)" : "var(--stroke)";
 	return /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("rect", {
 		x: props.x + .5,
 		y: props.y + .5,
 		width: props.width,
 		height: props.height,
-		fill: "var(--fill)",
+		fill,
 		stroke,
 		strokeWidth: "1px",
 		vectorEffect: "non-scaling-stroke",
@@ -14629,6 +14630,7 @@ function resolveBoxes(rpeInsights, onBoxClick) {
 		boxes.push({
 			data: {
 				candidateId: candidateRef.candidateId,
+				isRejected: false,
 				parentCandidateIds: prompt.parentCandidateIds,
 				aggregatedScore: aggregatedEvaluation?.aggregatedScore,
 				finalAggregatedScore: finalAggregatedEvaluation?.aggregatedEvaluation?.aggregatedScore,
@@ -14655,9 +14657,14 @@ function resolveBoxes(rpeInsights, onBoxClick) {
 			const isSelected = (iteration.selectedCandidateRefs ?? []).some((selectedCandidateRef) => {
 				return selectedCandidateRef.candidateId === candidate.candidateId;
 			});
+			const isRejected = (iteration.rejectedCandidates ?? []).some((rejectedCandidate) => {
+				const { candidateRef } = rejectedCandidate.candidate;
+				return candidateRef.candidateId === candidate.candidateId;
+			});
 			boxes.push({
 				data: {
 					candidateId: candidate.candidateId,
+					isRejected,
 					parentCandidateIds: candidate.parentCandidateIds,
 					aggregatedScore: candidateAggregatedEvaluation?.aggregatedScore,
 					finalAggregatedScore: finalAggregatedEvaluation?.aggregatedEvaluation?.aggregatedScore,
@@ -15926,6 +15933,14 @@ function CandidateDetails(props) {
 			children: [data?.changesSummary, "\xA0"]
 		});
 	};
+	const renderRejectionReasons = (reasons) => {
+		return /* @__PURE__ */ u("div", {
+			className: "text-muted",
+			children: reasons.map((reason, index) => {
+				return /* @__PURE__ */ u("div", { children: reason }, index.toString());
+			})
+		});
+	};
 	return /* @__PURE__ */ u(Panel, {
 		className: clsx(CandidateDetails_module_default["candidate-details-panel"], {
 			[CandidateDetails_module_default.visible]: visible,
@@ -15983,16 +15998,13 @@ function CandidateDetails(props) {
 					})
 				] })]
 			}),
-			data?.rejectionReason && /* @__PURE__ */ u(ExpandableSection, {
+			data?.rejectionReasons && /* @__PURE__ */ u(ExpandableSection, {
 				title: "Rejection Reason",
 				expanded: moreRejectionReason,
 				onToggle: () => {
 					setMoreRejectionReason(!moreRejectionReason);
 				},
-				children: /* @__PURE__ */ u(ExpandableSection.Details, { children: /* @__PURE__ */ u("div", {
-					className: "text-muted",
-					children: data.rejectionReason
-				}) })
+				children: /* @__PURE__ */ u(ExpandableSection.Details, { children: renderRejectionReasons(data.rejectionReasons) })
 			}),
 			data.validationAggregatedEvaluation && /* @__PURE__ */ u(CandidateAggregatedEvaluation, {
 				title: "Validation Evaluations",
@@ -16076,7 +16088,7 @@ function getCandidateDetailsData(rpeInsights, selectedCandidateId) {
 				trainingAggregatedEvaluation: findAggregatedEvaluationByCandidateId(nextIteration?.trainingAggregatedEvaluations, selectedCandidateId),
 				trainingAnalysis: findAnalysisByCandidateId(nextIteration?.trainingAnalyses, selectedCandidateId),
 				finalAggregatedEvaluation: findFinalAggregatedEvaluationByCandidateId(selectedCandidateId),
-				rejectionReason: rejectedCandidate?.reason
+				rejectionReasons: rejectedCandidate?.reasons
 			};
 			break;
 		}
@@ -16702,7 +16714,7 @@ function loadRPEInsights() {
 R$1(/* @__PURE__ */ u(App, { rpeInsights: loadRPEInsights() }), document.getElementById("app"));
 //#endregion
 
-//# sourceMappingURL=index-A-AwMei2.js.map</script>
+//# sourceMappingURL=index-DSlavqE5.js.map</script>
     <style rel="stylesheet" crossorigin>* {
   box-sizing: border-box;
 }

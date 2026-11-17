@@ -1,10 +1,10 @@
-import { generateText, JSONSchema7 } from 'ai';
+import { jsonSchema, JSONSchema7 } from 'ai';
 
 import { replacePlaceholders } from '../../string/index.js';
 import { runParallelBatchesOrThrow } from '../../concurrency/index.js';
 import {
-  buildModelCallSettings,
-  buildModelCallStructuredOutput,
+  llmGenerateStructuredOutput,
+  llmGenerateText,
   LLMModel,
   ModelParameters,
 } from '../../llm/index.js';
@@ -20,6 +20,7 @@ import {
   RPEExecutorResponse,
   RPEState,
   buildPromptFromSinglePromptCandidate,
+  RPEResponse,
 } from '../../rpe-core/index.js';
 import {
   SinglePromptLLMRPEExecutorInput,
@@ -107,27 +108,37 @@ async function generateResponse(
     datasetEntry.vars,
   );
 
+  // generate structured output response
+  if (structuredOutputSchema) {
+    const { output, usage } = await llmGenerateStructuredOutput({
+      model: model,
+      prompt: prompt.text,
+      modelParameters,
+      schema: jsonSchema(structuredOutputSchema),
+    });
+    return {
+      candidateRef: candidateRefFromCandidate(candidate),
+      datasetEntry: datasetEntry,
+      response: output as RPEResponse,
+      usage,
+      metadata: {
+        prompt: prompt.text,
+      },
+    };
+  }
+
   // generate text response
-  const response = await generateText({
-    model: model.model,
+  const { output, usage } = await llmGenerateText({
+    model: model,
     prompt: prompt.text,
-    ...buildModelCallSettings(modelParameters),
-    ...buildModelCallStructuredOutput(structuredOutputSchema),
+    modelParameters,
   });
 
   return {
     candidateRef: candidateRefFromCandidate(candidate),
     datasetEntry: datasetEntry,
-    response: !structuredOutputSchema ? response.text : response.output,
-    usage: {
-      modelUsage: [
-        {
-          modelName: model.name,
-          inputTokens: response.usage.inputTokens,
-          outputTokens: response.usage.outputTokens,
-        },
-      ],
-    },
+    response: output,
+    usage,
     metadata: {
       prompt: prompt.text,
     },

@@ -1,3 +1,4 @@
+import { InternalToorError } from '../errors/index.js';
 import { findUniquePlaceholders } from '../string/index.js';
 import { average } from '../math/index.js';
 import { ModelParameters } from '../llm/index.js';
@@ -55,8 +56,12 @@ export async function rpeLightweight(
   input: RPELightweightInput,
 ): Promise<RPEInput> {
   const model = (name?: string, parameters?: ModelParameters) => {
+    const modelName = name ?? input.modelName;
+    if (!modelName) {
+      throw new InternalToorError('Model name is required');
+    }
     return {
-      modelName: name ?? input.modelName,
+      modelName,
       modelProvider: input.modelProvider,
       modelParameters: parameters ?? input.modelParameters,
     };
@@ -204,11 +209,15 @@ function createCandidateValidator(
   }
 
   if (additionalContext) {
+    const modelName = input.candidateValidatorModelName ?? input.modelName;
+    if (!modelName) {
+      throw new InternalToorError('Model name is required');
+    }
     validators.push(
       semanticRPECandidateValidator(
         {
           contract: additionalContext,
-          modelName: input.modelName,
+          modelName,
           modelProvider: input.modelProvider,
           modelParameters: input.modelParameters,
         },

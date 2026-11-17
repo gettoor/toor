@@ -7,6 +7,7 @@ import {
   findCandidateById,
   RPEIteration,
   RPEIterationInProgress,
+  RPERejectedCandidate,
   RPEState,
 } from '../rpe-state/index.js';
 import { buildRPEInsightsInfo, RPEInsights } from '../rpe-insights/index.js';
@@ -31,6 +32,7 @@ import {
 } from './candidate-generator-utils.js';
 import { validateCandidates } from './candidate-validator.js';
 import { RPERejectedCandidateRef } from './candidate-validator-types.js';
+import { selectCandidates } from './candidate-selector.js';
 
 /**
  * Runs the Reflective Prompt Evolution (RPE) process.
@@ -167,7 +169,7 @@ export async function optimize(
           },
           candidatesValidated: async (
             validCandidates: RPECandidateGeneratorCandidate[],
-            rejectedCandidates: RPERejectedCandidateRef[],
+            rejectedCandidateRefs: RPERejectedCandidateRef[],
           ) => {
             // valid (not rejected) candidates
             iteration.validCandidates = validCandidates.map(
@@ -175,22 +177,10 @@ export async function optimize(
             );
 
             // rejected candidates
-            iteration.rejectedCandidates = rejectedCandidates.map(rejectedCandidate => {
-              const generatedCandidate = generatedCandidates.find(generatedCandidate => {
-                return generatedCandidate.candidate.candidateId ===
-                  rejectedCandidate.candidateRef.candidateId;
-              });
-              if (!generatedCandidate) {
-                throw new InternalToorError(
-                  `Generated candidate not found for rejected candidate ` +
-                  `${ToorError.quote(rejectedCandidate.candidateRef.candidateId)}`,
-                );
-              }
-              return {
-                candidate: toCandidateGeneratorOutputCandidate(generatedCandidate),
-                reason: rejectedCandidate.reason,
-              };
-            });
+            iteration.rejectedCandidates = resolveRejectedCandidates(
+              rejectedCandidateRefs,
+              generatedCandidates,
+            );
 
             await listeners.candidatesValidated?.(iteration);
           },
@@ -238,7 +228,7 @@ export async function optimize(
       await listeners.selectingCandidates?.(iteration);
       const {
         candidateRefs: selectedCandidateRefs,
-      } = await input.candidateSelector.run(state, {});
+      } = await selectCandidates(state, input.candidateSelector);
       iteration.selectedCandidateRefs = selectedCandidateRefs;
       lastSelectedCandidateRefs = selectedCandidateRefs;
       await listeners.candidatesSelected?.(iteration);
@@ -293,6 +283,29 @@ export async function optimize(
     finalCandidates: state.finalCandidates,
     insights,
   };
+}
+
+function resolveRejectedCandidates(
+  rejectedCandidateRefs: RPERejectedCandidateRef[],
+  generatedCandidates: RPECandidateGeneratorCandidate[],
+): RPERejectedCandidate[] {
+  const rejectedCandidates = rejectedCandidateRefs.map(rejectedCandidate => {
+    const generatedCandidate = generatedCandidates.find(generatedCandidate => {
+      return generatedCandidate.candidate.candidateId ===
+        rejectedCandidate.candidateRef.candidateId;
+    });
+    if (!generatedCandidate) {
+      throw new InternalToorError(
+        `Generated candidate not found for rejected candidate ` +
+        `${ToorError.quote(rejectedCandidate.candidateRef.candidateId)}`,
+      );
+    }
+    return {
+      candidate: toCandidateGeneratorOutputCandidate(generatedCandidate),
+      reasons: rejectedCandidate.reasons,
+    };
+  });
+  return rejectedCandidates;
 }
 
 async function populateFinalCandidates(
