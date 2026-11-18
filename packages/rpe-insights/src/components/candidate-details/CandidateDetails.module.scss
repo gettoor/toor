@@ -17,6 +17,14 @@
     transition: transform 280ms ease-in;
     transform: translate(-50%, 110%);
   }
+
+  &.minimized {
+    left: 50%;
+    transition: transform 280ms ease-in;
+
+    // -1rem to show the panel subtitle
+    transform: translate(-50%, calc(100% - $vertical-padding * 2 - 1rem));
+  }
 }
 
 .candidate-details-prompt {

@@ -77,8 +77,8 @@ export function InfoPanel(props: InfoPanelProps) {
   return (
     <Panel
       title='Info'
-      onCloseClick={onCloseClick}
       className={panelClassName}
+      onCloseClick={onCloseClick}
     >
       <h1>General</h1>
       <h2>Stop reason</h2>

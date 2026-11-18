@@ -44,8 +44,8 @@ export function FinalCandidatesPanel(props: FinalCandidatesPanelProps) {
   return (
     <Panel
       title='Final Candidates'
-      onCloseClick={onCloseClick}
       className={panelClassName}
+      onCloseClick={onCloseClick}
     >
       { renderFinalCandidates() }
     </Panel>

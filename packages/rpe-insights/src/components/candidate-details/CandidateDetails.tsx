@@ -1,4 +1,5 @@
 import { clsx } from 'clsx';
+import { useState, useEffect } from 'preact/hooks';
 import { 
   type RPECandidate,
   type RPEAggregatorOutput,
@@ -15,6 +16,7 @@ import {
   LinkButton,
   Metadata,
   MiddotSeparator,
+  Tag,
 } from '../basic';
 import { CandidateModules } from '../common';
 import { CandidateAggregatedEvaluation } from './CandidateAggregatedEvaluation';
@@ -22,6 +24,7 @@ import { CandidateAnalysis } from './CandidateAnalysis';
 import { CandidateChanges } from './CandidateChanges';
 import styles from './CandidateDetails.module.scss';
 import { countLabel } from '../../string';
+import { VNode } from 'preact';
 
 export interface CandidateDetailsData {
   datasetEntries: RPEDatasetEntry[];
@@ -32,6 +35,7 @@ export interface CandidateDetailsData {
   trainingAggregatedEvaluation?: RPEAggregatorOutput;
   trainingAnalysis?: RPEAnalyzerOutput;
   finalAggregatedEvaluation?: RPEAggregatorOutput;
+  isFinalCandidate: boolean;
   rejectionReasons?: string[];
 }
 
@@ -56,6 +60,44 @@ export function CandidateDetails(props: CandidateDetailsProps) {
     moreRejectionReason,
     setMoreRejectionReason,
   ] = useLocalStorage(false, 'moreRejectionReason');
+
+
+  // minimized
+  const [isMinimized, setIsMinimized] = useState(false);
+  useEffect(
+    () => {
+      if (!visible) {
+        setIsMinimized(false);
+      }
+    },
+    [visible],
+  );
+  const onMinimizeClick = () => {
+    setIsMinimized(!isMinimized);
+  };
+
+  const renderPanelSubtitle = () => {
+    const nodes: VNode[] = [];
+
+    const isRejected = (data?.rejectionReasons ?? []).length > 0;
+    if (isRejected) {
+      nodes.push(
+        <div key='rejected' className='red'>
+          Rejected
+        </div>
+      );
+    }
+
+    if (data?.isFinalCandidate) {
+      nodes.push(
+        <div key='final' className='green'>
+          Final Candidate
+        </div>
+      );
+    }
+
+    return <>{nodes}</>;
+  };
 
   const renderMetadataSummary = () => {
     const keys = Object.keys(data?.candidate.metadata ?? {});
@@ -90,8 +132,9 @@ export function CandidateDetails(props: CandidateDetailsProps) {
   const boxClassName = clsx(
     styles['candidate-details-panel'],
     {
-      [styles.visible]: visible,
-      [styles.hidden]: !visible,
+      [styles['visible']]: visible,
+      [styles['hidden']]: !visible,
+      [styles['minimized']]: isMinimized,
     },
   );
 
@@ -99,6 +142,8 @@ export function CandidateDetails(props: CandidateDetailsProps) {
     <Panel
       className={boxClassName}
       title='Candidate details'
+      subtitle={renderPanelSubtitle()}
+      onMinimizeClick={onMinimizeClick}
       onCloseClick={onCloseClick}
     >
       { !!data &&

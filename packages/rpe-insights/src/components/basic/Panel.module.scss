@@ -22,15 +22,25 @@
   overflow-y: auto;
   overscroll-behavior: contain;
 
-  .panel-header {
-    font-family: 'Funnel Display', sans-serif;
-    font-size: 1.25rem;
-    font-weight: 500;
+  left: 50%;
+  transform: translate(-50%, -110%);
+
+  .panel-top-bar {
     padding: 0;
     border-bottom: 1px solid var(--muted);
     position: sticky;
     top: 0;
     padding: calc(var(--border-radius) * 1.5) calc(var(--border-radius) * 2);
+    // display: flex;
+    // flex-direction: row;
+    // align-items: center;
+    // justify-content: flex-start;
+  }
+
+  .panel-header {
+    font-family: 'Funnel Display', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 500;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -39,7 +49,17 @@
   .panel-header-title {
     flex: 1;
   }
+
   .panel-header-subtitle {
+    @include font-medium;
+    color: var(--text-muted);
+  }
+
+  .panel-header-actions {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    // gap: 0.5rem;
   }
 
   .panel-content {
@@ -65,4 +85,8 @@
     margin-bottom: 0rem;
     padding: 0;
   }
+}
+
+.panel-docked {
+  right: 0;
 }

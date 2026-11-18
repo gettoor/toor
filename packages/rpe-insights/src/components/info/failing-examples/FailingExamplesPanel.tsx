@@ -46,8 +46,8 @@ export function FailingExamplesPanel(props: FailingExamplesPanelProps) {
   return (
     <Panel
       title='Failing examples'
-      onCloseClick={onCloseClick}
       className={panelClassName}
+      onCloseClick={onCloseClick}
     >
       { renderFailingExamples() }
     </Panel>

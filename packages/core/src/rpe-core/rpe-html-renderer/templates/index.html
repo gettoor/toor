@@ -489,9 +489,6 @@ function D$1(n, t) {
 	return "function" == typeof t ? t(n) : t;
 }
 //#endregion
-//#region src/components/candidate-tree/CandidateTree.module.scss
-var CandidateTree_module_default = { "candidate-tree": "_candidate-tree_njqup_1" };
-//#endregion
 //#region ../../node_modules/.pnpm/clsx@2.1.1/node_modules/clsx/dist/clsx.mjs
 function r(e) {
 	var t, f, n = "";
@@ -506,6 +503,14 @@ function clsx() {
 	for (var e, t, f = 0, n = "", o = arguments.length; f < o; f++) (e = arguments[f]) && (t = r(e)) && (n && (n += " "), n += t);
 	return n;
 }
+var CandidateTree_module_default = {
+	"candidate-tree-viewport": "_candidate-tree-viewport_arau0_1",
+	panning: "_panning_arau0_9",
+	"candidate-tree": "_candidate-tree_arau0_1"
+};
+//#endregion
+//#region src/components/candidate-tree/candidate-tree-consts.ts
+var CANDIDATE_BOX_ATTRIBUTE = "data-candidate-box";
 var CandidateBox_module_default = {
 	"candidate-box-foreign-object": "_candidate-box-foreign-object_n8r2y_1",
 	muted: "_muted_n8r2y_11",
@@ -4803,28 +4808,45 @@ function IconButton(props) {
 	});
 }
 var Panel_module_default = {
-	panel: "_panel_1705s_1",
-	"panel-header": "_panel-header_1705s_21",
-	"panel-header-title": "_panel-header-title_1705s_34",
-	"panel-content": "_panel-content_1705s_37"
+	panel: "_panel_gpov3_1",
+	"panel-top-bar": "_panel-top-bar_gpov3_23",
+	"panel-header": "_panel-header_gpov3_30",
+	"panel-header-title": "_panel-header-title_gpov3_38",
+	"panel-header-subtitle": "_panel-header-subtitle_gpov3_41",
+	"panel-header-actions": "_panel-header-actions_gpov3_45",
+	"panel-content": "_panel-content_gpov3_50",
+	"panel-docked": "_panel-docked_gpov3_72"
 };
 //#endregion
 //#region src/components/basic/Panel.tsx
 function Panel(props) {
+	const onMinimizeClick = () => {
+		props.onMinimizeClick?.();
+	};
 	return /* @__PURE__ */ u("div", {
 		className: clsx(Panel_module_default["panel"], props.className),
 		children: [/* @__PURE__ */ u("div", {
-			className: Panel_module_default["panel-header"],
+			className: Panel_module_default["panel-top-bar"],
 			children: [/* @__PURE__ */ u("div", {
-				className: Panel_module_default["panel-header-title"],
-				children: [/* @__PURE__ */ u("div", { children: props.title }), props.subtitle && /* @__PURE__ */ u("div", {
-					className: Panel_module_default["panel-header-subtitle"],
-					children: props.subtitle
+				className: Panel_module_default["panel-header"],
+				children: [/* @__PURE__ */ u("div", {
+					className: Panel_module_default["panel-header-title"],
+					children: /* @__PURE__ */ u("div", { children: props.title })
+				}), /* @__PURE__ */ u("div", {
+					className: Panel_module_default["panel-header-actions"],
+					children: [props.onMinimizeClick && /* @__PURE__ */ u(IconButton, {
+						name: "minimize",
+						title: "Minimize",
+						onClick: onMinimizeClick
+					}), /* @__PURE__ */ u(IconButton, {
+						name: "close",
+						title: "Close",
+						onClick: props.onCloseClick
+					})]
 				})]
-			}), /* @__PURE__ */ u(IconButton, {
-				name: "close",
-				title: "Close",
-				onClick: props.onCloseClick
+			}), props.subtitle && /* @__PURE__ */ u("div", {
+				className: Panel_module_default["panel-header-subtitle"],
+				children: props.subtitle
 			})]
 		}), /* @__PURE__ */ u("div", {
 			className: Panel_module_default["panel-content"],
@@ -9212,68 +9234,71 @@ function CandidateBox(props) {
 	const strokeColorState = data.isRejected ? "rejected" : data.isFinalCandidate ? "final" : "default";
 	const strokeColorName = props.isSelected ? "selected" : "default";
 	const stroke = STROKE_COLORS[strokeColorState][strokeColorName];
-	return /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("rect", {
-		x: props.x + .5,
-		y: props.y + .5,
-		width: props.width,
-		height: props.height,
-		fill,
-		stroke,
-		strokeWidth: "1px",
-		vectorEffect: "non-scaling-stroke",
-		opacity: props.isHighlighted == false ? .25 : 1,
-		rx: `var(--border-radius)`,
-		ry: `var(--border-radius)`,
-		cursor: "pointer",
-		onClick: props.onClick
-	}), /* @__PURE__ */ u("foreignObject", {
-		x: props.x,
-		y: props.y,
-		width: props.width,
-		height: props.height,
-		onClick: props.onClick,
-		children: /* @__PURE__ */ u("div", {
-			className: infoClassName,
-			children: [data.aggregatedScore !== void 0 && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("div", {
-				className: CandidateBox_module_default["candidate-box-score-name"],
-				children: "Score"
-			}), /* @__PURE__ */ u("div", {
-				className: CandidateBox_module_default["candidate-box-score-value"],
-				children: [data.aggregatedScore.toFixed(2), data.finalAggregatedScore !== void 0 && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u(MiddotSeparator, {}), /* @__PURE__ */ u("span", {
-					className: "green",
-					children: data.finalAggregatedScore.toFixed(2)
-				})] })]
-			})] }), /* @__PURE__ */ u("div", {
-				className: CandidateBox_module_default["candidate-box-info-properties"],
-				children: [
-					/* @__PURE__ */ u("div", {
-						className: CandidateBox_module_default["candidate-box-info-name"],
-						children: "Passed:"
-					}),
-					/* @__PURE__ */ u("div", {
-						className: passedEvaluationsCountClassName,
-						children: data.passedEvaluationsCount ?? "-"
-					}),
-					/* @__PURE__ */ u("div", {
-						className: CandidateBox_module_default["candidate-box-info-name"],
-						children: "Failed:"
-					}),
-					/* @__PURE__ */ u("div", {
-						className: failedEvaluationsCountClassName,
-						children: data.failedEvaluationsCount ?? "-"
-					}),
-					/* @__PURE__ */ u("div", {
-						className: CandidateBox_module_default["candidate-box-info-name"],
-						children: "Changes:"
-					}),
-					/* @__PURE__ */ u("div", {
-						className: CandidateBox_module_default["candidate-box-info-value"],
-						children: data.candidateChangesCount ?? "-"
-					})
-				]
-			})]
-		})
-	})] });
+	return /* @__PURE__ */ u("g", {
+		[CANDIDATE_BOX_ATTRIBUTE]: true,
+		children: [/* @__PURE__ */ u("rect", {
+			x: props.x + .5,
+			y: props.y + .5,
+			width: props.width,
+			height: props.height,
+			fill,
+			stroke,
+			strokeWidth: "1px",
+			vectorEffect: "non-scaling-stroke",
+			opacity: props.isHighlighted == false ? .25 : 1,
+			rx: `var(--border-radius)`,
+			ry: `var(--border-radius)`,
+			cursor: "pointer",
+			onClick: props.onClick
+		}), /* @__PURE__ */ u("foreignObject", {
+			x: props.x,
+			y: props.y,
+			width: props.width,
+			height: props.height,
+			onClick: props.onClick,
+			children: /* @__PURE__ */ u("div", {
+				className: infoClassName,
+				children: [data.aggregatedScore !== void 0 && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("div", {
+					className: CandidateBox_module_default["candidate-box-score-name"],
+					children: "Score"
+				}), /* @__PURE__ */ u("div", {
+					className: CandidateBox_module_default["candidate-box-score-value"],
+					children: [data.aggregatedScore.toFixed(2), data.finalAggregatedScore !== void 0 && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u(MiddotSeparator, {}), /* @__PURE__ */ u("span", {
+						className: "green",
+						children: data.finalAggregatedScore.toFixed(2)
+					})] })]
+				})] }), /* @__PURE__ */ u("div", {
+					className: CandidateBox_module_default["candidate-box-info-properties"],
+					children: [
+						/* @__PURE__ */ u("div", {
+							className: CandidateBox_module_default["candidate-box-info-name"],
+							children: "Passed:"
+						}),
+						/* @__PURE__ */ u("div", {
+							className: passedEvaluationsCountClassName,
+							children: data.passedEvaluationsCount ?? "-"
+						}),
+						/* @__PURE__ */ u("div", {
+							className: CandidateBox_module_default["candidate-box-info-name"],
+							children: "Failed:"
+						}),
+						/* @__PURE__ */ u("div", {
+							className: failedEvaluationsCountClassName,
+							children: data.failedEvaluationsCount ?? "-"
+						}),
+						/* @__PURE__ */ u("div", {
+							className: CandidateBox_module_default["candidate-box-info-name"],
+							children: "Changes:"
+						}),
+						/* @__PURE__ */ u("div", {
+							className: CandidateBox_module_default["candidate-box-info-value"],
+							children: data.candidateChangesCount ?? "-"
+						})
+					]
+				})]
+			})
+		})]
+	});
 }
 //#endregion
 //#region src/components/candidate-tree/CandidateBoxConnection.tsx
@@ -20748,19 +20773,104 @@ function isHighlighted(boxes, promptId, selectedPromptId) {
 	})) return true;
 	return false;
 }
+/**
+* Clamp the tree offset so that at least one column and one row of boxes
+* (including the tree padding) stay visible in the viewport.
+*/
+function clampTreeOffset(offset, treeWidth, treeHeight, viewportWidth, viewportHeight) {
+	const clamp = (value, treeSize, viewportSize, boxSize) => {
+		const minVisible = Math.min(10 + boxSize, treeSize);
+		const min = minVisible - treeSize;
+		const max = Math.max(min, viewportSize - minVisible);
+		return Math.min(Math.max(value, min), max);
+	};
+	return {
+		x: clamp(offset.x, treeWidth, viewportWidth, 120),
+		y: clamp(offset.y, treeHeight, viewportHeight, 120)
+	};
+}
+/**
+* Check if the event target is inside a candidate box.
+*/
+function isInsideCandidateBox(target) {
+	return target instanceof Element && target.closest(`[data-candidate-box]`) !== null;
+}
 //#endregion
 //#region src/components/candidate-tree/CandidateTree.tsx
 function CandidateTree(props) {
 	const { rpeInsights, selectedCandidateId: selectedPromptId, detailsVisible } = props;
-	const { candidates, iterationHistory } = rpeInsights;
+	const viewportRef = A$2(null);
+	const svgRef = A$2(null);
+	const offsetRef = A$2({
+		x: 0,
+		y: 0
+	});
+	const panRef = A$2(null);
+	const pannedRef = A$2(false);
+	const [isPanning, setIsPanning] = d$1(false);
 	const onBoxClick = (promptId) => {
 		props.onSelectCandidateId(promptId);
 	};
-	const onBackgroundClick = () => {
-		props.onBackgroundClick();
-	};
 	const boxes = resolveBoxes(rpeInsights, onBoxClick);
 	const connections = resolveConnections(boxes);
+	const width = 10 + boxes.reduce((max, box) => Math.max(max, box.x + box.width), 0);
+	const height = 10 + boxes.reduce((max, box) => Math.max(max, box.y + box.height), 0);
+	const applyOffset = (offset) => {
+		const viewport = viewportRef.current;
+		const svg = svgRef.current;
+		if (viewport === null || svg === null) return;
+		const clampedOffset = clampTreeOffset(offset, width, height, viewport.clientWidth, viewport.clientHeight);
+		offsetRef.current = clampedOffset;
+		svg.style.transform = `translate(${clampedOffset.x}px, ${clampedOffset.y}px)`;
+	};
+	h(() => {
+		const onResize = () => {
+			return applyOffset(offsetRef.current);
+		};
+		onResize();
+		window.addEventListener("resize", onResize);
+		return () => {
+			return window.removeEventListener("resize", onResize);
+		};
+	}, [width, height]);
+	const onPointerDown = (event) => {
+		if (event.button !== 0 || isInsideCandidateBox(event.target)) return;
+		event.preventDefault();
+		viewportRef.current?.setPointerCapture(event.pointerId);
+		panRef.current = {
+			pointerId: event.pointerId,
+			startX: event.clientX,
+			startY: event.clientY,
+			startOffset: offsetRef.current
+		};
+		pannedRef.current = false;
+		setIsPanning(true);
+	};
+	const onPointerMove = (event) => {
+		const pan = panRef.current;
+		if (pan === null || pan.pointerId !== event.pointerId) return;
+		const dx = event.clientX - pan.startX;
+		const dy = event.clientY - pan.startY;
+		if (Math.abs(dx) > 3 || Math.abs(dy) > 3) pannedRef.current = true;
+		if (pannedRef.current) applyOffset({
+			x: pan.startOffset.x + dx,
+			y: pan.startOffset.y + dy
+		});
+	};
+	const onPointerUp = (event) => {
+		const pan = panRef.current;
+		if (pan === null || pan.pointerId !== event.pointerId) return;
+		viewportRef.current?.releasePointerCapture(event.pointerId);
+		panRef.current = null;
+		setIsPanning(false);
+	};
+	const onClick = (event) => {
+		if (pannedRef.current) {
+			pannedRef.current = false;
+			return;
+		}
+		if (!isInsideCandidateBox(event.target)) props.onBackgroundClick();
+	};
 	const renderBoxes = () => {
 		return boxes.map((box) => /* @__PURE__ */ u(CandidateBox, {
 			...box,
@@ -20778,32 +20888,22 @@ function CandidateTree(props) {
 			}, id);
 		});
 	};
-	const width = 10 + boxes.reduce((max, box) => {
-		return Math.max(max, box.x + box.width);
-	}, 0);
-	const height = 10 + boxes.reduce((max, box) => {
-		return Math.max(max, box.y + box.height);
-	}, 0);
-	return /* @__PURE__ */ u("svg", {
-		className: CandidateTree_module_default["candidate-tree"],
-		width: `${width}px`,
-		height: `${height}px`,
-		viewBox: `0 0 ${width} ${height}`,
-		children: [
-			/* @__PURE__ */ u("rect", {
-				x: 0,
-				y: 0,
-				width,
-				height,
-				fill: "var(--bg)",
-				opacity: 0,
-				rx: `var(--border-radius)`,
-				ry: `var(--border-radius)`,
-				onClick: onBackgroundClick
-			}),
-			renderConnections(),
-			renderBoxes()
-		]
+	return /* @__PURE__ */ u("div", {
+		ref: viewportRef,
+		className: clsx(CandidateTree_module_default["candidate-tree-viewport"], { [CandidateTree_module_default.panning]: isPanning }),
+		onPointerDown,
+		onPointerMove,
+		onPointerUp,
+		onPointerCancel: onPointerUp,
+		onClick,
+		children: /* @__PURE__ */ u("svg", {
+			ref: svgRef,
+			className: CandidateTree_module_default["candidate-tree"],
+			width: `${width}px`,
+			height: `${height}px`,
+			viewBox: `0 0 ${width} ${height}`,
+			children: [renderConnections(), renderBoxes()]
+		})
 	});
 }
 //#endregion
@@ -21919,11 +22019,12 @@ function CandidateChanges(props) {
 	return /* @__PURE__ */ u("div", { children: renderChanges() });
 }
 var CandidateDetails_module_default = {
-	"candidate-details-panel": "_candidate-details-panel_kt8uo_1",
-	visible: "_visible_kt8uo_5",
-	hidden: "_hidden_kt8uo_10",
-	"candidate-details-prompt": "_candidate-details-prompt_kt8uo_16",
-	"candidate-details-prompt-expanded": "_candidate-details-prompt-expanded_kt8uo_26"
+	"candidate-details-panel": "_candidate-details-panel_1czib_1",
+	visible: "_visible_1czib_5",
+	hidden: "_hidden_1czib_10",
+	minimized: "_minimized_1czib_15",
+	"candidate-details-prompt": "_candidate-details-prompt_1czib_21",
+	"candidate-details-prompt-expanded": "_candidate-details-prompt-expanded_1czib_31"
 };
 //#endregion
 //#region src/components/candidate-details/CandidateDetails.tsx
@@ -21932,6 +22033,25 @@ function CandidateDetails(props) {
 	const [moreMetadata, setMoreMetadata] = useLocalStorage(false, "moreCandidateMetadata");
 	const [moreCandidateChanges, setMoreCandidateChanges] = useLocalStorage(false, "moreCandidateChanges");
 	const [moreRejectionReason, setMoreRejectionReason] = useLocalStorage(false, "moreRejectionReason");
+	const [isMinimized, setIsMinimized] = d$1(false);
+	h(() => {
+		if (!visible) setIsMinimized(false);
+	}, [visible]);
+	const onMinimizeClick = () => {
+		setIsMinimized(!isMinimized);
+	};
+	const renderPanelSubtitle = () => {
+		const nodes = [];
+		if ((data?.rejectionReasons ?? []).length > 0) nodes.push(/* @__PURE__ */ u("div", {
+			className: "red",
+			children: "Rejected"
+		}, "rejected"));
+		if (data?.isFinalCandidate) nodes.push(/* @__PURE__ */ u("div", {
+			className: "green",
+			children: "Final Candidate"
+		}, "final"));
+		return /* @__PURE__ */ u(S$1, { children: nodes });
+	};
 	const renderMetadataSummary = () => {
 		return /* @__PURE__ */ u("span", { children: [countLabel(Object.keys(data?.candidate.metadata ?? {}).length, "metadata entry", "metadata entries"), /* @__PURE__ */ u(MiddotSeparator, {})] });
 	};
@@ -21951,10 +22071,13 @@ function CandidateDetails(props) {
 	};
 	return /* @__PURE__ */ u(Panel, {
 		className: clsx(CandidateDetails_module_default["candidate-details-panel"], {
-			[CandidateDetails_module_default.visible]: visible,
-			[CandidateDetails_module_default.hidden]: !visible
+			[CandidateDetails_module_default["visible"]]: visible,
+			[CandidateDetails_module_default["hidden"]]: !visible,
+			[CandidateDetails_module_default["minimized"]]: isMinimized
 		}),
 		title: "Candidate details",
+		subtitle: renderPanelSubtitle(),
+		onMinimizeClick,
 		onCloseClick,
 		children: !!data && /* @__PURE__ */ u(S$1, { children: [
 			/* @__PURE__ */ u(Header, { title: "Modules" }),
@@ -22064,6 +22187,11 @@ function getCandidateDetailsData(rpeInsights, selectedCandidateId) {
 			return analysis.candidateRef.candidateId === candidateId;
 		});
 	};
+	const isFinalCandidate = (candidateId) => {
+		return rpeInsights.finalCandidates.some((finalCandidate) => {
+			return finalCandidate.candidateRef.candidateId === candidateId;
+		});
+	};
 	const firstIteration = iterationHistory[0];
 	const seedCandidateRef = (firstIteration.candidateRefs ?? []).find((candidateRef) => {
 		return candidateRef.candidateId === selectedCandidateId;
@@ -22074,7 +22202,8 @@ function getCandidateDetailsData(rpeInsights, selectedCandidateId) {
 		validationAggregatedEvaluation: findAggregatedEvaluationByCandidateId(rpeInsights.aggregatedEvaluations, selectedCandidateId),
 		trainingAggregatedEvaluation: findAggregatedEvaluationByCandidateId(firstIteration.trainingAggregatedEvaluations, selectedCandidateId),
 		trainingAnalysis: findAnalysisByCandidateId(firstIteration.trainingAnalyses, selectedCandidateId),
-		finalAggregatedEvaluation: findFinalAggregatedEvaluationByCandidateId(selectedCandidateId)
+		finalAggregatedEvaluation: findFinalAggregatedEvaluationByCandidateId(selectedCandidateId),
+		isFinalCandidate: isFinalCandidate(selectedCandidateId)
 	};
 	let data;
 	for (let index = 0; index < iterationHistory.length; index++) {
@@ -22096,7 +22225,8 @@ function getCandidateDetailsData(rpeInsights, selectedCandidateId) {
 				trainingAggregatedEvaluation: findAggregatedEvaluationByCandidateId(nextIteration?.trainingAggregatedEvaluations, selectedCandidateId),
 				trainingAnalysis: findAnalysisByCandidateId(nextIteration?.trainingAnalyses, selectedCandidateId),
 				finalAggregatedEvaluation: findFinalAggregatedEvaluationByCandidateId(selectedCandidateId),
-				rejectionReasons: rejectedCandidate?.reasons
+				rejectionReasons: rejectedCandidate?.reasons,
+				isFinalCandidate: isFinalCandidate(selectedCandidateId)
 			};
 			break;
 		}
@@ -22202,8 +22332,8 @@ function InfoPanel(props) {
 	};
 	return /* @__PURE__ */ u(Panel, {
 		title: "Info",
-		onCloseClick,
 		className: panelClassName,
+		onCloseClick,
 		children: [
 			/* @__PURE__ */ u("h1", { children: "General" }),
 			/* @__PURE__ */ u("h2", { children: "Stop reason" }),
@@ -22398,11 +22528,11 @@ function FinalCandidatesPanel(props) {
 	};
 	return /* @__PURE__ */ u(Panel, {
 		title: "Final Candidates",
-		onCloseClick,
 		className: clsx(FinalCandidatesPanel_module_default["final-candidates-panel"], {
 			[FinalCandidatesPanel_module_default["visible"]]: visible,
 			[FinalCandidatesPanel_module_default["hidden"]]: !visible
 		}),
+		onCloseClick,
 		children: renderFinalCandidates()
 	});
 }
@@ -22637,11 +22767,11 @@ function FailingExamplesPanel(props) {
 	};
 	return /* @__PURE__ */ u(Panel, {
 		title: "Failing examples",
-		onCloseClick,
 		className: clsx(FailingExamplesPanel_module_default["failing-examples-panel"], {
 			[FailingExamplesPanel_module_default["visible"]]: visible,
 			[FailingExamplesPanel_module_default["hidden"]]: !visible
 		}),
+		onCloseClick,
 		children: renderFailingExamples()
 	});
 }
@@ -22722,7 +22852,7 @@ function loadRPEInsights() {
 R$1(/* @__PURE__ */ u(App, { rpeInsights: loadRPEInsights() }), document.getElementById("app"));
 //#endregion
 
-//# sourceMappingURL=index-BdvaoIZN.js.map</script>
+//# sourceMappingURL=index-BcTvv40o.js.map</script>
     <style rel="stylesheet" crossorigin>* {
   box-sizing: border-box;
 }
@@ -22814,10 +22944,23 @@ html[data-theme=light] p {
 
 .text-muted {
   color: var(--text-muted);
-}._candidate-tree_njqup_1 {
+}._candidate-tree-viewport_arau0_1 {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+}
+._candidate-tree-viewport_arau0_1._panning_arau0_9 {
+  cursor: grabbing;
+}
+
+._candidate-tree_arau0_1 {
   --fill: var(--bg-muted);
   --stroke: var(--muted);
   --stroke-selected: var(--border-highlighted);
+  display: block;
 }._candidate-box-foreign-object_n8r2y_1 {
   display: flex;
   flex-direction: column;
@@ -22896,7 +23039,7 @@ html[data-theme=light] p {
   align-items: center;
   justify-content: center;
   user-select: none;
-}._panel_1705s_1 {
+}._panel_gpov3_1 {
   border: 1px solid var(--muted);
   border-radius: var(--border-radius);
   background-color: var(--bg-muted);
@@ -22915,29 +23058,42 @@ html[data-theme=light] p {
   flex-direction: column;
   overflow-y: auto;
   overscroll-behavior: contain;
+  left: 50%;
+  transform: translate(-50%, -110%);
 }
-._panel_1705s_1 ._panel-header_1705s_21 {
-  font-family: "Funnel Display", sans-serif;
-  font-size: 1.25rem;
-  font-weight: 500;
+._panel_gpov3_1 ._panel-top-bar_gpov3_23 {
   padding: 0;
   border-bottom: 1px solid var(--muted);
   position: sticky;
   top: 0;
   padding: calc(var(--border-radius) * 1.5) calc(var(--border-radius) * 2);
+}
+._panel_gpov3_1 ._panel-header_gpov3_30 {
+  font-family: "Funnel Display", sans-serif;
+  font-size: 1.25rem;
+  font-weight: 500;
   display: flex;
   flex-direction: row;
   align-items: center;
 }
-._panel_1705s_1 ._panel-header-title_1705s_34 {
+._panel_gpov3_1 ._panel-header-title_gpov3_38 {
   flex: 1;
 }
-._panel_1705s_1 ._panel-content_1705s_37 {
+._panel_gpov3_1 ._panel-header-subtitle_gpov3_41 {
+  font-size: 0.84rem;
+  color: var(--text-muted);
+}
+._panel_gpov3_1 ._panel-header-actions_gpov3_45 {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+._panel_gpov3_1 ._panel-content_gpov3_50 {
   padding: calc(var(--border-radius) * 1.5) calc(var(--border-radius) * 2);
   overflow-y: auto;
   flex: 1;
 }
-._panel_1705s_1 h1 {
+._panel_gpov3_1 h1 {
   font-family: "Funnel Display", sans-serif;
   font-size: 1.25rem;
   margin-top: 1rem;
@@ -22946,12 +23102,16 @@ html[data-theme=light] p {
   font-weight: 500;
   line-height: 1;
 }
-._panel_1705s_1 h2 {
+._panel_gpov3_1 h2 {
   font-family: "Funnel Display", sans-serif;
   font-size: 0.84rem;
   margin-top: 1rem;
   margin-bottom: 0rem;
   padding: 0;
+}
+
+._panel-docked_gpov3_72 {
+  right: 0;
 }._table_40r8k_1 {
   display: grid;
   --padding-x: 0.875rem;
@@ -23149,22 +23309,27 @@ html[data-theme=light] p {
 
 ._candidate-analysis-summary_1xahz_5 {
   color: var(--text-muted);
-}._candidate-details-panel_kt8uo_1 {
+}._candidate-details-panel_1czib_1 {
   left: 50%;
   transform: translate(-50%, -110%);
 }
-._candidate-details-panel_kt8uo_1._visible_kt8uo_5 {
+._candidate-details-panel_1czib_1._visible_1czib_5 {
   left: 50%;
   transform: translate(-50%, 0);
   transition: transform 340ms ease-out;
 }
-._candidate-details-panel_kt8uo_1._hidden_kt8uo_10 {
+._candidate-details-panel_1czib_1._hidden_1czib_10 {
   left: 50%;
   transition: transform 280ms ease-in;
   transform: translate(-50%, 110%);
 }
+._candidate-details-panel_1czib_1._minimized_1czib_15 {
+  left: 50%;
+  transition: transform 280ms ease-in;
+  transform: translate(-50%, calc(100% - 2rem - 1rem));
+}
 
-._candidate-details-prompt_kt8uo_16 {
+._candidate-details-prompt_1czib_21 {
   max-height: 12rem;
   font-size: 0.72rem;
   border: 1px solid var(--muted);
@@ -23174,7 +23339,7 @@ html[data-theme=light] p {
   overflow-wrap: anywhere;
 }
 
-._candidate-details-prompt-expanded_kt8uo_26 {
+._candidate-details-prompt-expanded_1czib_31 {
   max-height: 36rem;
 }._toolbar_17c56_1 {
   position: fixed;

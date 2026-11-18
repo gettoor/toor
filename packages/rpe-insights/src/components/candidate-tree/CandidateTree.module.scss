@@ -1,5 +1,19 @@
+.candidate-tree-viewport {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+
+  &.panning {
+    cursor: grabbing;
+  }
+}
+
 .candidate-tree {
   --fill: var(--bg-muted);
   --stroke: var(--muted);
   --stroke-selected: var(--border-highlighted);
+  display: block;
 }

@@ -6,9 +6,15 @@ import {
   BOX_HEIGHT,
   BOX_X_SPACING,
   BOX_Y_SPACING,
+  CANDIDATE_BOX_ATTRIBUTE,
 } from './candidate-tree-consts';
 import { CandidateBoxProps } from './CandidateBox';
 import { CandidateBoxConnectionProps } from './CandidateBoxConnection';
+
+export interface TreeOffset {
+  x: number;
+  y: number;
+}
 
 /**
  * Resolve the boxes for the prompt tree.
@@ -235,4 +241,42 @@ export function isHighlighted(
   }
 
   return false;
+}
+
+/**
+ * Clamp the tree offset so that at least one column and one row of boxes
+ * (including the tree padding) stay visible in the viewport.
+ */
+export function clampTreeOffset(
+  offset: TreeOffset,
+  treeWidth: number,
+  treeHeight: number,
+  viewportWidth: number,
+  viewportHeight: number,
+): TreeOffset {
+  const clamp = (
+    value: number,
+    treeSize: number,
+    viewportSize: number,
+    boxSize: number,
+  ) => {
+    const minVisible = Math.min(PADDING + boxSize, treeSize);
+    const min = minVisible - treeSize;
+    const max = Math.max(min, viewportSize - minVisible);
+    return Math.min(Math.max(value, min), max);
+  };
+  return {
+    x: clamp(offset.x, treeWidth, viewportWidth, BOX_WIDTH),
+    y: clamp(offset.y, treeHeight, viewportHeight, BOX_HEIGHT),
+  };
+}
+
+/**
+ * Check if the event target is inside a candidate box.
+ */
+export function isInsideCandidateBox(target: EventTarget | null): boolean {
+  return (
+    target instanceof Element &&
+    target.closest(`[${CANDIDATE_BOX_ATTRIBUTE}]`) !== null
+  );
 }

@@ -46,12 +46,19 @@ export function getCandidateDetailsData(
     });
     return finalCandidate?.aggregatedEvaluation;
   };
+
   const findAnalysisByCandidateId = (
     analyses: RPEAnalyzerOutput[] | undefined,
     candidateId: string
   ): RPEAnalyzerOutput | undefined => {
     return analyses?.find(analysis => {
       return analysis.candidateRef.candidateId === candidateId;
+    });
+  };
+
+  const isFinalCandidate = (candidateId: string) => {
+    return rpeInsights.finalCandidates.some(finalCandidate => {
+      return finalCandidate.candidateRef.candidateId === candidateId;
     });
   };
 
@@ -81,6 +88,7 @@ export function getCandidateDetailsData(
       finalAggregatedEvaluation: findFinalAggregatedEvaluationByCandidateId(
         selectedCandidateId,
       ),
+      isFinalCandidate: isFinalCandidate(selectedCandidateId),
     };
   }
 
@@ -122,6 +130,7 @@ export function getCandidateDetailsData(
           selectedCandidateId,
         ),
         rejectionReasons: rejectedCandidate?.reasons,
+        isFinalCandidate: isFinalCandidate(selectedCandidateId),
       };
       break;
     }

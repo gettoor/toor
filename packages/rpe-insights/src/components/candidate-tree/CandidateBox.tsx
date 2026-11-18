@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import styles from './CandidateBox.module.scss';
 import { MiddotSeparator } from '../basic';
+import { CANDIDATE_BOX_ATTRIBUTE } from './candidate-tree-consts';
 
 export interface CandidateBoxData {
   candidateId: string;
@@ -81,7 +82,7 @@ export function CandidateBox(props: CandidateBoxProps) {
   const stroke = STROKE_COLORS[strokeColorState][strokeColorName];
 
   return (
-    <>
+    <g {...{ [CANDIDATE_BOX_ATTRIBUTE]: true }}>
       <rect
         x={props.x + 0.5}
         y={props.y + 0.5}
@@ -145,6 +146,6 @@ export function CandidateBox(props: CandidateBoxProps) {
           </div>
         </div>
       </foreignObject>
-    </>
+    </g>
   );
 }
