@@ -1,7 +1,8 @@
 import { getGeneratedCandidates, RPEInsights, type RPECandidate } from '@gettoor/core';
 
 import { 
-  PADDING,
+  PADDING_TOP,
+  PADDING_LEFT,
   BOX_WIDTH,
   BOX_HEIGHT,
   BOX_X_SPACING,
@@ -25,7 +26,7 @@ export function resolveBoxes(
 ): CandidateBoxProps[] {
   const { candidates, iterationHistory, aggregatedEvaluations } = rpeInsights;
   const boxes: CandidateBoxProps[] = [];
-  let y = PADDING;
+  let y = PADDING_TOP;
 
   const findCandidateById = (candidateId: string) => {
     const candidate = candidates.find((itr) => {
@@ -57,7 +58,7 @@ export function resolveBoxes(
 
   // seed prompts
   const firstIteration = iterationHistory[0];
-  let x = PADDING;
+  let x = PADDING_LEFT;
   for (const candidateRef of firstIteration.candidateRefs ?? []) {
     const prompt = findCandidateById(candidateRef.candidateId);
     const aggregatedEvaluation = findCandidateAggregatedEvaluation(
@@ -91,7 +92,7 @@ export function resolveBoxes(
 
   // candidates from each iteration
   for (const iteration of iterationHistory) {
-    let x = PADDING;
+    let x = PADDING_LEFT;
     const generatedCandidates = getGeneratedCandidates(iteration);
     for (const newCandidate of generatedCandidates) {
       const candidate = findCandidateById(
@@ -259,15 +260,16 @@ export function clampTreeOffset(
     treeSize: number,
     viewportSize: number,
     boxSize: number,
+    padding: number,
   ) => {
-    const minVisible = Math.min(PADDING + boxSize, treeSize);
+    const minVisible = Math.min(padding + boxSize, treeSize);
     const min = minVisible - treeSize;
     const max = Math.max(min, viewportSize - minVisible);
     return Math.min(Math.max(value, min), max);
   };
   return {
-    x: clamp(offset.x, treeWidth, viewportWidth, BOX_WIDTH),
-    y: clamp(offset.y, treeHeight, viewportHeight, BOX_HEIGHT),
+    x: clamp(offset.x, treeWidth, viewportWidth, BOX_WIDTH, PADDING_LEFT),
+    y: clamp(offset.y, treeHeight, viewportHeight, BOX_HEIGHT, PADDING_TOP),
   };
 }
 

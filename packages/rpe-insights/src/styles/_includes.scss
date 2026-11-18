@@ -1,17 +1,17 @@
 @mixin font-tiny {
-  font-size: 0.64rem;
+  font-size: var(--font-size-tiny);
 }
 
 @mixin font-small {
-  font-size: 0.72rem;
+  font-size: var(--font-size-small);
 }
 
 @mixin font-medium {
-  font-size: 0.84rem;
+  font-size: var(--font-size-medium);
 }
 
 @mixin font-big {
-  font-size: 1.25rem;
+  font-size: var(--font-size-big);
 }
 
 @mixin font-monospace {

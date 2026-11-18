@@ -3,7 +3,16 @@ import { useEffect, useRef, useState } from 'preact/hooks';
 import { RPEInsights } from '@gettoor/core';
 
 import styles from './CandidateTree.module.scss';
-import { PADDING, PAN_THRESHOLD } from './candidate-tree-consts';
+import { 
+  BOX_HEIGHT,
+  BOX_Y_SPACING,
+  PADDING_TOP,
+  PADDING_RIGHT,
+  PADDING_BOTTOM,
+  PADDING_LEFT,
+  PAN_THRESHOLD,
+  BOX_BORDER_RADIUS,
+} from './candidate-tree-consts';
 import { CandidateBox } from './CandidateBox';
 import { CandidateBoxConnection } from './CandidateBoxConnection';
 import { 
@@ -14,6 +23,8 @@ import {
   resolveBoxes,
   resolveConnections,
 } from './candidate-tree-utils';
+import { VNode } from 'preact';
+import { IterationLabel } from './IterationLabel';
 
 export interface CandidateTreeProps {
   rpeInsights: RPEInsights;
@@ -47,14 +58,16 @@ export function CandidateTree(props: CandidateTreeProps) {
   const boxes = resolveBoxes(rpeInsights, onBoxClick);
   const connections = resolveConnections(boxes);
 
-  const width = PADDING + boxes.reduce(
+  const boxesWidth = boxes.reduce(
     (max, box) => Math.max(max, box.x + box.width),
     0,
   );
-  const height = PADDING + boxes.reduce(
+  const boxesHeight = boxes.reduce(
     (max, box) => Math.max(max, box.y + box.height),
     0,
   );
+  const width = PADDING_LEFT + boxesWidth + PADDING_RIGHT;
+  const height = PADDING_TOP + boxesHeight + PADDING_BOTTOM;
 
   const applyOffset = (offset: TreeOffset) => {
     const viewport = viewportRef.current;
@@ -89,7 +102,7 @@ export function CandidateTree(props: CandidateTreeProps) {
   );
 
   const onPointerDown = (event: PointerEvent) => {
-    // if no the main button or inside a candidate box
+    // if not the main button or inside a candidate box
     if (event.button !== 0 || isInsideCandidateBox(event.target)) {
       return;
     }
@@ -172,6 +185,27 @@ export function CandidateTree(props: CandidateTreeProps) {
     });
   };
 
+  const renderIterationLabels = () => {
+    const nodes: VNode[] = [];
+    const iterationCount = rpeInsights.iterationHistory.length;
+    for (let index = 0; index < iterationCount + 1; index++) {
+      const label = index === 0 ? 'Seed' : `Iteration ${index}`;
+      const x = 36;
+      const y = index * (BOX_HEIGHT + BOX_Y_SPACING) +
+        BOX_HEIGHT + PADDING_TOP - BOX_BORDER_RADIUS;
+      nodes.push(
+        <IterationLabel
+          key={index}
+          label={label}
+          x={x}
+          y={y}
+          fill='var(--text-muted)'
+        />
+      );
+    }
+    return <>{nodes}</>;
+  };
+
   const viewportClassName = clsx(
     styles['candidate-tree-viewport'],
     { [styles.panning]: isPanning },
@@ -196,13 +230,7 @@ export function CandidateTree(props: CandidateTreeProps) {
       >
         {renderConnections()}
         {renderBoxes()}
-        {/* <text
-          x="20"
-          y="100"
-          transform="rotate(-90 20 100)"
-        >
-          Vertical text
-        </text>     */}        
+        {renderIterationLabels()}
       </svg>
     </div>
   );
