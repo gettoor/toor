@@ -6,7 +6,7 @@ import {
   findUniquePlaceholders,
   replacePlaceholders,
 } from '../../string/index.js';
-import { InternalToorError, ToorError } from '../../errors/index.js';
+import { InternalToorError } from '../../errors/index.js';
 import { runParallelBatchesOrThrow } from '../../concurrency/index.js';
 import {
   MetricResult,
@@ -148,7 +148,7 @@ export function singlePromptRPECandidateGenerator(
           candidate: findCandidateById(state, taskEntry.candidateId),
           candidateInstruction: taskEntry.candidateInstruction,
           newCandidateId,
-          aggregation: taskEntry.aggregation,
+          trainingAggregation: taskEntry.aggregation,
           analysis: taskEntry.analysis,
           datasetEntries: state.datasetEntries,
           includeExpectedResponse: includeFailedExpectedResponses,
@@ -198,7 +198,7 @@ async function doGenerateCandidate(
   input: GenerateCandidateInput,
 ): Promise<RPECandidateGeneratorCandidate | undefined> {
   // don't generate candidate if no evaluations failed
-  if (input.aggregation.failedEvaluations.length === 0) {
+  if (input.trainingAggregation.failedEvaluations.length === 0) {
     return undefined;
   }
   const { candidate } = input;
@@ -226,7 +226,7 @@ async function doGenerateCandidate(
         candidate.candidateId,
       ),
       aggregated_metrics: aggregatedMetricsForPrompt(
-        input.aggregation.aggregatedMetrics ?? {},
+        input.trainingAggregation.aggregatedMetrics ?? {},
       ),
       strengths: listForPrompt(
         input.analysis.strengths,
@@ -237,7 +237,7 @@ async function doGenerateCandidate(
         'No recommendations'
       ),
       passed_evaluations: passedEvaluationsForPrompt(
-        input.aggregation.passedEvaluations,
+        input.trainingAggregation.passedEvaluations,
       ),
       failed_examples: failedExampleAnalysisForPrompt(
         input.datasetEntries,
@@ -449,7 +449,7 @@ interface GenerateCandidateInput {
   candidate: RPECandidate;
   candidateInstruction: SinglePromptRPECandidateGeneratorInstruction;
   newCandidateId: string;
-  aggregation: RPEAggregatorOutput;
+  trainingAggregation: RPEAggregatorOutput;
   analysis: RPEAnalyzerOutput;
   datasetEntries: RPEDatasetEntry[];
   includeExpectedResponse: boolean;

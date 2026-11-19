@@ -1,4 +1,4 @@
-export const PADDING_TOP = 10;
+export const PADDING_TOP = 40;
 export const PADDING_RIGHT = 10;
 export const PADDING_BOTTOM = 10;
 export const PADDING_LEFT = 40;

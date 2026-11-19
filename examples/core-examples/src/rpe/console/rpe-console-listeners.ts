@@ -39,7 +39,6 @@ export function consoleRPEListeners(): RPEListeners {
     },
 
     iterationCompleted: async (iteration) => {
-      bar();
       const candidateEntries = (iteration.selectedCandidateRefs ?? [])
         .map(
           candidateRef => candidateRef.candidateId
@@ -60,6 +59,7 @@ export function consoleRPEListeners(): RPEListeners {
           };
         });
       if (candidateEntries.length > 0) {
+        bar();
         printCandidateTable(candidateEntries, BAR);
         console.log('');
       }
@@ -105,8 +105,17 @@ export function consoleRPEListeners(): RPEListeners {
       startBarSpinner('Generating candidates...');
     },
 
-    candidatesGenerated: async (iteration) => {
+    candidatesGenerated: async (iteration, generatedCandidates) => {
       spinner.stop();
+      const generatedCount = generatedCandidates.length;    
+      bar(
+        `Generated ${Styles.highlight(generatedCount.toString())} candidates`,
+      );  
+    },
+
+    noCandidatesGenerated: async (iteration) => {
+      spinner.stop();
+      bar('No candidates generated');
     },
 
     validatingCandidates: async (iteration) => {
@@ -159,12 +168,9 @@ export function consoleRPEListeners(): RPEListeners {
 
     candidatesSelected: async (iteration) => {
       spinner.stop();
-      const generatedCandidates = getGeneratedCandidates(iteration);
-      const generatedCount = generatedCandidates.length;
       const selectedCount = iteration.selectedCandidateRefs?.length ?? 0;
       bar(
-        `Generated ${Styles.highlight(generatedCount.toString())} and ` +
-        `selected ${Styles.highlight(selectedCount.toString())} candidates`,
+        `Selected ${Styles.highlight(selectedCount.toString())} candidates`,
       );
     },
 

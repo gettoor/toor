@@ -7,7 +7,10 @@ import {
 import { RPEEvaluator } from '../rpe-evaluator/index.js';
 import { RPEAggregator } from '../rpe-aggregator/index.js';
 import { RPEAnalyzer } from '../rpe-analyzer/index.js';
-import { RPECandidateGenerator } from '../rpe-candidate-generator/index.js';
+import { 
+  RPECandidateGenerator,
+  RPECandidateGeneratorCandidate,
+} from '../rpe-candidate-generator/index.js';
 import { RPECandidateSelector } from '../rpe-candidate-selector/index.js';
 import { RPEStopFunc } from '../rpe-stop/index.js';
 import {
@@ -123,8 +126,19 @@ export interface RPEListeners {
   /**
    * Called when candidates have been generated.
    * @param iteration - Current iteration.
+   * @see {@link noCandidatesGenerated}
    */
   candidatesGenerated?: (
+    iteration: RPEIterationInProgress,
+    generatedCandidates: RPECandidateGeneratorCandidate[],
+  ) => Promise<void>;
+
+  /**
+   * Called when no candidates have been generated.
+   * @param iteration - Current iteration.
+   * @see {@link candidatesGenerated}
+   */
+  noCandidatesGenerated?: (
     iteration: RPEIterationInProgress,
   ) => Promise<void>;
 

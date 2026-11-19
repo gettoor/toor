@@ -20639,7 +20639,7 @@ object({
 function resolveBoxes(rpeInsights, onBoxClick) {
 	const { candidates, iterationHistory, aggregatedEvaluations } = rpeInsights;
 	const boxes = [];
-	let y = 10;
+	let y = 40;
 	const findCandidateById = (candidateId) => {
 		const candidate = candidates.find((itr) => {
 			return itr.candidateId === candidateId;
@@ -20796,7 +20796,7 @@ function clampTreeOffset(offset, treeWidth, treeHeight, viewportWidth, viewportH
 	};
 	return {
 		x: clamp(offset.x, treeWidth, viewportWidth, 120, 40),
-		y: clamp(offset.y, treeHeight, viewportHeight, 120, 10)
+		y: clamp(offset.y, treeHeight, viewportHeight, 120, 40)
 	};
 }
 /**
@@ -20852,7 +20852,7 @@ function CandidateTree(props) {
 	const boxesWidth = boxes.reduce((max, box) => Math.max(max, box.x + box.width), 0);
 	const boxesHeight = boxes.reduce((max, box) => Math.max(max, box.y + box.height), 0);
 	const width = 40 + boxesWidth + 10;
-	const height = 10 + boxesHeight + 10;
+	const height = 40 + boxesHeight + 10;
 	const applyOffset = (offset) => {
 		const viewport = viewportRef.current;
 		const svg = svgRef.current;
@@ -20984,7 +20984,7 @@ function CandidateTree(props) {
 		for (let index = 0; index < iterationCount + 1; index++) {
 			const label = index === 0 ? "Seed" : `Iteration ${index}`;
 			const x = 36;
-			const y = index * 160 + 120 + 10 - 8;
+			const y = index * 160 + 120 + 40 - 8;
 			nodes.push(/* @__PURE__ */ u(IterationLabel, {
 				label,
 				x,
@@ -23016,7 +23016,7 @@ function loadRPEInsights() {
 R$1(/* @__PURE__ */ u(App, { rpeInsights: loadRPEInsights() }), document.getElementById("app"));
 //#endregion
 
-//# sourceMappingURL=index-CoSrmzrd.js.map</script>
+//# sourceMappingURL=index-BgUFQod-.js.map</script>
     <style rel="stylesheet" crossorigin>* {
   box-sizing: border-box;
 }

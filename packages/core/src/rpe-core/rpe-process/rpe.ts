@@ -148,7 +148,12 @@ export async function optimize(
       state,
       input.candidateGenerator,
     );
-    await listeners.candidatesGenerated?.(iteration);
+    await listeners.candidatesGenerated?.(iteration, generatedCandidates);
+
+    // notify if no candidates were generated
+    if (generatedCandidates.length === 0) {
+      await listeners.noCandidatesGenerated?.(iteration);
+    }
 
     // validate and evaluate candidates if there are any
     if (generatedCandidates.length > 0) {
