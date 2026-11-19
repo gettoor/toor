@@ -41,6 +41,8 @@ interface PanState {
   startOffset: TreeOffset;
 }
 
+const DISABLE_BACKGROUND_CLICK = true;
+
 export function CandidateTree(props: CandidateTreeProps) {
   const { rpeInsights, selectedCandidateId: selectedPromptId, detailsVisible } = props;
 
@@ -151,9 +153,55 @@ export function CandidateTree(props: CandidateTreeProps) {
       pannedRef.current = false;
       return;
     }
-    if (!isInsideCandidateBox(event.target)) {
+    if (!DISABLE_BACKGROUND_CLICK && !isInsideCandidateBox(event.target)) {
       props.onBackgroundClick();
     }
+  };
+
+  const renderCorners = () => {
+    const inset = 0.5;
+    const arm = 48;
+    const radius = 8;
+    const left = inset;
+    const top = inset;
+    const right = width - inset;
+    const bottom = height - inset;
+
+    const corners = [
+      `M ${left} ${top + arm} ` +
+      `L ${left} ${top + radius} ` + 
+      `A ${radius} ${radius} 0 0 1 ${left + radius} ${top} ` +
+      `L ${left + arm} ${top}`,
+
+      `M ${right - arm} ${top} ` +
+      `L ${right - radius} ${top} ` +
+      `A ${radius} ${radius} 0 0 1 ${right} ${top + radius} ` +
+      `L ${right} ${top + arm}`,
+
+      `M ${right} ${bottom - arm} ` +
+      `L ${right} ${bottom - radius} ` +
+      `A ${radius} ${radius} 0 0 1 ${right - radius} ${bottom} ` +
+      `L ${right - arm} ${bottom}`,
+      
+      `M ${left + arm} ${bottom} ` +
+      `L ${left + radius} ${bottom} ` +
+      `A ${radius} ${radius} 0 0 1 ${left} ${bottom - radius} ` +
+      `L ${left} ${bottom - arm}`,
+    ];
+
+    return (
+      <g
+        stroke="var(--text-muted)"
+        strokeWidth={1}
+        strokeDasharray="8 4"
+        fill="none"
+        opacity={0.25}
+      >
+        {corners.map((d, index) => (
+          <path key={index} d={d} />
+        ))}
+      </g>
+    );
   };
   
   const renderBoxes = () => {
@@ -228,6 +276,7 @@ export function CandidateTree(props: CandidateTreeProps) {
         height={`${height}px`}
         viewBox={`0 0 ${width} ${height}`}
       >
+        {renderCorners()}
         {renderConnections()}
         {renderBoxes()}
         {renderIterationLabels()}

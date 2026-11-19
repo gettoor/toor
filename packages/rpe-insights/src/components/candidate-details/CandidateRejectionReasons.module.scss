@@ -1,0 +1,11 @@
+.rejection-reasons {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.rejection-reason:first-child {
+  h2 {
+    padding-top: 0rem;
+    margin-top: 0rem;
+  }
+}

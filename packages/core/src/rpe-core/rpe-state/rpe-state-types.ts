@@ -2,6 +2,9 @@ import { RPEMetadata } from '../rpe-core/index.js';
 import { RPEDatasetEntry } from '../rpe-dataset/index.js';
 import { RPECandidate, RPECandidateRef } from '../rpe-candidate/index.js';
 import { RPEExecutorResponse } from '../rpe-executor/index.js';
+import { 
+  RPECandidateValidatorViolation,
+} from '../rpe-candidate-validator/index.js';
 import { RPEAggregatorOutput } from '../rpe-aggregator/index.js';
 import { RPEAnalyzerOutput } from '../rpe-analyzer/index.js';
 import {
@@ -38,7 +41,7 @@ export interface RPERejectedCandidate {
   /**
    * Reasons for the rejection (can be markdown).
    */
-  reasons: string[];
+  reasons: RPECandidateValidatorViolation[];
 }
 
 /**

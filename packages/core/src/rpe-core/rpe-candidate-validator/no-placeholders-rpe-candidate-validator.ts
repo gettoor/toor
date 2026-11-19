@@ -5,6 +5,7 @@ import {
   RPECandidateValidator,
   RPECandidateValidatorInput,
   RPECandidateValidatorOutput,
+  RPECandidateValidatorViolation,
 } from './rpe-candidate-validator-types.js';
 import {
   NoPlaceholdersRPECandidateValidatorInput,
@@ -26,7 +27,7 @@ export function noPlaceholdersRPECandidateValidator(
     input: RPECandidateValidatorInput,
     candidatePlaceholdersPerModule: Record<string, string[]>,
   ): Promise<Pick<RPECandidateValidatorOutput, 'violations'>> => {
-    const violations: string[] = [];
+    const violations: RPECandidateValidatorViolation[] = [];
   
     Object.keys(candidatePlaceholdersPerModule).forEach(moduleKey => {
       const modulePlaceholders = candidatePlaceholdersPerModule[moduleKey];
@@ -34,9 +35,10 @@ export function noPlaceholdersRPECandidateValidator(
 
       const forbidden = modulesWithoutPlaceholders.includes(moduleKey);
       if (forbidden && hasPlaceholders) {
-        violations.push(
-          `Module ${moduleKey} is forbidden to have placeholders`,
-        );
+        violations.push({
+          module: moduleKey,
+          requirement: `Module is forbidden to have placeholders`,
+        });
       }
     });
 

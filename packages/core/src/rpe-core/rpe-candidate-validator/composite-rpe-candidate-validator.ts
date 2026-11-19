@@ -2,6 +2,7 @@ import { objectToRPEPropertyValue } from '../rpe-info/index.js';
 import { 
   RPECandidateValidator,
   RPECandidateValidatorInput,
+  RPECandidateValidatorViolation,
 } from './rpe-candidate-validator-types.js';
 import { 
   CompositeRPECandidateValidatorInput,
@@ -21,7 +22,7 @@ export function compositeRPECandidateValidator(
 
   return {
     validate: async (input: RPECandidateValidatorInput) => {
-      const allViolations: string[] = [];
+      const allViolations: RPECandidateValidatorViolation[] = [];
 
       // run all validators and collect violations
       for (const validator of validators) {

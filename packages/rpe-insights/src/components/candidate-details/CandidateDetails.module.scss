@@ -3,28 +3,30 @@
 .candidate-details-panel {
   $vertical-padding: 1rem;
 
-  left: 50%;
-  transform: translate(-50%, -110%);
+  right: 4rem; // next to the toolbar
+  transform: translate(0, -110%);
 
   &.visible {
-    left: 50%;
-    transform: translate(-50%, 0);
+    transform: translate(0, 0);
     transition: transform 340ms ease-out;
   }
 
   &.hidden {
-    left: 50%;
     transition: transform 280ms ease-in;
-    transform: translate(-50%, 110%);
+    transform: translate(0, 110%);
   }
 
   &.minimized {
-    left: 50%;
     transition: transform 280ms ease-in;
 
     // -1rem to show the panel subtitle
-    transform: translate(-50%, calc(100% - $vertical-padding * 2 - 1rem));
+    transform: translate(0, calc(100% - $vertical-padding * 2 - 1rem));
   }
+}
+
+.candidate-details-panel-subtitle {
+  display: flex;
+  flex-direction: row;
 }
 
 .candidate-details-prompt {

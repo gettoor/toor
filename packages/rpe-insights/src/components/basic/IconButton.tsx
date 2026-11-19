@@ -7,7 +7,7 @@ export interface IconButtonProps {
   name: string;
   title?: string;
   className?: string;
-  onClick: () => void;
+  onClick: (event: MouseEvent) => void;
 }
 
 export function IconButton(props: IconButtonProps) {
@@ -15,7 +15,7 @@ export function IconButton(props: IconButtonProps) {
   return (
     <div 
       className={clsx(styles['icon-button'], className)}
-      onClick={onClick}
+      onClick={(event: MouseEvent) => onClick(event)}
     >
       <Icon
         className='icon'

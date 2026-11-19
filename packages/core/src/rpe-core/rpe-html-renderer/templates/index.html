@@ -4799,7 +4799,7 @@ function IconButton(props) {
 	const { name, title, className, onClick } = props;
 	return /* @__PURE__ */ u("div", {
 		className: clsx(IconButton_module_default["icon-button"], className),
-		onClick,
+		onClick: (event) => onClick(event),
 		children: /* @__PURE__ */ u(Icon, {
 			className: "icon",
 			name,
@@ -4808,27 +4808,36 @@ function IconButton(props) {
 	});
 }
 var Panel_module_default = {
-	panel: "_panel_ud8ns_1",
-	"panel-top-bar": "_panel-top-bar_ud8ns_23",
-	"panel-header": "_panel-header_ud8ns_30",
-	"panel-header-title": "_panel-header-title_ud8ns_38",
-	"panel-header-subtitle": "_panel-header-subtitle_ud8ns_41",
-	"panel-header-actions": "_panel-header-actions_ud8ns_45",
-	"panel-content": "_panel-content_ud8ns_50",
-	"panel-docked": "_panel-docked_ud8ns_72"
+	panel: "_panel_1qg4q_1",
+	"panel-top-bar": "_panel-top-bar_1qg4q_21",
+	"panel-header": "_panel-header_1qg4q_28",
+	"panel-header-clickable": "_panel-header-clickable_1qg4q_36",
+	"panel-header-title": "_panel-header-title_1qg4q_39",
+	"panel-header-subtitle": "_panel-header-subtitle_1qg4q_42",
+	"panel-header-actions": "_panel-header-actions_1qg4q_46",
+	"panel-content": "_panel-content_1qg4q_52",
+	"panel-docked": "_panel-docked_1qg4q_74"
 };
 //#endregion
 //#region src/components/basic/Panel.tsx
 function Panel(props) {
-	const onMinimizeClick = () => {
+	const onMinimizeClick = (event) => {
+		event.stopPropagation();
 		props.onMinimizeClick?.();
 	};
+	const onHeaderClick = (event) => {
+		event.stopPropagation();
+		props.onHeaderClick?.();
+	};
+	const panelClassName = clsx(Panel_module_default["panel"], props.className);
+	const headerClassName = clsx(Panel_module_default["panel-header"], { [Panel_module_default["panel-header-clickable"]]: props.onHeaderClick !== void 0 });
 	return /* @__PURE__ */ u("div", {
-		className: clsx(Panel_module_default["panel"], props.className),
+		className: panelClassName,
 		children: [/* @__PURE__ */ u("div", {
 			className: Panel_module_default["panel-top-bar"],
 			children: [/* @__PURE__ */ u("div", {
-				className: Panel_module_default["panel-header"],
+				className: headerClassName,
+				onClick: (event) => onHeaderClick(event),
 				children: [/* @__PURE__ */ u("div", {
 					className: Panel_module_default["panel-header-title"],
 					children: /* @__PURE__ */ u("div", { children: props.title })
@@ -4837,7 +4846,7 @@ function Panel(props) {
 					children: [props.onMinimizeClick && /* @__PURE__ */ u(IconButton, {
 						name: "minimize",
 						title: "Minimize",
-						onClick: onMinimizeClick
+						onClick: (event) => onMinimizeClick(event)
 					}), /* @__PURE__ */ u(IconButton, {
 						name: "close",
 						title: "Close",
@@ -20886,7 +20895,28 @@ function CandidateTree(props) {
 			pannedRef.current = false;
 			return;
 		}
-		if (!isInsideCandidateBox(event.target)) props.onBackgroundClick();
+	};
+	const renderCorners = () => {
+		const inset = .5;
+		const arm = 48;
+		const radius = 8;
+		const left = inset;
+		const top = inset;
+		const right = width - inset;
+		const bottom = height - inset;
+		return /* @__PURE__ */ u("g", {
+			stroke: "var(--text-muted)",
+			strokeWidth: 1,
+			strokeDasharray: "8 4",
+			fill: "none",
+			opacity: .25,
+			children: [
+				`M ${left} 48.5 L ${left} 8.5 A ${radius} ${radius} 0 0 1 8.5 ${top} L 48.5 ${top}`,
+				`M ${right - arm} ${top} L ${right - radius} ${top} A ${radius} ${radius} 0 0 1 ${right} 8.5 L ${right} 48.5`,
+				`M ${right} ${bottom - arm} L ${right} ${bottom - radius} A ${radius} ${radius} 0 0 1 ${right - radius} ${bottom} L ${right - arm} ${bottom}`,
+				`M 48.5 ${bottom} L 8.5 ${bottom} A ${radius} ${radius} 0 0 1 ${left} ${bottom - radius} L ${left} ${bottom - arm}`
+			].map((d, index) => /* @__PURE__ */ u("path", { d }, index))
+		});
 	};
 	const renderBoxes = () => {
 		return boxes.map((box) => /* @__PURE__ */ u(CandidateBox, {
@@ -20936,6 +20966,7 @@ function CandidateTree(props) {
 			height: `${height}px`,
 			viewBox: `0 0 ${width} ${height}`,
 			children: [
+				renderCorners(),
 				renderConnections(),
 				renderBoxes(),
 				renderIterationLabels()
@@ -20992,7 +21023,7 @@ function countLabel(count, singular, plural) {
 //#endregion
 //#region src/components/common/Metrics.tsx
 function Metrics(props) {
-	console.log(props.metrics);
+	props.metrics;
 	return /* @__PURE__ */ u(Table, {
 		header: ["Metric", "Score"],
 		rows: Object.keys(props.metrics).sort().map((name) => {
@@ -22045,9 +22076,15 @@ function CandidateChanges(props) {
 		const key = `${candidateId}c${index}`;
 		return /* @__PURE__ */ u(S$1, { children: [index > 0 && /* @__PURE__ */ u(Separator, {}), /* @__PURE__ */ u("div", { children: [
 			/* @__PURE__ */ u("h2", { children: "Change" }),
-			/* @__PURE__ */ u("div", { children: /* @__PURE__ */ u(Markdown, { content: change.description }) }),
+			/* @__PURE__ */ u("p", {
+				className: "text-muted",
+				children: change.description
+			}),
 			/* @__PURE__ */ u("h2", { children: "Reasoning" }),
-			/* @__PURE__ */ u("div", { children: /* @__PURE__ */ u(Markdown, { content: change.reasoning }) })
+			/* @__PURE__ */ u("p", {
+				className: "text-muted",
+				children: change.reasoning
+			})
 		] }, key)] });
 	};
 	const renderChanges = () => {
@@ -22056,13 +22093,51 @@ function CandidateChanges(props) {
 	return /* @__PURE__ */ u("div", { children: renderChanges() });
 }
 var CandidateDetails_module_default = {
-	"candidate-details-panel": "_candidate-details-panel_178fi_1",
-	visible: "_visible_178fi_5",
-	hidden: "_hidden_178fi_10",
-	minimized: "_minimized_178fi_15",
-	"candidate-details-prompt": "_candidate-details-prompt_178fi_21",
-	"candidate-details-prompt-expanded": "_candidate-details-prompt-expanded_178fi_31"
+	"candidate-details-panel": "_candidate-details-panel_r0i5y_1",
+	visible: "_visible_r0i5y_5",
+	hidden: "_hidden_r0i5y_9",
+	minimized: "_minimized_r0i5y_13",
+	"candidate-details-panel-subtitle": "_candidate-details-panel-subtitle_r0i5y_18",
+	"candidate-details-prompt": "_candidate-details-prompt_r0i5y_23",
+	"candidate-details-prompt-expanded": "_candidate-details-prompt-expanded_r0i5y_33"
 };
+//#endregion
+//#region src/components/candidate-details/CandidateRejectionReasons.module.scss
+var CandidateRejectionReasons_module_default = {
+	"rejection-reasons": "_rejection-reasons_1bm1x_1",
+	"rejection-reason": "_rejection-reason_1bm1x_1"
+};
+//#endregion
+//#region src/components/candidate-details/CandidateRejectionReasons.tsx
+function CandidateRejectionReasons(props) {
+	const { reasons } = props;
+	return /* @__PURE__ */ u("div", {
+		className: CandidateRejectionReasons_module_default["rejection-reasons"],
+		children: reasons.map((reason, index) => {
+			return /* @__PURE__ */ u(S$1, { children: [index > 0 && /* @__PURE__ */ u(Separator, {}), /* @__PURE__ */ u("div", {
+				className: CandidateRejectionReasons_module_default["rejection-reason"],
+				children: [
+					reason.module && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("h2", { children: "Module" }), /* @__PURE__ */ u("p", {
+						className: "text-muted",
+						children: reason.module
+					})] }),
+					reason.requirement && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("h2", { children: "Requirement" }), /* @__PURE__ */ u("p", {
+						className: "text-muted",
+						children: reason.requirement
+					})] }),
+					reason.evidence && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("h2", { children: "Evidence" }), /* @__PURE__ */ u("p", {
+						className: "text-muted",
+						children: reason.evidence
+					})] }),
+					reason.reasoning && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("h2", { children: "Reasoning" }), /* @__PURE__ */ u("p", {
+						className: "text-muted",
+						children: reason.reasoning
+					})] })
+				]
+			}, index.toString())] });
+		})
+	});
+}
 //#endregion
 //#region src/components/candidate-details/CandidateDetails.tsx
 function CandidateDetails(props) {
@@ -22079,15 +22154,30 @@ function CandidateDetails(props) {
 	};
 	const renderPanelSubtitle = () => {
 		const nodes = [];
-		if ((data?.rejectionReasons ?? []).length > 0) nodes.push(/* @__PURE__ */ u("div", {
+		const appendNode = (node) => {
+			if (nodes.length > 0) nodes.push(/* @__PURE__ */ u(MiddotSeparator, {}));
+			nodes.push(node);
+		};
+		if (data) appendNode(/* @__PURE__ */ u("div", { children: [
+			/* @__PURE__ */ u("span", { children: "Identifier:" }),
+			"\xA0",
+			/* @__PURE__ */ u("span", {
+				className: "text-normal",
+				children: data.candidate.candidateId
+			})
+		] }));
+		if ((data?.rejectionReasons ?? []).length > 0) appendNode(/* @__PURE__ */ u("div", {
 			className: "red",
 			children: "Rejected"
 		}, "rejected"));
-		if (data?.isFinalCandidate) nodes.push(/* @__PURE__ */ u("div", {
+		if (data?.isFinalCandidate) appendNode(/* @__PURE__ */ u("div", {
 			className: "green",
 			children: "Final Candidate"
 		}, "final"));
-		return /* @__PURE__ */ u(S$1, { children: nodes });
+		return /* @__PURE__ */ u("div", {
+			className: CandidateDetails_module_default["candidate-details-panel-subtitle"],
+			children: nodes
+		});
 	};
 	const renderMetadataSummary = () => {
 		return /* @__PURE__ */ u("span", { children: [countLabel(Object.keys(data?.candidate.metadata ?? {}).length, "metadata entry", "metadata entries"), /* @__PURE__ */ u(MiddotSeparator, {})] });
@@ -22096,14 +22186,6 @@ function CandidateDetails(props) {
 		return /* @__PURE__ */ u("span", {
 			className: "text-muted",
 			children: [data?.changesSummary, "\xA0"]
-		});
-	};
-	const renderRejectionReasons = (reasons) => {
-		return /* @__PURE__ */ u("div", {
-			className: "text-muted",
-			children: reasons.map((reason, index) => {
-				return /* @__PURE__ */ u("div", { children: reason }, index.toString());
-			})
 		});
 	};
 	return /* @__PURE__ */ u(Panel, {
@@ -22115,6 +22197,7 @@ function CandidateDetails(props) {
 		title: "Candidate details",
 		subtitle: renderPanelSubtitle(),
 		onMinimizeClick,
+		onHeaderClick: onMinimizeClick,
 		onCloseClick,
 		children: !!data && /* @__PURE__ */ u(S$1, { children: [
 			/* @__PURE__ */ u(Header, { title: "Modules" }),
@@ -22167,12 +22250,12 @@ function CandidateDetails(props) {
 				] })]
 			}),
 			data?.rejectionReasons && /* @__PURE__ */ u(ExpandableSection, {
-				title: "Rejection Reason",
+				title: "Rejection Reasons",
 				expanded: moreRejectionReason,
 				onToggle: () => {
 					setMoreRejectionReason(!moreRejectionReason);
 				},
-				children: /* @__PURE__ */ u(ExpandableSection.Details, { children: renderRejectionReasons(data.rejectionReasons) })
+				children: /* @__PURE__ */ u(ExpandableSection.Details, { children: /* @__PURE__ */ u(CandidateRejectionReasons, { reasons: data.rejectionReasons }) })
 			}),
 			data.validationAggregatedEvaluation && /* @__PURE__ */ u(CandidateAggregatedEvaluation, {
 				title: "Validation Evaluations",
@@ -22889,7 +22972,7 @@ function loadRPEInsights() {
 R$1(/* @__PURE__ */ u(App, { rpeInsights: loadRPEInsights() }), document.getElementById("app"));
 //#endregion
 
-//# sourceMappingURL=index-B5_sAqJC.js.map</script>
+//# sourceMappingURL=index-Drl6q1Lt.js.map</script>
     <style rel="stylesheet" crossorigin>* {
   box-sizing: border-box;
 }
@@ -23080,7 +23163,7 @@ html[data-theme=light] p {
   align-items: center;
   justify-content: center;
   user-select: none;
-}._panel_ud8ns_1 {
+}._panel_1qg4q_1 {
   border: 1px solid var(--muted);
   border-radius: var(--border-radius);
   background-color: var(--bg-muted);
@@ -23099,17 +23182,15 @@ html[data-theme=light] p {
   flex-direction: column;
   overflow-y: auto;
   overscroll-behavior: contain;
-  left: 50%;
-  transform: translate(-50%, -110%);
 }
-._panel_ud8ns_1 ._panel-top-bar_ud8ns_23 {
+._panel_1qg4q_1 ._panel-top-bar_1qg4q_21 {
   padding: 0;
   border-bottom: 1px solid var(--muted);
   position: sticky;
   top: 0;
   padding: calc(var(--border-radius) * 1.5) calc(var(--border-radius) * 2);
 }
-._panel_ud8ns_1 ._panel-header_ud8ns_30 {
+._panel_1qg4q_1 ._panel-header_1qg4q_28 {
   font-family: "Funnel Display", sans-serif;
   font-size: 1.25rem;
   font-weight: 500;
@@ -23117,24 +23198,28 @@ html[data-theme=light] p {
   flex-direction: row;
   align-items: center;
 }
-._panel_ud8ns_1 ._panel-header-title_ud8ns_38 {
+._panel_1qg4q_1 ._panel-header-clickable_1qg4q_36 {
+  cursor: pointer;
+}
+._panel_1qg4q_1 ._panel-header-title_1qg4q_39 {
   flex: 1;
 }
-._panel_ud8ns_1 ._panel-header-subtitle_ud8ns_41 {
+._panel_1qg4q_1 ._panel-header-subtitle_1qg4q_42 {
   font-size: var(--font-size-medium);
   color: var(--text-muted);
 }
-._panel_ud8ns_1 ._panel-header-actions_ud8ns_45 {
+._panel_1qg4q_1 ._panel-header-actions_1qg4q_46 {
   display: flex;
   flex-direction: row;
   align-items: center;
+  gap: 0.25rem;
 }
-._panel_ud8ns_1 ._panel-content_ud8ns_50 {
+._panel_1qg4q_1 ._panel-content_1qg4q_52 {
   padding: calc(var(--border-radius) * 1.5) calc(var(--border-radius) * 2);
   overflow-y: auto;
   flex: 1;
 }
-._panel_ud8ns_1 h1 {
+._panel_1qg4q_1 h1 {
   font-family: "Funnel Display", sans-serif;
   font-size: var(--font-size-big);
   margin-top: 1rem;
@@ -23143,7 +23228,7 @@ html[data-theme=light] p {
   font-weight: 500;
   line-height: 1;
 }
-._panel_ud8ns_1 h2 {
+._panel_1qg4q_1 h2 {
   font-family: "Funnel Display", sans-serif;
   font-size: var(--font-size-medium);
   margin-top: 1rem;
@@ -23151,7 +23236,7 @@ html[data-theme=light] p {
   padding: 0;
 }
 
-._panel-docked_ud8ns_72 {
+._panel-docked_1qg4q_74 {
   right: 0;
 }._table_40r8k_1 {
   display: grid;
@@ -23350,27 +23435,29 @@ html[data-theme=light] p {
 
 ._candidate-analysis-summary_1xahz_5 {
   color: var(--text-muted);
-}._candidate-details-panel_178fi_1 {
-  left: 50%;
-  transform: translate(-50%, -110%);
+}._candidate-details-panel_r0i5y_1 {
+  right: 4rem;
+  transform: translate(0, -110%);
 }
-._candidate-details-panel_178fi_1._visible_178fi_5 {
-  left: 50%;
-  transform: translate(-50%, 0);
+._candidate-details-panel_r0i5y_1._visible_r0i5y_5 {
+  transform: translate(0, 0);
   transition: transform 340ms ease-out;
 }
-._candidate-details-panel_178fi_1._hidden_178fi_10 {
-  left: 50%;
+._candidate-details-panel_r0i5y_1._hidden_r0i5y_9 {
   transition: transform 280ms ease-in;
-  transform: translate(-50%, 110%);
+  transform: translate(0, 110%);
 }
-._candidate-details-panel_178fi_1._minimized_178fi_15 {
-  left: 50%;
+._candidate-details-panel_r0i5y_1._minimized_r0i5y_13 {
   transition: transform 280ms ease-in;
-  transform: translate(-50%, calc(100% - 2rem - 1rem));
+  transform: translate(0, calc(100% - 2rem - 1rem));
 }
 
-._candidate-details-prompt_178fi_21 {
+._candidate-details-panel-subtitle_r0i5y_18 {
+  display: flex;
+  flex-direction: row;
+}
+
+._candidate-details-prompt_r0i5y_23 {
   max-height: 12rem;
   font-size: var(--font-size-small);
   border: 1px solid var(--muted);
@@ -23380,8 +23467,16 @@ html[data-theme=light] p {
   overflow-wrap: anywhere;
 }
 
-._candidate-details-prompt-expanded_178fi_31 {
+._candidate-details-prompt-expanded_r0i5y_33 {
   max-height: 36rem;
+}._rejection-reasons_1bm1x_1 {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+._rejection-reason_1bm1x_1:first-child h2 {
+  padding-top: 0rem;
+  margin-top: 0rem;
 }._toolbar_17c56_1 {
   position: fixed;
   top: 1rem;

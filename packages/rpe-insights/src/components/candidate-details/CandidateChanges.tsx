@@ -19,9 +19,9 @@ export function CandidateChanges(props: CandidateChangesProps) {
         { index > 0 && <Separator/> }
         <div key={key}>
           <h2>Change</h2>
-          <div><Markdown content={change.description}/></div>
+          <p className='text-muted'>{ change.description}</p>
           <h2>Reasoning</h2>
-          <div><Markdown content={change.reasoning}/></div>
+          <p className='text-muted'>{ change.reasoning}</p>
         </div>
       </>
     );

@@ -59,19 +59,15 @@ export function semanticRPECandidateValidator(
         prompt: prompt.text,
         modelParameters,
         schema: SemanticRPECandidateValidatorSchema,
-        // providerOptions: {
-        //   anthropic: {
-        //     structuredOutputMode: 'outputFormat',
-        //   },
-        // },
       });
 
       const violations = output.violations.map(violation => {
-        const module = violation.module ? `Module: ${violation.module}` : '';
-        return `${module} ` +
-          `| Violated requirement: ${violation.requirement} ` +
-          `| Evidence: ${violation.evidence} ` +
-          `| Reasoning: ${violation.reasoning}`;
+        return {
+          module: violation.module,
+          requirement: violation.requirement,
+          evidence: violation.evidence,
+          reasoning: violation.reasoning,
+        };
       });
       return {
         violations,

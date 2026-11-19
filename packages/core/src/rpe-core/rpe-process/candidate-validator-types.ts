@@ -1,7 +1,10 @@
 import { 
   RPECandidateGeneratorCandidate,
 } from '../rpe-candidate-generator/index.js';
-import { RPECandidateValidator } from '../rpe-candidate-validator/index.js';
+import { 
+  RPECandidateValidator,
+  RPECandidateValidatorViolation,
+} from '../rpe-candidate-validator/index.js';
 import { RPECandidateRef } from '../rpe-candidate/index.js';
 
 export interface RPERejectedCandidateRef {
@@ -13,7 +16,7 @@ export interface RPERejectedCandidateRef {
   /**
    * Reasons for the rejection (can be markdown).
    */
-  reasons: string[];
+  reasons: RPECandidateValidatorViolation[];
 }
 
 export interface ValidateCandidateInput {

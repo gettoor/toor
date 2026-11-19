@@ -6,6 +6,7 @@ import {
   type RPEAnalyzerOutput,
   type RPECandidateGeneratorChange,
   RPEDatasetEntry,
+  RPECandidateValidatorViolation,
 } from '@gettoor/core';
 
 import { useLocalStorage } from '../../hooks';
@@ -16,7 +17,7 @@ import {
   LinkButton,
   Metadata,
   MiddotSeparator,
-  Tag,
+  Separator,
 } from '../basic';
 import { CandidateModules } from '../common';
 import { CandidateAggregatedEvaluation } from './CandidateAggregatedEvaluation';
@@ -25,6 +26,7 @@ import { CandidateChanges } from './CandidateChanges';
 import styles from './CandidateDetails.module.scss';
 import { countLabel } from '../../string';
 import { VNode } from 'preact';
+import { CandidateRejectionReasons } from './CandidateRejectionReasons';
 
 export interface CandidateDetailsData {
   datasetEntries: RPEDatasetEntry[];
@@ -36,7 +38,7 @@ export interface CandidateDetailsData {
   trainingAnalysis?: RPEAnalyzerOutput;
   finalAggregatedEvaluation?: RPEAggregatorOutput;
   isFinalCandidate: boolean;
-  rejectionReasons?: string[];
+  rejectionReasons?: RPECandidateValidatorViolation[];
 }
 
 export interface CandidateDetailsProps {
@@ -79,9 +81,25 @@ export function CandidateDetails(props: CandidateDetailsProps) {
   const renderPanelSubtitle = () => {
     const nodes: VNode[] = [];
 
+    const appendNode = (node: VNode) => {
+      if (nodes.length > 0) {
+        nodes.push(<MiddotSeparator/>);
+      }
+      nodes.push(node);
+    };
+
+    if (data) {
+      appendNode(
+        <div>
+          <span>Identifier:</span>&nbsp;
+          <span className='text-normal'>{data.candidate.candidateId}</span>
+        </div>
+      );
+    }
+
     const isRejected = (data?.rejectionReasons ?? []).length > 0;
     if (isRejected) {
-      nodes.push(
+      appendNode(
         <div key='rejected' className='red'>
           Rejected
         </div>
@@ -89,14 +107,20 @@ export function CandidateDetails(props: CandidateDetailsProps) {
     }
 
     if (data?.isFinalCandidate) {
-      nodes.push(
+      appendNode(
         <div key='final' className='green'>
           Final Candidate
         </div>
       );
     }
 
-    return <>{nodes}</>;
+    return (
+      <div
+        className={styles['candidate-details-panel-subtitle']}
+      >
+        {nodes}
+      </div>
+    );
   };
 
   const renderMetadataSummary = () => {
@@ -122,7 +146,14 @@ export function CandidateDetails(props: CandidateDetailsProps) {
       <div className='text-muted'>
         { reasons.map((reason, index) => {
           return (
-            <div key={index.toString()}>{ reason }</div>
+            <>
+              { index > 0 && <Separator/> }
+              <div
+                key={index.toString()}
+              >
+                { reason }
+              </div>
+            </>
           );
         }) }
       </div>
@@ -144,6 +175,7 @@ export function CandidateDetails(props: CandidateDetailsProps) {
       title='Candidate details'
       subtitle={renderPanelSubtitle()}
       onMinimizeClick={onMinimizeClick}
+      onHeaderClick={onMinimizeClick}
       onCloseClick={onCloseClick}
     >
       { !!data &&
@@ -205,12 +237,12 @@ export function CandidateDetails(props: CandidateDetailsProps) {
           }
           { data?.rejectionReasons &&
             <ExpandableSection
-              title='Rejection Reason'
+              title='Rejection Reasons'
               expanded={moreRejectionReason}
               onToggle={() => { setMoreRejectionReason(!moreRejectionReason); }}
             >
               <ExpandableSection.Details>
-                { renderRejectionReasons(data.rejectionReasons) }
+                <CandidateRejectionReasons reasons={data.rejectionReasons}/>
               </ExpandableSection.Details>
             </ExpandableSection>
           }

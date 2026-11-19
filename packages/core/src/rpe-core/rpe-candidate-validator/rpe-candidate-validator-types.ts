@@ -19,6 +19,32 @@ export interface RPECandidateValidatorInput {
 }
 
 /**
+ * Violation of the candidate validator.
+ * @category Reflective Prompt Evolution
+ */
+export interface RPECandidateValidatorViolation {
+  /**
+   * Module that violated the requirement.
+   */
+  module?: string;
+
+  /**
+   * Requirement that was violated.
+   */
+  requirement: string;
+
+  /**
+   * Evidence that was used to determine the violation.
+   */
+  evidence?: string;
+
+  /**
+   * Reasoning that was used to determine the violation.
+   */
+  reasoning?: string;
+}
+
+/**
  * Output for the candidate validator.
  * @category Reflective Prompt Evolution
  */
@@ -27,7 +53,7 @@ export interface RPECandidateValidatorOutput {
    * Violations of the validation. A candidate is considered valid if
    * there are no violations.
    */
-  violations: string[];
+  violations: RPECandidateValidatorViolation[];
 
   /**
    * Usage of the candidate validator.

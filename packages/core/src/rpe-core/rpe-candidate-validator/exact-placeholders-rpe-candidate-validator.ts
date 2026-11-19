@@ -1,9 +1,13 @@
 import { InternalToorError } from '../../errors/index.js';
-import { countPlaceholders, findUniquePlaceholders } from '../../string/index.js';
+import { 
+  countPlaceholders,
+  findUniquePlaceholders,
+} from '../../string/index.js';
 import { 
   RPECandidateValidator,
   RPECandidateValidatorInput,
   RPECandidateValidatorOutput,
+  RPECandidateValidatorViolation,
 } from './rpe-candidate-validator-types.js';
 import { 
   placeholdersRPECandidateValidator,
@@ -51,7 +55,7 @@ export function exactPlaceholdersRPECandidateValidator(
     input: RPECandidateValidatorInput,
     candidatePlaceholdersPerModule: Record<string, string[]>,
   ): Promise<Pick<RPECandidateValidatorOutput, 'violations'>> => {
-    const violations: string[] = [];
+    const violations: RPECandidateValidatorViolation[] = [];
     const moduleKeys = Object.keys(candidatePlaceholdersPerModule);
 
     if (validPlaceholders) {
@@ -65,8 +69,11 @@ export function exactPlaceholdersRPECandidateValidator(
         );
         if (missingPlaceholders.length > 0) {
           violations.push(
-            `Module ${moduleKey} is missing the following ` +
-            `placeholders: ${missingPlaceholders.join(', ')}`,
+            {
+              module: moduleKey,
+              requirement: `Module is missing the following ` +
+                `placeholders: ${missingPlaceholders.join(', ')}`,
+            },
           );
         }
 
@@ -76,10 +83,11 @@ export function exactPlaceholdersRPECandidateValidator(
           validPlaceholders,
         );
         if (extraPlaceholders.length > 0) {
-          violations.push(
-            `Module ${moduleKey} has the following extra ` +
-            `placeholders: ${extraPlaceholders.join(', ')}`,
-          );
+          violations.push({
+            module: moduleKey,
+            requirement: `Module has the following extra ` +
+              `placeholders: ${extraPlaceholders.join(', ')}`,
+          });
         }
       });
     }
@@ -98,10 +106,11 @@ export function exactPlaceholdersRPECandidateValidator(
           validPlaceholders,
         );
         if (missingPlaceholders.length > 0) {
-          violations.push(
-            `Module ${moduleKey} is missing the following ` +
-            `placeholders: ${missingPlaceholders.join(', ')}`,
-          );
+          violations.push({
+            module: moduleKey,
+            requirement: `Module is missing the following ` +
+              `placeholders: ${missingPlaceholders.join(', ')}`,
+          });
         }
 
         // extra placeholders
@@ -110,9 +119,11 @@ export function exactPlaceholdersRPECandidateValidator(
           validPlaceholders,
         );
         if (extraPlaceholders.length > 0) {
-          violations.push(
-            `Module ${moduleKey} has the following extra ` +
-            `placeholders: ${extraPlaceholders.join(', ')}`,
+          violations.push({
+            module: moduleKey,
+              requirement: `Module has the following extra ` +
+                `placeholders: ${extraPlaceholders.join(', ')}`,
+            },
           );
         }
       });
@@ -128,10 +139,11 @@ export function exactPlaceholdersRPECandidateValidator(
 
         // duplicated placeholders
         if (duplicates.length > 0) {
-          violations.push(
-            `Module ${moduleKey} has the following duplicated placeholders: `+
-            `${duplicates.join(', ')}`,
-          );
+          violations.push({
+            module: moduleKey,
+            requirement: `Module has the following duplicated ` +
+              `placeholders: ${duplicates.join(', ')}`,
+          });
         }
       });
     }
