@@ -504,9 +504,9 @@ function clsx() {
 	return n;
 }
 var CandidateTree_module_default = {
-	"candidate-tree-viewport": "_candidate-tree-viewport_arau0_1",
-	panning: "_panning_arau0_9",
-	"candidate-tree": "_candidate-tree_arau0_1"
+	"candidate-tree-viewport": "_candidate-tree-viewport_1vloe_1",
+	panning: "_panning_1vloe_9",
+	"candidate-tree": "_candidate-tree_1vloe_1"
 };
 //#endregion
 //#region src/components/candidate-tree/candidate-tree-consts.ts
@@ -9244,7 +9244,7 @@ function CandidateBox(props) {
 	const strokeColorName = props.isSelected ? "selected" : "default";
 	const stroke = STROKE_COLORS[strokeColorState][strokeColorName];
 	return /* @__PURE__ */ u("g", {
-		[CANDIDATE_BOX_ATTRIBUTE]: true,
+		[CANDIDATE_BOX_ATTRIBUTE]: data.candidateId,
 		children: [/* @__PURE__ */ u("rect", {
 			x: props.x + .5,
 			y: props.y + .5,
@@ -9267,6 +9267,7 @@ function CandidateBox(props) {
 			onClick: props.onClick,
 			children: /* @__PURE__ */ u("div", {
 				className: infoClassName,
+				[CANDIDATE_BOX_ATTRIBUTE]: data.candidateId,
 				children: [data.aggregatedScore !== void 0 && /* @__PURE__ */ u(S$1, { children: [/* @__PURE__ */ u("div", {
 					className: CandidateBox_module_default["candidate-box-score-name"],
 					children: "Score"
@@ -20799,10 +20800,15 @@ function clampTreeOffset(offset, treeWidth, treeHeight, viewportWidth, viewportH
 	};
 }
 /**
-* Check if the event target is inside a candidate box.
+* Candidate id of the box under the event target, if any.
 */
-function isInsideCandidateBox(target) {
-	return target instanceof Element && target.closest(`[data-candidate-box]`) !== null;
+function getCandidateBoxId(target) {
+	if (!(target instanceof Element)) return null;
+	const box = target.closest(`[${CANDIDATE_BOX_ATTRIBUTE}]`);
+	if (box === null) return null;
+	const candidateId = box.getAttribute(CANDIDATE_BOX_ATTRIBUTE);
+	if (candidateId === null || candidateId.length === 0) return null;
+	return candidateId;
 }
 //#endregion
 //#region src/components/candidate-tree/IterationLabel.tsx
@@ -20821,6 +20827,12 @@ function IterationLabel(props) {
 }
 //#endregion
 //#region src/components/candidate-tree/CandidateTree.tsx
+var WHEEL_LINE_HEIGHT = 16;
+function wheelDeltaToPixels(delta, deltaMode, pageSize) {
+	if (deltaMode === WheelEvent.DOM_DELTA_LINE) return delta * WHEEL_LINE_HEIGHT;
+	if (deltaMode === WheelEvent.DOM_DELTA_PAGE) return delta * pageSize;
+	return delta;
+}
 function CandidateTree(props) {
 	const { rpeInsights, selectedCandidateId: selectedPromptId, detailsVisible } = props;
 	const viewportRef = A$2(null);
@@ -20850,45 +20862,76 @@ function CandidateTree(props) {
 		svg.style.transform = `translate(${clampedOffset.x}px, ${clampedOffset.y}px)`;
 	};
 	h(() => {
+		const viewport = viewportRef.current;
 		const onResize = () => {
 			return applyOffset(offsetRef.current);
 		};
+		const onWheel = (event) => {
+			if (viewport === null || event.ctrlKey) return;
+			event.preventDefault();
+			const deltaY = wheelDeltaToPixels(event.deltaY, event.deltaMode, viewport.clientHeight);
+			applyOffset({
+				x: offsetRef.current.x,
+				y: offsetRef.current.y - deltaY
+			});
+		};
 		onResize();
 		window.addEventListener("resize", onResize);
+		viewport?.addEventListener("wheel", onWheel, { passive: false });
 		return () => {
-			return window.removeEventListener("resize", onResize);
+			window.removeEventListener("resize", onResize);
+			viewport?.removeEventListener("wheel", onWheel);
 		};
 	}, [width, height]);
 	const onPointerDown = (event) => {
-		if (event.button !== 0 || isInsideCandidateBox(event.target)) return;
+		if (event.button !== 0) return;
 		event.preventDefault();
 		viewportRef.current?.setPointerCapture(event.pointerId);
 		panRef.current = {
 			pointerId: event.pointerId,
 			startX: event.clientX,
 			startY: event.clientY,
-			startOffset: offsetRef.current
+			startOffset: offsetRef.current,
+			candidateId: getCandidateBoxId(event.target)
 		};
 		pannedRef.current = false;
-		setIsPanning(true);
 	};
 	const onPointerMove = (event) => {
 		const pan = panRef.current;
 		if (pan === null || pan.pointerId !== event.pointerId) return;
 		const dx = event.clientX - pan.startX;
 		const dy = event.clientY - pan.startY;
-		if (Math.abs(dx) > 3 || Math.abs(dy) > 3) pannedRef.current = true;
+		const isPanThreshold = Math.abs(dx) > 3 || Math.abs(dy) > 3;
+		if (!pannedRef.current && isPanThreshold) {
+			pannedRef.current = true;
+			setIsPanning(true);
+		}
 		if (pannedRef.current) applyOffset({
 			x: pan.startOffset.x + dx,
 			y: pan.startOffset.y + dy
 		});
 	};
-	const onPointerUp = (event) => {
+	const endPan = (event, commitClick) => {
 		const pan = panRef.current;
 		if (pan === null || pan.pointerId !== event.pointerId) return;
 		viewportRef.current?.releasePointerCapture(event.pointerId);
+		const { candidateId } = pan;
+		const panned = pannedRef.current;
 		panRef.current = null;
 		setIsPanning(false);
+		if (commitClick && !panned && candidateId !== null) props.onSelectCandidateId(candidateId);
+	};
+	const onPointerUp = (event) => {
+		endPan(event, true);
+	};
+	const onPointerCancel = (event) => {
+		endPan(event, false);
+	};
+	const onClickCapture = (event) => {
+		if (!pannedRef.current) return;
+		pannedRef.current = false;
+		event.stopPropagation();
+		event.preventDefault();
 	};
 	const onClick = (event) => {
 		if (pannedRef.current) {
@@ -20957,7 +21000,8 @@ function CandidateTree(props) {
 		onPointerDown,
 		onPointerMove,
 		onPointerUp,
-		onPointerCancel: onPointerUp,
+		onPointerCancel,
+		onClickCapture,
 		onClick,
 		children: /* @__PURE__ */ u("svg", {
 			ref: svgRef,
@@ -22972,7 +23016,7 @@ function loadRPEInsights() {
 R$1(/* @__PURE__ */ u(App, { rpeInsights: loadRPEInsights() }), document.getElementById("app"));
 //#endregion
 
-//# sourceMappingURL=index-Drl6q1Lt.js.map</script>
+//# sourceMappingURL=index-CoSrmzrd.js.map</script>
     <style rel="stylesheet" crossorigin>* {
   box-sizing: border-box;
 }
@@ -23068,7 +23112,7 @@ html[data-theme=light] p {
 
 .text-muted {
   color: var(--text-muted);
-}._candidate-tree-viewport_arau0_1 {
+}._candidate-tree-viewport_1vloe_1 {
   position: fixed;
   inset: 0;
   overflow: hidden;
@@ -23076,11 +23120,11 @@ html[data-theme=light] p {
   user-select: none;
   touch-action: none;
 }
-._candidate-tree-viewport_arau0_1._panning_arau0_9 {
+._candidate-tree-viewport_1vloe_1._panning_1vloe_9, ._candidate-tree-viewport_1vloe_1._panning_1vloe_9 * {
   cursor: grabbing;
 }
 
-._candidate-tree_arau0_1 {
+._candidate-tree_1vloe_1 {
   --fill: var(--bg-muted);
   --stroke: var(--muted);
   --stroke-selected: var(--border-highlighted);

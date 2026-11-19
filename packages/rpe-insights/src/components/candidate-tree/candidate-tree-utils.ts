@@ -274,11 +274,26 @@ export function clampTreeOffset(
 }
 
 /**
+ * Candidate id of the box under the event target, if any.
+ */
+export function getCandidateBoxId(target: EventTarget | null): string | null {
+  if (!(target instanceof Element)) {
+    return null;
+  }
+  const box = target.closest(`[${CANDIDATE_BOX_ATTRIBUTE}]`);
+  if (box === null) {
+    return null;
+  }
+  const candidateId = box.getAttribute(CANDIDATE_BOX_ATTRIBUTE);
+  if (candidateId === null || candidateId.length === 0) {
+    return null;
+  }
+  return candidateId;
+}
+
+/**
  * Check if the event target is inside a candidate box.
  */
 export function isInsideCandidateBox(target: EventTarget | null): boolean {
-  return (
-    target instanceof Element &&
-    target.closest(`[${CANDIDATE_BOX_ATTRIBUTE}]`) !== null
-  );
+  return getCandidateBoxId(target) !== null;
 }

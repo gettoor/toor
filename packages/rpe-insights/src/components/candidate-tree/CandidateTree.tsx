@@ -18,6 +18,7 @@ import { CandidateBoxConnection } from './CandidateBoxConnection';
 import { 
   type TreeOffset,
   clampTreeOffset,
+  getCandidateBoxId,
   isHighlighted,
   isInsideCandidateBox,
   resolveBoxes,
@@ -39,6 +40,23 @@ interface PanState {
   startX: number;
   startY: number;
   startOffset: TreeOffset;
+  candidateId: string | null;
+}
+
+const WHEEL_LINE_HEIGHT = 16;
+
+function wheelDeltaToPixels(
+  delta: number,
+  deltaMode: number,
+  pageSize: number,
+): number {
+  if (deltaMode === WheelEvent.DOM_DELTA_LINE) {
+    return delta * WHEEL_LINE_HEIGHT;
+  }
+  if (deltaMode === WheelEvent.DOM_DELTA_PAGE) {
+    return delta * pageSize;
+  }
+  return delta;
 }
 
 const DISABLE_BACKGROUND_CLICK = true;
@@ -91,23 +109,42 @@ export function CandidateTree(props: CandidateTreeProps) {
 
   useEffect(
     () => {
+      const viewport = viewportRef.current;
       const onResize = () => {
         return applyOffset(offsetRef.current);
       };
+      const onWheel = (event: WheelEvent) => {
+        if (viewport === null || event.ctrlKey) {
+          return;
+        }
+        event.preventDefault();
+        const deltaY = wheelDeltaToPixels(
+          event.deltaY,
+          event.deltaMode,
+          viewport.clientHeight,
+        );
+        applyOffset({
+          x: offsetRef.current.x,
+          y: offsetRef.current.y - deltaY,
+        });
+      };
       onResize();
       window.addEventListener('resize', onResize);
+      viewport?.addEventListener('wheel', onWheel, { passive: false });
       return () => {
-        return window.removeEventListener('resize', onResize);
+        window.removeEventListener('resize', onResize);
+        viewport?.removeEventListener('wheel', onWheel);
       };
     },
     [width, height],
   );
 
   const onPointerDown = (event: PointerEvent) => {
-    // if not the main button or inside a candidate box
-    if (event.button !== 0 || isInsideCandidateBox(event.target)) {
+    if (event.button !== 0) {
       return;
     }
+    // Suppress the compatibility click. A press that stays within the pan
+    // threshold is delivered as a box click on release.
     event.preventDefault();
     viewportRef.current?.setPointerCapture(event.pointerId);
     panRef.current = {
@@ -115,9 +152,9 @@ export function CandidateTree(props: CandidateTreeProps) {
       startX: event.clientX,
       startY: event.clientY,
       startOffset: offsetRef.current,
+      candidateId: getCandidateBoxId(event.target),
     };
     pannedRef.current = false;
-    setIsPanning(true);
   };
 
   const onPointerMove = (event: PointerEvent) => {
@@ -127,8 +164,11 @@ export function CandidateTree(props: CandidateTreeProps) {
     }
     const dx = event.clientX - pan.startX;
     const dy = event.clientY - pan.startY;
-    if (Math.abs(dx) > PAN_THRESHOLD || Math.abs(dy) > PAN_THRESHOLD) {
+    const isPanThreshold =
+      Math.abs(dx) > PAN_THRESHOLD || Math.abs(dy) > PAN_THRESHOLD;
+    if (!pannedRef.current && isPanThreshold) {
       pannedRef.current = true;
+      setIsPanning(true);
     }
     if (pannedRef.current) {
       applyOffset({
@@ -138,14 +178,36 @@ export function CandidateTree(props: CandidateTreeProps) {
     }
   };
 
-  const onPointerUp = (event: PointerEvent) => {
+  const endPan = (event: PointerEvent, commitClick: boolean) => {
     const pan = panRef.current;
     if (pan === null || pan.pointerId !== event.pointerId) {
       return;
     }
     viewportRef.current?.releasePointerCapture(event.pointerId);
+    const { candidateId } = pan;
+    const panned = pannedRef.current;
     panRef.current = null;
     setIsPanning(false);
+    if (commitClick && !panned && candidateId !== null) {
+      props.onSelectCandidateId(candidateId);
+    }
+  };
+
+  const onPointerUp = (event: PointerEvent) => {
+    endPan(event, true);
+  };
+
+  const onPointerCancel = (event: PointerEvent) => {
+    endPan(event, false);
+  };
+
+  const onClickCapture = (event: MouseEvent) => {
+    if (!pannedRef.current) {
+      return;
+    }
+    pannedRef.current = false;
+    event.stopPropagation();
+    event.preventDefault();
   };
 
   const onClick = (event: MouseEvent) => {
@@ -266,7 +328,8 @@ export function CandidateTree(props: CandidateTreeProps) {
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
-      onPointerCancel={onPointerUp}
+      onPointerCancel={onPointerCancel}
+      onClickCapture={onClickCapture}
       onClick={onClick}
     >
       <svg

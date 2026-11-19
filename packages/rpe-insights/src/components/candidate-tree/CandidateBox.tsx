@@ -82,7 +82,7 @@ export function CandidateBox(props: CandidateBoxProps) {
   const stroke = STROKE_COLORS[strokeColorState][strokeColorName];
 
   return (
-    <g {...{ [CANDIDATE_BOX_ATTRIBUTE]: true }}>
+    <g {...{ [CANDIDATE_BOX_ATTRIBUTE]: data.candidateId }}>
       <rect
         x={props.x + 0.5}
         y={props.y + 0.5}
@@ -105,7 +105,10 @@ export function CandidateBox(props: CandidateBoxProps) {
         height={props.height}
         onClick={props.onClick}
       >
-        <div className={infoClassName}>
+        <div
+          className={infoClassName}
+          {...{ [CANDIDATE_BOX_ATTRIBUTE]: data.candidateId }}
+        >
           { data.aggregatedScore !== undefined &&
             <>
               <div className={styles['candidate-box-score-name']}>

@@ -6,7 +6,8 @@
   user-select: none;
   touch-action: none;
 
-  &.panning {
+  &.panning,
+  &.panning * {
     cursor: grabbing;
   }
 }
