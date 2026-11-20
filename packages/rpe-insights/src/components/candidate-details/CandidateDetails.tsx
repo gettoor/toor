@@ -141,25 +141,6 @@ export function CandidateDetails(props: CandidateDetailsProps) {
     );
   };
 
-  const renderRejectionReasons = (reasons: string[]) => {
-    return (
-      <div className='text-muted'>
-        { reasons.map((reason, index) => {
-          return (
-            <>
-              { index > 0 && <Separator/> }
-              <div
-                key={index.toString()}
-              >
-                { reason }
-              </div>
-            </>
-          );
-        }) }
-      </div>
-    );
-  };
-
   const boxClassName = clsx(
     styles['candidate-details-panel'],
     {

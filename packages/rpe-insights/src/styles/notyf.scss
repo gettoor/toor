@@ -1,0 +1,18 @@
+@use './includes' as *;
+
+.notification-notyf-success {
+  $bg-color: var(--bg-muted);
+
+  background-color: $bg-color !important;
+  border: 1px solid var(--muted) !important;
+  border-radius: var(--border-radius) !important;
+
+  .notyf__wrapper {
+    background-color: $bg-color;
+    padding: 0.5rem 2rem 0.5rem 1rem !important;
+    
+    .notyf__message {
+      @include font-medium;
+    }
+  }
+}

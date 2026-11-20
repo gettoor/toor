@@ -41,7 +41,12 @@ export function FinalCandidate(props: FinalCandidateProps) {
     return (
       <span className={styles['final-candidate-summary']}>
         <span>
-          Evaluation score:&nbsp;
+          Identifier:&nbsp;
+          <span className='text-normal'>{candidate.candidateId}</span>
+          <MiddotSeparator/>
+        </span>
+        <span>
+          Test evaluation score:&nbsp;
           <Score
             score={aggregatedEvaluation.aggregatedScore}
             className='text-normal'

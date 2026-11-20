@@ -2,6 +2,7 @@ import { render } from 'preact';
 import './styles/global.scss';
 import './styles/themes.scss';
 import './styles/colors.scss';
+import './notifications/index.js';
 import { App } from './App.js';
 import { loadRPEInsights } from './rpe-insights';
 

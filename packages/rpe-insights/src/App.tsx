@@ -1,6 +1,8 @@
 import { type RPEInsights } from '@gettoor/core';
 import { ProcessView } from './components/index.js';
 
+import { notifications } from './notifications/index.js';
+
 export interface AppProps {
   rpeInsights: RPEInsights;
 }

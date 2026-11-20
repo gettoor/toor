@@ -4,6 +4,7 @@ import { useState } from 'preact/hooks';
 import { camelCaseToSentenceCase } from '../../string';
 import { COLLAPSE_ICON, EXPAND_ICON } from '../consts';
 import { IconButton, Header } from '../basic';
+import { notifications } from '../../notifications';
 import styles from './CandidateModule.module.scss';
 
 export interface CandidateModuleProps {
@@ -18,6 +19,7 @@ export function CandidateModule(props: CandidateModuleProps) {
 
   const onCopyClick = () => {
     navigator.clipboard.writeText(module);
+    notifications.success(`Module <b>${name}</b> copied to clipboard`);
   };
   const onToggle = () => {
     setExpanded(!expanded);
